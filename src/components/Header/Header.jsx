@@ -3,21 +3,24 @@ import React from "react";
 const Header = () => {
   return (
     <div>
-      <header id="header" class="header d-flex align-items-center fixed-top">
-        <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <header
+        id="header"
+        className="header d-flex align-items-center fixed-top"
+      >
+        <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
           <a
-            href="index.html"
-            class="logo d-flex align-items-center me-auto me-xl-0"
+            href="/"
+            className="logo d-flex align-items-center me-auto me-xl-0"
           >
             {/* <!-- Uncomment the line below if you also wish to use an image logo --> */}
             {/* <img src="assets/img/logo.png" alt=""/>  */}
-            <h1 class="sitename">QuickyRupay</h1>
+            <h1 className="sitename">QuickyRupay</h1>
           </a>
 
-          <nav id="navmenu" class="navmenu">
+          <nav id="navmenu" className="navmenu">
             <ul>
               <li>
-                <a href="#hero" class="active">
+                <a href="#hero" className="active">
                   Home
                 </a>
               </li>
@@ -33,19 +36,19 @@ const Header = () => {
               {/* <li>
                 <a href="#pricing">Pricing</a>
               </li> */}
-              {/* <li class="dropdown">
+              {/* <li className="dropdown">
                 <a href="#">
                   <span>Dropdown</span>
-                  <i class="bi bi-chevron-down toggle-dropdown"></i>
+                  <i className="bi bi-chevron-down toggle-dropdown"></i>
                 </a>
                 <ul>
                   <li>
                     <a href="#">Dropdown 1</a>
                   </li>
-                  <li class="dropdown">
+                  <li className="dropdown">
                     <a href="#">
                       <span>Deep Dropdown</span>
-                      <i class="bi bi-chevron-down toggle-dropdown"></i>
+                      <i className="bi bi-chevron-down toggle-dropdown"></i>
                     </a>
                     <ul>
                       <li>
@@ -79,13 +82,21 @@ const Header = () => {
               <li>
                 <a href="#contact">Contact</a>
               </li>
+              <li>
+                <a href="/process">Loan Process</a>
+              </li>
             </ul>
-            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <a class="btn-getstarted" href="index.html#about">
-            Get Started
-          </a>
+          <div className="d-flex flex-row gap-0">
+            <a className="btn-getstarted" href="/signIn">
+              Sign In
+            </a>
+            <a className="btn-getstarted" href="index.html#about">
+              Get Started
+            </a>
+          </div>
         </div>
       </header>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/Header/Header";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
@@ -15,25 +15,46 @@ import FaqSection from "../../components/FaqSection/FaqSection";
 import PricingSection from "../../components/PricingSection/PricingSection";
 import CallToActionSection2 from "../../components/CallToActionSection2/CallToActionSection2";
 import ContactSection from "../../components/ContactSection/ContactSection";
+import styles from "./IndexPageStyles.module.css";
+import axios from "axios";
 
 const IndexPage = () => {
+  const fetch = async () => {
+    try {
+      const resp = await axios.get(
+        "https://api.api-ninjas.com/v1/interestrate?country=United Kingdom",
+        {
+          headers: {
+            "X-Api-Key": "Pbe9EWzO6ueJ2lK4H7fETA==pyB2o2InlLZFeMos",
+          },
+        }
+      );
+      console.log(resp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
-    <div className="index-page">
-      <Header />
+    <div className={styles.indexPage}>
       <HeroSection />
       <AboutSection />
       <FeaturesSection />
-      {/* <FeaturesCardsSection /> */}
-      {/* <Features2Section /> */}
+      <FeaturesCardsSection />
+      <Features2Section />
       <CallToActionSection />
-      {/* <ClientsSection /> */}
-      {/* <TestimonialsSection /> */}
-      {/* <StatsSection /> */}
-      {/* <ServicesSection /> */}
-      {/* <PricingSection /> */}
-      {/* <FaqSection /> */}
-      {/* <CallToActionSection2 /> */}
-      {/* <ContactSection /> */}
+      <ClientsSection />
+      <TestimonialsSection />
+      <StatsSection />
+      <ServicesSection />
+      <PricingSection />
+      <FaqSection />
+      <CallToActionSection2 />
+      <ContactSection />
       <FooterSection />
     </div>
   );

@@ -116,7 +116,7 @@
 
 // export default AboutSection;
 
-import React from "react";
+import React, { useEffect } from "react";
 
 const AboutSection = () => {
   return (
@@ -236,4 +236,3 @@ const AboutSection = () => {
 };
 
 export default AboutSection;
-  

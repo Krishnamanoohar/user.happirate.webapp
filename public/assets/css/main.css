@@ -187,7 +187,7 @@ h6 {
   background: var(--accent-color);
   font-size: 14px;
   padding: 8px 20px;
-  margin: 0 0 0 30px;
+  margin: 0 0 0 10px;
   border-radius: 50px;
   transition: 0.3s;
 }
@@ -2342,5 +2342,24 @@ section,
 # Starter Section Section
 --------------------------------------------------------------*/
 .starter-section {
+  padding-top: 130px;
   /* Add your styles here */
+}
+
+/* Scrollbar customization for Loan Offers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: white; /* Tailwind's blue-500 */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #ffffff; /* Tailwind's blue-600 on hover */
 }
