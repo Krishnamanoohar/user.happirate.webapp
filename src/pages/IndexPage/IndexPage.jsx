@@ -42,16 +42,16 @@ const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
       <HeroSection />
-      <AboutSection />
       <FeaturesSection />
       <FeaturesCardsSection />
-      <Features2Section />
+      <AboutSection />
+      {/* <Features2Section /> */}
       <CallToActionSection />
-      <ClientsSection />
+      {/* <ClientsSection /> */}
       <TestimonialsSection />
-      <StatsSection />
+      {/* <StatsSection /> */}
       <ServicesSection />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <FaqSection />
       <CallToActionSection2 />
       <ContactSection />

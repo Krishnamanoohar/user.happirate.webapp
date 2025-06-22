@@ -63,7 +63,7 @@ const CallToActionSection2 = () => {
                   to your profile. Get clarity, save money, and make smarter
                   financial decisions today.
                 </p>
-                <a className="cta-btn" href="#services">
+                <a className="cta-btn" href="/compare-loans">
                   Compare Loan Offers Now
                 </a>
               </div>
