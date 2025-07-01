@@ -8,6 +8,8 @@ const LoanComparisonPage = () => {
   const [selectedBank, setSelectedBank] = useState(null); // or use multiple for checkboxes
   const [animationKey, setAnimationKey] = useState(0);
 
+  const [userEligibilityData, setUserEligibilityData] = useState({});
+
   const handleFormSubmit = (userInput) => {
     // Simulated API call or static data fetch
     const results = [
@@ -19,15 +21,17 @@ const LoanComparisonPage = () => {
         tenure: "5 years",
         maxAmount: "₹10,00,000",
         logo: "hdfc-logo.png",
+        featured: true,
       },
       {
         id: 2,
-        bank: "ICICI Bank",
-        interestRate: "11.2%",
-        processingFee: "0.5%",
-        tenure: "4 years",
-        maxAmount: "₹8,00,000",
-        logo: "icici-logo.png",
+        bank: "Bajaj Finserv",
+        interestRate: "13.0%",
+        processingFee: "1.25%",
+        tenure: "3 years",
+        maxAmount: "₹5,00,000",
+        logo: "bajaj-logo.png",
+        featured: true,
       },
       {
         id: 3,
@@ -103,12 +107,12 @@ const LoanComparisonPage = () => {
       },
       {
         id: 11,
-        bank: "Bajaj Finserv",
-        interestRate: "13.0%",
-        processingFee: "1.25%",
-        tenure: "3 years",
-        maxAmount: "₹5,00,000",
-        logo: "bajaj-logo.png",
+        bank: "ICICI Bank",
+        interestRate: "11.2%",
+        processingFee: "0.5%",
+        tenure: "4 years",
+        maxAmount: "₹8,00,000",
+        logo: "icici-logo.png",
       },
       {
         id: 12,
@@ -201,7 +205,11 @@ const LoanComparisonPage = () => {
     <div className="starter-section min-vh-100">
       <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="d-flex gap-4 max-w-8xl mx-auto">
-          <UserInputForm onSubmit={handleFormSubmit} />
+          <UserInputForm
+            onSubmit={handleFormSubmit}
+            formData={userEligibilityData}
+            setFormData={setUserEligibilityData}
+          />
           <div className="w-full mt-8 grid gap-6">
             <div className="max-h-[600px] overflow-y-auto pr-2 space-y-6 custom-scrollbar">
               <AnimatePresence>
@@ -216,6 +224,7 @@ const LoanComparisonPage = () => {
                     <LoanOfferCard
                       key={offer.id}
                       offer={offer}
+                      featured={offer.featured || false}
                       selected={selectedBank === offer.id}
                       onSelect={() => setSelectedBank(offer.id)}
                     />

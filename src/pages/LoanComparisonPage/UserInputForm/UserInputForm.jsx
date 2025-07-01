@@ -1,18 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const UserInputForm = ({ onSubmit }) => {
+const UserInputForm = ({ onSubmit, formData, setFormData }) => {
   const [income, setIncome] = useState(25); // in thousands
+  const [hasActiveEmi, setHasActiveEmi] = useState("no");
 
-  const [formData, setFormData] = useState({
-    amount: "",
-    tenure: "",
-    income: "",
-    city: "",
-  });
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+
+  const handleContinue = () => {
+    navigate("/loan-application");
   };
 
   return (
@@ -65,12 +66,30 @@ const UserInputForm = ({ onSubmit }) => {
 
             <div className="col-md-6">
               <label className="form-label">Do you have any active EMIs?</label>
-              <select className="form-control" required>
+              <select
+                className="form-control"
+                required
+                onChange={(e) => setHasActiveEmi(e.target.value)}
+              >
                 <option value="">Select Option</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
               </select>
             </div>
+
+            {hasActiveEmi === "yes" && (
+              <div className="col-md-6 mt-3">
+                <label className="form-label">
+                  Current Monthly EMI Spending
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Enter amount e.g. ₹10,000"
+                  required
+                />
+              </div>
+            )}
 
             <div className="col-md-6">
               <label className="form-label">Loan Type</label>
@@ -93,7 +112,7 @@ const UserInputForm = ({ onSubmit }) => {
               />
             </div>
 
-            <div className="col-md-6">
+            <div className="flex flex-col justify-between col-md-6">
               <label className="form-label">Preferred Tenure</label>
               <select className="form-control" required>
                 <option value="">Select Tenure</option>
@@ -104,9 +123,19 @@ const UserInputForm = ({ onSubmit }) => {
               </select>
             </div>
 
-            <div className="col-md-12">
+            {/* <div className="col-md-12"> */}
+            <div
+              className={`${hasActiveEmi === "yes" ? "col-md-6" : "col-md-12"}`}
+            >
               <label className="form-label">
-                Credit Score Range (optional)
+                Credit Score Range (
+                <small className="text-muted">
+                  Don’t know your credit score?{" "}
+                  <a href="/check-credit-score" className="text-primary">
+                    Click here to check
+                  </a>
+                </small>
+                )
               </label>
               <select className="form-control">
                 <option value="">Select</option>
@@ -127,6 +156,58 @@ const UserInputForm = ({ onSubmit }) => {
             </div>
           </div>
         </form>
+
+        <div
+          className="modal fade"
+          id="loanApplyModal"
+          tabIndex="1"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow">
+              <div className="modal-header bg-[#00519e] text-white">
+                <h5 className="modal-title text-white">
+                  Your Privacy, Our Promise
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p className="text-muted mb-3">
+                  We understand how important your personal information is. When
+                  you apply through our platform:
+                </p>
+                <ul className="list-unstyled ps-3 text-muted">
+                  <li>
+                    ✅ <strong>No spam calls</strong> from third-party agents.
+                  </li>
+                  <li>
+                    ✅ <strong>No data sharing</strong> without your permission.
+                  </li>
+                  <li>
+                    ✅ <strong>Bank-grade security</strong> to protect your
+                    information.
+                  </li>
+                  <li>✅ Only verified lenders will see your application.</li>
+                </ul>
+                <button
+                  className="btn btn-primary bg-[#00519e] w-100 mt-3"
+                  onClick={handleContinue}
+                  data-bs-dismiss="modal"
+                >
+                  Continue to Application
+                </button>
+                <p className="text-xs text-center text-muted mt-2">
+                  We do not store or sell your data. You are always in control.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

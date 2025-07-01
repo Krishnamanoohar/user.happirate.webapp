@@ -44,13 +44,13 @@ const IndexPage = () => {
       <HeroSection />
       <FeaturesSection />
       <FeaturesCardsSection />
-      <AboutSection />
       {/* <Features2Section /> */}
+      <ServicesSection />
+      {/* <AboutSection /> */}
       <CallToActionSection />
-      {/* <ClientsSection /> */}
+      <ClientsSection />
       <TestimonialsSection />
       {/* <StatsSection /> */}
-      <ServicesSection />
       {/* <PricingSection /> */}
       <FaqSection />
       <CallToActionSection2 />

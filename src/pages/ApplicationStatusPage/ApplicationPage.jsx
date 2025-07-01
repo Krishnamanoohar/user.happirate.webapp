@@ -59,6 +59,28 @@ const ApplicationPage = () => {
           </h2>
 
           {/* Detail Card */}
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-xl p-2 flex items-center gap-4 shadow-sm">
+            <svg
+              className="text-yellow-500 w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                mb-0
+                fillRule="evenodd"
+                d="M18 13a1 1 0 011-1V5a1 1 0 00-1-1h-3.382a1 1 0 01-.894-.553L12.382 2H7.618l-.342.447A1 1 0 016.382 4H3a1 1 0 00-1 1v7a1 1 0 011 1h2v1a1 1 0 001 1h10a1 1 0 001-1v-1h2zm-5 2v-1H7v1h6z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <div>
+              <p className="mb-0 text-sm text-yellow-700 font-medium">
+                Current Status
+              </p>
+              <p className="mb-0 text-base font-semibold text-yellow-800">
+                Document Verification
+              </p>
+            </div>
+          </div>
           <div className="d-flex align-items-center bg-gray-50 rounded-xl p-4 flex items-center gap-4 shadow-md">
             <User className="text-blue-600" size={24} />
             <div className="d-flex gap-3 align-items-center">
@@ -105,29 +127,6 @@ const ApplicationPage = () => {
               <p className="mb-0 text-sm text-gray-500">Bank</p>
               <p className="mb-0 text-base font-medium text-gray-900">
                 HDFC Bank
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-xl p-2 flex items-center gap-4 shadow-sm">
-            <svg
-              className="text-yellow-500 w-6 h-6"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                mb-0
-                fillRule="evenodd"
-                d="M18 13a1 1 0 011-1V5a1 1 0 00-1-1h-3.382a1 1 0 01-.894-.553L12.382 2H7.618l-.342.447A1 1 0 016.382 4H3a1 1 0 00-1 1v7a1 1 0 011 1h2v1a1 1 0 001 1h10a1 1 0 001-1v-1h2zm-5 2v-1H7v1h6z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <div>
-              <p className="mb-0 text-sm text-yellow-700 font-medium">
-                Current Status
-              </p>
-              <p className="mb-0 text-base font-semibold text-yellow-800">
-                Document Verification
               </p>
             </div>
           </div>

@@ -14,7 +14,10 @@ const Header = () => {
           >
             {/* <!-- Uncomment the line below if you also wish to use an image logo --> */}
             {/* <img src="assets/img/logo.png" alt=""/>  */}
-            <h1 className="sitename">QuickyRupay</h1>
+            {/* <h1 className="sitename">HAPPI₹ATE</h1> */}
+            <div>
+              <img src="/assets/img/happirateLogo2.jpg" alt="" width={200} />
+            </div>
           </a>
 
           <nav id="navmenu" className="navmenu">
@@ -25,11 +28,14 @@ const Header = () => {
                 </a>
               </li>
               <li>
-                <a href="#about">About</a>
-              </li>
-              <li>
                 <a href="#features">Features</a>
               </li>
+              <li>
+                <a href="#services">Services</a>
+              </li>
+              {/* <li>
+                <a href="#about">About</a>
+              </li> */}
               {/* <li>
                 <a href="#services">Services</a>
               </li> */}
@@ -83,7 +89,10 @@ const Header = () => {
                 <a href="#contact">Contact</a>
               </li>
               <li>
-                <a href="/process">Loan Process</a>
+                <a href="/process">Loan Status</a>
+              </li>
+              <li>
+                <a href="/financial-summary">Financial Summary</a>
               </li>
             </ul>
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>

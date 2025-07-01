@@ -11,7 +11,7 @@ const LoginPage = () => {
           <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-500">
             Logging in gives you personalized access to smarter financial tools
             — track loans, monitor repayments, access offers, and manage your
-            QuickRupay profile with full control and security.
+            HappiRate profile with full control and security.
           </p>
           <a
             href="#"
@@ -38,7 +38,7 @@ const LoginPage = () => {
 
         <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl ">
           <h2 className="text-2xl font-bold text-gray-900 ">
-            Sign in to QuickRupay
+            Sign in to Happirate
           </h2>
           <form className="mt-8 space-y-6" action="#">
             <div>
@@ -53,7 +53,7 @@ const LoginPage = () => {
                 name="email"
                 id="email"
                 className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="you@quickrupay.com"
+                placeholder="you@happirate.com"
                 required
               />
             </div>
