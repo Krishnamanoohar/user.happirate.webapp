@@ -10,6 +10,8 @@
 # Font & Color Variables
 # Help: https://bootstrapmade.com/color-system/
 --------------------------------------------------------------*/
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Cal+Sans&family=Codystar&family=Honk&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Manrope:wght@200..800&family=Monofett&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playwrite+HU:wght@100..400&family=Poetsen+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Vast+Shadow&display=swap");
+
 /* Fonts */
 :root {
   --default-font: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto,
@@ -17,6 +19,7 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --heading-font: "Nunito", sans-serif;
   --nav-font: "Inter", sans-serif;
+  --marope-font: "Manrope", sans-serif;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
@@ -27,6 +30,7 @@
   --accent-color: #0d83fd; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+  --button-color: #5243bc;
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
@@ -155,9 +159,11 @@ h6 {
 
 .header .header-container {
   background: var(--surface-color);
+  background: transparent !important;
   border-radius: 50px;
   padding: 5px 25px;
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 15px rgba(255, 255, 255, 0.4);
+  border: 1px solid white;
 }
 
 .scrolled .header .header-container {
@@ -184,7 +190,7 @@ h6 {
 .header .btn-getstarted,
 .header .btn-getstarted:focus {
   color: var(--contrast-color);
-  background: var(--accent-color);
+  /* background: var(--accent-color); */
   font-size: 14px;
   padding: 8px 20px;
   margin: 0 0 0 10px;
@@ -720,11 +726,28 @@ section,
 .hero {
   position: relative;
   padding-top: 160px;
-  background: linear-gradient(
+  /* background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--accent-color), transparent 95%) 50%,
     color-mix(in srgb, var(--accent-color), transparent 98%) 25%,
     transparent 50%
+  ); */
+  /* background: linear-gradient(
+    to right,
+    rgb(139, 148, 197),
+    rgba(255, 255, 255, 0.8),
+    #a2aadb
+  ); */
+  /* background: rgb(162, 170, 219, 0.1); */
+  background: rgb(152, 161, 188, 0.5);
+  /* background: #c9d3fe; */
+  /* background: #ccd4fc; */
+  /* background: rgb(204, 212, 252, 0.5); */
+  background: linear-gradient(
+    to right,
+    rgb(204, 212, 252, 1) 20%,
+    rgb(204, 212, 252, 1) 15%,
+    rgb(204, 212, 252, 0.5)
   );
 }
 
@@ -750,13 +773,35 @@ section,
 
 .hero .hero-content h1 {
   font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 500;
+  line-height: 115%;
   margin-bottom: 1.5rem;
+  font-family: var(--marope-font) !important;
 }
 
 .hero .hero-content h1 .accent-text {
   color: var(--accent-color);
+  background: linear-gradient(to bottom right, #736cff, #75b0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For Firefox */
+  color: transparent;
+}
+
+.gradient-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  /* background: linear-gradient(to right, #5243bc, #6756ff, #6876db); */
+  background-image: linear-gradient(264deg, #7e90ff, #452cc0);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-button:hover {
+  opacity: 0.9;
 }
 
 @media (max-width: 992px) {

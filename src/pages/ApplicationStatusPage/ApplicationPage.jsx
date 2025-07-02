@@ -50,7 +50,7 @@ const ApplicationPage = () => {
   ];
 
   return (
-    <div className="pt-[110px] min-h-screen bg-gray-50 py-12 px-6 lg:px-20">
+    <div className="pt-[120px] min-h-screen bg-gray-50 py-12 px-6 lg:px-20">
       <div className="container max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left: Loan Details (Styled as Cards) */}
         <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4">

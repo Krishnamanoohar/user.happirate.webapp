@@ -7,7 +7,10 @@ const Header = () => {
         id="header"
         className="header d-flex align-items-center fixed-top"
       >
-        <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+        <div
+          className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between bg-[#e5e9ff]"
+          style={{ background: "#e5e9ff" }}
+        >
           <a
             href="/"
             className="logo d-flex align-items-center me-auto me-xl-0"
@@ -16,7 +19,7 @@ const Header = () => {
             {/* <img src="assets/img/logo.png" alt=""/>  */}
             {/* <h1 className="sitename">HAPPI₹ATE</h1> */}
             <div>
-              <img src="/assets/img/happirateLogo2.jpg" alt="" width={200} />
+              {/* <img src="/assets/img/happirateLogo2.jpg" alt="" width={200} /> */}
             </div>
           </a>
 
@@ -99,10 +102,13 @@ const Header = () => {
           </nav>
 
           <div className="d-flex flex-row gap-0">
-            <a className="btn-getstarted" href="/signIn">
+            <a className="btn-getstarted gradient-button" href="/signIn">
               Sign In
             </a>
-            <a className="btn-getstarted" href="index.html#about">
+            <a
+              className="btn-getstarted gradient-button"
+              href="index.html#about"
+            >
               Get Started
             </a>
           </div>

@@ -1,9 +1,37 @@
 import React from "react";
+import Squares from "../../ReactBitsComps/Squares Grid/Squares";
+import Noise from "../../ReactBitsComps/Noise/Noise";
 
 const HeroSection = () => {
   return (
-    <div>
+    <div className="relative w-full h-screen overflow-hidden">
       {/* <!-- Hero Section --> */}
+      <div className="absolute inset-0 z-0">
+        <Squares
+          direction="diagonal" // options: right, left, up, down, diagonal
+          speed={0.000001}
+          // borderColor="#000"
+          borderColor="#4959B4"
+          hoverFillColor="#222"
+          squareSize={75}
+        />
+        {/* <div
+          style={{
+            width: "600px",
+            height: "400px",
+            position: "relative",
+            overflow: "hidden",
+          }} */}
+        {/* > */}
+        <Noise
+          patternSize={440}
+          patternScaleX={3}
+          patternScaleY={2.2}
+          patternRefreshInterval={2}
+          patternAlpha={15}
+        />
+        {/* </div> */}
+      </div>
       <section id="hero" className="hero section">
         <div className="container" data-aos="fade-up" data-aos-delay="100">
           <div className="row align-items-center">
@@ -18,7 +46,13 @@ const HeroSection = () => {
                   Empowering Smart Borrowers
                 </div>
 
-                <h1 className="mb-4">
+                <h1
+                  className="mb-4 text-[#180147]"
+                  style={{
+                    color: "#180147",
+                    fontFamily: "var(--manrope-font)",
+                  }}
+                >
                   Compare Loans <br />
                   From Top Banks <br />
                   <span className="accent-text">
@@ -36,7 +70,7 @@ const HeroSection = () => {
                 <div className="hero-buttons">
                   <a
                     href="compare-loans"
-                    className="btn btn-primary me-0 me-sm-2 mx-1"
+                    className="btn btn-primary me-0 me-sm-2 mx-1 gradient-button"
                   >
                     Start Comparing
                   </a>
@@ -57,13 +91,13 @@ const HeroSection = () => {
                 data-aos="zoom-out"
                 data-aos-delay="300"
               >
-                <img
+                {/* <img
                   src="assets/img/illustration-1.webp"
                   alt="Loan comparison illustration"
                   className="img-fluid"
-                />
+                /> */}
 
-                <div className="customers-badge">
+                {/* <div className="customers-badge">
                   <div className="customer-avatars">
                     <img
                       src="assets/img/avatar-1.webp"
@@ -95,7 +129,7 @@ const HeroSection = () => {
                   <p className="mb-0 mt-2">
                     Trusted by over 10,000 borrowers to find the best loans
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
