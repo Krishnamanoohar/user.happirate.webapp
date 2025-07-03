@@ -5,10 +5,10 @@ const Header = () => {
     <div>
       <header
         id="header"
-        className="header d-flex align-items-center fixed-top"
+        className="header d-flex align-items-center fixed-top mt-0"
       >
         <div
-          className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between bg-[#e5e9ff]"
+          className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between gap-10 bg-[#e5e9ff]"
           style={{ background: "#e5e9ff" }}
         >
           <a
@@ -101,16 +101,19 @@ const Header = () => {
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <div className="d-flex flex-row gap-0">
-            <a className="btn-getstarted gradient-button" href="/signIn">
+          <div className="d-flex flex-col gap-0 text-center">
+            <a
+              className="btn-getstarted py-2 text-decoration-none border border-white rounded-0 w-full"
+              href="/signIn"
+            >
               Sign In
             </a>
-            <a
-              className="btn-getstarted gradient-button"
+            {/* <a
+              className="btn-getstarted py-3 text-decoration-none border border-white rounded-0"
               href="index.html#about"
             >
               Get Started
-            </a>
+            </a> */}
           </div>
         </div>
       </header>

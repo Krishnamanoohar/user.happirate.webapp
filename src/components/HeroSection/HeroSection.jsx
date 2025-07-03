@@ -1,20 +1,26 @@
-import React from "react";
 import Squares from "../../ReactBitsComps/Squares Grid/Squares";
 import Noise from "../../ReactBitsComps/Noise/Noise";
+import Silk from "../../ReactBitsComps/SilkBaground/Silk";
+import Beams from "../../ReactBitsComps/BeamsBackground/Beams";
+import GlareHover from "../../ReactBitsComps/GlareHover/GlareHover";
+import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
+import Particles from "../../ReactBitsComps/Particles/Particles";
+import Waves from "../../ReactBitsComps/Waves/Waves";
+// import MetallicPaintOverlay from "../../ReactBitsComps/MetallicPaint/MetallicPaint";
 
 const HeroSection = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* <!-- Hero Section --> */}
-      <div className="absolute inset-0 z-0">
-        <Squares
+      <div className="absolute inset-0 z-1">
+        {/* <Squares
           direction="diagonal" // options: right, left, up, down, diagonal
           speed={0.000001}
           // borderColor="#000"
           borderColor="#4959B4"
           hoverFillColor="#222"
           squareSize={75}
-        />
+        /> */}
         {/* <div
           style={{
             width: "600px",
@@ -23,19 +29,74 @@ const HeroSection = () => {
             overflow: "hidden",
           }} */}
         {/* > */}
-        <Noise
+        {/* <Noise
           patternSize={440}
           patternScaleX={3}
           patternScaleY={2.2}
           patternRefreshInterval={2}
           patternAlpha={15}
+        /> */}
+        {/* <Silk
+          speed={5}
+          scale={1}
+          color="#7B7481"
+          noiseIntensity={1.5}
+          rotation={0}
+        /> */}
+        {/* <Beams
+          beamWidth={2}
+          beamHeight={15}
+          beamNumber={120}
+          lightColor="#ffffff"
+          speed={2}
+          noiseIntensity={1.75}
+          scale={0.2}
+          rotation={90}
+        /> */}
+        {/* <DotGrid
+          dotSize={6}
+          gap={15}
+          baseColor="#001"
+          activeColor="#000"
+          proximity={120}
+          shockRadius={250}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        /> */}
+        {/* <Particles
+          particleColors={["#ffffff", "#ffffff", "#ffffff"]}
+          particleCount={300}
+          particleSpread={20}
+          speed={0.1}
+          particleBaseSize={200}
+          moveParticlesOnHover={false}
+          alphaParticles={false}
+          // disableRotation={false}
+        /> */}
+        <Waves
+          lineColor="#fff"
+          backgroundColor="rgba(255, 255, 255, 0.2)"
+          waveSpeedX={0.02}
+          waveSpeedY={0.01}
+          waveAmpX={40}
+          waveAmpY={20}
+          friction={0.9}
+          tension={0.01}
+          maxCursorMove={120}
+          xGap={12}
+          yGap={36}
         />
         {/* </div> */}
       </div>
       <section id="hero" className="hero section">
-        <div className="container" data-aos="fade-up" data-aos-delay="100">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
+        <div
+          className="container hero-gradient"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          <div className="row justify-center align-items-center text-center py-3 text-white">
+            <div className="col-lg-12">
               <div
                 className="hero-content"
                 data-aos="fade-up"
@@ -60,20 +121,25 @@ const HeroSection = () => {
                   </span>
                 </h1>
 
-                <p className="mb-4 mb-md-5">
+                <p
+                  className="w-[50%] mb-4 mb-md-5"
+                  style={{ color: "#2c2c2c" }}
+                >
                   Discover the lowest interest rates, minimal fees, and flexible
                   repayment options all in one place. Save time, save money, and
                   make informed decisions with our transparent loan comparison
                   platform.
                 </p>
 
-                <div className="hero-buttons">
+                <div className="hero-buttons flex">
                   <a
                     href="compare-loans"
-                    className="btn btn-primary me-0 me-sm-2 mx-1 gradient-button"
+                    className="btn metallic-button-container"
                   >
-                    Start Comparing
+                    <span className="metallic-text">Start Comparing</span>
+                    {/* <MetallicPaintOverlay /> */}
                   </a>
+
                   <a
                     href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
                     className="btn btn-link mt-2 mt-sm-0 glightbox"
@@ -85,19 +151,19 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className="col-lg-6">
+            {/* <div className="col-lg-6">
               <div
                 className="hero-image"
                 data-aos="zoom-out"
                 data-aos-delay="300"
               >
-                {/* <img
+                <img
                   src="assets/img/illustration-1.webp"
                   alt="Loan comparison illustration"
                   className="img-fluid"
-                /> */}
+                />
 
-                {/* <div className="customers-badge">
+                <div className="customers-badge">
                   <div className="customer-avatars">
                     <img
                       src="assets/img/avatar-1.webp"
@@ -129,9 +195,9 @@ const HeroSection = () => {
                   <p className="mb-0 mt-2">
                     Trusted by over 10,000 borrowers to find the best loans
                   </p>
-                </div> */}
+                </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div
