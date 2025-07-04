@@ -17,6 +17,7 @@ import CallToActionSection2 from "../../components/CallToActionSection2/CallToAc
 import ContactSection from "../../components/ContactSection/ContactSection";
 import styles from "./IndexPageStyles.module.css";
 import axios from "axios";
+import BottomScroller from "../../components/BottomScroller/BottomScroller";
 
 const IndexPage = () => {
   const fetch = async () => {
@@ -42,6 +43,7 @@ const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
       <HeroSection />
+      <BottomScroller />
       <FeaturesSection />
       <FeaturesCardsSection />
       {/* <Features2Section /> */}

@@ -13,7 +13,7 @@ const HeroSection = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* <!-- Hero Section --> */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-">
         {/* <Squares
           direction="diagonal" // options: right, left, up, down, diagonal
           speed={0.000001}
@@ -65,7 +65,7 @@ const HeroSection = () => {
           resistance={750}
           returnDuration={1.5}
         /> */}
-        {/* <Particles
+        <Particles
           particleColors={["#ffffff", "#ffffff", "#ffffff"]}
           particleCount={300}
           particleSpread={20}
@@ -74,8 +74,8 @@ const HeroSection = () => {
           moveParticlesOnHover={false}
           alphaParticles={false}
           // disableRotation={false}
-        /> */}
-        <Waves
+        />
+        {/* <Waves
           lineColor="#fff"
           backgroundColor="rgba(255, 255, 255, 0.2)"
           waveSpeedX={0.02}
@@ -87,7 +87,7 @@ const HeroSection = () => {
           maxCursorMove={120}
           xGap={12}
           yGap={36}
-        />
+        /> */}
         {/* </div> */}
       </div>
 
@@ -116,18 +116,20 @@ const HeroSection = () => {
                     fontFamily: "var(--manrope-font)",
                   }}
                 >
-                  Compare Loans <br />
+                  Compare Loans from <br />
+                  Top Banks <br />
+                  Any Loan. Any Bank. Tailored for You.
+                  {/*  Compare Loans <br />
                   From Top Banks <br />
                   <span className="accent-text">
                     Find Your Best Deal Instantly
-                  </span>
+                  </span> */}
                 </h1>
 
                 <p className="mb-4 mb-md-5" style={{ color: "white" }}>
-                  Discover the lowest interest rates, minimal fees, and flexible
-                  repayment options all in one place. Save time, save money, and
-                  make informed decisions with our transparent loan comparison
-                  platform.
+                  Compare the lowest rates, minimal fees, and flexible terms—all
+                  in one place. Save time, save money, and borrow smarter with
+                  complete transparency.
                 </p>
 
                 <div className="hero-buttons flex">
@@ -201,11 +203,11 @@ const HeroSection = () => {
           </div>
 
           <div
-            className="row stats-row gy-4 mt-5"
+            className="row stats-row gy-4 mt-5 bg-transparent"
             data-aos="fade-up"
             data-aos-delay="500"
           >
-            <div className="col-lg-3 col-md-6">
+            {/* <div className="col-lg-3 col-md-6">
               <div className="stat-item">
                 <div className="stat-icon">
                   <i className="bi bi-currency-dollar"></i>
@@ -250,7 +252,7 @@ const HeroSection = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

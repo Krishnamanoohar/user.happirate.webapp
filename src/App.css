@@ -123,3 +123,43 @@ body,
 .gold-glow {
   box-shadow: 0 0 6px #ffd700, 0 0 12px #ffbf00, 0 0 24px #ffaa00;
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  min-width: 100%;
+  animation: marquee 20s linear infinite;
+}
+
+.outlined-text {
+  display: flex;
+  font-size: 140px;
+  font-weight: bold;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+  color: transparent;
+  -webkit-text-stroke: 1px white;
+  text-align: center;
+  margin: 0;
+  text-transform: uppercase;
+  text-wrap: nowrap;
+}
+
+.BottomScroller {
+  overflow: hidden;
+  background: linear-gradient(
+    to right,
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 0.9),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1)
+  );
+}
