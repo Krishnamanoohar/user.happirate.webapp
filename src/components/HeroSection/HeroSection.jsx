@@ -6,13 +6,14 @@ import GlareHover from "../../ReactBitsComps/GlareHover/GlareHover";
 import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
 import Particles from "../../ReactBitsComps/Particles/Particles";
 import Waves from "../../ReactBitsComps/Waves/Waves";
+import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
 // import MetallicPaintOverlay from "../../ReactBitsComps/MetallicPaint/MetallicPaint";
 
 const HeroSection = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* <!-- Hero Section --> */}
-      <div className="absolute inset-0 z-1">
+      <div className="absolute inset-0 z-0">
         {/* <Squares
           direction="diagonal" // options: right, left, up, down, diagonal
           speed={0.000001}
@@ -89,14 +90,15 @@ const HeroSection = () => {
         />
         {/* </div> */}
       </div>
+
       <section id="hero" className="hero section">
         <div
           className="container hero-gradient"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <div className="row justify-center align-items-center text-center py-3 text-white">
-            <div className="col-lg-12">
+          <div className="flex flex-row justify-left items-center py-3 text-white relative">
+            <div className="col-lg-6">
               <div
                 className="hero-content"
                 data-aos="fade-up"
@@ -108,7 +110,7 @@ const HeroSection = () => {
                 </div>
 
                 <h1
-                  className="mb-4 text-[#180147]"
+                  className="mb-4 text-[#180147] text-white"
                   style={{
                     color: "#180147",
                     fontFamily: "var(--manrope-font)",
@@ -121,10 +123,7 @@ const HeroSection = () => {
                   </span>
                 </h1>
 
-                <p
-                  className="w-[50%] mb-4 mb-md-5"
-                  style={{ color: "#2c2c2c" }}
-                >
+                <p className="mb-4 mb-md-5" style={{ color: "white" }}>
                   Discover the lowest interest rates, minimal fees, and flexible
                   repayment options all in one place. Save time, save money, and
                   make informed decisions with our transparent loan comparison
@@ -151,8 +150,8 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* <div className="col-lg-6">
-              <div
+            {/* <div className="col-lg-7"> */}
+            {/* <div
                 className="hero-image"
                 data-aos="zoom-out"
                 data-aos-delay="300"
@@ -196,8 +195,9 @@ const HeroSection = () => {
                     Trusted by over 10,000 borrowers to find the best loans
                   </p>
                 </div>
-              </div>
-            </div> */}
+              </div> */}
+            <AnimatedTable />
+            {/* </div> */}
           </div>
 
           <div

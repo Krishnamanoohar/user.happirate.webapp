@@ -781,16 +781,18 @@ section,
     rgb(0, 0, 0, 1)
   );
 }
-
+/* 
 .hero-gradient {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.6) 40%,
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.2) 10%,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 1) 30%,
+    rgba(255, 255, 255, 0.6) 20%,
     rgba(255, 255, 255, 0.2) 70%,
     rgba(255, 255, 255, 0) 100%
   );
-}
+} */
 
 .hero::before {
   content: "";
@@ -809,10 +811,10 @@ section,
 }
 
 .hero .hero-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
   position: relative;
   z-index: 1;
   padding-top: 50px;
@@ -824,7 +826,7 @@ section,
   line-height: 115%;
   margin-bottom: 1.5rem;
   font-family: var(--figtree-font) !important;
-  color: #2c2c2c !important;
+  /* color: #2c2c2c !important; */
 }
 
 .hero .hero-content h1 .accent-text {
@@ -833,8 +835,8 @@ section,
   /* -webkit-background-clip: text; */
   /* -webkit-text-fill-color: transparent; */
   background-clip: text; /* For Firefox */
-  color: transparent;
-  color: rgb(43, 43, 43) !important;
+  /* color: transparent; */
+  /* color: rgb(43, 43, 43) !important; */
 }
 
 .gradient-button {
