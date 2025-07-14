@@ -141,7 +141,7 @@ body,
 
 .outlined-text {
   display: flex;
-  font-size: 140px;
+  font-size: 70px;
   font-weight: bold;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
   color: transparent;
@@ -154,12 +154,4 @@ body,
 
 .BottomScroller {
   overflow: hidden;
-  background: linear-gradient(
-    to right,
-    rgb(0, 0, 0, 1),
-    rgb(0, 0, 0, 1),
-    rgb(0, 0, 0, 0.9),
-    rgb(0, 0, 0, 1),
-    rgb(0, 0, 0, 1)
-  );
 }

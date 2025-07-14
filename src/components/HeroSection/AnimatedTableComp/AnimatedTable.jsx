@@ -225,7 +225,7 @@ export default function AnimatedTable() {
   const loopingBanks = [...banks, ...banks];
 
   return (
-    <div className="absolute top-[10%] right-[-15%] bottom-0 rounded-2xl shadow-lg border-transparent overflow-hidden group w-[53%] max-w-3xl mx-auto backdrop-blur-md bg-gradient-to-br from-black via-neutral-900 to-zinc-800 shadow-white shadow-2xl bg-transparent shadow-[0_0_6px_#ffd700,0_0_12px_#ffbf00,0_0_24px_#ffaa00] gold-glow">
+    <div className="absolute top-[10%] right-[-5%] bottom-0 rounded-2xl shadow-lg border-transparent overflow-hidden group w-[53%] max-w-3xl mx-auto backdrop-blur-md bg-gradient-to-br from-black via-neutral-900 to-zinc-800 shadow-white shadow-2xl bg-transparent shadow-[0_0_6px_#ffd700,0_0_12px_#ffbf00,0_0_24px_#ffaa00] gold-glow">
       {/* shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]  */}
       {/* Cards */}
       <div className="flex justify-between m-4 gap-4 mb-0 rounded-xl">

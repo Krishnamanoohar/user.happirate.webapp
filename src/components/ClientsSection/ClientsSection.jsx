@@ -295,7 +295,7 @@ const ClientsSection = () => {
     //     </Swiper>
     //   </div>
     // </section>
-    <div className="container bg-transparent pt-12 py-6 mx-auto bg-white">
+    <section className="container bg-transparent pt-12 py-6 mx-auto bg-white">
       <div className="section-title">
         <h2 className="text-2xl font-semibold text-center">Partner Banks</h2>
       </div>
@@ -337,7 +337,7 @@ const ClientsSection = () => {
           ))}
         </Swiper>
       </section>
-    </div>
+    </section>
   );
 };
 

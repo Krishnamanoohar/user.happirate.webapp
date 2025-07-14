@@ -7,44 +7,46 @@ import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
 import Particles from "../../ReactBitsComps/Particles/Particles";
 import Waves from "../../ReactBitsComps/Waves/Waves";
 import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
+import Header from "../Header/Header";
 // import MetallicPaintOverlay from "../../ReactBitsComps/MetallicPaint/MetallicPaint";
 
 const HeroSection = () => {
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       {/* <!-- Hero Section --> */}
-      <div className="absolute inset-0 z-">
-        {/* <Squares
+      {/* <div className="absolute inset-0 z-"> */}
+      {/* <Squares
           direction="diagonal" // options: right, left, up, down, diagonal
           speed={0.000001}
           // borderColor="#000"
           borderColor="#4959B4"
           hoverFillColor="#222"
           squareSize={75}
-        /> */}
-        {/* <div
+          /> */}
+      {/* <div
           style={{
             width: "600px",
             height: "400px",
+     
             position: "relative",
             overflow: "hidden",
           }} */}
-        {/* > */}
-        {/* <Noise
+      {/* > */}
+      {/* <Noise
           patternSize={440}
           patternScaleX={3}
           patternScaleY={2.2}
           patternRefreshInterval={2}
           patternAlpha={15}
         /> */}
-        {/* <Silk
+      {/* <Silk
           speed={5}
           scale={1}
           color="#7B7481"
           noiseIntensity={1.5}
           rotation={0}
         /> */}
-        {/* <Beams
+      {/* <Beams
           beamWidth={2}
           beamHeight={15}
           beamNumber={120}
@@ -54,7 +56,7 @@ const HeroSection = () => {
           scale={0.2}
           rotation={90}
         /> */}
-        {/* <DotGrid
+      {/* <DotGrid
           dotSize={6}
           gap={15}
           baseColor="#001"
@@ -65,7 +67,7 @@ const HeroSection = () => {
           resistance={750}
           returnDuration={1.5}
         /> */}
-        <Particles
+      {/* <Particles
           particleColors={["#ffffff", "#ffffff", "#ffffff"]}
           particleCount={300}
           particleSpread={20}
@@ -74,8 +76,8 @@ const HeroSection = () => {
           moveParticlesOnHover={false}
           alphaParticles={false}
           // disableRotation={false}
-        />
-        {/* <Waves
+        /> */}
+      {/* <Waves
           lineColor="#fff"
           backgroundColor="rgba(255, 255, 255, 0.2)"
           waveSpeedX={0.02}
@@ -88,8 +90,8 @@ const HeroSection = () => {
           xGap={12}
           yGap={36}
         /> */}
-        {/* </div> */}
-      </div>
+      {/* </div> */}
+      {/* </div> */}
 
       <section id="hero" className="hero section">
         <div
@@ -97,7 +99,7 @@ const HeroSection = () => {
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <div className="flex flex-row justify-left items-center py-3 text-white relative">
+          <div className="flex flex-row justify-left items-center py-4 text-white relative">
             <div className="col-lg-6">
               <div
                 className="hero-content"
@@ -132,7 +134,7 @@ const HeroSection = () => {
                   complete transparency.
                 </p>
 
-                <div className="hero-buttons flex">
+                <div className="hero-buttons flex mt-6">
                   <a
                     href="compare-loans"
                     className="btn metallic-button-container"
@@ -202,12 +204,12 @@ const HeroSection = () => {
             {/* </div> */}
           </div>
 
-          <div
+          {/* <div
             className="row stats-row gy-4 mt-5 bg-transparent"
             data-aos="fade-up"
             data-aos-delay="500"
           >
-            {/* <div className="col-lg-3 col-md-6">
+            <div className="col-lg-3 col-md-6">
               <div className="stat-item">
                 <div className="stat-icon">
                   <i className="bi bi-currency-dollar"></i>
@@ -252,10 +254,11 @@ const HeroSection = () => {
                   </p>
                 </div>
               </div>
-            </div> */}
-          </div>
+            </div>
+          </div> */}
         </div>
       </section>
+
       {/* <!-- /Hero Section --> */}
     </div>
   );

@@ -1,5 +1,13 @@
-/* .indexPage > div > * {
-  background: #2980b9;
+.indexPage > div > * {
+  /* background: #2980b9;
   background: -webkit-linear-gradient(to right, #ffffff, #6dd5fa, #2980b9);
-  background: linear-gradient(to right, #ffffff, #6dd5fa, #2980b9);
-} */
+  background: linear-gradient(to right, #ffffff, #6dd5fa, #2980b9); */
+  background: linear-gradient(
+    to right,
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 0.9),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1)
+  );
+}

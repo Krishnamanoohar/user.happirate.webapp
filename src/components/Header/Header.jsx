@@ -5,10 +5,10 @@ const Header = () => {
     <div>
       <header
         id="header"
-        className="header d-flex align-items-center fixed-top mt-0"
+        className="header d-flex align-items-center sticky-top mt-0"
       >
         <div
-          className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between gap-10 bg-[#e5e9ff]"
+          className="header-container container-fluid container-2xl position-relative d-flex align-items-center justify-content-between gap-10 bg-[#e5e9ff]"
           style={{ background: "#e5e9ff" }}
         >
           <a
@@ -101,9 +101,9 @@ const Header = () => {
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <div className="d-flex flex-col gap-0 text-center">
+          <div className="d-flex flex-col gap-0 text-center pr-12">
             <a
-              className="btn-getstarted py-2 text-decoration-none border border-white rounded-0 w-full"
+              className="btn-getstarted py-2 text-decoration-none border border-white rounded-0 w-full mr-10"
               href="/signIn"
             >
               Sign In
