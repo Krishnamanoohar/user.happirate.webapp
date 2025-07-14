@@ -18,6 +18,8 @@ import ContactSection from "../../components/ContactSection/ContactSection";
 import styles from "./IndexPageStyles.module.css";
 import axios from "axios";
 import BottomScroller from "../../components/BottomScroller/BottomScroller";
+import CurvedLoop from "../../ReactBitsComps/CurvedLoop/CurvedLoop";
+import { Smile } from "lucide-react";
 
 const IndexPage = () => {
   const fetch = async () => {
@@ -43,7 +45,16 @@ const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
       <HeroSection />
-      <BottomScroller />
+      {/* <BottomScroller /> */}
+      <CurvedLoop
+        marqueeText="Any Loan ✦ Any Bank ✦ Tailored For You ✦"
+        // marqueeText={<Smile />}
+        speed={3}
+        curveAmount={0}
+        direction="right"
+        interactive={true}
+        className="custom-text-style"
+      />
       <FeaturesSection />
       <FeaturesCardsSection />
       {/* <Features2Section /> */}

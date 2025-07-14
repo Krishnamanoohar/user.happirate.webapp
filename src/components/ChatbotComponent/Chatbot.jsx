@@ -215,7 +215,7 @@ const Chatbot = () => {
       {/* Chat Window */}
       {isOpen && (
         <div
-          className="fixed bottom-24 right-2 text-white rounded-xl overflow-hidden z-50 backdrop-blur-md bg-[rgba(50,50,50,0.99)] flex flex-col shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
+          className="fixed bottom-23 right-2 text-white rounded-xl overflow-hidden z-50 backdrop-blur-md bg-[rgba(50,50,50,0.99)] flex flex-col shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
           style={{ maxWidth: "686px" }}
         >
           {/* Header */}
@@ -256,7 +256,7 @@ const Chatbot = () => {
             </div>
 
             {/* Footer section with icons and input */}
-            <div className="p-3 space-y-3 shrink-0">
+            <div className="p-4 space-y-3 shrink-0">
               <Divider color="white" className="mb-2" sx={{ height: "2px" }} />
               <div className="flex justify-around text-sm text-center">
                 <div className="flex flex-col items-center p-1">

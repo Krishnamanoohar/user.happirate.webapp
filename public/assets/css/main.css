@@ -47,7 +47,7 @@
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
   --nav-color: #212529; /* The default color of the main navmenu links */
-  --nav-hover-color: #0d83fd; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-hover-color: #4c45a5; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
@@ -273,21 +273,34 @@ h6 {
 
   .navmenu li {
     position: relative;
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  .navmenu li:hover {
+    background-image: radial-gradient(
+      circle,
+      rgb(255, 255, 255, 0.5),
+      transparent
+    ) !important;
   }
 
   .navmenu a,
   .navmenu a:focus {
     /* color: var(--nav-color); */
-    color: whitesmoke;
+    color: grey;
     padding: 0px 15px;
     font-size: 18px;
-    font-family: var(--nav-font);
+    /* font-family: var(--nav-font); */
+    font-family: "Radley", serif;
     font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: space-between;
     white-space: nowrap;
     transition: 0.3s;
+    /* text-transform: uppercase; */
+    opacity: 0.8;
   }
 
   .navmenu a i,
@@ -305,7 +318,9 @@ h6 {
   .navmenu li:hover > a,
   .navmenu .active,
   .navmenu .active:focus {
-    color: var(--nav-hover-color);
+    /* color: var(--nav-hover-color); */
+    opacity: 1;
+    color: whitesmoke;
   }
 
   .navmenu .dropdown ul {
@@ -794,7 +809,7 @@ section,
 
   background: linear-gradient(
     to right,
-    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0),
     rgb(0, 0, 0, 1),
     rgb(0, 0, 0, 0.9),
     rgb(0, 0, 0, 1),
@@ -838,7 +853,7 @@ section,
   /* align-items: center; */
   position: relative;
   z-index: 1;
-  padding-bottom: 50px;
+  padding-top: 50px;
 }
 
 .hero .hero-content h1 {

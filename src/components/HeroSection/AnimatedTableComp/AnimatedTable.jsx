@@ -256,7 +256,7 @@ export default function AnimatedTable() {
           <div className="relative z-10 p-4 rounded-2xl space-y-8 overflow-hidden">
             {loopingBanks?.map((bank, i) => (
               <motion.div
-                key={bank.name}
+                key={i}
                 custom={i}
                 initial="hidden"
                 animate="visible"

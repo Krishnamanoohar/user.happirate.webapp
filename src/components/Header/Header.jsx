@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
+  const location = useLocation();
+  const [activeHash, setActiveHash] = useState(location.hash);
+
+  const menuItems = [
+    { name: "Home", href: "#hero" },
+    { name: "Features", href: "#features" },
+    { name: "Services", href: "#services" },
+    { name: "Contact", href: "#contact" },
+    { name: "Loan Status", href: "/process" },
+    { name: "Financial Summary", href: "/financial-summary" },
+  ];
+
   return (
     <div>
       <header
@@ -15,88 +28,24 @@ const Header = () => {
             href="/"
             className="logo d-flex align-items-center me-auto me-xl-0"
           >
-            {/* <!-- Uncomment the line below if you also wish to use an image logo --> */}
-            {/* <img src="assets/img/logo.png" alt=""/>  */}
-            {/* <h1 className="sitename">HAPPI₹ATE</h1> */}
             <div>
-              {/* <img src="/assets/img/happirateLogo2.jpg" alt="" width={200} /> */}
+              <img
+                src="/assets/img/happilogo.png"
+                alt=""
+                width={80}
+                height={180}
+                className="ml-8"
+              />
             </div>
           </a>
-
+          {/* 4c45a5 */}
           <nav id="navmenu" className="navmenu">
             <ul>
-              <li>
-                <a href="#hero" className="active">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#features">Features</a>
-              </li>
-              <li>
-                <a href="#services">Services</a>
-              </li>
-              {/* <li>
-                <a href="#about">About</a>
-              </li> */}
-              {/* <li>
-                <a href="#services">Services</a>
-              </li> */}
-              {/* <li>
-                <a href="#pricing">Pricing</a>
-              </li> */}
-              {/* <li className="dropdown">
-                <a href="#">
-                  <span>Dropdown</span>
-                  <i className="bi bi-chevron-down toggle-dropdown"></i>
-                </a>
-                <ul>
-                  <li>
-                    <a href="#">Dropdown 1</a>
-                  </li>
-                  <li className="dropdown">
-                    <a href="#">
-                      <span>Deep Dropdown</span>
-                      <i className="bi bi-chevron-down toggle-dropdown"></i>
-                    </a>
-                    <ul>
-                      <li>
-                        <a href="#">Deep Dropdown 1</a>
-                      </li>
-                      <li>
-                        <a href="#">Deep Dropdown 2</a>
-                      </li>
-                      <li>
-                        <a href="#">Deep Dropdown 3</a>
-                      </li>
-                      <li>
-                        <a href="#">Deep Dropdown 4</a>
-                      </li>
-                      <li>
-                        <a href="#">Deep Dropdown 5</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="#">Dropdown 2</a>
-                  </li>
-                  <li>
-                    <a href="#">Dropdown 3</a>
-                  </li>
-                  <li>
-                    <a href="#">Dropdown 4</a>
-                  </li>
-                </ul>
-              </li> */}
-              <li>
-                <a href="#contact">Contact</a>
-              </li>
-              <li>
-                <a href="/process">Loan Status</a>
-              </li>
-              <li>
-                <a href="/financial-summary">Financial Summary</a>
-              </li>
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <a href={item.href}>{item.name}</a>
+                </li>
+              ))}
             </ul>
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
@@ -108,12 +57,6 @@ const Header = () => {
             >
               Sign In
             </a>
-            {/* <a
-              className="btn-getstarted py-3 text-decoration-none border border-white rounded-0"
-              href="index.html#about"
-            >
-              Get Started
-            </a> */}
           </div>
         </div>
       </header>
