@@ -46,15 +46,17 @@ const IndexPage = () => {
     <div className={styles.indexPage}>
       <HeroSection />
       {/* <BottomScroller /> */}
-      <CurvedLoop
-        marqueeText="Any Loan ✦ Any Bank ✦ Tailored For You ✦"
-        // marqueeText={<Smile />}
-        speed={3}
-        curveAmount={0}
-        direction="right"
-        interactive={true}
-        className="custom-text-style"
-      />
+      <div className="border-y-2">
+        <CurvedLoop
+          marqueeText="Any Loan ☻ Any Bank ☻ Tailored For You ☻ "
+          // marqueeText={<Smile />}
+          speed={3}
+          curveAmount={0}
+          direction="right"
+          interactive={true}
+          className="custom-text-style"
+        />
+      </div>
       <FeaturesSection />
       <FeaturesCardsSection />
       {/* <Features2Section /> */}

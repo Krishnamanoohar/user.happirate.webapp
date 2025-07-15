@@ -8,11 +8,12 @@ import Particles from "../../ReactBitsComps/Particles/Particles";
 import Waves from "../../ReactBitsComps/Waves/Waves";
 import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
 import Header from "../Header/Header";
+import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 
 const HeroSection = () => {
   return (
     <div className="relative w-full overflow-hidden">
-      <section id="hero" className="hero section">
+      <section id="hero" className="min-h-screen hero section">
         <div
           className="container hero-gradient"
           data-aos="fade-up"
@@ -25,9 +26,9 @@ const HeroSection = () => {
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
-                <div className="company-badge mb-4">
+                <div className="shiny-text shiny-white company-badge mb-4 w-min text-nowrap shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
                   <i className="bi bi-bank me-2"></i>
-                  Empowering Smart Borrowers
+                  <ShinyText text={"Empowering Smart Borrowers"} />
                 </div>
 
                 <h1
@@ -37,9 +38,8 @@ const HeroSection = () => {
                     fontFamily: "var(--manrope-font)",
                   }}
                 >
-                  Compare Loans from <br />
-                  Top Banks <br />
-                  Any Loan. Any Bank. Tailored for You.
+                  Compare Loans <br /> from Top Banks
+                  {/* Any Loan. Any Bank. Tailored for You. */}
                   {/*  Compare Loans <br />
                   From Top Banks <br />
                   <span className="accent-text">
@@ -53,22 +53,28 @@ const HeroSection = () => {
                   complete transparency.
                 </p>
 
-                <div className="hero-buttons flex mt-6">
-                  <a
+                <div className="hero-buttons flex gap-4 mt-6">
+                  <button
                     href="compare-loans"
-                    className="btn metallic-button-container"
+                    className="vibrant-shadow-btn px-4 btn"
                   >
-                    <span className="metallic-text">Start Comparing</span>
-                    {/* <MetallicPaintOverlay /> */}
-                  </a>
-
+                    Start Comparing
+                  </button>
+                  {/* 
                   <a
                     href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
-                    className="btn btn-link mt-2 mt-sm-0 glightbox"
+                    className="shiny-text"
                   >
-                    <i className="bi bi-play-circle me-1"></i>
                     How It Works
-                  </a>
+                  </a> */}
+
+                  <div
+                    className="vibrant-shadow-btn"
+                    style={{ animationDuration: "2s" }}
+                  >
+                    <i className="bi bi-play-circle"></i>
+                    <p className="mb-0">How it works</p>
+                  </div>
                 </div>
               </div>
             </div>

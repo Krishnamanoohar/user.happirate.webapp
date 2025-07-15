@@ -155,3 +155,173 @@ body,
 .BottomScroller {
   overflow: hidden;
 }
+
+.metallic-button-container {
+  white-space: nowrap;
+  border-radius: 0.5rem;
+  flex-flow: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 0;
+  line-height: 1;
+  transition: box-shadow 0.3s;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    /* diagonal: top-left to bottom-right */ #4c45a5 10%,
+    transparent 20%,
+    #4c45a5 100%
+  );
+  background-size: 200% 200%;
+  animation: shimmer-diagonal 3s linear infinite;
+}
+
+@keyframes shimmer-diagonal {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.inner-btn {
+  z-index: 2;
+  background-color: var(--background-primary);
+  border-radius: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  padding: 1rem 2rem;
+  display: flex;
+  position: relative;
+}
+
+.inner-btn p {
+  background-image: linear-gradient(
+    360deg,
+    #ffffff80,
+    var(--text-primary) 50%,
+    var(--text-primary)
+  );
+  -webkit-text-fill-color: transparent;
+  text-wrap: balance;
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-bottom: 0;
+  font-size: clamp(0.875rem, 3vw, 1rem);
+}
+
+.glow-btn {
+  background-color: var(--brand-primary);
+  filter: blur(1rem);
+  width: 60%;
+  height: 80%;
+  position: absolute;
+  inset: 0% auto auto 0%;
+}
+
+.vibrant-shadow-btn {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 12px 24px;
+  background-color: #000000;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: -8px 0 16px -4px #4c45a5; /* shadow only on left */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.vibrant-shadow-btn:hover {
+  box-shadow: 0 0 20px 4px #4c45a5; /* shadow on all sides */
+  transform: translateY(-2px); /* optional hover lift */
+}
+
+.shiny-text {
+  display: flex !important;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  /* justify-content: center; */
+  color: #b5b5b5a4;
+  background: linear-gradient(
+    120deg,
+    rgba(72, 62, 212, 0.9) 40%,
+    rgb(76, 69, 165) 50%,
+    rgb(76, 69, 165, 0) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 5s linear infinite;
+}
+
+.shiny-white {
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgb(255, 255, 255, 0.8) 50%,
+    rgb(255, 255, 255, 0) 60%
+  );
+  background-size: 200% 100%;
+  /* border-radius: 5px !important; */
+  animation: shiny-white-stripe 5s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+@keyframes shiny-white-stripe {
+  0% {
+    background-position: -100% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+}
+
+.shiny-badge {
+  color: #b5b5b5a4; /* Adjust this color to change intensity/style */
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+}

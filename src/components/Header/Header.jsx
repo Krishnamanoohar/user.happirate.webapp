@@ -29,13 +29,13 @@ const Header = () => {
             className="logo d-flex align-items-center me-auto me-xl-0"
           >
             <div>
-              <img
+              {/* <img
                 src="/assets/img/happilogo.png"
                 alt=""
                 width={80}
                 height={180}
                 className="ml-8"
-              />
+              /> */}
             </div>
           </a>
           {/* 4c45a5 */}

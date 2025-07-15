@@ -42,6 +42,8 @@
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
   --button-color: #5243bc;
+  --banner-color: #4c45a5;
+  --background-primary: black;
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
@@ -925,7 +927,10 @@ section,
   }
 
   .hero .hero-content .hero-buttons {
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between !important;
+    gap: 12rem !important;
   }
 }
 
@@ -939,7 +944,7 @@ section,
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  /* background-color: rgb(76, 69, 165, 0.5); */
   border-radius: 50px;
   /* color: var(--accent-color); */
   color: white;
