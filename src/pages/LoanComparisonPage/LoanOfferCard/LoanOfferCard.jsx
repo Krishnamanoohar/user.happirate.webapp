@@ -18,8 +18,6 @@ const LoanOfferCard = ({ offer, onSelect, featured = false }) => {
             textTransform: "uppercase",
             background: "linear-gradient(90deg, #FFD700, #FFA500)",
             color: "#fff",
-            fontWeight: "bold",
-            textTransform: "uppercase",
             boxShadow: "0 0 8px rgba(255, 215, 0, 0.8)",
           }}
         />
