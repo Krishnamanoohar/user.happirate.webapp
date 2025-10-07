@@ -2503,7 +2503,9 @@ section,
 # Starter Section Section
 --------------------------------------------------------------*/
 .starter-section {
-  padding-top: 130px;
+  padding-top: 30px;
+  color: white !important;
+  background: black;
   /* Add your styles here */
 }
 
