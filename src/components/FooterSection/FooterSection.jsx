@@ -158,7 +158,7 @@ const FooterSection = () => {
               </a>
               <div className="footer-contact pt-3">
                 <p>100 Fintech Avenue</p>
-                <p>Bangalore, IN 560001</p>
+                <p>Hyderabad, IN 560001</p>
                 <p className="mt-3">
                   <strong>Phone:</strong> <span>+91 98765 43210</span>
                 </p>
