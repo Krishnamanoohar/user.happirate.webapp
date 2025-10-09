@@ -91,11 +91,11 @@ const HeroSection = () => {
                 data-aos="zoom-out"
                 data-aos-delay="300"
               >
-                {/* <img
+                <img
                   src="assets/img/illustration-1.webp"
                   alt="Loan comparison illustration"
                   className="img-fluid"
-                /> */}
+                />
 
                 {/* <div className="customers-badge">
                   <div className="customer-avatars">
