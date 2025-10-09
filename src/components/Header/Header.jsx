@@ -16,7 +16,7 @@ const Header = () => {
             {/* <img src="assets/img/logo.png" alt=""/>  */}
             {/* <h1 className="sitename">HAPPI₹ATE</h1> */}
             <div>
-              <img src="/assets/img/happirateLogo2.jpg" alt="" width={200} />
+              <img src="/assets/img/image.png" alt="" width={200} />
             </div>
           </a>
 
