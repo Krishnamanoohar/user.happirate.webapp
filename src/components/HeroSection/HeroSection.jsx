@@ -41,7 +41,7 @@ const HeroSection = () => {
                     Start Comparing
                   </a>
                   <a
-                    href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
+                    // href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
                     className="btn btn-link mt-2 mt-sm-0 glightbox"
                   >
                     <i className="bi bi-play-circle me-1"></i>
