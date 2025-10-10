@@ -10,6 +10,7 @@ const Header = () => {
     { name: "Features", href: "#features" },
     { name: "Services", href: "#services" },
     { name: "Contact", href: "#contact" },
+    { name: "EMI Calculator", href: "#contact" },
     { name: "Loan Status", href: "/process" },
     { name: "Financial Summary", href: "/financial-summary" },
   ];
