@@ -265,6 +265,7 @@ const ClientsSection = () => {
       logo: "hsbc-logo.png",
     },
   ];
+
   return (
     // <section id="clients" className="clients section">
     //   <div className="container" data-aos="fade-up" data-aos-delay="100">
@@ -295,49 +296,51 @@ const ClientsSection = () => {
     //     </Swiper>
     //   </div>
     // </section>
-    <section className="container bg-transparent pt-12 py-6 mx-auto bg-white">
-      <div className="section-title">
-        <h2 className="text-2xl font-semibold text-center">Partner Banks</h2>
-      </div>
-      <section className="bg-transparent pt-0">
-        <Swiper
-          loop={true}
-          speed={3000}
-          autoplay={{
-            delay: 0,
-            disableOnInteraction: true,
-          }}
-          slidesPerView="auto"
-          spaceBetween={10}
-          allowTouchMove={true}
-          grabCursor={false}
-          breakpoints={{
-            320: { slidesPerView: 4 },
-            480: { slidesPerView: 5 },
-            768: { slidesPerView: 6 },
-            1024: { slidesPerView: 10 },
-          }}
-          modules={[Autoplay]}
-          className="w-full"
-        >
-          {banks.map((bank) => (
-            <SwiperSlide
-              key={bank.id}
-              className="d-flex flex-column gap-3 justify-center items-center"
-            >
-              <div className="d-flex align-items-center h-26 p-6  border-secondary rounded">
-                <img
-                  src={`/assets/img/bank-logos/${bank.logo}`}
-                  alt={bank.bank}
-                  className="max-h-16 w-16 object-contain hover:grayscale-0 transition duration-300 rounded"
-                />
-              </div>
-              <h6 className="text-center">{bank.bank}</h6>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+    <div>
+      <section className="bg-transparent dark-background pt-12 py-6 w-full bg-white">
+        <div className="section-title">
+          <h2 className="text-2xl font-semibold text-center">Partner Banks</h2>
+        </div>
+        <section className="bg-transparent pt-0 mt-[2.5rem]">
+          <Swiper
+            loop={true}
+            speed={3000}
+            autoplay={{
+              delay: 0,
+              disableOnInteraction: true,
+            }}
+            slidesPerView="auto"
+            spaceBetween={10}
+            allowTouchMove={true}
+            grabCursor={false}
+            breakpoints={{
+              320: { slidesPerView: 4 },
+              480: { slidesPerView: 5 },
+              768: { slidesPerView: 6 },
+              1024: { slidesPerView: 10 },
+            }}
+            modules={[Autoplay]}
+            className="w-full"
+          >
+            {banks.map((bank) => (
+              <SwiperSlide
+                key={bank.id}
+                className="d-flex flex-column gap-3 justify-center items-center"
+              >
+                <div className="d-flex align-items-center h-26 p-6  border-secondary rounded">
+                  <img
+                    src={`/assets/img/bank-logos/${bank.logo}`}
+                    alt={bank.bank}
+                    className="max-h-16 w-16 object-contain hover:grayscale-0 transition duration-300 rounded"
+                  />
+                </div>
+                <h6 className="text-center">{bank.bank}</h6>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
       </section>
-    </section>
+    </div>
   );
 };
 

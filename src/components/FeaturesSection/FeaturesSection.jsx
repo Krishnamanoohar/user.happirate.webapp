@@ -1,11 +1,15 @@
 import React from "react";
+import ScrollStack, {
+  ScrollStackItem,
+} from "../../ReactBitsComps/ScrollStack/ScrollStack";
 
 const FeaturesSection = () => {
   return (
     <div>
       {/* <!-- Features Section --> */}
       <section
-        id="features"
+        // id="features"
+        id="solutions"
         className="features section"
         style={{
           background:
@@ -14,15 +18,64 @@ const FeaturesSection = () => {
       >
         {/* <!-- Section Title --> */}
         <div className="container section-title" data-aos="fade-up">
-          <h2>Features</h2>
+          <h2>Solutions</h2>
           <p>
             Discover why thousands trust our platform to find the best loan
             deals tailored just for them.
           </p>
         </div>
         {/* <!-- End Section Title --> */}
+        <div className="container h-[80vh]">
+          <ScrollStack>
+            <ScrollStackItem itemClassName="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg p-6 h-[80vh] flex flex-col justify-center bg-[linear-gradient(114deg,#585858,#8692df)]">
+              <h2>Compare Rates</h2>
+              <p>
+                Instantly compare interest rates, processing fees, and tenure
+                options from multiple trusted banks to find the best deal for
+                your loan requirements.
+              </p>
+              <ul className="list-disc ml-6">
+                <li>Transparent comparison with no hidden charges.</li>
+                <li>Updated regularly with latest bank offers.</li>
+                <li>Easy-to-understand breakdowns to help you decide.</li>
+              </ul>
+            </ScrollStackItem>
 
-        <div className="container">
+            <ScrollStackItem itemClassName="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg p-6 h-[80vh] flex flex-col justify-center bg-[linear-gradient(114deg,#585858,#8692df)]">
+              <h2>Personalized Offers</h2>
+              <p>
+                Get loan recommendations based on your profile, credit score,
+                and preferences — ensuring you get tailored options that suit
+                your financial goals.
+              </p>
+              <ul className="list-disc ml-6">
+                <li>Customized offers from top lenders.</li>
+                <li>Filters for loan amount, tenure, and interest types.</li>
+                <li>Easy pre-qualification checks to save time.</li>
+                <li>Compare EMI options side by side.</li>
+              </ul>
+            </ScrollStackItem>
+
+            <ScrollStackItem itemClassName="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg p-6 h-[80vh] flex flex-col justify-center bg-[linear-gradient(114deg,#585858,#8692df)]">
+              <h2>Smart Tools</h2>
+              <p>
+                Our smart tools make loan comparison simple, accurate, and
+                tailored to you.
+              </p>
+              <ul className="list-disc ml-6">
+                <li>Interactive EMI calculators to plan your finances.</li>
+                <li>
+                  Loan eligibility checkers based on your income and credit.
+                </li>
+                <li>
+                  Helpful tips and guides for smarter borrowing decisions.
+                </li>
+              </ul>
+            </ScrollStackItem>
+          </ScrollStack>
+        </div>
+
+        {/* <div className="container">
           <div className="d-flex justify-content-center">
             <ul
               className="nav nav-tabs"
@@ -39,7 +92,6 @@ const FeaturesSection = () => {
                   <h4>Compare Rates</h4>
                 </a>
               </li>
-              {/* <!-- End tab nav item --> */}
 
               <li className="nav-item">
                 <a
@@ -51,7 +103,6 @@ const FeaturesSection = () => {
                   <h4>Personalized Offers</h4>
                 </a>
               </li>
-              {/* <!-- End tab nav item --> */}
 
               <li className="nav-item">
                 <a
@@ -63,7 +114,6 @@ const FeaturesSection = () => {
                   <h4>Smart Tools</h4>
                 </a>
               </li>
-              {/* <!-- End tab nav item --> */}
             </ul>
           </div>
 
@@ -105,7 +155,6 @@ const FeaturesSection = () => {
                 </div>
               </div>
             </div>
-            {/* <!-- End tab content item --> */}
 
             <div className="tab-pane fade" id="features-tab-2">
               <div className="row">
@@ -146,7 +195,6 @@ const FeaturesSection = () => {
                 </div>
               </div>
             </div>
-            {/* <!-- End tab content item --> */}
 
             <div className="tab-pane fade" id="features-tab-3">
               <div className="row">
@@ -187,9 +235,8 @@ const FeaturesSection = () => {
                 </div>
               </div>
             </div>
-            {/* <!-- End tab content item --> */}
           </div>
-        </div>
+        </div> */}
       </section>
       {/* <!-- /Features Section --> */}
     </div>

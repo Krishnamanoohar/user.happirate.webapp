@@ -11,6 +11,9 @@ import ApplicationPage from "./pages/ApplicationStatusPage/ApplicationPage";
 import FinancialSummaryPage from "./pages/FinancialSummaruPage/FinancialSummaryPage";
 import Chatbot from "./components/ChatbotComponent/Chatbot";
 import BankApplicationPage from "./pages/BankApplicationPage/BankApplicationPage";
+import AboutSection from "./components/AboutSection/AboutSection";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
+import EMICalculatorPage from "./pages/EMICalculatorPage/EMICalculatorPage";
 
 const App = () => {
   useEffect(() => {
@@ -25,8 +28,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="signIn" element={<LoginPage />} />
+          <Route path="our-story" element={<AboutUsPage />} />
           <Route path="compare-loans" element={<LoanComparisonPage />} />
           <Route path="process" element={<ApplicationPage />} />
+          <Route path="emi-calculator" element={<EMICalculatorPage />} />
           <Route path="financial-summary" element={<FinancialSummaryPage />} />
           <Route path="loan-application" element={<BankApplicationPage />} />
         </Routes>

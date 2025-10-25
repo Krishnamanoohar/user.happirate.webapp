@@ -153,7 +153,7 @@ const TestimonialsSection = () => {
       {/* <!-- Testimonials Section --> */}
       <section
         id="testimonials"
-        className="testimonials section light-background"
+        className="testimonials section dark-background"
       >
         {/* <!-- Section Title --> */}
         <div className="container section-title" data-aos="fade-up">

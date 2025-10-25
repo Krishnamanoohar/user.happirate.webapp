@@ -20,6 +20,7 @@ import axios from "axios";
 import BottomScroller from "../../components/BottomScroller/BottomScroller";
 import CurvedLoop from "../../ReactBitsComps/CurvedLoop/CurvedLoop";
 import { Smile } from "lucide-react";
+import GetInTouchSection from "../../components/GetInTouchSection/GetInTouchSection";
 
 const IndexPage = () => {
   const fetch = async () => {
@@ -46,7 +47,7 @@ const IndexPage = () => {
     <div className={styles.indexPage}>
       <HeroSection />
       {/* <BottomScroller /> */}
-      <div className="border-y-2">
+      {/* <div className="border-y-2">
         <CurvedLoop
           marqueeText="Any Loan ☻ Any Bank ☻ Tailored For You ☻ "
           // marqueeText={<Smile />}
@@ -56,20 +57,20 @@ const IndexPage = () => {
           interactive={true}
           className="custom-text-style"
         />
-      </div>
+      </div> */}
       <FeaturesSection />
       <FeaturesCardsSection />
       {/* <Features2Section /> */}
-      <ServicesSection />
+      {/* <ServicesSection /> */}
       {/* <AboutSection /> */}
       <CallToActionSection />
       <ClientsSection />
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
       {/* <StatsSection /> */}
       {/* <PricingSection /> */}
       <FaqSection />
       <CallToActionSection2 />
-      <ContactSection />
+      <GetInTouchSection />
       <FooterSection />
     </div>
   );

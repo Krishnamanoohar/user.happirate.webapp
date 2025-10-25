@@ -1,6 +1,6 @@
 /**
-* Template Name: QuickyRupay
-* Template URL: https://bootstrapmade.com/QuickyRupay-bootstrap-landing-page-template/
+* Template Name: HappiRate
+* Template URL: https://bootstrapmade.com/HappiRate-bootstrap-landing-page-template/
 * Updated: Nov 12 2024 with Bootstrap v5.3.3
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
@@ -199,8 +199,8 @@ h6 {
 }
 
 .header .logo img {
-  max-height: 36px;
-  margin-right: 8px;
+  max-height: 180px;
+  /* margin-right: 120px; */
 }
 
 .header .logo h1 {
@@ -214,12 +214,12 @@ h6 {
 .header .btn-getstarted:focus {
   color: var(--contrast-color);
   /* background: var(--accent-color); */
-  font-size: 24px;
+  font-size: 18px;
   padding: 8px 20px;
   margin: 0 0 0 10px;
   border-radius: 50px;
   transition: 0.3s;
-  font-family: "Radley", serif;
+  font-family: var(--marope-font);
 }
 
 .header .btn-getstarted:hover,
@@ -267,15 +267,16 @@ h6 {
     margin: 0;
     padding: 0;
     display: flex;
+    justify-content: center;
     list-style: none;
     align-items: center;
     flex-direction: row;
-    gap: 1rem;
+    gap: 2rem;
+    font-family: var(--marope-font);
   }
 
   .navmenu li {
     position: relative;
-    padding: 1rem;
     cursor: pointer;
   }
 
@@ -289,20 +290,23 @@ h6 {
 
   .navmenu a,
   .navmenu a:focus {
+    display: flex;
+    justify-content: center;
     /* color: var(--nav-color); */
     color: grey;
-    padding: 0px 15px;
+    /* padding: 0px 15px; */
     font-size: 18px;
     /* font-family: var(--nav-font); */
-    font-family: "Radley", serif;
+    font-family: var(--marope-font);
     font-weight: 400;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     white-space: nowrap;
     transition: 0.3s;
     /* text-transform: uppercase; */
     opacity: 0.8;
+    padding: 1rem;
   }
 
   .navmenu a i,
@@ -313,9 +317,9 @@ h6 {
     transition: 0.3s;
   }
 
-  .navmenu li:last-child a {
+  /* .navmenu li:last-child a {
     padding-right: 0;
-  }
+  } */
 
   .navmenu li:hover > a,
   .navmenu .active,
@@ -332,8 +336,8 @@ h6 {
     display: block;
     position: absolute;
     visibility: hidden;
-    left: 14px;
-    top: 130%;
+    /* left: 14px; */
+    /* top: 130%; */
     opacity: 0;
     transition: 0.3s;
     border-radius: 4px;
@@ -733,7 +737,7 @@ section,
 --------------------------------------------------------------*/
 .section-title {
   text-align: center;
-  padding-bottom: 60px;
+  /* padding-bottom: 60px; */
   position: relative;
 }
 
@@ -751,7 +755,8 @@ section,
   display: block;
   width: 50px;
   height: 3px;
-  background: var(--accent-color);
+  /* background: var(--accent-color); */
+  background: #4c45a5;
   left: 0;
   right: 0;
   bottom: 0;
@@ -817,7 +822,7 @@ section,
     rgb(0, 0, 0, 1),
     rgb(0, 0, 0, 1)
   );
-  padding-bottom: 150px !important;
+  /* padding-bottom: 150px !important; */
 }
 /* 
 .hero-gradient {
@@ -1561,7 +1566,8 @@ section,
 # Call To Action Section
 --------------------------------------------------------------*/
 .call-to-action .container {
-  background: var(--accent-color);
+  /* background: var(--accent-color); */
+  background: #4c45a5;
   color: var(--contrast-color);
   position: relative;
   overflow: hidden;
@@ -2073,7 +2079,8 @@ section,
 # Faq Section
 --------------------------------------------------------------*/
 .faq .faq-title {
-  font-size: 2.5rem;
+  /* font-size: 2.5rem; */
+  font-size: 50px;
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--heading-color);
@@ -2560,3 +2567,8 @@ section,
     background-position: 0% 50%;
   }
 }
+
+.scroll-stack-backdrop {
+  background-image: linear-gradient(114deg, rgb(68, 68, 68, 0.1), #585858);
+}
+

@@ -228,6 +228,7 @@ body,
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  justify-content: center;
   padding: 12px 24px;
   background-color: #000000;
   border: none;
@@ -235,7 +236,7 @@ body,
   color: #fff;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: -8px 0 16px -4px #4c45a5; /* shadow only on left */
+  box-shadow: -2px 0 16px 0px #4c45a5; /* shadow only on left */
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
@@ -324,4 +325,73 @@ body,
 
 .shiny-text.disabled {
   animation: none;
+}
+
+.custom-heading {
+  font-size: 50px !important;
+  font-weight: 700;
+  color: #fff !important;
+}
+
+/* Get in touch styles 1D3FB6*/
+.contact {
+  background: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0),
+    rgb(40, 40, 40),
+    white,
+    black
+  );
+  background: #000000;
+  background: linear-gradient(
+    355deg,
+    rgba(0, 0, 0, 0.51) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+.form-control {
+  background-color: rgb(88, 88, 88, 0.1) !important;
+}
+
+.submit-btn {
+  text-align: center;
+  width: 100%;
+  background: #fff;
+  color: black !important;
+}
+
+.sign-in-btn {
+  display: flex !important;
+  justify-content: center;
+  text-align: center;
+}
+
+.dark-background {
+  background: linear-gradient(
+    to right,
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 0.9),
+    rgb(0, 0, 0, 1),
+    rgb(0, 0, 0, 1)
+  );
+}
+
+.glass-background {
+  /* From https://css.glass */
+  /* background: rgba(255, 255, 255, 0.84); */
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.8px);
+  -webkit-backdrop-filter: blur(9.8px);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+}
+
+.glass-background .glass-background input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

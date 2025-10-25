@@ -13,7 +13,7 @@ import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 const HeroSection = () => {
   return (
     <div className="relative w-full overflow-hidden">
-      <section id="hero" className="min-h-screen hero section">
+      <section id="hero" className="min-h-[87vh] hero section">
         <div
           className="container hero-gradient"
           data-aos="fade-up"

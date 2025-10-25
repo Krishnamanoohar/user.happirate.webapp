@@ -1,6 +1,6 @@
 /**
- * Template Name: QuickyRupay
- * Template URL: https://bootstrapmade.com/QuickyRupay-bootstrap-landing-page-template/
+ * Template Name: HappiRate
+ * Template URL: https://bootstrapmade.com/HappiRate-bootstrap-landing-page-template/
  * Updated: Nov 12 2024 with Bootstrap v5.3.3
  * Author: BootstrapMade.com
  * License: https://bootstrapmade.com/license/

@@ -86,7 +86,7 @@ const FeaturesCardsSection = () => {
   return (
     <div>
       {/* <!-- Features Cards Section --> */}
-      <section id="features-cards" className="features-cards section">
+      <section id="features-cards" className="features-cards section dark-background">
         <div className="container">
           <div className="row gy-4">
             <div

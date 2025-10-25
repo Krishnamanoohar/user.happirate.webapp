@@ -150,13 +150,13 @@ const FaqSection = () => {
   };
 
   return (
-    <section className="faq-9 faq section light-background" id="faq">
+    <section className="faq-9 faq section dark-background" id="faq">
       <div className="container">
         <div className="row">
           <div className="col-lg-5" data-aos="fade-up">
-            <h2 className="faq-title">Frequently Asked Questions</h2>
+            <h2 className="faq-title text-[50px]">Frequently Asked Questions</h2>
             <p className="faq-description">
-              We’ve answered some of the most common questions to help you get
+              We’ve answered some of the most common questions to help <br /> you get
               the most out of our platform.
             </p>
             <div
@@ -175,7 +175,7 @@ const FaqSection = () => {
                     activeIndex === index ? "faq-active" : ""
                   }`}
                   onClick={() => toggleFaq(index)}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", background:"#454a4c" }}
                 >
                   <h3>{item.question}</h3>
                   <div

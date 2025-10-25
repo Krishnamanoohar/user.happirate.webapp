@@ -101,8 +101,8 @@ const CallToActionSection = () => {
   return (
     <div>
       {/* <!-- Call To Action Section --> */}
-      <section id="call-to-action" className="call-to-action section">
-        <div className="container" data-aos="fade-up" data-aos-delay="100">
+      <section id="call-to-action" className="call-to-action section dark-background">
+        <div className="container" data-aos="fade-up" data-aos-delay="100" style={{boxShadow: "-2px 0 16px 0px #4c45a5" }}>
           <div className="row content justify-content-center align-items-center position-relative">
             <div className="col-lg-8 mx-auto text-center">
               <h2 className="display-4 mb-4">
@@ -112,7 +112,7 @@ const CallToActionSection = () => {
                 Compare personalized loan offers quickly and securely. Start
                 your journey towards better financing today!
               </p>
-              <a href="/compare-loans" className="btn btn-cta" role="button">
+              <a href="/compare-loans" className="btn btn-cta rounded-2" role="button">
                 Compare Loans Now
               </a>
             </div>

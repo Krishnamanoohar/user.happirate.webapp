@@ -8,7 +8,7 @@
 //           <div class="row gy-4">
 //             <div class="col-lg-4 col-md-6 footer-about">
 //               <a href="index.html" class="logo d-flex align-items-center">
-//                 <span class="sitename">QuickyRupay</span>
+//                 <span class="sitename">HappiRate</span>
 //               </a>
 //               <div class="footer-contact pt-3">
 //                 <p>A108 Adam Street</p>
@@ -125,7 +125,7 @@
 //         <div class="container copyright text-center mt-4">
 //           <p>
 //             © <span>Copyright</span>
-//             <strong class="px-1 sitename">QuickyRupay</strong>
+//             <strong class="px-1 sitename">HappiRate</strong>
 //             <span>All Rights Reserved</span>
 //           </p>
 //           <div class="credits">
@@ -144,17 +144,16 @@
 // export default FooterSection;
 
 import React from "react";
-
 const FooterSection = () => {
   return (
     <div>
       {/* <footer id="footer" className="footer"> */}
-      <footer id="contact" className="footer">
+      <footer id="contact" className="footer dark-background">
         <div className="container footer-top">
           <div className="row gy-4">
             <div className="col-lg-4 col-md-6 footer-about">
               <a href="index.html" className="logo d-flex align-items-center">
-                <span className="sitename">QuickyRupay</span>
+                <span className="sitename">HappiRate</span>
               </a>
               <div className="footer-contact pt-3">
                 <p>100 Fintech Avenue</p>
@@ -163,7 +162,7 @@ const FooterSection = () => {
                   <strong>Phone:</strong> <span>+91 98765 43210</span>
                 </p>
                 <p>
-                  <strong>Email:</strong> <span>support@quickyrupay.com</span>
+                  <strong>Email:</strong> <span>support@HappiRate.com</span>
                 </p>
               </div>
               <div className="social-links d-flex mt-4">
@@ -271,7 +270,7 @@ const FooterSection = () => {
         <div className="container copyright text-center mt-4">
           <p>
             © <span>{new Date().getFullYear()}</span>{" "}
-            <strong className="px-1 sitename">QuickyRupay</strong> — All Rights
+            <strong className="px-1 sitename">HappiRate</strong> — All Rights
             Reserved
           </p>
           {/* <div className="credits">
