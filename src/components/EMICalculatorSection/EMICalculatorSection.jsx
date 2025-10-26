@@ -26,12 +26,12 @@ export default function EMICalculatorSection() {
       icon: <BookOpenCheck />,
     },
     {
-      title: "Vehicle Loan",
-      icon: <CarFront />,
-    },
-    {
       title: "Business Loan",
       icon: <Building2 />,
+    },
+    {
+      title: "Vehicle Loan",
+      icon: <CarFront />,
     },
   ];
 
