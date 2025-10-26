@@ -25,8 +25,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="signIn" element={<LoginPage />} />
-          <Route path="compare-loans" element={<LoanComparisonPage />} />
           <Route path="process" element={<ApplicationPage />} />
+          <Route path="compare-loans" element={<LoanComparisonPage />} />
           <Route path="financial-summary" element={<FinancialSummaryPage />} />
           <Route path="loan-application" element={<BankApplicationPage />} />
         </Routes>
