@@ -80,29 +80,30 @@
 
 // export default FeaturesCardsSection;
 
-import React from "react";
-
 const FeaturesCardsSection = () => {
   return (
     <div>
       {/* <!-- Features Cards Section --> */}
-      <section id="features-cards" className="features-cards section dark-background">
+      <section
+        id="features-cards"
+        className="features-cards section dark-background"
+      >
         <div className="container">
           <div className="row gy-4">
-            <div
-              className="col-xl-3 col-md-6"
-              data-aos="zoom-in"
-              data-aos-delay="100"
-            >
-              <div className="feature-box orange">
-                <i className="bi bi-award"></i>
-                <h4>Trusted Lender Network</h4>
-                <p>
-                  Access offers from verified banks and financial institutions
-                  you can trust, ensuring safe and reliable loan options.
-                </p>
+              <div
+                className="col-xl-3 col-md-6"
+                data-aos="zoom-in"
+                data-aos-delay="100"
+              >
+                <div className="feature-box orange">
+                  <i className="bi bi-award"></i>
+                  <h4>Trusted Lender Network</h4>
+                  <p>
+                    Access offers from verified banks and financial institutions
+                    you can trust, ensuring safe and reliable loan options.
+                  </p>
+                </div>
               </div>
-            </div>
             {/* <!-- End Feature Box--> */}
 
             <div

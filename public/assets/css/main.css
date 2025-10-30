@@ -719,7 +719,7 @@ h6 {
 section,
 .section {
   color: var(--default-color);
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
   padding: 60px 0;
   scroll-margin-top: 90px;
   overflow: clip;
@@ -773,69 +773,7 @@ section,
 .hero {
   position: relative;
   padding: 20px 0 !important;
-  /* padding-top: 60px; */
-  /* background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--accent-color), transparent 95%) 50%,
-    color-mix(in srgb, var(--accent-color), transparent 98%) 25%,
-    transparent 50%
-  ); */
-  /* background: linear-gradient(
-    to right,
-    rgb(139, 148, 197),
-    rgba(255, 255, 255, 0.8),
-    #a2aadb
-  ); */
-  /* background: rgb(162, 170, 219, 0.1); */
-  /* background: rgb(152, 161, 188, 0.5); */
-  /* background: #c9d3fe; */
-  /* background: #ccd4fc; */
-  /* background: rgb(204, 212, 252, 0.5); */
-  /* background: linear-gradient(
-    to right,
-    rgb(204, 212, 252, 1) 20%,
-    rgb(204, 212, 252, 1) 20%,
-    rgb(204, 212, 252, 1) 20%,
-    rgb(204, 212, 252, 1) 15%,
-    rgb(204, 212, 252, 0.5)
-  ); */
-  /* background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(20, 20, 20, 0.95) 25%,
-    rgba(50, 50, 50, 0.85) 50%,
-    rgba(80, 80, 80, 0.7) 75%,
-    rgba(100, 100, 100, 0.5) 100%
-  );
-  background: #7f8585;
-  background: linear-gradient(
-    0deg,
-    rgba(127, 133, 133, 0.9) 0%,
-    rgba(26, 23, 19, 0.9) 100%
-  ); */
-
-  background: linear-gradient(
-    to right,
-    rgb(0, 0, 0),
-    rgb(0, 0, 0, 1),
-    rgb(0, 0, 0, 0.9),
-    rgb(0, 0, 0, 1),
-    rgb(0, 0, 0, 1)
-  );
-  /* padding-bottom: 150px !important; */
-}
-/* 
-.hero-gradient {
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.2) 10%,
-    rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 1) 30%,
-    rgba(255, 255, 255, 0.6) 20%,
-    rgba(255, 255, 255, 0.2) 70%,
-    rgba(255, 255, 255, 0) 100%
-  );
-} */
+} 
 
 .hero::before {
   content: "";
@@ -854,13 +792,15 @@ section,
 }
 
 .hero .hero-content {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: center; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   /* align-items: center; */
   position: relative;
   z-index: 1;
-  padding-top: 50px;
+  padding-top: 40px;
+  /* padding-top: 50px; */
+  /* padding-top: 30px; */
 }
 
 .hero .hero-content h1 {
@@ -1595,7 +1535,8 @@ section,
 
 .call-to-action .btn-cta:hover {
   background-color: var(--contrast-color);
-  color: var(--accent-color);
+  /* color: var(--accent-color); */
+  color: #4c45a5;
 }
 
 .call-to-action .shape {

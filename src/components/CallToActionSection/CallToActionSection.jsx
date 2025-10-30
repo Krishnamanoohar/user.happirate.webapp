@@ -112,7 +112,7 @@ const CallToActionSection = () => {
                 Compare personalized loan offers quickly and securely. Start
                 your journey towards better financing today!
               </p>
-              <a href="/compare-loans" className="btn btn-cta rounded-2" role="button">
+              <a href="/compare-loans" className="btn btn-cta rounded-2 text-[$4c45a5]" role="button">
                 Compare Loans Now
               </a>
             </div>

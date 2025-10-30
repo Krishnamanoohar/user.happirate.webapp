@@ -297,7 +297,7 @@ const ClientsSection = () => {
     //   </div>
     // </section>
     <div>
-      <section className="bg-transparent dark-background pt-12 py-6 w-full bg-white">
+      <section className="bg-transparent dark-background pt-12 py-6 pb-0 w-full bg-white">
         <div className="section-title">
           <h2 className="text-2xl font-semibold text-center">Partner Banks</h2>
         </div>

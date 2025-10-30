@@ -12,14 +12,14 @@ import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 
 const HeroSection = () => {
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden dark-background">
       <section id="hero" className="min-h-[87vh] hero section">
         <div
-          className="container hero-gradient"
+          className="container hero-gradient mt-6"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <div className="flex flex-row justify-left items-center pt-4 text-white relative">
+          <div className="flex flex-row justify-left items-center text-white relative">
             <div className="col-lg-6 flex flex-col justify-end">
               <div
                 className="hero-content"

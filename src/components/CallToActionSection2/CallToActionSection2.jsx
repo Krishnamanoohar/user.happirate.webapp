@@ -48,7 +48,10 @@ const CallToActionSection2 = () => {
         id="call-to-action-2"
         className="call-to-action-2 section dark-background"
       >
-        <div className="container">
+        <div
+          className="container bg-[#4c45a5] p-8 py-24 rounded-4"
+          style={{ boxShadow: "rgb(76, 69, 165) -2px 0px 16px 0px" }}
+        >
           <div
             className="row justify-content-center"
             data-aos="zoom-in"
@@ -56,14 +59,16 @@ const CallToActionSection2 = () => {
           >
             <div className="col-xl-10">
               <div className="text-center">
-                <h3>Find the Right Loan, the Smarter Way</h3>
-                <p>
+                <h2 className="text-6xl" style={{ fontSize: "48px" }}>
+                  Find the Right Loan, the Smarter Way
+                </h2>
+                <p className="pt-4">
                   Stop wasting time visiting multiple bank websites. Our
                   platform compares the best loan offers side by side—tailored
                   to your profile. Get clarity, save money, and make smarter
                   financial decisions today.
                 </p>
-                <a className="cta-btn" href="/compare-loans">
+                <a className="btn-cta rounded-1" href="/compare-loans">
                   Compare Loan Offers Now
                 </a>
               </div>

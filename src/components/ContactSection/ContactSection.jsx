@@ -147,7 +147,7 @@ const ContactSection = () => {
   return (
     <div>
       {/* <!-- Contact Section --> */}
-      <section id="contact" className="contact section light-background">
+      <section id="get-in-touch" className="contact section light-background">
         {/* <!-- Section Title --> */}
         <div className="container section-title" data-aos="fade-up">
           <h2>Contact</h2>

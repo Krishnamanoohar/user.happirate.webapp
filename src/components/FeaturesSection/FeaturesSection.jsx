@@ -10,7 +10,7 @@ const FeaturesSection = () => {
       <section
         // id="features"
         id="solutions"
-        className="features section"
+        className="features section pt-0"
         style={{
           background:
             "linear-gradient(to right,rgb(0, 0, 0, 1),rgb(0, 0, 0, 1),rgb(0, 0, 0, 0.9),rgb(0, 0, 0, 1),rgb(0, 0, 0, 1))",
@@ -27,6 +27,7 @@ const FeaturesSection = () => {
         {/* <!-- End Section Title --> */}
         <div className="container h-[80vh]">
           <ScrollStack>
+            
             <ScrollStackItem itemClassName="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg p-6 h-[80vh] flex flex-col justify-center bg-[linear-gradient(114deg,#585858,#8692df)]">
               <h2>Compare Rates</h2>
               <p>

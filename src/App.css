@@ -376,6 +376,7 @@ body,
     rgb(0, 0, 0, 1),
     rgb(0, 0, 0, 1)
   );
+  /* background: #0d0c1d; */
 }
 
 .glass-background {
@@ -394,4 +395,15 @@ body,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.emi-info-card{
+  transition: 0.5s;
+}
+
+.emi-info-card:hover {
+  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.6);
+  scale: 1.01;
+  position: relative;
+  top: -10px;
 }
