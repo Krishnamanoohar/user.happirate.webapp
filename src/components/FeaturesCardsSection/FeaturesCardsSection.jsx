@@ -80,9 +80,122 @@
 
 // export default FeaturesCardsSection;
 
+import { BorderBeam } from "../ui/border-beam";
+
 const FeaturesCardsSection = () => {
+  const features = [
+    {
+      color: "orange",
+      icon: "bi bi-award",
+      title: "Trusted Lender Network",
+      description:
+        "Access offers from verified banks and financial institutions you can trust, ensuring safe and reliable loan options.",
+      delay: 100,
+    },
+    {
+      color: "blue",
+      icon: "bi bi-patch-check",
+      title: "Transparent Comparison",
+      description:
+        "Compare interest rates, fees, and repayment terms side-by-side with no hidden charges or surprises.",
+      delay: 200,
+    },
+    {
+      color: "green",
+      icon: "bi bi-sunrise",
+      title: "Easy EMI Calculators",
+      description:
+        "Use our smart calculators to estimate monthly payments and plan your budget effortlessly.",
+      delay: 300,
+    },
+    {
+      color: "red",
+      icon: "bi bi-shield-check",
+      title: "Data Privacy & Security",
+      description:
+        "Your personal information is protected with top-level encryption protocols to keep your data safe and confidential.",
+      delay: 400,
+    },
+  ];
+
   return (
-    <div>
+    // <div className="relative">
+    //   <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
+    //   {/* <!-- Features Cards Section --> */}
+    //   <section
+    //     id="features-cards"
+    //     className="features-cards section dark-background"
+    //   >
+    //     <div className="container">
+    //       <div className="row gy-4">
+    //         <div
+    //           className="col-xl-3 col-md-6"
+    //           data-aos="zoom-in"
+    //           data-aos-delay="100"
+    //         >
+    //           <div className="feature-box orange">
+    //             <i className="bi bi-award"></i>
+    //             <h4>Trusted Lender Network</h4>
+    //             <p>
+    //               Access offers from verified banks and financial institutions
+    //               you can trust, ensuring safe and reliable loan options.
+    //             </p>
+    //           </div>
+    //         </div>
+    //         {/* <!-- End Feature Box--> */}
+
+    //         <div
+    //           className="col-xl-3 col-md-6"
+    //           data-aos="zoom-in"
+    //           data-aos-delay="200"
+    //         >
+    //           <div className="feature-box blue">
+    //             <i className="bi bi-patch-check"></i>
+    //             <h4>Transparent Comparison</h4>
+    //             <p>
+    //               Compare interest rates, fees, and repayment terms side-by-side
+    //               with no hidden charges or surprises.
+    //             </p>
+    //           </div>
+    //         </div>
+    //         {/* <!-- End Feature Box--> */}
+    //         <div
+    //           className="col-xl-3 col-md-6"
+    //           data-aos="zoom-in"
+    //           data-aos-delay="300"
+    //         >
+    //           <div className="feature-box green">
+    //             <i className="bi bi-sunrise"></i>
+    //             <h4>Easy EMI Calculators</h4>
+    //             <p>
+    //               Use our smart calculators to estimate monthly payments and
+    //               plan your budget effortlessly.
+    //             </p>
+    //           </div>
+    //         </div>
+    //         {/* <!-- End Feature Box--> */}
+
+    //         <div
+    //           className="col-xl-3 col-md-6"
+    //           data-aos="zoom-in"
+    //           data-aos-delay="400"
+    //         >
+    //           <div className="feature-box red">
+    //             <i className="bi bi-shield-check"></i>
+    //             <h4>Data Privacy & Security</h4>
+    //             <p>
+    //               Your personal information is protected with top-level
+    //               encryption protocols to keep your data safe and confidential.
+    //             </p>
+    //           </div>
+    //         </div>
+    //         {/* <!-- End Feature Box--> */}
+    //       </div>
+    //     </div>
+    //   </section>
+    //   {/* <!-- /Features Cards Section --> */}
+    // </div>
+    <div className="relative">
       {/* <!-- Features Cards Section --> */}
       <section
         id="features-cards"
@@ -90,69 +203,36 @@ const FeaturesCardsSection = () => {
       >
         <div className="container">
           <div className="row gy-4">
+            {features.map((feature, index) => (
               <div
+                key={index}
                 className="col-xl-3 col-md-6"
                 data-aos="zoom-in"
-                data-aos-delay="100"
+                data-aos-delay={feature.delay}
               >
-                <div className="feature-box orange">
-                  <i className="bi bi-award"></i>
-                  <h4>Trusted Lender Network</h4>
-                  <p>
-                    Access offers from verified banks and financial institutions
-                    you can trust, ensuring safe and reliable loan options.
-                  </p>
+                <div className={`feature-box ${feature.color}`}>
+                  <BorderBeam
+                    size={400}
+                    initialOffset={180}
+                    shineColor={["#A07CFE", "#000", "#fff", "#FE8FB5"]}
+                  />
+                  {/* 
+                  <BorderBeam
+                  initialOffset={0}
+                  size={400}
+                    shineColor={[
+                      "#A07CFE",
+                      "#000",
+                      "#fff",
+                      "#FE8FB5",
+                    ]}
+                  /> */}
+                  <i className={feature.icon}></i>
+                  <h4>{feature.title}</h4>
+                  <p>{feature.description}</p>
                 </div>
               </div>
-            {/* <!-- End Feature Box--> */}
-
-            <div
-              className="col-xl-3 col-md-6"
-              data-aos="zoom-in"
-              data-aos-delay="200"
-            >
-              <div className="feature-box blue">
-                <i className="bi bi-patch-check"></i>
-                <h4>Transparent Comparison</h4>
-                <p>
-                  Compare interest rates, fees, and repayment terms side-by-side
-                  with no hidden charges or surprises.
-                </p>
-              </div>
-            </div>
-            {/* <!-- End Feature Box--> */}
-
-            <div
-              className="col-xl-3 col-md-6"
-              data-aos="zoom-in"
-              data-aos-delay="300"
-            >
-              <div className="feature-box green">
-                <i className="bi bi-sunrise"></i>
-                <h4>Easy EMI Calculators</h4>
-                <p>
-                  Use our smart calculators to estimate monthly payments and
-                  plan your budget effortlessly.
-                </p>
-              </div>
-            </div>
-            {/* <!-- End Feature Box--> */}
-
-            <div
-              className="col-xl-3 col-md-6"
-              data-aos="zoom-in"
-              data-aos-delay="400"
-            >
-              <div className="feature-box red">
-                <i className="bi bi-shield-check"></i>
-                <h4>Data Privacy & Security</h4>
-                <p>
-                  Your personal information is protected with top-level
-                  encryption protocols to keep your data safe and confidential.
-                </p>
-              </div>
-            </div>
-            {/* <!-- End Feature Box--> */}
+            ))}
           </div>
         </div>
       </section>

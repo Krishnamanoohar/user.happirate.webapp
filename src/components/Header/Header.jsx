@@ -26,7 +26,6 @@ const Header = () => {
       >
         <div
           className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between gap-12 bg-[#e5e9ff]"
-          style={{ background: "#e5e9ff" }}
         >
           <a
             href="/"
@@ -66,7 +65,7 @@ const Header = () => {
             <button
               href="compare-loans"
               className="w-full flex text-center content-center vibrant-shadow-btn px-4 btn"
-              onClick={() => (window.location.href = "/compare-loans")}
+              onClick={() => (window.location.href = "/sign-in")}
             >
               Sign In
             </button>

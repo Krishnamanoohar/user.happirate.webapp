@@ -1,9 +1,10 @@
+
 import React from "react";
 
 const LoginPage = () => {
   return (
     <section className="d-flex align-items-center min-vh-100 bg-gray-50 dark:bg-gray-900">
-      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
+      <div className="py-8 px-4 mx-auto max-w-screen-lg lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
         <div className="flex flex-col justify-center">
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl ">
             Secure Access to Your Financial Hub
@@ -99,8 +100,8 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              style={{ backgroundColor: "var(--accent-color)" }}
+              className="btn w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              style={{ backgroundColor: "#5243bc" }}
             >
               Login Securely
             </button>

@@ -13,7 +13,7 @@ import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 const HeroSection = () => {
   return (
     <div className="relative w-full overflow-hidden dark-background">
-      <section id="hero" className="min-h-[87vh] hero section">
+      <section id="hero" className="min-h-[100vh] hero section w-full">
         <div
           className="container hero-gradient mt-6"
           data-aos="fade-up"
@@ -89,3 +89,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+ 

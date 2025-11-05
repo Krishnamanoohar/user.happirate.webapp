@@ -27,7 +27,6 @@ const FeaturesSection = () => {
         {/* <!-- End Section Title --> */}
         <div className="container h-[80vh]">
           <ScrollStack>
-            
             <ScrollStackItem itemClassName="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg p-6 h-[80vh] flex flex-col justify-center bg-[linear-gradient(114deg,#585858,#8692df)]">
               <h2>Compare Rates</h2>
               <p>

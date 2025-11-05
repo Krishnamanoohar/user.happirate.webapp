@@ -27,7 +27,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/" element={<IndexPage />} />
-          <Route path="signIn" element={<LoginPage />} />
+          <Route path="sign-in" element={<LoginPage />} />
           <Route path="our-story" element={<AboutUsPage />} />
           <Route path="compare-loans" element={<LoanComparisonPage />} />
           <Route path="process" element={<ApplicationPage />} />
