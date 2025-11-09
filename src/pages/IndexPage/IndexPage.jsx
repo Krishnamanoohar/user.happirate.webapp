@@ -22,6 +22,7 @@ import CurvedLoop from "../../ReactBitsComps/CurvedLoop/CurvedLoop";
 import { Smile } from "lucide-react";
 import GetInTouchSection from "../../components/GetInTouchSection/GetInTouchSection";
 import FeaturesSection2 from "../../components/FeaturesSection/FeaturesSection2";
+import SignInPopup from "../SignInPage/SignInPopup";
 
 const IndexPage = () => {
   const fetch = async () => {
@@ -39,6 +40,7 @@ const IndexPage = () => {
       console.log(error);
     }
   };
+
 
   useEffect(() => {
     fetch();
@@ -73,6 +75,9 @@ const IndexPage = () => {
       <CallToActionSection2 />
       <GetInTouchSection />
       <FooterSection />
+
+      {/* Popups */}
+      <SignInPopup />
     </div>
   );
 };

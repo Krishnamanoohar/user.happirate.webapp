@@ -7,27 +7,32 @@ const FeaturesSection2 = () => {
       title: "Personal Loan",
       description:
         "Get instant access to funds for your goals — from travel to home upgrades — with simple steps, transparent rates, and zero hidden charges.",
-      imgSrc: "businessLoan.jpg",
+      imgSrc: "personalLoan.jpg",
+      iconSrc: "pl.png",
     },
     {
       title: "Business Loan",
       description:
         "Fuel your business growth with quick, collateral-free funding and flexible repayment options — designed for entrepreneurs who dream big.",
       imgSrc: "businessLoan.jpg",
+      iconSrc: "bl.png",
     },
     {
       title: "Vehicle Loan",
       description:
         "Drive home your dream car or bike with fast approvals, low EMIs, and complete transparency from start to finish.",
-      imgSrc: "businessLoan.jpg",
+      imgSrc: "autoLoan.jpeg",
+      iconSrc: "al.png",
     },
     {
       title: "Education Loan",
       description:
         "Invest in your future with easy, affordable education loans — covering tuition, living, and travel expenses with flexible repayment terms.",
-      imgSrc: "businessLoan.jpg",
+      imgSrc: "educationloan.jpg",
+      iconSrc: "el.png",
     },
   ];
+
   return (
     <div className="dark-background">
       <div className="container">
@@ -36,18 +41,6 @@ const FeaturesSection2 = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 py-6 rounded-2xl">
-          {/* <ProfileCard
-            name="Javi A. Torres"
-            title="Software Engineer"
-            handle="javicodes"
-            status="Online"
-            contactText="Contact Me"
-            avatarUrl="/path/to/avatar.jpg"
-            showUserInfo={true}
-            enableTilt={true}
-            enableMobileTilt={false}
-            onContactClick={() => console.log("Contact clicked")}
-          /> */}
           {loanCards.map((card, index) => (
             <div
               key={index}
@@ -64,7 +57,7 @@ const FeaturesSection2 = () => {
 
               <div className="h-24 w-24 ml-6 relative top-[-50px] p-1 rounded-2xl bg-white">
                 <img
-                  src="assets/img/avatar-1.webp"
+                  src={`assets/img/${card.iconSrc}`}
                   alt=""
                   className="rounded-2xl"
                 />

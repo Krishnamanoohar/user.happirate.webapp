@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import { Context } from "@/App";
+import React, { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const Header = () => {
   const location = useLocation();
-  const [activeHash, setActiveHash] = useState(location.hash);
+  const { showSignInPopup, setShowSignInPopup } = useContext(Context);
 
   const menuItems = [
     { name: "Solutions", href: "#solutions" },
     { name: "Get In Touch", href: "#get-in-touch" },
     { name: "Blog", href: "#blog" },
-    { name: "Our Story", href: "/our-story" },
     { name: "EMI Calculator", href: "/emi-calculator" },
+    // { name: "Our Story", href: "/our-story" },
     // { name: "Home", href: "#hero" },
     // { name: "Features", href: "#features" },
     // { name: "Services", href: "#services" },
@@ -24,9 +25,7 @@ const Header = () => {
         id="header"
         className="header d-flex align-items-center sticky-top mt-0"
       >
-        <div
-          className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between gap-12 bg-[#e5e9ff]"
-        >
+        <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between gap-12 bg-[#e5e9ff]">
           <a
             href="/"
             className="logo d-flex align-items-center me-auto me-xl-0"
@@ -53,9 +52,7 @@ const Header = () => {
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
 
-          <div
-            className="sign-in d-flex flex-col gap-0 text-center w-[10rem] sing-in-btn"
-          >
+          <div className="sign-in d-flex flex-col gap-0 text-center w-[10rem] sing-in-btn">
             {/* <a
               className="btn-getstarted py-2 text-decoration-none border border-white rounded-0 w-full mr-10"
               href="/signIn"
@@ -65,7 +62,7 @@ const Header = () => {
             <button
               href="compare-loans"
               className="w-full flex text-center content-center vibrant-shadow-btn px-4 btn"
-              onClick={() => (window.location.href = "/sign-in")}
+              onClick={() => setShowSignInPopup(true)}
             >
               Sign In
             </button>
