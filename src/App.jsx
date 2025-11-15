@@ -18,6 +18,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 export const Context = createContext();
 
+
 const App = () => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
