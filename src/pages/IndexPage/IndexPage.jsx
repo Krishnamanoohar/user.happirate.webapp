@@ -25,6 +25,7 @@ import FeaturesSection2 from "../../components/FeaturesSection/FeaturesSection2"
 import SignInPopup from "../SignInPage/SignInPopup";
 
 const IndexPage = () => {
+  
   const fetch = async () => {
     try {
       const resp = await axios.get(
@@ -40,8 +41,6 @@ const IndexPage = () => {
       console.log(error);
     }
   };
-
-
   useEffect(() => {
     fetch();
   }, []);

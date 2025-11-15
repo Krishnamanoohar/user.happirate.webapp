@@ -75,7 +75,7 @@ const SignInPopup = () => {
                   </p>
                 </div>{" "}
                 <div className="hidden lg:flex">
-                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
+                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl" >
                     <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg dark:from-white dark:to-slate-900/10">
                       Verify
                     </span>

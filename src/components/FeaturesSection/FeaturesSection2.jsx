@@ -1,40 +1,47 @@
 import React from "react";
 import ProfileCard from "../../ReactBitsComps/ProfileCard/ProfileCard";
-
+ import { useNavigate } from 'react-router-dom';
 const FeaturesSection2 = () => {
   const loanCards = [
     {
       title: "Personal Loan",
       description:
         "Get instant access to funds for your goals — from travel to home upgrades — with simple steps, transparent rates, and zero hidden charges.",
-      imgSrc: "personalLoan.jpg",
-      iconSrc: "pl.png",
+      imgSrc: "PersonalLoanOrg.jpg",
+      // imgSrc: "businessLoan.jpg",
+      iconSrc: "Personal loan.png",
     },
     {
       title: "Business Loan",
       description:
         "Fuel your business growth with quick, collateral-free funding and flexible repayment options — designed for entrepreneurs who dream big.",
       imgSrc: "businessLoan.jpg",
-      iconSrc: "bl.png",
+      iconSrc: "Buisness loan.png",
     },
     {
       title: "Vehicle Loan",
       description:
         "Drive home your dream car or bike with fast approvals, low EMIs, and complete transparency from start to finish.",
       imgSrc: "autoLoan.jpeg",
-      iconSrc: "al.png",
+      iconSrc: "Car loan.png",
     },
     {
       title: "Education Loan",
       description:
         "Invest in your future with easy, affordable education loans — covering tuition, living, and travel expenses with flexible repayment terms.",
       imgSrc: "educationloan.jpg",
-      iconSrc: "el.png",
+      iconSrc: "Education loan.png",
     },
   ];
 
+  const navigate = useNavigate();
+
+  const handleClick=()=>{
+    navigate('/sign-in')
+  }
+
   return (
-    <div className="dark-background">
+    <div className="dark-background" id="solutions">
       <div className="container">
         <div className="section-title">
           <h2 className="text-2xl font-semibold text-center mb-0">Solutions</h2>
@@ -46,7 +53,7 @@ const FeaturesSection2 = () => {
               key={index}
               className="flex flex-col border border-white rounded-2xl hover:scale-105 transition duration-200 cursor-pointer"
             >
-              <div className="rounded-2xl relative">
+              <div className="rounded-2xl relative ">
                 <img
                   src={`assets/img/${card.imgSrc}`}
                   alt=""
@@ -68,7 +75,7 @@ const FeaturesSection2 = () => {
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
                 </div>
-                <button className="vibrant-shadow-btn">Apply Now</button>
+                <button className="vibrant-shadow-btn"onClick={()=>handleClick()} >Apply Now</button>
               </div>
             </div>
           ))}

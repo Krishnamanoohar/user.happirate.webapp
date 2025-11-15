@@ -1,0 +1,35 @@
+{
+  "customerId": "CUST026",
+  "fullName": "Venkata Sanjana Meka",
+  "gender": "Female",
+  "age": 26,
+  "mobileNumber": {
+    "$numberLong": "8019904780"
+  },
+  "city": "Hyderabad",
+  "state": "Telangana",
+  "panNumber": "LWJPS0508Q",
+  "aadhaarMasked": "2556 0316 1387",
+  "address": "Plot Number 25, Jupiter Colony, Police Station Kharkhana, Kaka Guda, Secunderabad, Hyderabad",
+  "uanNumber": {
+    "$numberLong": "333959678111"
+  },
+  "employerName": "Real Variable",
+  "employmentType": "Salaried",
+  "monthlyIncome": 106540,
+  "experienceYears": 3,
+  "bankName": "HDFC Bank",
+  "bankAccountNumber": {
+    "$numberLong": "50100515578602"
+  },
+  "ifscCode": "HDFC0001995",
+  "itrFiled": "No",
+  "averageBalance": 51817,
+  "cibilScore": 787,
+  "activeLoans": 2,
+  "totalEmi": 31728,
+  "dtiPercent": 29.78,
+  "isEligible": "Yes",
+  "eligibleBanks": "HDFC",
+  "maxLoanAmount": 1364821
+}

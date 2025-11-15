@@ -9,8 +9,10 @@ import Waves from "../../ReactBitsComps/Waves/Waves";
 import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
 import Header from "../Header/Header";
 import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
-
+import { useState } from "react";
 const HeroSection = () => {
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <div className="relative w-full overflow-hidden dark-background">
       <section id="hero" className="min-h-[100vh] hero section w-full">
@@ -71,7 +73,8 @@ const HeroSection = () => {
 
                   <div
                     className="vibrant-shadow-btn"
-                    style={{ animationDuration: "2s" }}
+                    style={{ animationDuration: "2s", cursor: "pointer" }}
+                    onClick={() => setShowVideo(true)}
                   >
                     <i className="bi bi-play-circle"></i>
                     <p className="mb-0">How it works</p>
@@ -83,10 +86,30 @@ const HeroSection = () => {
             <AnimatedTable />
           </div>
         </div>
+        {showVideo && (
+          <div className="fixed inset-0 bg-opacity-80 flex items-center justify-center z-50">
+            <div className="relative w-full max-w-2xl">
+              <iframe
+                className="w-full h-64 md:h-96 rounded-lg"
+                src="https://www.youtube.com/embed/n93NmihKlVY"
+                title="How it works"
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              ></iframe>
+
+              <button
+                className="absolute top-2 right-2 text-white text-2xl"
+                onClick={() => setShowVideo(false)}
+              >
+                ✖
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );
 };
 
 export default HeroSection;
- 

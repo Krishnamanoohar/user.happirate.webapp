@@ -46,9 +46,9 @@ export default function EMICalculatorSection() {
 
         <div className="rounded-2xl shadow border px-10 py-8 flex flex-row justify-between w-full gap-8 my-8 glass-background">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
               <span className="text-[#fff] mb-8">Loan Type</span>
-              <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-4 ">
                 {loanTypes.map((item, index) => (
                   <div
                     className={`flex flex-col items-center shadow-2xl p-4 rounded-2 gap-2 cursor-pointer ${
@@ -66,7 +66,7 @@ export default function EMICalculatorSection() {
               </div>
             </div>
 
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 mt-10">
               <div className="flex-1 flex flex-col gap-6">
                 <div>
                   <div className="flex w-full items-center justify-between mb-4">
@@ -128,7 +128,7 @@ export default function EMICalculatorSection() {
                 </div>
               </div>
             </div>
-
+            {/* 
             <div className="w-full p-2 rounded-1">
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between text-[#fff] text-base">
@@ -152,13 +152,13 @@ export default function EMICalculatorSection() {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div
             className="flex flex-col justify-between items-center flex-shrink-0"
             style={{ flexGrow: 1 }}
           >
-            <div className="flex gap-6 text-sm mb-8 w-full justify-center mt-4">
+            {/* <div className="flex gap-6 text-sm mb-8 w-full justify-center mt-4">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-4 h-2 rounded bg-[#f7fafd]" />
                 Principal amount
@@ -167,8 +167,8 @@ export default function EMICalculatorSection() {
                 <span className="inline-block w-4 h-2 rounded bg-[#4c45a5]" />
                 Interest amount
               </div>
-            </div>
-            <PieChart
+            </div> */}
+            {/* <PieChart
               data={[
                 { value: principal, color: "#f7fafd" },
                 { value: Number(totalInterest), color: "#4c45a5" },
@@ -180,11 +180,41 @@ export default function EMICalculatorSection() {
               animate
               className="mb-3"
               style={{ height: 250 }}
-            />
+            /> */}
 
-            <div className="max-w-md w-full border border-gray-200 rounded-xl shadow-sm p-8 text-center">
+            <div className="w-full p-2 rounded-1 mt-5 border border-gray-200 rounded-xl p-3">
+              <div className="flex flex-col gap-3 ">
+                <div className="flex justify-between text-[#fff] text-base">
+                  <span>Monthly EMI</span>
+                  <span className="font-medium text-[#fff]">₹{monthlyEMI}</span>
+                </div>
+                <div className="flex justify-between text-[#fff] text-base">
+                  <span>Principal amount</span>
+                  <span className="font-medium text-[#fff]">₹{principal}</span>
+                </div>
+                <div className="flex justify-between text-[#fff] text-base">
+                  <span>Total interest</span>
+                  <span className="font-medium text-[#fff]">
+                    ₹{totalInterest}
+                  </span>
+                </div>
+                <div className="flex justify-between text-[#fff] text-base">
+                  <span>Total amount</span>
+                  <span className="font-medium text-[#fff]">
+                    ₹{totalPrincipal}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-md w-full border border-gray-200 rounded-xl shadow-sm p-8 text-center mt-15">
               <div className="flex justify-center mb-6">
-               <img src="assets/img/cash-bank.png" alt="" className="w-full rounded-1" width={100}/>
+                <img
+                  src="assets/img/cash-bank.png"
+                  alt=""
+                  className="w-full rounded-1"
+                  width={100}
+                />
               </div>
 
               <h2
@@ -222,7 +252,7 @@ export default function EMICalculatorSection() {
             </i>
             <br />
             <br />
-            <p className="text-sm text-white">
+            <p className="text-sm text-white ">
               <span className="font-bold">Where:</span>
               <br />P = Principal loan amount
               <br />R = Monthly interest rate (annual rate divided by 12)
@@ -246,25 +276,26 @@ export default function EMICalculatorSection() {
             <p className="text-white text-sm">
               <h6>Here’s how it helps you:</h6>
               <p>
-                <u>Budget effectively:</u> See how your EMI fits into your monthly
-                income and expenses.
+                <u>Budget effectively:</u> See how your EMI fits into your
+                monthly income and expenses.
               </p>{" "}
               <p>
-                <u>Compare options:</u> Adjust loan amounts or tenures to find what
-                works best for your budget.
+                <u>Compare options:</u> Adjust loan amounts or tenures to find
+                what works best for your budget.
               </p>
-              <p><u>Make informed choices:</u> Understand your repayment obligations before you apply — no
-              surprises later.</p>
-              
+              <p>
+                <u>Make informed choices:</u> Understand your repayment
+                obligations before you apply — no surprises later.
+              </p>
             </p>
             <p className="text-white text-sm">
               Planning a loan is an important financial step. Happirate’s EMI
               Calculator gives you clarity and confidence before you borrow.
             </p>
             <p className="text-white text-sm">
-              <u className="font-bold">Note:</u> The EMI shown is based on the details you provide. Actual
-              rates and terms may vary depending on the lender’s policies and
-              your credit profile.{" "}
+              <u className="font-bold">Note:</u> The EMI shown is based on the
+              details you provide. Actual rates and terms may vary depending on
+              the lender’s policies and your credit profile.{" "}
             </p>
           </div>
 
@@ -280,19 +311,17 @@ export default function EMICalculatorSection() {
                 or business).
               </li>
               <li>
-                <u>Enter the loan amount:</u> Specify the total sum
-                you intend to borrow.
+                <u>Enter the loan amount:</u> Specify the total sum you intend
+                to borrow.
               </li>
               <li>
-                <u>Outline the loan term:</u> Indicate the desired
-                duration of your repayment period (typically in months or
-                years).
+                <u>Outline the loan term:</u> Indicate the desired duration of
+                your repayment period (typically in months or years).
               </li>
               <li>
-                <u>Provide the interest rate:</u> This crucial factor
-                determines the cost of your loan. You can find this information
-                on the chosen institution's website or by contacting them
-                directly.
+                <u>Provide the interest rate:</u> This crucial factor determines
+                the cost of your loan. You can find this information on the
+                chosen institution's website or by contacting them directly.
               </li>
             </ul>
             <p className="text-sm text-white">

@@ -201,9 +201,10 @@ const Chatbot = () => {
 
         {/* Pulsing Icon */}
         <img
-          src="/assets/img/chatbot_icon.png"
+          src="/assets/img/ChatBotIcon.png"
+          //src="/assets/img/chatbot_icon.png"
           alt="Chatbot"
-          width={80}
+          width={50}
           className={`
               scale-x-[-1] cursor-pointer rounded-full transition-transform`}
           onMouseEnter={() => setIsHovered(true)}

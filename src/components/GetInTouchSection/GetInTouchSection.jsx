@@ -2,7 +2,7 @@ import React from "react";
 
 const GetInTouchSection = () => {
   return (
-    <div className="">
+    <div className="" id="get-in-touch">
       {/* <!-- Contact Section --> */}
       <section id="contact" className="contact section">
         {/* <!-- Section Title --> */}
