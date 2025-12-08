@@ -74,9 +74,6 @@ const IndexPage = () => {
       <CallToActionSection2 />
       <GetInTouchSection />
       <FooterSection />
-
-      {/* Popups */}
-      <SignInPopup />
     </div>
   );
 };

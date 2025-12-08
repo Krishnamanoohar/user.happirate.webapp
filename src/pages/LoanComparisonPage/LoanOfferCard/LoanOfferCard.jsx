@@ -46,7 +46,7 @@ const LoanOfferCard = ({ offer, onSelect, featured = false }) => {
           </div>
 
           <div className="flex justify-between">
-            <div className="text-sm text-gray-700 grid grid-cols-2 gap-3">
+            <div className="text-sm text-gray-700 grid grid-cols-4 gap-3">
               <div className="flex items-center gap-2">
                 <Banknote size={20} className="text-blue-500" />
                 <span>
@@ -67,7 +67,7 @@ const LoanOfferCard = ({ offer, onSelect, featured = false }) => {
               </div>
             </div>
 
-            <div className="flex items-end hover:shadow-lg">
+            {/* <div className="flex items-end hover:shadow-lg">
               <button
                 type="button"
                 data-bs-toggle="modal"
@@ -76,7 +76,7 @@ const LoanOfferCard = ({ offer, onSelect, featured = false }) => {
               >
                 Apply
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

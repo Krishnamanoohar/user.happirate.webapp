@@ -16,6 +16,7 @@ import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
 import EMICalculatorPage from "./pages/EMICalculatorPage/EMICalculatorPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
+import SignInPopup from "./pages/SignInPage/SignInPopup";
 export const Context = createContext();
 
 const App = () => {
@@ -109,6 +110,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Chatbot />
+          <SignInPopup />
         </BrowserRouter>
       </Context.Provider>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactSpeedometer from "react-d3-speedometer";
+
 const UserInputForm = ({ onSubmit, formData, setFormData }) => {
   const [income, setIncome] = useState(25); // in thousands
   const [hasActiveEmi, setHasActiveEmi] = useState("no");

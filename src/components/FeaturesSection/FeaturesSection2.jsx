@@ -53,11 +53,11 @@ const FeaturesSection2 = () => {
               key={index}
               className="flex flex-col border border-white rounded-2xl hover:scale-105 transition duration-200 cursor-pointer"
             >
-              <div className="rounded-2xl relative ">
+              <div className="rounded-2xl relative max-h-[200px] h-full">
                 <img
                   src={`assets/img/${card.imgSrc}`}
                   alt=""
-                  className="rounded-t-2xl"
+                  className="rounded-t-2xl h-full"
                 />
                 <div className="h-full w-full bg-red-50 absolute top-0 left-0 opacity-50 rounded-t-2xl"></div>
               </div>

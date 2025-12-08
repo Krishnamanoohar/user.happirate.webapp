@@ -13,12 +13,15 @@ const SignInPopup = () => {
   };
 
   return (
-    <Dialog open={showSignInPopup} onClose={() => setShowSignInPopup(false)}>
+    <Dialog
+      open={showSignInPopup}
+      onClose={() => setShowSignInPopup(false)}
+    >
       {otpSent ? (
         <div
           className="bg-[#171717] z-50 grid min-w-fit gap-6 p-6 shadow-xl min-h-[500px] w-[600px] shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
           style={{ boxShadow: "inset 0 -20px 80px -20px #ffffff1f" }}
-        >
+      >
           <div className="flex w-full gap-16">
             <div className="flex-1 p-8">
               <form
@@ -30,7 +33,7 @@ const SignInPopup = () => {
                     className="text-h1 text-foreground/70"
                     style={{ color: "#fafafa" }}
                   >
-                    OTP please?
+                    OTP
                   </h1>{" "}
                   <p className="text-[#8f8f8f]">
                     We have sent it to 9098765432{" "}
@@ -48,24 +51,30 @@ const SignInPopup = () => {
                       data-pin-input-root=""
                       className="group/pininput text-foreground flex items-center gap-2 has-disabled:opacity-30"
                     >
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>
-                      <div className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white">
-                        {" "}
-                      </div>{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
+                      <input
+                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
+                        type="number"
+                      />{" "}
                     </div>{" "}
                     <p className="text-body1 text-foreground/40 empty:hidden"></p>{" "}
                     <p className="text-body2 text-destructive empty:hidden"></p>

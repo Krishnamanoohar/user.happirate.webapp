@@ -407,3 +407,7 @@ input::-webkit-inner-spin-button {
   position: relative;
   top: -10px;
 }
+
+.css-10d30g3-MuiPaper-root-MuiDialog-paper{
+  background: transparent;
+}
