@@ -17,6 +17,7 @@ import EMICalculatorPage from "./pages/EMICalculatorPage/EMICalculatorPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
+import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
 export const Context = createContext();
 
 const App = () => {
@@ -79,8 +80,8 @@ const App = () => {
   useEffect(() => {
     AOS.init({ duration: 600 });
     AOS.refresh();
-    fetchData();
-    payslip();
+    // fetchData();
+    // payslip();
   }, []);
 
   return (
@@ -100,7 +101,8 @@ const App = () => {
             <Route path="sign-in" element={<LoginPage />} />
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
             <Route path="compare-loans" element={<LoanComparisonPage />} />
-            <Route path="process" element={<ApplicationPage />} />
+            {/* <Route path="process" element={<ApplicationPage />} /> */}
+            <Route path="loan-tracking-dashboard" element={<LoanTrackingDashboard />} />
             <Route path="emi-calculator" element={<EMICalculatorPage />} />
             <Route
               path="financial-summary"
