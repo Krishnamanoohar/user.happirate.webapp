@@ -1,5 +1,6 @@
 import { Context } from "@/App";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import ShinyText from "@/ReactBitsComps/ShinyText/ShinyText";
 import { Dialog } from "@mui/material";
 import React, { useContext, useState } from "react";
 
@@ -13,16 +14,13 @@ const SignInPopup = () => {
   };
 
   return (
-    <Dialog
-      open={showSignInPopup}
-      onClose={() => setShowSignInPopup(false)}
-    >
+    <Dialog open={showSignInPopup} onClose={() => setShowSignInPopup(false)}>
       {otpSent ? (
         <div
-          className="bg-[#171717] z-50 grid min-w-fit gap-6 p-6 shadow-xl min-h-[500px] w-[600px] shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
+          className="bg-[#171717] z-50 grid min-w-fit gap-6 p-6  min-h-[500px] w-[600px] "
           style={{ boxShadow: "inset 0 -20px 80px -20px #ffffff1f" }}
-      >
-          <div className="flex w-full gap-16">
+        >
+          <div className="flex w-full gap-16 shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
             <div className="flex-1 p-8">
               <form
                 id="login-form"
@@ -84,7 +82,7 @@ const SignInPopup = () => {
                   </p>
                 </div>{" "}
                 <div className="hidden lg:flex">
-                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl" >
+                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
                     <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg dark:from-white dark:to-slate-900/10">
                       Verify
                     </span>
@@ -111,10 +109,13 @@ const SignInPopup = () => {
         </div>
       ) : (
         <div
-          className="bg-[#171717] z-50 grid w-full min-w-fit gap-6 p-6 shadow-xl min-h-[500px] max-w-[600px] shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
-          style={{ boxShadow: "inset 0 -20px 80px -20px #ffffff1f" }}
+          className="bg-[#171717] z-50 grid w-full min-w-fit gap-6 p-6 min-h-[500px]  
+            "
+          style={{
+            boxShadow: "inset 0 -20px 80px -20px #ffffff1f  ",
+          }}
         >
-          <div className="flex w-full gap-16">
+          <div className="flex w-full gap-16 shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]  ">
             <div className="flex-1 p-8">
               <form
                 id="login-form"

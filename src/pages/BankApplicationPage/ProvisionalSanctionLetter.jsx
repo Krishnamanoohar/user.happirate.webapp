@@ -81,7 +81,7 @@ const SanctionLetterContent = ({
     {
       gap: "Rate Gap (1.20% difference)",
       limitation:
-        "Your current Debt-to-Income (DTI) ratio is at 45%, which increases perceived risk for the lowest interest tiers.",
+        "Your current Debt-to-Income (Debt To Income) ratio is at 45%, which increases perceived risk for the lowest interest tiers.",
       action:
         "Immediate Step: Reduce your high-interest debt exposure. Clearing the outstanding balance on Credit Card X (₹ 55,000) will immediately lower your DTI to 38%.",
     },

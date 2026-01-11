@@ -47,7 +47,7 @@ export default function BankApplicationPage() {
   const steps = [
     "Verify Mobile & Fetch Data",
     "Review & Edit Personal Details",
-    "Review & Edit Employment, Income",
+    "Review & Edit Employment and Credit Details",
     "Select Loan & Upload Documents",
     "Review & Submit",
   ];
@@ -85,6 +85,7 @@ export default function BankApplicationPage() {
   const [showProceedSuccess, setShowProceedSuccess] = useState(false); // NEW state for final confirmation
   const navigate = useNavigate();
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const [previewFile, setPreviewFile] = useState(null);
 
   const mapDummyData = (data) => ({
     ...data,
@@ -282,7 +283,15 @@ export default function BankApplicationPage() {
     const employmentFields = [
       { name: "employmentStatus", label: "Employment Status" },
       { name: "companyName", label: "Company Name" },
+      { name: "uan/pf", label: "UAN / PF Number" },
       { name: "monthlyIncome", label: "Monthly Income (₹)", type: "number" },
+      { name: "cibilScore", label: "Cibil Score", type: "number" },
+      { name: "recentEnquiries", label: "Recent Enquiries" },
+      { name: "settlements", label: "Settlements" },
+      { name: "emiBounces", label: "EMI Bounces" },
+      { name: "creditCardUtilization", label: "Credit Card Utilization" },
+      { name: "residentialStability", label: "Residential Stability" },
+      { name: "existingEmi", label: "Existing EMI" },
       { name: "residentialStatus", label: "Residential Status" },
       { name: "addressLine1", label: "Address Line 1" },
       { name: "city", label: "City" },
@@ -510,6 +519,8 @@ export default function BankApplicationPage() {
                   <option value="personal">Personal Loan</option>
                   {/* <option value="home">Home Loan</option> */}
                   <option value="education">Education Loan</option>
+                  <option value="buisness">Buisness Loan</option>
+                  <option value="home">Home Loan</option>
                 </select>
                 {errors.loanType && (
                   <p className="mt-2 text-sm text-red-600 font-medium">
@@ -548,11 +559,11 @@ export default function BankApplicationPage() {
             <h4 className="font-semibold text-lg text-gray-700 mb-3 border-t pt-4">
               Required Documents
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { name: "itrFile", label: "Last 3 Months ITR/Form 16 *" },
-                { name: "payslipsFile", label: "Last 3 Months Payslips *" },
+                { name: "itrFile", label: "Last 3 Years ITR/Form 16 *" },
                 { name: "photoFile", label: "Applicant Photo Upload *" },
+                { name: "payslipsFile", label: "Last 3 Months Payslips *" },
               ].map((field) => (
                 <div key={field.name}>
                   <label
@@ -589,7 +600,147 @@ export default function BankApplicationPage() {
                   )}
                 </div>
               ))}
+            </div> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { name: "itrFile", label: "Last 3 Years ITR/Form 16 *" },
+                { name: "photoFile", label: "Applicant Photo Upload *" },
+                { name: "payslipsFile", label: "Last 3 Months Payslips *" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block mb-2 text-sm font-medium text-gray-900">
+                    {field.label}
+                  </label>
+
+                  {field.name === "payslipsFile" ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+                      {[1, 2, 3].map((n) => {
+                        const fieldKey = `payslip_${n}`;
+                        const file = formData[fieldKey];
+
+                        return (
+                          <div
+                            key={fieldKey}
+                            className="flex flex-col items-center gap-1"
+                          >
+                            <div
+                              onClick={() =>
+                                document.getElementById(fieldKey).click()
+                              }
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                handleFileChange({
+                                  target: {
+                                    name: fieldKey,
+                                    files: e.dataTransfer.files,
+                                  },
+                                });
+                              }}
+                              className={`flex flex-col items-center justify-center h-28 w-full rounded-xl border-2 border-dashed cursor-pointer transition px-2
+              ${
+                errors[fieldKey]
+                  ? "border-red-400 bg-red-50"
+                  : "border-blue-300 bg-blue-50 hover:bg-blue-100"
+              }`}
+                            >
+                              <svg
+                                className="w-8 h-8 text-blue-500 mb-1"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h4l2-2h2l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                              </svg>
+
+                              <p className="text-[11px] text-gray-600 text-center truncate w-full">
+                                {file ? file.name : "Drag or click"}
+                              </p>
+
+                              <input
+                                id={fieldKey}
+                                type="file"
+                                name={fieldKey}
+                                hidden
+                                accept=".pdf"
+                                onChange={handleFileChange}
+                              />
+                            </div>
+
+                            {/* 🔹 PREVIEW BUTTON */}
+                            {file && (
+                              <button
+                                type="button"
+                                onClick={() => setPreviewFile(file)}
+                                className="text-xs text-blue-600 hover:underline"
+                              >
+                                Preview
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        type="file"
+                        accept={
+                          field.name === "photoFile"
+                            ? "image/*"
+                            : ".pdf,.doc,.docx,.jpg,.png"
+                        }
+                        onChange={handleFileChange}
+                        className={`block w-full text-sm border rounded-lg cursor-pointer bg-white focus:outline-none ${
+                          errors[field.name]
+                            ? "border-red-500 text-red-900"
+                            : "border-gray-300 text-gray-900"
+                        }`}
+                      />
+
+                      {formData[field.name] && (
+                        <p className="mt-1 text-xs text-gray-500">
+                          Attached: {formData[field.name].name}
+                        </p>
+                      )}
+                    </>
+                  )}
+
+                  {errors[field.name] && (
+                    <p className="mt-2 text-sm text-red-600 font-medium">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
+            {previewFile && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white p-4 rounded-xl w-full max-w-3xl relative max-h-[90vh] overflow-auto">
+                  <button
+                    className="absolute top-2 right-3 text-gray-600 hover:text-gray-800"
+                    onClick={() => setPreviewFile(null)}
+                  >
+                    ✕
+                  </button>
+
+                  {previewFile.type.startsWith("image/") ? (
+                    <img
+                      src={URL.createObjectURL(previewFile)}
+                      alt="Preview"
+                      className="max-h-[80vh] mx-auto"
+                    />
+                  ) : (
+                    <iframe
+                      src={URL.createObjectURL(previewFile)}
+                      className="w-full h-[80vh]"
+                      title="Preview"
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
 

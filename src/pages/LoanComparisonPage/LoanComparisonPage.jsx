@@ -29,7 +29,7 @@ const LoanComparisonPage = () => {
           />
           <div className="w-full mt-8 grid gap-6">
             <div className="flex items-end hover:shadow-lg">
-              {offers.length && (
+              {offers.length > 0 && (
                 <button
                   type="button"
                   data-bs-toggle="modal"

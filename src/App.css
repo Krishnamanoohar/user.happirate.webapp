@@ -397,7 +397,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-.emi-info-card{
+.emi-info-card {
   transition: 0.5s;
 }
 
@@ -408,6 +408,6 @@ input::-webkit-inner-spin-button {
   top: -10px;
 }
 
-.css-10d30g3-MuiPaper-root-MuiDialog-paper{
+.css-10d30g3-MuiPaper-root-MuiDialog-paper {
   background: transparent;
 }
