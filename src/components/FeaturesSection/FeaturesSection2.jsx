@@ -46,8 +46,51 @@ const FeaturesSection2 = () => {
         <div className="section-title">
           <h2 className="text-2xl font-semibold text-center mb-0">Solutions</h2>
         </div>
+        <section className=" text-white overflow-hidden">
+          {/* subtle noise overlay */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+          <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-10">
+            {loanCards.map((card, index) => (
+              <div
+                key={index}
+                className="group relative min-h-[320px] border border-white/10 bg-black/40 p-10 backdrop-blur-sm
+               transition-all duration-300 ease-out
+               hover:scale-[1.03] hover:border-violet-500"
+              >
+                <div className="flex h-full flex-col justify-between gap-6">
+                  {/* Top Content */}
+                  <div className="flex flex-col gap-6">
+                    <img
+                      src={card.iconSrc}
+                      alt={card.title}
+                      className="h-10 w-10 object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                    />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 py-6 rounded-2xl">
+                    <h2 className="text-3xl font-semibold tracking-tight transition-colors duration-300 group-hover:text-violet-400">
+                      {card.title}
+                    </h2>
+
+                    <p className="max-w-sm text-sm leading-relaxed tracking-wide text-white/60 font-mono transition-colors duration-300 group-hover:text-white/70">
+                      {card.description}
+                    </p>
+                  </div>
+
+                  {/* Apply Now Button */}
+                  <div className="flex justify-center">
+                    <button
+                      className="vibrant-shadow-btn"
+                      onClick={() => handleClick(card)}
+                    >
+                      Apply Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 py-6 rounded-2xl">
           {loanCards.map((card, index) => (
             <div
               key={index}
@@ -59,7 +102,7 @@ const FeaturesSection2 = () => {
                   alt=""
                   className="rounded-t-2xl h-full"
                 />
-                <div className="h-full w-full bg-red-50 absolute top-0 left-0 opacity-50 rounded-t-2xl"></div>
+                <div className=" w-full bg-red-50 absolute top-0 left-0 opacity-50 rounded-t-2xl"></div>
               </div>
               <div className="flex flex-col justify-center items-center  p-4 pt-2 text-white h-full rounded-t-2xl">
                 <div>
@@ -84,7 +127,8 @@ const FeaturesSection2 = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
+
         {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10 py-12 bg-gradient-to-br from-[#0d1853] to-[#07217e] rounded-2xl">
           {loanCards.map((card, index) => (
             <div key={index} className="flex justify-center items-center">

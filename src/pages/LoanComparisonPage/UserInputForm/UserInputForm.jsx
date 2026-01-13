@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactSpeedometer from "react-d3-speedometer";
-import loanEligibilityPost from "../../../utils/api";
+import api from "../../../api/api";
 const UserInputForm = ({ onSubmit, formData, setFormData }) => {
-  const [income, setIncome] = useState(25); // in thousands
+  const [income, setIncome] = useState(0); // in thousands
   const [hasActiveEmi, setHasActiveEmi] = useState("no");
   const [loanType, setLoanType] = useState("");
   const [tenure, setTenure] = useState("");
@@ -18,12 +18,12 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
   const [creditScore, setCreditScore] = useState("");
   const [currentMonthEmi, setCurrentMonthEmi] = useState("");
 
-  const tenureOptionsByLoanType = {
-    personal: ["1-2Yrs", "2-3Yrs", "3-4Yrs", "4-5Yrs", "5+Yrs"],
-    buisness: ["1-3Yrs", "3-6Yrs", "6-8Yrs", "8-10Yrs", "10+Yrs"],
-    home: ["10-15Yrs", "15-20Yrs", "20-25Yrs", "25-30Yrs", "30+Yrs"],
-    education: ["5-7Yrs", "7-10Yrs", "10-12Yrs", "12-15Yrs", "15+Yrs"],
-  };
+  // const tenureOptionsByLoanType = {
+  //   personal: ["1-2Yrs", "2-3Yrs", "3-4Yrs", "4-5Yrs", "5+Yrs"],
+  //   buisness: ["1-3Yrs", "3-6Yrs", "6-8Yrs", "8-10Yrs", "10+Yrs"],
+  //   home: ["10-15Yrs", "15-20Yrs", "20-25Yrs", "25-30Yrs", "30+Yrs"],
+  //   education: ["5-7Yrs", "7-10Yrs", "10-12Yrs", "12-15Yrs", "15+Yrs"],
+  // };
 
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
   // };
 
   const buildPayload = () => ({
-    employmentType,
+    employmentType: employmentType,
     monthlySalary: Number(income),
     employmentExperienceYears: Number(years),
     outstandingEMIAmount: Number(outstandingEmi),
@@ -43,18 +43,18 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
     creditCardOutstandingAmount:
       creditOption === "yes" ? Number(creditCardAmount) : 0,
     loanEnquiryCountLast12Months: Number(loanEnquiry),
-    creditScore:
-      creditScore === "low" ? 550 : creditScore === "mid" ? 700 : 780,
+    creditScore: Number(creditScore),
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    onSubmit(formData);
 
     const payload = buildPayload();
     console.log("Submitting payload:", payload);
 
     try {
-      const result = await loanEligibilityPost(payload);
+      const result = await api.checkLoanEligibility(payload);
       console.log("Eligibility result:", result);
     } catch (err) {
       console.error("Failed to submit eligibility", err);
@@ -109,8 +109,8 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                   <option value="rural">Rural</option>
                 </select>
               </div> */}
-              <div className="col-md-6">
-                <div className="flex items-center gap-4 mb-2">
+              <div className="col-md-6 ">
+                <div className="flex items-center gap-4 mb-2 justify-between">
                   <label className="form-label mb-0">Monthly Income</label>
 
                   <div className="flex items-center gap-2 w-[130px]">
@@ -137,7 +137,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">Job Experience</label>
+                <label className="form-label">Employment Experience</label>
 
                 <div className="row">
                   <div className="col-6">
@@ -177,7 +177,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                   type="number"
                   className="form-control text-white"
                   placeholder="Enter amount e.g. 10000"
-                  min="0"
+                  min="1"
                   //onChange={(e) => setHasActiveEmi(e.target.value)}
                   onChange={(e) => {
                     setOutstandingEmi(e.target.value);
@@ -226,6 +226,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                 <input
                   type="number"
                   className="form-control text-white"
+                  min="1"
                   placeholder="e.g. 500000"
                   onChange={(e) => setLoanAmount(e.target.value)}
                   required
@@ -280,7 +281,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                     type="number"
                     className="form-control text-white"
                     placeholder="Enter amount e.g. 25000"
-                    min="0"
+                    min="1"
                     value={creditCardAmount}
                     onChange={(e) => setCreditCardAmount(e.target.value)}
                     required
@@ -296,6 +297,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                   type="number"
                   className="form-control text-white"
                   placeholder="e.g.0"
+                  min="1"
                   onChange={(e) => {
                     setLoanEnquiry(e.target.value);
                   }}
@@ -303,7 +305,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                 />
               </div>
 
-              <div
+              {/* <div
                 className={`${
                   hasActiveEmi === "yes" ? "col-md-6" : "col-md-12"
                 }`}
@@ -333,6 +335,41 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                   <option value="mid">600 - 750</option>
                   <option value="high">750+</option>
                 </select>
+              </div> */}
+
+              <div
+                className={`${
+                  hasActiveEmi === "yes" ? "col-md-6" : "col-md-12"
+                }`}
+              >
+                <label className="form-label">
+                  Credit Score (
+                  <small className="text-white">
+                    Don’t know your credit score?{" "}
+                    <a href="/check-credit-score" className="text-primary">
+                      Click here to check
+                    </a>
+                  </small>
+                  )
+                </label>
+
+                <input
+                  type="number"
+                  min={300}
+                  max={900}
+                  placeholder="Enter credit score (300 - 900)"
+                  className="form-control text-white"
+                  value={creditScore}
+                  onChange={(e) => {
+                    setCreditScore(e.target.value);
+                  }}
+                  style={{
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
+                    border: "1px solid #333",
+                    appearance: "none",
+                  }}
+                />
               </div>
 
               <div className="col-12 text-center">

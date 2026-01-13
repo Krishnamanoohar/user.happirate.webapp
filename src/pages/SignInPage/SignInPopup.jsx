@@ -7,10 +7,29 @@ import React, { useContext, useState } from "react";
 const SignInPopup = () => {
   const { showSignInPopup, setShowSignInPopup } = useContext(Context);
   const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   const handleMobileNumberSubmit = (e) => {
     e.preventDefault();
     setOtpSent(true);
+  };
+
+  const handleOtpChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      document.getElementById(`otp-${index - 1}`)?.focus();
+    }
   };
 
   return (
@@ -40,47 +59,39 @@ const SignInPopup = () => {
                       aria-label="Edit"
                     ></button>
                   </p>
-                </div>{" "}
+                </div>
                 <div className="grow space-y-4">
                   <div className="space-y-2">
-                    {" "}
                     <div
                       id="otp"
-                      data-pin-input-root=""
-                      className="group/pininput text-foreground flex items-center gap-2 has-disabled:opacity-30"
+                      className="group/pininput text-foreground flex items-center gap-2"
                     >
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                      <input
-                        className="focus-override relative size-12 flex items-center justify-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 outline-0 data-active:outline-1 data-active:outline-white"
-                        type="number"
-                      />{" "}
-                    </div>{" "}
-                    <p className="text-body1 text-foreground/40 empty:hidden"></p>{" "}
+                      {otp.map((digit, index) => (
+                        <input
+                          key={index}
+                          id={`otp-${index}`}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) =>
+                            handleOtpChange(e.target.value, index)
+                          }
+                          onKeyDown={(e) => handleOtpKeyDown(e, index)}
+                          className="focus-override relative size-12 text-center transition-all duration-75 border-foreground/20 rounded-lg border text-foreground outline-0 group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40"
+                        />
+                      ))}
+                    </div>
+
+                    <p className="text-body1 text-foreground/40 empty:hidden"></p>
                     <p className="text-body2 text-destructive empty:hidden"></p>
-                  </div>{" "}
+                  </div>
+
                   <p className="text-body1 text-[#8f8f8f]">
                     Resend in <span className="text-[#fafafa]">00:16</span>
                   </p>
-                </div>{" "}
+                </div>
+
                 <div className="hidden lg:flex">
                   <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
                     <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg dark:from-white dark:to-slate-900/10">
