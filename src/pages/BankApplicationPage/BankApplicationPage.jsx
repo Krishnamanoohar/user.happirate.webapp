@@ -222,15 +222,15 @@ export default function BankApplicationPage() {
       if (!formData.loanAmount || Number(formData.loanAmount) <= 0) {
         newErrors.loanAmount = "Enter a valid loan amount.";
       }
-      if (!formData.itrFile) {
-        newErrors.itrFile = "Last 3 months ITR upload is required.";
-      }
-      if (!formData.payslipsFile) {
-        newErrors.payslipsFile = "Last 3 months payslips upload is required.";
-      }
-      if (!formData.photoFile) {
-        newErrors.photoFile = "Applicant photo upload is required.";
-      }
+      // if (!formData.itrFile) {
+      //   newErrors.itrFile = "Last 3 months ITR upload is required.";
+      // }
+      // if (!formData.payslipsFile) {
+      //   newErrors.payslipsFile = "Last 3 months payslips upload is required.";
+      // }
+      // if (!formData.photoFile) {
+      //   newErrors.photoFile = "Applicant photo upload is required.";
+      // }
 
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
