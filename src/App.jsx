@@ -18,6 +18,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
 import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
+import ProtectedRoute from "./Protect";
 export const Context = createContext();
 
 const App = () => {
@@ -108,7 +109,9 @@ const App = () => {
               path="financial-summary"
               element={<FinancialSummaryPage />}
             />
-            <Route path="loan-application" element={<BankApplicationPage />} />
+            <Route path="/loan-application" element={<ProtectedRoute>
+      <BankApplicationPage />
+    </ProtectedRoute>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Chatbot />

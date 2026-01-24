@@ -1,10 +1,11 @@
 import { Context } from "@/App";
 import React, { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-
+import logout from "../../api/api"
 const Header = () => {
   const location = useLocation();
   const { showSignInPopup, setShowSignInPopup } = useContext(Context);
+const isLoggedIn = !!localStorage.getItem("authToken");
 
   const menuItems = [
     { name: "Solutions", href: "/#solutions" },
@@ -18,6 +19,15 @@ const Header = () => {
     // { name: "Loan Status", href: "/process" },
     // { name: "Financial Summary", href: "/financial-summary" },
   ];
+  const handleLogout = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  //await logout(refreshToken);
+
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("refreshToken");
+
+  window.location.href = "/";
+};
 
   return (
     // <div>
@@ -56,13 +66,23 @@ const Header = () => {
             >
               Sign In
             </a> */}
-          <button
-            href="compare-loans"
-            className="w-full flex text-center content-center vibrant-shadow-btn px-4 btn"
-            onClick={() => setShowSignInPopup(true)}
-          >
-            Sign In
-          </button>
+          <div className="sign-in d-flex flex-col gap-0 text-center w-[10rem] sing-in-btn">
+  {isLoggedIn ? (
+    <button
+      className="w-full flex text-center content-center vibrant-shadow-btn px-4 btn"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  ) : (
+    <button
+      className="w-full flex text-center content-center vibrant-shadow-btn px-4 btn"
+      onClick={() => setShowSignInPopup(true)}
+    >
+      Sign In
+    </button>
+  )}
+</div>
         </div>
       </div>
     </header>

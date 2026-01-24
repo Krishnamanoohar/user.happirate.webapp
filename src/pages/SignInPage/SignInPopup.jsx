@@ -3,16 +3,37 @@ import { ShimmerButton } from "@/components/ui/shimmer-button";
 import ShinyText from "@/ReactBitsComps/ShinyText/ShinyText";
 import { Dialog } from "@mui/material";
 import React, { useContext, useState } from "react";
+import { signInWithPhoneNumber } from "firebase/auth";
+import { auth, setupRecaptcha } from "@/firebase";
+import { loginWithPhone } from "@/api/api";
+import { ConstructionIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 
 const SignInPopup = () => {
+  const [phone, setPhone] = useState("");
+const [confirmationResult, setConfirmationResult] = useState(null);
+const navigate = useNavigate();
   const { showSignInPopup, setShowSignInPopup } = useContext(Context);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
-  const handleMobileNumberSubmit = (e) => {
-    e.preventDefault();
+ const handleMobileNumberSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const appVerifier = setupRecaptcha();
+    const fullPhone = "+91" + phone;
+
+    const result = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
+    setConfirmationResult(result);
     setOtpSent(true);
-  };
+    console.log("OTP Sent")
+  } catch (err) {
+    console.error("OTP send failed", err);
+    alert(err.message);
+  }
+};
+
 
   const handleOtpChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
@@ -31,9 +52,30 @@ const SignInPopup = () => {
       document.getElementById(`otp-${index - 1}`)?.focus();
     }
   };
+  const handleVerifyOtp = async () => {
+  try {
+    const code = otp.join("");
+    console.log("111111111111111", code)
+    console.log("2222222222222",otp)
+    const result = await confirmationResult.confirm(code);
+    const idToken = await result.user.getIdToken();
+
+    const response = await loginWithPhone(idToken);
+
+    const { accessToken } = response.data;
+    localStorage.setItem("authToken", accessToken);
+    
+    setShowSignInPopup(false);
+   navigate("/loan-application");
+  } catch (err) {
+    console.error("OTP verification failed", err);
+  }
+};
+
 
   return (
     <Dialog open={showSignInPopup} onClose={() => setShowSignInPopup(false)}>
+      <div id="recaptcha-container"></div>
       {otpSent ? (
         <div
           className="bg-[#171717] z-50 grid min-w-fit gap-6 p-6  min-h-[500px] w-[600px] "
@@ -44,6 +86,7 @@ const SignInPopup = () => {
               <form
                 id="login-form"
                 className="flex h-full flex-col justify-between gap-6"
+                onSubmit={handleOtpChange}
               >
                 <div className="space-y-2">
                   <h1
@@ -53,7 +96,7 @@ const SignInPopup = () => {
                     OTP
                   </h1>{" "}
                   <p className="text-[#8f8f8f]">
-                    We have sent it to 9098765432{" "}
+                    We have sent it to {phone}{" "}
                     <button
                       className="mb-1 align-middle"
                       aria-label="Edit"
@@ -93,7 +136,7 @@ const SignInPopup = () => {
                 </div>
 
                 <div className="hidden lg:flex">
-                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
+                  <button type="button" onClick={handleVerifyOtp} className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
                     <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg dark:from-white dark:to-slate-900/10">
                       Verify
                     </span>
@@ -105,8 +148,9 @@ const SignInPopup = () => {
               <footer className="fixed bottom-0 left-0 right-0 z-50 space-y-3  p-5 pb-safe-offset-5 border-t bg-background/30 backdrop-blur-md lg:hidden">
                 <button
                   className="h-[3.25rem] px-6 py-3 text-h3  ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-xl font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-1.5 cursor-pointer w-full text-primary-foreground bg-primary/80 hover:bg-primary/90"
-                  type="submit"
+                  type="button"
                   form="login-form"
+                  onClick={handleVerifyOtp}
                 >
                   {" "}
                   Verify OTP
@@ -159,8 +203,11 @@ const SignInPopup = () => {
                                   className="resize-none bg-transparent py-2 flex-1 rounded-xl text-heading4 file:text-h4 flex w-full file:border-0 file:bg-transparent file:font-medium placeholder:text-[#fafafa] focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                                   name="mobileNumber"
                                   maxlength="10"
+                                  value={phone}
+  onChange={(e) => setPhone(e.target.value)}
                                   autofocus=""
                                 />
+                           
                               </div>
                             </div>
                           </div>{" "}
@@ -190,7 +237,7 @@ const SignInPopup = () => {
                       Privacy Policy
                     </a>
                   </p>{" "}
-                  <button className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
+                  <button type="submit" className="w-[250px] group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)]  px-6 py-3 whitespace-nowrap text-white [background:var(--bg)] transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px shadow-2xl">
                     <span className="text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg dark:from-white dark:to-slate-900/10">
                       Proceed
                     </span>

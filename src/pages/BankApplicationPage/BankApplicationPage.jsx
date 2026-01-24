@@ -151,15 +151,30 @@ export default function BankApplicationPage() {
     console.log(`Fake OTP sent to: ${mobileNumber}`);
   };
 
-  const verifyOtp = (enteredOtp) => {
+  const verifyOtp = async (enteredOtp) => {
     if (enteredOtp === "1234") {
-      setIsMobileVerified(true);
-      setFormData((prev) => ({
-        ...prev,
-        ...mapDummyData(DUMMY_USER_DATA),
-      }));
-      setErrors({});
-      setTimeout(() => setActiveStep(1), 500);
+  setIsMobileVerified(true);
+
+  try {
+    const res = await fetch("http://localhost:8000/api/kyc/resolve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mobile: mobileNumber }),
+    });
+
+    const kycData = await res.json();
+
+    setFormData((prev) => ({
+      ...prev,
+      ...kycData,   // backend already returns UI-ready fields
+    }));
+
+    setErrors({});
+    setTimeout(() => setActiveStep(1), 500);
+  } catch (err) {
+    console.error("KYC Fetch Failed", err);
+    setErrors({ mobileNumber: "Failed to fetch KYC data" });
+  }
     } else {
       setErrors({ otp: "Invalid OTP. Please try again." });
       setOtp(["", "", "", ""]);
@@ -283,7 +298,7 @@ export default function BankApplicationPage() {
     const employmentFields = [
       { name: "employmentStatus", label: "Employment Status" },
       { name: "companyName", label: "Company Name" },
-      { name: "uan/pf", label: "UAN / PF Number" },
+      { name: "uan", label: "UAN / PF Number" },
       { name: "monthlyIncome", label: "Monthly Income (₹)", type: "number" },
       { name: "cibilScore", label: "Cibil Score", type: "number" },
       { name: "recentEnquiries", label: "Recent Enquiries" },
