@@ -56,6 +56,8 @@ export default function BankApplicationPage() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isMobileVerified, setIsMobileVerified] = useState(false);
+const [showPreviewModal, setShowPreviewModal] = useState(false);
+const [pslPdfUrl, setPslPdfUrl] = useState(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -94,7 +96,30 @@ export default function BankApplicationPage() {
     state: data.address.state,
     pincode: data.address.pincode,
   });
+const submitApplication = async () => {
+  const payload = new FormData();
 
+  // Append full form JSON
+  payload.append("applicationData", JSON.stringify({
+    mobileNumber,
+    ...formData
+  }));
+
+  // Append files
+  payload.append("itrFile", formData.itrFile);
+  payload.append("photoFile", formData.photoFile);
+  payload.append("payslip1", formData.payslip_1);
+  payload.append("payslip2", formData.payslip_2);
+  payload.append("payslip3", formData.payslip_3);
+
+  const res = await fetch("http://localhost:8000/api/loan/submit", {
+    method: "POST",
+    body: payload
+  });
+
+  const data = await res.json();
+  console.log("Application stored:", data);
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -231,27 +256,23 @@ export default function BankApplicationPage() {
     }
 
     if (activeStep === 3) {
-      if (!formData.loanType) {
-        newErrors.loanType = "Please select a loan type.";
-      }
-      if (!formData.loanAmount || Number(formData.loanAmount) <= 0) {
-        newErrors.loanAmount = "Enter a valid loan amount.";
-      }
-      // if (!formData.itrFile) {
-      //   newErrors.itrFile = "Last 3 months ITR upload is required.";
-      // }
-      // if (!formData.payslipsFile) {
-      //   newErrors.payslipsFile = "Last 3 months payslips upload is required.";
-      // }
-      // if (!formData.photoFile) {
-      //   newErrors.photoFile = "Applicant photo upload is required.";
-      // }
+  const requiredFiles = ["itrFile", "photoFile", "payslip_1", "payslip_2", "payslip_3"];
+  let fileErrors = {};
 
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-    }
+  requiredFiles.forEach((f) => {
+    if (!formData[f]) fileErrors[f] = "Required";
+  });
+
+  if (Object.keys(fileErrors).length > 0) {
+    setErrors(fileErrors);
+    return;
+  }
+
+  // Instead of moving to step 4 directly
+  setShowPreviewModal(true);
+  return;
+}
+
 
     if (activeStep === steps.length - 1) {
       // Final Review -> Show PSL modal
@@ -970,7 +991,7 @@ export default function BankApplicationPage() {
                   complete the final processing steps.
                 </p>
                 <button
-                  onClick={handleFinalNavigation}
+                  onClick={submitApplication}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition w-full"
                 >
                   🚀 Go to Loan Tracking Dashboard
