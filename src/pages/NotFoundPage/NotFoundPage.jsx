@@ -1,4 +1,3 @@
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import React from "react";
 
 const NotFoundPage = () => {

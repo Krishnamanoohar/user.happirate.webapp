@@ -96,7 +96,7 @@ const App = () => {
         }}
       >
         <BrowserRouter>
-          <Header />
+          {window.location.pathname !== "/sign-in" && <Header />}
           <Routes>
             <Route path="/" element={<IndexPage />} />
             <Route path="sign-in" element={<LoginPage />} />
@@ -109,9 +109,8 @@ const App = () => {
               path="financial-summary"
               element={<FinancialSummaryPage />}
             />
-            <Route path="/loan-application" element={<ProtectedRoute>
-      <BankApplicationPage />
-    </ProtectedRoute>} />
+            <Route path="loan-application" element={<BankApplicationPage />} />
+            {/* <Route path="loan-application" element={<HappirateSplitAuth />} /> */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Chatbot />

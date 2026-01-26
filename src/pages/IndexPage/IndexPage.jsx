@@ -42,7 +42,7 @@ const IndexPage = () => {
     }
   };
   useEffect(() => {
-    fetch();
+    // fetch();
   }, []);
 
   return (

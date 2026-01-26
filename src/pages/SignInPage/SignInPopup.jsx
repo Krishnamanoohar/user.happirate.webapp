@@ -1,6 +1,4 @@
 import { Context } from "@/App";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
-import ShinyText from "@/ReactBitsComps/ShinyText/ShinyText";
 import { Dialog } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { signInWithPhoneNumber } from "firebase/auth";

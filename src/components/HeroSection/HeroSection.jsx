@@ -1,15 +1,16 @@
-import Squares from "../../ReactBitsComps/Squares Grid/Squares";
-import Noise from "../../ReactBitsComps/Noise/Noise";
-import Silk from "../../ReactBitsComps/SilkBaground/Silk";
-import Beams from "../../ReactBitsComps/BeamsBackground/Beams";
-import GlareHover from "../../ReactBitsComps/GlareHover/GlareHover";
-import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
-import Particles from "../../ReactBitsComps/Particles/Particles";
-import Waves from "../../ReactBitsComps/Waves/Waves";
+// import Squares from "../../ReactBitsComps/Squares Grid/Squares";
+// import Noise from "../../ReactBitsComps/Noise/Noise";
+// import Silk from "../../ReactBitsComps/SilkBaground/Silk";
+// import Beams from "../../ReactBitsComps/BeamsBackground/Beams";
+// import GlareHover from "../../ReactBitsComps/GlareHover/GlareHover";
+// import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
+// import Particles from "../../ReactBitsComps/Particles/Particles";
+// import Waves from "../../ReactBitsComps/Waves/Waves";
+// import Header from "../Header/Header";
 import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
-import Header from "../Header/Header";
 import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 import { useState } from "react";
+
 const HeroSection = () => {
   const [showVideo, setShowVideo] = useState(false);
 
@@ -59,7 +60,7 @@ const HeroSection = () => {
                   <button
                     href="compare-loans"
                     className="vibrant-shadow-btn px-4 btn"
-                    onClick={() => (window.location.href = "/compare-loans")}
+                    onClick={() => (window.location.href = "/loan-application")}
                   >
                     Start Comparing
                   </button>
@@ -86,6 +87,7 @@ const HeroSection = () => {
             <AnimatedTable />
           </div>
         </div>
+
         {showVideo && (
           <div className="fixed inset-0 bg-opacity-80 flex items-center justify-center z-50">
             <div className="relative w-full max-w-2xl">
