@@ -1,24 +1,28 @@
-import axios from "axios";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../firebase/firebase";
 
-const fetchData = async () => {
-  try {
-    const response = await axios.post(
-      "https://api-prod.tartanhq.com/aphrodite/api/tp/v1/verification",
+export const sendFirebaseOtpToMobileNumber = async (mobile) => {
+  if (!window.recaptchaVerifier) {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
       {
-        username: "Sandbox_RealVariable",
-        password: "Sandbox@1234",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
+        size: "invisible",
+        callback: () => {
+          console.log("reCAPTCHA solved");
         },
-      }
+      },
     );
-    return response;
-  } catch (error) {
-    console.log(error, "error");
   }
+
+  const confirmationResult = await signInWithPhoneNumber(
+    auth,
+    `+91${mobile}`,
+    window.recaptchaVerifier,
+  );
+
+  window.confirmationResult = confirmationResult;
+  return confirmationResult;
 };
 
-export { fetchData };
+

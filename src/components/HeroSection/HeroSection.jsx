@@ -59,7 +59,7 @@ const HeroSection = () => {
                   <button
                     href="sign-in"
                     className="vibrant-shadow-btn px-4 btn"
-                    onClick={() => (window.location.href = "/sign-in")}
+                    onClick={() => (window.location.href = "/loan-application")}
                   >
                     Apply Loan
                   </button>

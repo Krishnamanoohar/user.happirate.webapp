@@ -25,26 +25,6 @@ import FeaturesSection2 from "../../components/FeaturesSection/FeaturesSection2"
 import SignInPopup from "../SignInPage/SignInPopup";
 
 const IndexPage = () => {
-  
-  const fetch = async () => {
-    try {
-      const resp = await axios.get(
-        "https://api.api-ninjas.com/v1/interestrate?country=United Kingdom",
-        {
-          headers: {
-            "X-Api-Key": "Pbe9EWzO6ueJ2lK4H7fETA==pyB2o2InlLZFeMos",
-          },
-        }
-      );
-      console.log(resp);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    fetch();
-  }, []);
-
   return (
     <div className={styles.indexPage}>
       <HeroSection />

@@ -28,6 +28,7 @@ const sendOtpToMobile = async (payload) => {
 
   return resp;
 };
+
 const verifyOtpApi = async (payload) => {
   const resp = await axios.post(
     "https://m3pmjfgx-3000.inc1.devtunnels.ms/customer/validate-otp",
