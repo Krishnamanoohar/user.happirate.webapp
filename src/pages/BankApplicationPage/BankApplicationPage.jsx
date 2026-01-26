@@ -3,7 +3,13 @@ import { Stepper, Step, StepLabel, Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ProvisionalSanctionLetter from "./ProvisionalSanctionLetter";
 import { CheckCircle } from "lucide-react"; // For the success modal icon
-
+import {
+  sendOtpToMobile,
+  verifyOtpApi,
+  personalDetailsVerification,
+  submitFinancialProfileDetails,
+} from "../../../src/api/api";
+import { ToastContainer, toast } from "react-toastify";
 // --- DUMMY DATA FOR FETCHED USER ---
 const DUMMY_USER_DATA1 = {
   firstName: "Aarav",
@@ -56,6 +62,7 @@ export default function BankApplicationPage() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isMobileVerified, setIsMobileVerified] = useState(false);
+  const [showOtp, setShowOtp] = useState();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -64,9 +71,19 @@ export default function BankApplicationPage() {
     panCard: "",
     dateOfBirth: "",
     employmentStatus: "",
+    cibilScore: "",
     companyName: "",
+    uanNumber: "",
+    aadharCard: "",
     monthlyIncome: "",
-    residentialStatus: "",
+    //residentialStatus: "",
+    creditCardUtilization: "",
+    residentialStability: "",
+    existingEmi: "",
+    residentialType: "",
+    recentEnquiries: "",
+    settlements: "",
+    emiBounces: "",
     addressLine1: "",
     city: "",
     state: "",
@@ -87,12 +104,72 @@ export default function BankApplicationPage() {
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
   const [previewFile, setPreviewFile] = useState(null);
 
+  const formatDateToDDMMYYYY = (isoDate) => {
+    if (!isoDate) return "";
+
+    const [year, month, day] = isoDate.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
+  const normalizeAadhaarForApi = (value) => {
+    return value
+      ?.replace(/\D/g, "")
+      ?.replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
+  const validateAadhaar = (value) => {
+    if (!value) return "Aadhaar number is required";
+    const regex = /^\d{4}-\d{4}-\d{4}$/;
+    return regex.test(value)
+      ? null
+      : "Aadhaar must be in format XXXX-XXXX-XXXX";
+  };
+
+  const validatePan = (value) => {
+    if (!value) return "PAN is required";
+    const pan = value.toUpperCase();
+    const regex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    return regex.test(pan) ? null : "PAN must be in format ABCDE1234F";
+  };
+
+  const validateGmail = (value) => {
+    if (!value) return "Email is required";
+    const regex = /^[a-z0-9._%+-]+@gmail\.com$/;
+    return regex.test(value.toLowerCase())
+      ? null
+      : "Enter a valid Gmail address";
+  };
+
+  const validateEmploymentNumbers = () => {
+    const errors = {};
+
+    if (Number(formData.monthlyIncome) <= 0) {
+      errors.monthlyIncome = "Monthly income must be greater than 0";
+    }
+
+    if (
+      Number(formData.cibilScore) < 300 ||
+      Number(formData.cibilScore) > 900
+    ) {
+      errors.cibilScore = "CIBIL score must be between 300 and 900";
+    }
+
+    if (!/^\d{6}$/.test(formData.pincode)) {
+      errors.pincode = "Pincode must be 6 digits";
+    }
+
+    if (!/^\d{12}$/.test(formData.uanNumber)) {
+      errors.uanNumber = "UAN must be 12 digits";
+    }
+
+    return errors;
+  };
+
   const mapDummyData = (data) => ({
     ...data,
-    addressLine1: data.address.line1,
-    city: data.address.city,
-    state: data.address.state,
-    pincode: data.address.pincode,
+    addressLine1: data?.address?.line1 || "",
+    city: data?.address?.city || "",
+    state: data?.address?.state || "",
+    pincode: data?.address?.pincode || "",
   });
 
   const handleChange = (e) => {
@@ -109,7 +186,7 @@ export default function BankApplicationPage() {
 
   const handleMobileChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    setMobileNumber(value);
+    setMobileNumber(String(value));
     setErrors((prev) => ({ ...prev, mobileNumber: "" }));
   };
 
@@ -123,9 +200,9 @@ export default function BankApplicationPage() {
     if (value && index < otpRefs.length - 1) {
       otpRefs[index + 1].current.focus();
     }
-    if (newOtp.every((digit) => digit !== "") && newOtp.length === 4) {
-      setTimeout(() => verifyOtp(newOtp.join("")), 100);
-    }
+    // if (newOtp.every((digit) => digit !== "") && newOtp.length === 4) {
+    //   setTimeout(() => verifyOtp(newOtp.join("")), 100);
+    // }
   };
 
   const handleOtpKeyDown = (e, index) => {
@@ -133,41 +210,140 @@ export default function BankApplicationPage() {
       otpRefs[index - 1].current.focus();
     }
   };
+  const buildMobilePayload = () => ({
+    mobileNumber,
+  });
+  const buildPersonalDetailsPayload = () => ({
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    dateOfBirth: formatDateToDDMMYYYY(formData.dateOfBirth),
+    email: formData.email,
+    panCard: formData.panCard,
+    aadharCard: normalizeAadhaarForApi(formData.aadharCard),
+  });
+  const buildEmploymentDetailsPayload = () => ({
+    employmentStatus: formData.employmentStatus,
+    companyName: formData.companyName,
+    uanNumber: formData.uanNumber,
+    monthlyIncome: Number(formData.monthlyIncome),
+    cibilScore: Number(formData.cibilScore),
+    recentEnquiries: Number(formData.recentEnquiries),
+    settlements: Number(formData.settlements),
+    emiBounces: Number(formData.emiBounces),
+    creditCardUtilization: Number(formData.creditCardUtilization),
+    residentialStability: Number(formData.residentialStability),
+    existingEmi: Number(formData.existingEmi),
+    residentialType: formData.residentialType,
+    addressLine1: formData.addressLine1,
+    city: formData.city,
+    state: formData.state,
+    pincode: formData.pincode,
+  });
 
-  const sendOtp = () => {
+  // const sendOtp = () => {
+  //   if (mobileNumber.length !== 10) {
+  //     setErrors({
+  //       mobileNumber: "Please enter a valid 10-digit mobile number",
+  //     });
+  //     return;
+  //   }
+  //   if (!consentChecked) {
+  //     setErrors({ consent: "You must agree to the consent statement." });
+  //     return;
+  //   }
+
+  //   setIsOtpSent(true);
+  //   setErrors({});
+  //   console.log(`Fake OTP sent to: ${mobileNumber}`);
+  // };
+  const sendOtp = async () => {
     if (mobileNumber.length !== 10) {
       setErrors({
         mobileNumber: "Please enter a valid 10-digit mobile number",
       });
       return;
     }
+
     if (!consentChecked) {
       setErrors({ consent: "You must agree to the consent statement." });
       return;
     }
 
-    setIsOtpSent(true);
-    setErrors({});
-    console.log(`Fake OTP sent to: ${mobileNumber}`);
-  };
+    const payload = buildMobilePayload();
+    console.log(" Sending OTP payload:", payload);
 
-  const verifyOtp = (enteredOtp) => {
-    if (enteredOtp === "1234") {
-      setIsMobileVerified(true);
-      setFormData((prev) => ({
-        ...prev,
-        ...mapDummyData(DUMMY_USER_DATA),
-      }));
+    try {
+      const res = await sendOtpToMobile(payload);
+      setShowOtp(res?.data?.otp);
+      console.log(res, "res---------------->");
+      toast.success("Otp sent Successfully");
+      setIsOtpSent(true);
+      console.log(otp, "otp");
+
       setErrors({});
-      setTimeout(() => setActiveStep(1), 500);
-    } else {
-      setErrors({ otp: "Invalid OTP. Please try again." });
-      setOtp(["", "", "", ""]);
-      otpRefs[0].current.focus();
+    } catch (error) {
+      console.error("OTP send failed", error);
+      toast.error("Failed to send OTP");
+      setErrors({
+        mobileNumber: "Failed to send OTP. Please try again.",
+      });
     }
   };
 
-  const handleNext = () => {
+  // const verifyOtp = (enteredOtp) => {
+  //   if (enteredOtp === "1234") {
+  //     setIsMobileVerified(true);
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       ...mapDummyData(DUMMY_USER_DATA),
+  //     }));
+  //     setErrors({});
+  //     setTimeout(() => setActiveStep(1), 500);
+  //   } else {
+  //     setErrors({ otp: "Invalid OTP. Please try again." });
+  //     setOtp(["", "", "", ""]);
+  //     otpRefs[0].current.focus();
+  //   }
+  // };
+  const verifyOtp = async (enteredOtp) => {
+    if (enteredOtp.length !== 4) {
+      setErrors({ otp: "Enter valid 4-digit OTP" });
+      return;
+    }
+
+    const payload = {
+      otp: enteredOtp,
+      mobileNumber: mobileNumber,
+    };
+
+    console.log("VERIFY OTP PAYLOAD:", payload);
+
+    try {
+      const response = await verifyOtpApi(payload);
+      console.log(response, "response------------>");
+      toast.success("Otp Verified Successfully");
+      setIsMobileVerified(true);
+      setErrors({});
+
+      // setFormData((prev) => ({
+      //   ...prev,
+      //   ...mapDummyData(DUMMY_USER_DATA),
+      // }));
+      setTimeout(() => setActiveStep(1), 300);
+    } catch (error) {
+      toast.error("OTP verification failed");
+      console.error(
+        "OTP verification failed:",
+        error.response?.data || error.message,
+      );
+
+      setErrors({ otp: error.response?.data?.message || "Invalid OTP" });
+      setOtp(["", "", "", ""]);
+      otpRefs[0]?.current?.focus();
+    }
+  };
+
+  const handleNext = async () => {
     let newErrors = {};
 
     if (activeStep === 0) {
@@ -188,24 +364,28 @@ export default function BankApplicationPage() {
         }
 
         if (isOtpSent) {
-          verifyOtp(otp.join(""));
+          verifyOtp(otp.join(""), mobileNumber);
           return;
         }
+
         sendOtp();
         return;
       }
     }
 
-    if (activeStep === 1 || activeStep === 2) {
-      const fieldsToValidate =
-        activeStep === 1
-          ? ["firstName", "lastName", "email", "panCard"]
-          : ["monthlyIncome", "employmentStatus", "addressLine1"];
-      fieldsToValidate.forEach((field) => {
+    if (activeStep === 1) {
+      const requiredFields = [
+        "firstName",
+        "lastName",
+        "email",
+        "panCard",
+        "dateOfBirth",
+        "aadharCard",
+      ];
+
+      requiredFields.forEach((field) => {
         if (!formData[field]) {
-          newErrors[field] = `${field
-            .replace(/([A-Z])/g, " $1")
-            .toLowerCase()} is required.`;
+          newErrors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
         }
       });
 
@@ -213,30 +393,127 @@ export default function BankApplicationPage() {
         setErrors(newErrors);
         return;
       }
+
+      const emailError = validateGmail(formData.email);
+      const panError = validatePan(formData.panCard);
+      const aadhaarError = validateAadhaar(
+        normalizeAadhaarForApi(formData.aadharCard),
+      );
+
+      if (emailError || panError || aadhaarError) {
+        setErrors({
+          email: emailError,
+          panCard: panError,
+          aadharCard: aadhaarError,
+        });
+        return;
+      }
+
+      const payload = buildPersonalDetailsPayload();
+      console.log("Personal Details Payload:", payload);
+
+      try {
+        const res = await personalDetailsVerification(payload);
+        console.log(res, "res");
+        toast.success("Submitted Successfully");
+      } catch (error) {
+        toast.error("submission failed");
+        console.error(
+          "Personal details submission failed",
+          error.response?.data || error.message,
+        );
+
+        setErrors({
+          api:
+            error.response?.data?.message || "Failed to save personal details",
+        });
+        return;
+      }
     }
 
-    if (activeStep === 3) {
-      if (!formData.loanType) {
-        newErrors.loanType = "Please select a loan type.";
-      }
-      if (!formData.loanAmount || Number(formData.loanAmount) <= 0) {
-        newErrors.loanAmount = "Enter a valid loan amount.";
-      }
-      // if (!formData.itrFile) {
-      //   newErrors.itrFile = "Last 3 months ITR upload is required.";
-      // }
-      // if (!formData.payslipsFile) {
-      //   newErrors.payslipsFile = "Last 3 months payslips upload is required.";
-      // }
-      // if (!formData.photoFile) {
-      //   newErrors.photoFile = "Applicant photo upload is required.";
-      // }
+    if (activeStep === 2) {
+      const requiredEmploymentFields = [
+        "employmentStatus",
+        "companyName",
+        "uanNumber",
+        "monthlyIncome",
+        "cibilScore",
+        //"residentialStatus",
+        "creditCardUtilization",
+        "residentialStability",
+        "existingEmi",
+        "residentialType",
+        "recentEnquiries",
+        "settlements",
+        "emiBounces",
+        "addressLine1",
+        "city",
+        "state",
+        "pincode",
+      ];
+
+      requiredEmploymentFields.forEach((field) => {
+        if (!formData[field]) {
+          newErrors[field] = `${field.replace(/([A-Z])/g, " $1")} is required`;
+        }
+      });
 
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
         return;
       }
+
+      const numericErrors = validateEmploymentNumbers();
+      if (Object.keys(numericErrors).length > 0) {
+        setErrors(numericErrors);
+        return;
+      }
+
+      const payload = buildEmploymentDetailsPayload();
+      console.log("Employment Details Payload:", payload);
+
+      try {
+        const res = await submitFinancialProfileDetails(payload);
+        console.log(res, "res-----------Employment");
+        toast.success("Submitted Successfully");
+      } catch (error) {
+        toast.error("Employment details submission failed");
+        console.error(
+          "Employment details submission failed",
+          error.response?.data || error.message,
+        );
+
+        setErrors({
+          api:
+            error.response?.data?.message ||
+            "Failed to save employment details",
+        });
+        return;
+      }
     }
+
+    // if (activeStep === 3) {
+    //   if (!formData.loanType) {
+    //     newErrors.loanType = "Please select a loan type.";
+    //   }
+    //   if (!formData.loanAmount || Number(formData.loanAmount) <= 0) {
+    //     newErrors.loanAmount = "Enter a valid loan amount.";
+    //   }
+    //   // if (!formData.itrFile) {
+    //   //   newErrors.itrFile = "Last 3 months ITR upload is required.";
+    //   // }
+    //   // if (!formData.payslipsFile) {
+    //   //   newErrors.payslipsFile = "Last 3 months payslips upload is required.";
+    //   // }
+    //   // if (!formData.photoFile) {
+    //   //   newErrors.photoFile = "Applicant photo upload is required.";
+    //   // }
+
+    //   if (Object.keys(newErrors).length > 0) {
+    //     setErrors(newErrors);
+    //     return;
+    //   }
+    // }
 
     if (activeStep === steps.length - 1) {
       // Final Review -> Show PSL modal
@@ -275,15 +552,15 @@ export default function BankApplicationPage() {
       { name: "firstName", label: "First Name" },
       { name: "lastName", label: "Last Name" },
       { name: "dateOfBirth", label: "Date of Birth", type: "date" },
-      { name: "panCard", label: "PAN Card", disabled: true },
+      { name: "panCard", label: "PAN Card" },
       { name: "email", label: "E-Mail ID", type: "email" },
-      { name: "aadharCard", label: "Aadhar Card", disabled: true },
+      { name: "aadharCard", label: "Aadhar Card" },
     ];
 
     const employmentFields = [
       { name: "employmentStatus", label: "Employment Status" },
       { name: "companyName", label: "Company Name" },
-      { name: "uan/pf", label: "UAN / PF Number" },
+      { name: "uanNumber", label: "UAN / PF Number" },
       { name: "monthlyIncome", label: "Monthly Income (₹)", type: "number" },
       { name: "cibilScore", label: "Cibil Score", type: "number" },
       { name: "recentEnquiries", label: "Recent Enquiries" },
@@ -292,7 +569,7 @@ export default function BankApplicationPage() {
       { name: "creditCardUtilization", label: "Credit Card Utilization" },
       { name: "residentialStability", label: "Residential Stability" },
       { name: "existingEmi", label: "Existing EMI" },
-      { name: "residentialStatus", label: "Residential Status" },
+      { name: "residentialType", label: "Residential Type" },
       { name: "addressLine1", label: "Address Line 1" },
       { name: "city", label: "City" },
       { name: "state", label: "State" },
@@ -371,7 +648,7 @@ export default function BankApplicationPage() {
                   )}
                 </div>
               );
-            }
+            },
           )}
         </div>
         <p className="mt-4 text-sm text-gray-600 italic">
@@ -404,7 +681,7 @@ export default function BankApplicationPage() {
                 type="tel"
                 value={mobileNumber}
                 onChange={handleMobileChange}
-                disabled={isOtpSent}
+                disabled={isOtpSent && !errors.otp}
                 className={`text-sm rounded-lg block w-full p-2.5 ${
                   errors.mobileNumber
                     ? "border-red-500"
@@ -450,8 +727,8 @@ export default function BankApplicationPage() {
             {isOtpSent && !isMobileVerified && (
               <div className="mt-4">
                 <p className="mb-3 text-sm text-green-600 font-medium">
-                  OTP Sent to {mobileNumber}. Please check your mobile. (Use
-                  **1234** for demo)
+                  OTP Sent to {mobileNumber}. Please check your mobile. (Use **
+                  {showOtp}** for )
                 </p>
                 <div className="flex justify-between max-w-xs mx-auto space-x-2">
                   {otp.map((digit, index) => (
@@ -487,7 +764,7 @@ export default function BankApplicationPage() {
       case 2: // Review & Edit Employment & Income
         return renderEditableFields(
           null,
-          "Review & Edit Employment, Income & Address"
+          "Review & Edit Employment, Income & Address",
         );
 
       case 3: // Select Loan & Upload Documents
@@ -746,7 +1023,7 @@ export default function BankApplicationPage() {
 
       case 4: // Final Review & Submit
         const reviewKeys = Object.keys(formData).filter(
-          (key) => !(formData[key] instanceof File)
+          (key) => !(formData[key] instanceof File),
         );
 
         return (
@@ -852,6 +1129,17 @@ export default function BankApplicationPage() {
       elevation={4}
       className="container flex mt-6 mb-12 rounded mx-auto max-w-4xl"
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
+
       <div className="w-full">
         <div className="mx-auto p-6">
           <Stepper activeStep={activeStep} alternativeLabel>
@@ -888,10 +1176,10 @@ export default function BankApplicationPage() {
               {activeStep === steps.length - 1
                 ? "View Sanction Letter"
                 : activeStep === 0 && !isOtpSent
-                ? "Send OTP"
-                : activeStep === 0 && isOtpSent && !isMobileVerified
-                ? "Verify OTP"
-                : "Next"}
+                  ? "Send OTP"
+                  : activeStep === 0 && isOtpSent && !isMobileVerified
+                    ? "Verify OTP"
+                    : "Next"}
             </button>
           </div>
 

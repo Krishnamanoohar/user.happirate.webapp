@@ -57,11 +57,11 @@ const HeroSection = () => {
 
                 <div className="hero-buttons flex gap-4 mt-6">
                   <button
-                    href="compare-loans"
+                    href="sign-in"
                     className="vibrant-shadow-btn px-4 btn"
-                    onClick={() => (window.location.href = "/compare-loans")}
+                    onClick={() => (window.location.href = "/sign-in")}
                   >
-                    Start Comparing
+                    Apply Loan
                   </button>
                   {/* 
                   <a

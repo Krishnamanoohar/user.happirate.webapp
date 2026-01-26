@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactSpeedometer from "react-d3-speedometer";
-import api from "../../../api/api";
+import { checkLoanEligibility } from "../../../api/api";
+
 const UserInputForm = ({ onSubmit, formData, setFormData }) => {
-  const [income, setIncome] = useState(0); // in thousands
+  const [income, setIncome] = useState(0);
   const [hasActiveEmi, setHasActiveEmi] = useState("no");
   const [loanType, setLoanType] = useState("");
   const [tenure, setTenure] = useState("");
@@ -35,7 +36,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
   const buildPayload = () => ({
     employmentType: employmentType,
     monthlySalary: Number(income),
-    employmentExperienceYears: Number(years),
+    employmentExperienceYears: years ? Number(years) : null,
     outstandingEMIAmount: Number(outstandingEmi),
     requiredLoanType: loanType,
     requiredLoanAmount: Number(loanAmount),
@@ -43,7 +44,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
     creditCardOutstandingAmount:
       creditOption === "yes" ? Number(creditCardAmount) : 0,
     loanEnquiryCountLast12Months: Number(loanEnquiry),
-    creditScore: Number(creditScore),
+    creditScore: creditScore ? Number(creditScore) : null,
   });
 
   const handleSubmit = async (e) => {
@@ -52,6 +53,11 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
 
     const payload = buildPayload();
     console.log("Submitting payload:", payload);
+
+    if (creditOption === "yes" && !creditCardAmount) {
+      alert("Please enter credit card outstanding amount");
+      return;
+    }
 
     try {
       const result = await api.checkLoanEligibility(payload);
@@ -137,38 +143,23 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">Employment Experience</label>
+                <label className="form-label">
+                  Employment Experience (Years)
+                </label>
 
-                <div className="row">
-                  <div className="col-6">
-                    <select
-                      className="form-control  text-white  custom-select"
-                      onChange={(e) => setYears(e.target.value)}
-                      required
-                    >
-                      <option value="">Years</option>
-                      {[...Array(20)].map((_, i) => (
-                        <option key={i} value={`${i + 1}-${i + 2}`}>
-                          {i + 1}-{i + 2} Years
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="col-6">
-                    <select
-                      className="form-control  text-white  custom-select"
-                      required
-                    >
-                      <option value="">Months</option>
-                      {[...Array(11)].map((_, i) => (
-                        <option key={i} value={`${i + 1}-${i + 2}`}>
-                          {i + 1}-{i + 2} Months
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                <select
+                  className="form-control text-white custom-select"
+                  value={years}
+                  onChange={(e) => setYears(e.target.value)}
+                  required
+                >
+                  <option value="">Select Years</option>
+                  {[...Array(30)].map((_, i) => (
+                    <option key={i} value={i + 1}>
+                      {i + 1} Year{i + 1 > 1 ? "s" : ""}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="col-md-6">
@@ -185,7 +176,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                 />
               </div>
 
-              {hasActiveEmi === "yes" && (
+              {/* {hasActiveEmi === "yes" && (
                 <div className="col-md-6 mt-3">
                   <label className="form-label">
                     Current Monthly EMI Spending
@@ -200,7 +191,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                     required
                   />
                 </div>
-              )}
+              )} */}
 
               <div className="col-md-6">
                 <label className="form-label">Loan Type</label>
@@ -281,7 +272,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                     type="number"
                     className="form-control text-white"
                     placeholder="Enter amount e.g. 25000"
-                    min="1"
+                    min="0"
                     value={creditCardAmount}
                     onChange={(e) => setCreditCardAmount(e.target.value)}
                     required
@@ -297,7 +288,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                   type="number"
                   className="form-control text-white"
                   placeholder="e.g.0"
-                  min="1"
+                  min="0"
                   onChange={(e) => {
                     setLoanEnquiry(e.target.value);
                   }}

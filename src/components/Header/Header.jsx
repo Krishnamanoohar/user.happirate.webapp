@@ -11,6 +11,7 @@ const Header = () => {
     { name: "Get In Touch", href: "/#get-in-touch" },
     //{ name: "Blog", href: "/#blog" },
     { name: "EMI Calculator", href: "/emi-calculator" },
+    { name: "Compare Loans", href: "/compare-loans" },
     // { name: "Our Story", href: "/our-story" },
     // { name: "Home", href: "#hero" },
     // { name: "Features", href: "#features" },

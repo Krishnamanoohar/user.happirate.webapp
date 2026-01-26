@@ -18,6 +18,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
 import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
+import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
 export const Context = createContext();
 
 const App = () => {
@@ -37,7 +38,7 @@ const App = () => {
             "Content-Type": "application/json",
             "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
           },
-        }
+        },
       );
       const token = response.data.token;
       sessionStorage.setItem("token", token);
@@ -69,7 +70,7 @@ const App = () => {
             "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       );
       console.log(res, "res payslip");
     } catch (error) {
@@ -98,17 +99,23 @@ const App = () => {
           <Header />
           <Routes>
             <Route path="/" element={<IndexPage />} />
-            <Route path="sign-in" element={<LoginPage />} />
+            {/* <Route path="sign-in" element={<LoginPage />} /> */}
+            <Route path="sign-in" element={<HappirateSplitAuth />} />
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
             <Route path="compare-loans" element={<LoanComparisonPage />} />
             {/* <Route path="process" element={<ApplicationPage />} /> */}
-            <Route path="loan-tracking-dashboard" element={<LoanTrackingDashboard />} />
+            <Route
+              path="loan-tracking-dashboard"
+              element={<LoanTrackingDashboard />}
+            />
             <Route path="emi-calculator" element={<EMICalculatorPage />} />
             <Route
               path="financial-summary"
               element={<FinancialSummaryPage />}
             />
             <Route path="loan-application" element={<BankApplicationPage />} />
+            //
+            <Route path="loan-application" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Chatbot />
