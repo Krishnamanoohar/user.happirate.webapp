@@ -19,6 +19,7 @@ import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
 import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
 import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
+import CreditHealthReport from "./components/CreditHealthReport/CreditHealthReport";
 export const Context = createContext();
 
 const App = () => {
@@ -117,6 +118,8 @@ const App = () => {
             //
             <Route path="loan-application" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
+
+            <Route path="/credit-health-report" element={<CreditHealthReport />} />
           </Routes>
           <Chatbot />
           <SignInPopup />

@@ -7,6 +7,7 @@ const Header = () => {
   const { showSignInPopup, setShowSignInPopup } = useContext(Context);
 
   const menuItems = [
+    { name: "Credit Health Report", href:"/credit-health-report"},
     { name: "Solutions", href: "/#solutions" },
     { name: "Get In Touch", href: "/#get-in-touch" },
     //{ name: "Blog", href: "/#blog" },
