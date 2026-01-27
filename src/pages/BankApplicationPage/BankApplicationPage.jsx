@@ -238,21 +238,6 @@ export default function BankApplicationPage() {
     }
   };
 
-  // const verifyOtp = (enteredOtp) => {
-  //   if (enteredOtp === "1234") {
-  //     setIsMobileVerified(true);
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       ...mapDummyData(DUMMY_USER_DATA),
-  //     }));
-  //     setErrors({});
-  //     setTimeout(() => setActiveStep(1), 500);
-  //   } else {
-  //     setErrors({ otp: "Invalid OTP. Please try again." });
-  //     setOtp(["", "", "", ""]);
-  //     otpRefs[0].current.focus();
-  //   }
-  // };
   const verifyOtp = async (enteredOtp) => {
     if (enteredOtp.length !== 4) {
       setErrors({ otp: "Enter valid 4-digit OTP" });
@@ -297,7 +282,7 @@ export default function BankApplicationPage() {
     if (activeStep === 0) {
       if (!isMobileVerified) {
         if (isOtpSent && otp.some((d) => d === "")) {
-          newErrors.otp = "Please enter the 4-digit OTP.";
+          newErrors.otp = "Please enter the 6-digit OTP.";
         }
 
         if (Object.keys(newErrors).length > 0) {
