@@ -20,6 +20,7 @@ import SignInPopup from "./pages/SignInPage/SignInPopup";
 import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
 import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
 import CreditHealthReport from "./components/CreditHealthReport/CreditHealthReport";
+import OneScoreDashboard from "./components/Dashboard/Dashboard";
 export const Context = createContext();
 
 const App = () => {
@@ -120,6 +121,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
 
             <Route path="/credit-health-report" element={<CreditHealthReport />} />
+            <Route path="/oneboarddashboard" element={<OneScoreDashboard />} />
           </Routes>
           <Chatbot />
           <SignInPopup />
