@@ -23,37 +23,58 @@ import { Smile } from "lucide-react";
 import GetInTouchSection from "../../components/GetInTouchSection/GetInTouchSection";
 import FeaturesSection2 from "../../components/FeaturesSection/FeaturesSection2";
 import SignInPopup from "../SignInPage/SignInPopup";
+import Hero from '../../IntegrateComponents/Hero/Hero'
+import BanksSection from "@/IntegrateComponents/BankSection/BanksSection";
+import EMICalculator from "@/IntegrateComponents/EMICalculator/EMICalculator";
+import Features from "@/IntegrateComponents/Features/Features";
+import Footer from "@/IntegrateComponents/Footer/Footer";
+
+
+// const IndexPage = () => {
+//   return (
+//     <div className={styles.indexPage}>
+//       {/* <HeroSection /> */}
+//       <Hero/>
+//       {/* <BottomScroller /> */}
+//       {/* <div className="border-y-2">
+//         <CurvedLoop
+//           marqueeText="Any Loan ☻ Any Bank ☻ Tailored For You ☻ "
+//           // marqueeText={<Smile />}
+//           speed={3}
+//           curveAmount={0}
+//           direction="right"
+//           interactive={true}
+//           className="custom-text-style"
+//         />
+//       </div> */}
+//       <FeaturesSection2 />
+//       <FeaturesCardsSection />
+//       {/* <Features2Section /> */}
+//       {/* <ServicesSection /> */}
+//       {/* <AboutSection /> */}
+//       <CallToActionSection />
+//       <ClientsSection />
+//       {/* <TestimonialsSection /> */}
+//       {/* <StatsSection /> */}
+//       {/* <PricingSection /> */}
+//       <FaqSection />
+//       <CallToActionSection2 />
+//       <GetInTouchSection />
+//       <FooterSection />
+//     </div>
+//   );
+// };
 
 const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
-      <HeroSection />
-      {/* <BottomScroller /> */}
-      {/* <div className="border-y-2">
-        <CurvedLoop
-          marqueeText="Any Loan ☻ Any Bank ☻ Tailored For You ☻ "
-          // marqueeText={<Smile />}
-          speed={3}
-          curveAmount={0}
-          direction="right"
-          interactive={true}
-          className="custom-text-style"
-        />
-      </div> */}
-      <FeaturesSection2 />
-      <FeaturesCardsSection />
-      {/* <Features2Section /> */}
-      {/* <ServicesSection /> */}
-      {/* <AboutSection /> */}
-      <CallToActionSection />
-      <ClientsSection />
-      {/* <TestimonialsSection /> */}
-      {/* <StatsSection /> */}
-      {/* <PricingSection /> */}
-      <FaqSection />
-      <CallToActionSection2 />
-      <GetInTouchSection />
-      <FooterSection />
+      
+      <Hero/>
+      <BanksSection />
+      <EMICalculator />
+      <Features />
+      <Footer />
+     
     </div>
   );
 };

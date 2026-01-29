@@ -21,64 +21,19 @@ import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDas
 import { HappirateSplitAuth } from "./pages/AuthenticationPageNew/HappirateSplitAuth";
 //import Index from "./pages/NewBankApplicationPage/Index";
 import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
+import Navbar from "./IntegrateComponents/Navbar/Navbar";
 export const Context = createContext();
 
 const App = () => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
+  const [scrollY, setScrollY] = useState(0)
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.post(
-        "https://api-prod.tartanhq.com/aphrodite/api/auth/v1/login",
-        {
-          username: "Sandbox_RealVariable",
-          password: "Sandbox@1234",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
-          },
-        },
-      );
-      const token = response.data.token;
-      sessionStorage.setItem("token", token);
-      console.log(token, "token");
-      console.log(response.data, "response");
-      return response;
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
-
-  const payslip = async () => {
-    try {
-      //const token = sessionStorage.getItem("token");
-      const res = await axios.post(
-        "https://api-ext-prod.tartanhq.com/aphrodite/external/v1/intelligent-ocr",
-
-        {
-          name: "tarran",
-          phoneNumber: "XXXXXXXX",
-          email: "Test@tartanhq.com",
-          companyName: "APARAJITHA CORPORATE SERVICES PRIVATE LIMITED",
-          applicationId: "SidiDevTest",
-          mode: "PROD",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        },
-      );
-      console.log(res, "res payslip");
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     AOS.init({ duration: 600 });
@@ -98,7 +53,8 @@ const App = () => {
         }}
       >
         <BrowserRouter>
-          <Header />
+          {/* <Header /> */}
+          <Navbar scrollY={scrollY} />
           <Routes>
             <Route path="/" element={<IndexPage />} />
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
