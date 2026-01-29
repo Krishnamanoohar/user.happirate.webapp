@@ -1,8 +1,8 @@
 import axios from "axios";
-const baseUrl = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
+const localUrl = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
 
 const apiClient = axios.create({
-  baseUrl: baseUrl,
+  baseURL: localUrl,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -14,23 +14,16 @@ const checkLoanEligibility = async (payload) => {
 };
 
 const sendOtpToMobile = async (mobile) => {
-  const resp = axios.post(`${baseUrl}/send-otp-to-mobile`, {
+  const resp = await apiClient.post("/send-otp-to-mobile", {
     mobileNumber: mobile,
   });
-  // const resp = await apiClient.post("/send-otp-to-mobile", { mobile: payload });
 
   console.log(resp, "resp");
   return resp;
 };
 
-const verifyOtpApi = async (payload) => {
-  const resp = await apiClient.post(
-    " https://m3pmjfgx-3000.inc1.devtunnels.ms/customer/send-otp-to-mobile",
-    payload,
-    {
-      headers: { "Content-Type": "application/json" },
-    },
-  );
+const verifyOtp = async (payload) => {
+  const resp = await apiClient.post("/validate-otp", payload);
 
   console.log(resp, "resp");
   return resp;
@@ -57,5 +50,5 @@ export {
   personalDetailsVerification,
   submitFinancialProfileDetails,
   sendOtpToMobile,
-  verifyOtpApi,
+  verifyOtp,
 };

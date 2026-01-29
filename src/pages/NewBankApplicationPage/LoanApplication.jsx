@@ -31,6 +31,7 @@ import {
   personalDetailsVerification,
   submitFinancialProfileDetails,
 } from "../../../src/api/api";
+import { useLocation } from "react-router-dom";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -161,7 +162,7 @@ const buildEmploymentDetailsPayload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
 
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({

@@ -13,8 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { sendOtpToMobile, verifyOtpApi } from "../../../src/api/api";
+// import { toast } from "sonner";
+import { sendOtpToMobile, verifyOtp } from "../../../src/api/api";
+import { Navigate, useNavigate } from "react-router-dom";
+// import { ToastContainer } from "react-toastify";
+import { toast, Toaster } from "sonner";
 
 function Stat({ value, label }) {
   return (
@@ -30,6 +33,8 @@ export function HappirateSplitAuth() {
   const [password, setPassword] = useState("");
   const [showOtp, setShowOtp] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
   const [isMobileVerified, setIsMobileVerified] = useState(false);
@@ -73,7 +78,7 @@ export function HappirateSplitAuth() {
     }
   };
 
-  const verifyOtp = async (enteredOtp) => {
+  const handleVerifyOtp = async (enteredOtp) => {
     if (enteredOtp.length !== 4) {
       setErrors({ otp: "Enter valid 4-digit OTP" });
       return;
@@ -87,9 +92,9 @@ export function HappirateSplitAuth() {
     console.log("VERIFY OTP PAYLOAD:", payload);
 
     try {
-      await verifyOtpApi(payload);
-
+      const resp = await verifyOtp(payload);
       toast.success("OTP verified successfully");
+      navigate("/loan-application");
       setIsMobileVerified(true);
       setErrors({});
     } catch (error) {
@@ -107,6 +112,8 @@ export function HappirateSplitAuth() {
 
   return (
     <AuroraBackdrop className="min-h-screen bg-gradient-to-br from-[#fdfcfd] via-[#f3e8ff] to-[#e9d5ff]">
+      <Toaster richColors position="top-right" />
+
       <div className="min-h-screen w-full">
         <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
           {/* Left marketing panel */}
@@ -232,7 +239,7 @@ export function HappirateSplitAuth() {
                         type="button"
                         variant="hero"
                         className="w-full"
-                        onClick={() => verifyOtp(otp.join(""))}
+                        onClick={() => handleVerifyOtp(otp.join(""))}
                       >
                         Verify OTP
                       </Button>
