@@ -8,6 +8,12 @@
   background: linear-gradient(to right, #ffffff, #6dd5fa, #2980b9); */
 }
 
+.bg-primary {
+  background-color: #7c3bed !important;
+}
+.text-primary {
+  color: #7c3bed !important;
+}
 /* Hide scrollbar but allow scroll (for all browsers) */
 body {
   overflow-y: scroll; /* Enable scroll */
@@ -114,14 +120,21 @@ body,
   );
   background-size: 400% 100%;
   animation: fire-border 2s linear infinite;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
 }
 
 .gold-glow {
-  box-shadow: 0 0 6px #ffd700, 0 0 12px #ffbf00, 0 0 24px #ffaa00;
+  box-shadow:
+    0 0 6px #ffd700,
+    0 0 12px #ffbf00,
+    0 0 24px #ffaa00;
 }
 
 @keyframes marquee {
@@ -237,7 +250,9 @@ body,
   font-weight: bold;
   cursor: pointer;
   box-shadow: -2px 0 16px 0px #4c45a5; /* shadow only on left */
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
 }
 
 .vibrant-shadow-btn:hover {

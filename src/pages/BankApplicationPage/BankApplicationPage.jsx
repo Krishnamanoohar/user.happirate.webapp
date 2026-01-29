@@ -5,7 +5,7 @@ import ProvisionalSanctionLetter from "./ProvisionalSanctionLetter";
 import { CheckCircle } from "lucide-react"; // For the success modal icon
 import {
   // sendOtpToMobile,
-  verifyOtpApi,
+  //verifyOtpApi,
   personalDetailsVerification,
   submitFinancialProfileDetails,
 } from "../../../src/api/api";

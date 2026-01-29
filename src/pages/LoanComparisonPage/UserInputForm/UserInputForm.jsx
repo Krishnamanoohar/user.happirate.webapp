@@ -60,7 +60,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
     }
 
     try {
-      const result = await api.checkLoanEligibility(payload);
+      const result = await checkLoanEligibility(payload);
       console.log("Eligibility result:", result);
     } catch (err) {
       console.error("Failed to submit eligibility", err);

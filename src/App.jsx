@@ -18,7 +18,9 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
 import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDashboard";
-import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
+import { HappirateSplitAuth } from "./pages/AuthenticationPageNew/HappirateSplitAuth";
+//import Index from "./pages/NewBankApplicationPage/Index";
+import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
 export const Context = createContext();
 
 const App = () => {
@@ -113,9 +115,9 @@ const App = () => {
               path="financial-summary"
               element={<FinancialSummaryPage />}
             />
-            <Route path="loan-application" element={<BankApplicationPage />} />
-            //
-            <Route path="loan-application" element={<HappirateSplitAuth />} />
+            <Route path="loan-application" element={<LoanApplication />} />
+
+            <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Chatbot />
