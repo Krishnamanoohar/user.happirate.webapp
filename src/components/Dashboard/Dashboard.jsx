@@ -4,19 +4,36 @@
 /* ================= ICONS ================= */
 
 const Icons = {
-    CreditCard: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>,
-    TrendingUp: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /></svg>,
-    AlertCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /></svg>,
-    CheckCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 4 12 14 9 11" /></svg>,
-    ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 19-7-7 7-7" /></svg>,
-    Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 3 2 7 7 2-7 2-2 7-2-7-7-2 7-2 2-7z" /></svg>,
-    X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>,
+    CreditCard: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>,
+    TrendingUp: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>,
+    AlertCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>,
+    CheckCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>,
+    Clock: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
+    Shield: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
+    ChevronRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>,
+    Activity: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>,
+    Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>,
+    DollarSign: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>,
+    PieChart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg>,
+    Bell: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>,
+    Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>,
+    X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>,
+    Calendar: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>,
+    ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>,
+    Info: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>,
+    Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M9 3v4" /><path d="M3 5h4" /><path d="M3 9h4" /></svg>,
+    Send: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" x2="11" y1="2" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>,
+    FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><line x1="10" x2="8" y1="9" y2="9" /></svg>,
+    Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
+    Share2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg>,
+    Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
 };
 
 const Icon = ({ name, className }) => {
-    const Comp = Icons[name];
-    return Comp ? <div className={className}><Comp /></div> : null;
+    const IconComponent = Icons[name];
+    return IconComponent ? <div className={className}><IconComponent /></div> : null;
 };
+
 
 /* ================= STATIC DATA ================= */
 
@@ -138,13 +155,38 @@ export default function OneScoreDashboard() {
             }
         ]
     };
-    const ScoreGauge = ({ score }) => (
-        <div className="bg-[#172554] text-white p-6 rounded-3xl text-center">
-            <div className="text-4xl font-bold">{score}</div>
-            <div className="text-xs mt-1">CIBIL Score</div>
-            <p className="text-xs mt-2">Last updated: {apiResponse.customer.lastUpdated}</p>
-        </div>
-    );
+    const ScoreGauge = ({ score }) => {
+        const radius = 80;
+        const stroke = 12;
+        const normalizedRadius = radius - stroke * 2;
+        const circumference = normalizedRadius * 2 * Math.PI;
+        const strokeDashoffset = circumference - ((score - 300) / 600) * circumference;
+        let scoreColor = "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]";
+        if (score < 650) scoreColor = "text-red-300";
+
+        return (
+            <div className="relative flex flex-col items-center justify-center p-6 bg-[#172554] rounded-3xl shadow-xl hover:shadow-2xl transition-all">
+                <div className="relative">
+                    <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+                        <circle stroke="#FFFFFF" strokeWidth={stroke} strokeOpacity="0.1" fill="transparent" r={normalizedRadius} cx={radius} cy={radius} strokeLinecap="round" />
+                        <circle stroke="currentColor" strokeWidth={stroke} strokeDasharray={circumference + ' ' + circumference} style={{ strokeDashoffset, transition: 'stroke-dashoffset 1s ease-in-out' }} className={`${scoreColor}`} fill="transparent" r={normalizedRadius} cx={radius} cy={radius} strokeLinecap="round" />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-4xl font-bold text-white drop-shadow-md">{score}</span>
+                        <span className="text-xs text-indigo-100 uppercase tracking-wider mt-1">CIBIL Score</span>
+                    </div>
+                </div>
+                <div className="mt-4 text-center">
+                    <p className="text-indigo-100 text-sm">Last updated: {apiResponse.customer.lastUpdated}</p>
+                    <div className="flex items-center justify-center mt-2 space-x-2">
+                        <div className="px-2 py-1 bg-white/10 text-white text-xs rounded-full border border-white/20 flex items-center shadow-sm">
+                            <span className="mr-1"><Icon name="TrendingUp" className="w-3 h-3" /></span> Top 25% of borrowers
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
     const OfferCard = ({ offer }) => (
         <div className={`relative overflow-hidden rounded-2xl p-5 mb-4 ${offer.color} shadow-sm transform transition hover:scale-[1.01]`}>
             <div className="absolute top-0 right-0 p-3 opacity-[0.05] pointer-events-none">
@@ -164,11 +206,21 @@ export default function OneScoreDashboard() {
     );
 
 
-    const FactorCard = ({ title, value, status, color, onClick }) => (
-        <div onClick={onClick} className="bg-white p-4 rounded-xl border cursor-pointer hover:shadow-md transition-shadow">
-            <p className="text-xs text-slate-500">{title}</p>
-            <p className={`text-lg font-bold ${color}`}>{status}</p>
-            <p className="text-sm text-slate-700">{value}</p>
+    const FactorCard = ({ title, status, value, color, iconName, onClick }) => (
+        <div onClick={onClick} className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all cursor-pointer group">
+            <div className="flex items-center space-x-3">
+                <div className={`p-2 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors text-blue-700`}>
+                    <Icon name={iconName} className="w-5 h-5" />
+                </div>
+                <div>
+                    <p className="text-slate-500 text-xs uppercase tracking-wide">{title}</p>
+                    <p className={`font-semibold text-sm ${color.includes('#') ? `text-[${color}]` : color}`}>{status}</p>
+                </div>
+            </div>
+            <div className="text-right">
+                <p className="text-slate-900 font-bold">{value}</p>
+                <div className="ml-auto mt-1"><Icon name="ChevronRight" className="w-4 h-4 text-slate-400" /></div>
+            </div>
         </div>
     );
 
@@ -636,7 +688,7 @@ export default function OneScoreDashboard() {
                         </div>
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-lg font-bold text-slate-900">Recommended for You</h2>
-                            <button onClick={() => handleTabChange('offers')} className="text-sm text-blue-600 hover:text-blue-700">See all</button>
+                            <button onClick={() => activeTab('offers')} className="text-sm text-blue-600 hover:text-blue-700">See all</button>
                         </div>
                         <div>
                             {apiResponse.offers.slice(0, 1).map(offer => (

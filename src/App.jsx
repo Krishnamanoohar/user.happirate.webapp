@@ -21,6 +21,7 @@ import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDas
 import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
 import CreditHealthReport from "./components/CreditHealthReport/CreditHealthReport";
 import OneScoreDashboard from "./components/Dashboard/Dashboard";
+import Emicalculatornew from "./components/Emi Calculator New/Emicalculatenew";
 export const Context = createContext();
 
 const App = () => {
@@ -110,7 +111,8 @@ const App = () => {
               path="loan-tracking-dashboard"
               element={<LoanTrackingDashboard />}
             />
-            <Route path="emi-calculator" element={<EMICalculatorPage />} />
+            {/* <Route path="emi-calculator" element={<EMICalculatorPage />} /> */}
+            <Route path="emi-calculator" element={<Emicalculatornew />} />
             <Route
               path="financial-summary"
               element={<FinancialSummaryPage />}
