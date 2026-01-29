@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -26,12 +26,13 @@ import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
 import {
+  fetchCreditReport,
   // sendOtpToMobile,
   //verifyOtpApi,
   personalDetailsVerification,
   submitFinancialProfileDetails,
 } from "../../../src/api/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -105,11 +106,11 @@ const validatePan = (value) => {
   return regex.test(pan) ? null : "PAN must be in format ABCDE1234F";
 };
 
-const validateGmail = (value) => {
-  if (!value) return "Email is required";
-  const regex = /^[a-z0-9._%+-]+@gmail\.com$/;
-  return regex.test(value.toLowerCase()) ? null : "Enter a valid Gmail address";
-};
+// const validateGmail = (value) => {
+//   if (!value) return "Email is required";
+//   const regex = /^[a-z0-9._%+-]+@gmail\.com$/;
+//   return regex.test(value.toLowerCase()) ? null : "Enter a valid Gmail address";
+// };
 
 const validateEmploymentNumbers = (data) => {
   const errors = {};
@@ -162,11 +163,37 @@ const buildEmploymentDetailsPayload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2); // Start from 1
+  const [emailOptions, setEmailOptions] = useState([]);
+
+  const navigate = useNavigate();
 
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({
-    ...mockFetchedData,
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    panCard: "",
+    email: "",
+    aadhaarCard: "",
+    mobileNumber: "",
+    employmentStatus: "",
+    companyName: "",
+    monthlyIncome: "",
+    residentialStatus: "",
+    addressLine1: "",
+    // city: "",
+    state: "",
+    pincode: "",
+    loanType: "",
+    loanAmount: "",
+    cibilScore: "",
+    recentEnquiries: "",
+    settlements: "",
+    emiBounces: "",
+    creditCardUtilization: "",
+    residentialStability: "",
+    existingEmi: "",
   });
 
   // Uploaded documents state
@@ -185,10 +212,10 @@ const LoanApplication = () => {
     // STEP 1 → Personal Details API
     if (currentStep === 1) {
       const panError = validatePan(formData.panCard);
-      const emailError = validateGmail(formData.email);
+      //const emailError = validateGmail(formData.email);
 
-      if (panError || emailError) {
-        alert(panError || emailError);
+      if (panError) {
+        alert(panError);
         return;
       }
       const payload = buildPersonalDetailsPayload(formData);
@@ -250,6 +277,54 @@ const LoanApplication = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const mapApiResponseToFormData = (apiData, mobile) => {
+    // pick PRIMARY email
+    // const primaryEmail = apiData.emails?.[0]?.email || "";
+
+    // pick RESIDENCE address (fallback to first)
+    const addresses = Array.isArray(apiData?.addresses)
+      ? apiData?.addresses
+      : [];
+
+    const residenceAddress =
+      addresses.find((a) => a.type === "Residence") || addresses[0] || {};
+
+    return {
+      firstName: apiData.firstName || "",
+      lastName: apiData.lastName || "",
+      dateOfBirth: apiData.dateOfBirth || "",
+      panCard: apiData.panCard || "",
+      email: apiData?.emails || [],
+      aadhaarCard: "", // ❌ NOT PROVIDED BY API
+      mobileNumber: mobile,
+
+      employmentStatus: apiData.employmentStatus?.toLowerCase() || "",
+
+      companyName: "", // ❌ NOT PROVIDED
+      monthlyIncome: "", // ❌ NOT PROVIDED
+
+      residentialStatus: residenceAddress.type
+        ? residenceAddress.type.toLowerCase()
+        : "",
+
+      addressLine1: residenceAddress?.streetAddress || "",
+      city: apiData.city || "",
+      state: residenceAddress.state || "",
+      pincode: residenceAddress.pincode || "",
+
+      loanType: "", // ❌ USER INPUT
+      loanAmount: "", // ❌ USER INPUT
+
+      cibilScore: apiData.cibilScore || "",
+      recentEnquiries: apiData.last6MonthsEnquiryCount || "",
+      settlements: apiData.settlements || "",
+      emiBounces: apiData.emiBounces || "",
+      creditCardUtilization: apiData.creaditCardUtilization || "",
+      residentialStability: "", // ❌ NOT PROVIDED
+      existingEmi: apiData.existingEmi || "",
+    };
+  };
+
   // Enhanced Summary Section Component
   const SummarySection = ({ title, icon: Icon, children }) => (
     <div className="bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm">
@@ -300,11 +375,366 @@ const LoanApplication = () => {
     </div>
   );
 
+  const autoFillUserDetails = async () => {
+    try {
+      const mobile = sessionStorage.getItem("mobile_number");
+      console.log(mobile, "mobile");
+
+      if (!mobile) {
+        navigate("/sign-in", { replace: true });
+        return;
+      }
+      const resp = await fetchCreditReport({ mobileNumber: mobile });
+      const apiData = resp?.data ?? resp;
+      if (!apiData) {
+        console.error("Credit report API returned empty response", resp);
+        return;
+      }
+      // const resp = {
+      //   data: {
+      //     fullName: "ARUN BAIKANI",
+      //     firstName: "BIRUDARAJU",
+      //     lastName: "MANOHAR",
+      //     middleName: "KRISHNA",
+      //     emails: [
+      //       {
+      //         email: "B.ARUN@MAIL.CA.IN",
+      //         type: "Primary",
+      //       },
+      //       {
+      //         email: "ARUN.BAIKAN@REALVARIABLE.COM",
+      //         type: "Primary",
+      //       },
+      //       {
+      //         email: "ARUNBAIKANI2000@GMAIL.COM",
+      //         type: "Primary",
+      //       },
+      //     ],
+      //     occupationCode: "04",
+      //     occupationName: "Others",
+      //     panCard: "DQQPA3737P",
+      //     dateOfBirth: "2000-05-19",
+      //     employmentStatus: "Others",
+      //     cibilScore: "737",
+      //     addresses: [
+      //       {
+      //         streetAddress:
+      //           "FIRST FLOOR PEARL ENCLAVE BANJARAHILLS ROAD NO 5 8 2 334 BY 5  SBI ENCLAVE",
+      //         pincode: "500034",
+      //         type: "Office",
+      //         state: "Telangana",
+      //       },
+      //       {
+      //         streetAddress:
+      //           "302 BK GUDA SR NAGAR 3RD FLOOR ROAD NO LIK 2 SR NAGAR HYDERABAD  LIG PARK",
+      //         pincode: "500038",
+      //         type: "Residence",
+      //         state: "Telangana",
+      //       },
+      //       {
+      //         streetAddress:
+      //           "2-29/5/T NEAR AMBEDKAR   STREET BASHEERABAD KAMMARPALLY",
+      //         pincode: "503225",
+      //         type: "Not Categorized",
+      //         state: "Andhra Pradesh",
+      //       },
+      //       {
+      //         streetAddress: "HYDERABAD HITECH CITY HYDERABAD HITECH CITY",
+      //         pincode: "500032",
+      //         type: "Office",
+      //         state: "Telangana",
+      //       },
+      //     ],
+      //     // city: null,
+      //     last6MonthsEnquiryCount: 2,
+      //     creaditCardUtilization: 98,
+      //     existingEmi: 31045,
+      //     settlements: 0,
+      //     emiBounces: 5,
+      //     ckycId: "30072076761054",
+      //     phoneNumbers: [
+      //       {
+      //         SerialNumber: "1297942604",
+      //         Number: "9346521702",
+      //       },
+      //       {
+      //         SerialNumber: "1297942603",
+      //         Number: "9346521702",
+      //       },
+      //       {
+      //         SerialNumber: "1359932387",
+      //         Number: "294971630",
+      //       },
+      //       {
+      //         SerialNumber: "1186343072",
+      //         Number: "7095196617",
+      //       },
+      //     ],
+      //     inquiryHistory: [
+      //       {
+      //         date: "2025-12-05",
+      //         bankName: "AXIS BANK",
+      //         amount: 10000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2025-08-22",
+      //         bankName: "HDFC BANK",
+      //         amount: 100000,
+      //         purpose: "Personal Loan",
+      //       },
+      //       {
+      //         date: "2025-05-15",
+      //         bankName: "TGB",
+      //         amount: 120000,
+      //         purpose: "Agriculture Loan",
+      //       },
+      //       {
+      //         date: "2025-01-06",
+      //         bankName: "ICICI BANK",
+      //         amount: 100000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-12-11",
+      //         bankName: "ICICI BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-11-19",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-11-14",
+      //         bankName: "IDFC FIRST BANK",
+      //         amount: 20000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-09-19",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-09-10",
+      //         bankName: "HDFC BANK",
+      //         amount: 50000,
+      //         purpose: "Personal Loan",
+      //       },
+      //       {
+      //         date: "2024-03-02",
+      //         bankName: "AXIS BANK",
+      //         amount: 10000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-03-01",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-02-16",
+      //         bankName: "KOTAK BANK",
+      //         amount: 50000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2024-02-16",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2023-08-20",
+      //         bankName: "WHIZDMFINANCE",
+      //         amount: 200000,
+      //         purpose: "Personal Loan",
+      //       },
+      //       {
+      //         date: "2023-08-02",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2023-06-20",
+      //         bankName: "KOTAK BANK",
+      //         amount: 50000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2023-06-09",
+      //         bankName: "HDFC BANK",
+      //         amount: 1000,
+      //         purpose: "Other / General Loan Enquiry",
+      //       },
+      //       {
+      //         date: "2023-02-27",
+      //         bankName: "BAJAJ FIN LTD",
+      //         amount: 25000,
+      //         purpose: "Personal Loan",
+      //       },
+      //     ],
+      //     totalCurrentBalance: 1335277,
+      //     tradelines: [
+      //       {
+      //         accountTypeCode: "10",
+      //         accountTypeName: "Credit Card / Unsecured Credit",
+      //         bank: "AXIS BANK",
+      //         currentBalance: "38095",
+      //         emiAmount: "-1",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "-1",
+      //         paymentHistoryStatus: "0,0,",
+      //         creditLimit: "39000",
+      //         loanAmount: 0,
+      //         collateralType: "Unsecured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //       {
+      //         accountTypeCode: "05",
+      //         accountTypeName: "Personal Loan",
+      //         bank: "HDFC BANK",
+      //         currentBalance: "469495",
+      //         emiAmount: "-1",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "12756",
+      //         paymentHistoryStatus: "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,",
+      //         creditLimit: "-1",
+      //         loanAmount: 0,
+      //         collateralType: "Unsecured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //       {
+      //         accountTypeCode: "69",
+      //         accountTypeName: "BNPL / Pay Later",
+      //         bank: "ADBIRLACAP",
+      //         currentBalance: "0",
+      //         emiAmount: "-1",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "-1",
+      //         paymentHistoryStatus: "0,0,0,0,0,0,0,0,0,0,0,0,",
+      //         creditLimit: "-1",
+      //         loanAmount: 0,
+      //         collateralType: "Unsecured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //       {
+      //         accountTypeCode: "06",
+      //         accountTypeName: "Consumer Loan",
+      //         bank: "HDFC BANK",
+      //         currentBalance: "0",
+      //         emiAmount: "-1",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "-1",
+      //         paymentHistoryStatus: "0,0,0,0,0,",
+      //         creditLimit: "-1",
+      //         loanAmount: 0,
+      //         collateralType: "Unsecured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //       {
+      //         accountTypeCode: "03",
+      //         accountTypeName: "Housing / Home Loan",
+      //         bank: "APTUS",
+      //         currentBalance: "737712",
+      //         emiAmount: "18289",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "-1",
+      //         paymentHistoryStatus:
+      //           "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,XXX,0,0,0,0,0,XXX,0,0,0,0,0,0,0,0,0,0,0,0,0,",
+      //         creditLimit: "-1",
+      //         loanAmount: 0,
+      //         collateralType: "Secured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //       {
+      //         accountTypeCode: "36",
+      //         accountTypeName: "Consumer Loan",
+      //         bank: "TGB",
+      //         currentBalance: "89975",
+      //         emiAmount: "-1",
+      //         amountOverdue: 0,
+      //         actualPaymentAmount: "-1",
+      //         paymentHistoryStatus:
+      //           "STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,STD,STD,STD,STD,",
+      //         creditLimit: "-1",
+      //         loanAmount: 0,
+      //         collateralType: "Secured",
+      //         repaymentTenure: null,
+      //         settlementAmount: -1,
+      //       },
+      //     ],
+      //     scoreFactors: [
+      //       {
+      //         code: null,
+      //         description: null,
+      //       },
+      //       {
+      //         code: null,
+      //         description: null,
+      //       },
+      //       {
+      //         code: null,
+      //         description: null,
+      //       },
+      //       {
+      //         code: null,
+      //         description: null,
+      //       },
+      //       {
+      //         code: null,
+      //         description: null,
+      //       },
+      //     ],
+      //   },
+      // };
+
+      const apiEmails = Array.isArray(apiData.emails)
+        ? apiData.emails.map((e) => e.email)
+        : [];
+
+      setEmailOptions(apiEmails);
+
+      setFormData((prev) => ({
+        ...prev,
+        email: apiEmails[0] || "",
+      }));
+
+      setFormData((prev) => ({
+        ...prev,
+        email: apiEmails[0] || "",
+      }));
+      console.log(
+        "mapApiResponseToFormData",
+        mapApiResponseToFormData(resp.data, mobile),
+      );
+
+      setFormData(mapApiResponseToFormData(resp.data, mobile));
+    } catch (error) {
+      console.log("error in auto filling user details", error);
+    }
+  };
+
+  useEffect(() => {
+    autoFillUserDetails();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20">
+    <div className="min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20">
       <div className="px-4 py-8 md:py-12">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="justify-center text-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             Loan Application
           </h1>
@@ -359,13 +789,27 @@ const LoanApplication = () => {
                     disabled
                     hint="PAN cannot be edited as it's verified from source"
                   />
-                  <FormInput
-                    label="E-Mail ID"
-                    value={formData.email}
-                    onChange={(v) => updateFormData("email", v)}
-                    type="email"
-                    required
-                  />
+                  {emailOptions.length > 1 ? (
+                    <FormSelect
+                      label="E-Mail ID"
+                      value={formData.email}
+                      onChange={(v) => updateFormData("email", v)}
+                      options={emailOptions.map((e) => ({
+                        value: e,
+                        label: e,
+                      }))}
+                      required
+                    />
+                  ) : (
+                    <FormInput
+                      label="E-Mail ID"
+                      value={formData.email}
+                      onChange={(v) => updateFormData("email", v)}
+                      type="email"
+                      required
+                    />
+                  )}
+
                   <FormInput
                     label="Aadhaar Card"
                     value={formData.aadhaarCard}
@@ -387,21 +831,30 @@ const LoanApplication = () => {
                     <MapPin className="w-4 h-4 text-primary" />
                     Address Details
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="md:col-span-2">
-                      <FormInput
-                        label="Address Line 1"
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-foreground">
+                        Address Line 1
+                      </label>
+
+                      <textarea
                         value={formData.addressLine1}
-                        onChange={(v) => updateFormData("addressLine1", v)}
+                        onChange={(e) =>
+                          updateFormData("addressLine1", e.target.value)
+                        }
                         required
+                        rows={3}
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+               focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
-                    <FormInput
+
+                    {/* <FormInput
                       label="City"
                       value={formData.city}
                       onChange={(v) => updateFormData("city", v)}
                       required
-                    />
+                    /> */}
                     <FormInput
                       label="State"
                       value={formData.state}
@@ -414,12 +867,12 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("pincode", v)}
                       required
                     />
-                    <FormSelect
+                    {/* <FormSelect
                       label="Residential Status"
                       value={formData.residentialStatus}
                       onChange={(v) => updateFormData("residentialStatus", v)}
                       options={residentialStatuses}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>

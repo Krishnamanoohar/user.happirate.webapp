@@ -21,64 +21,15 @@ import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDas
 import { HappirateSplitAuth } from "./pages/AuthenticationPageNew/HappirateSplitAuth";
 //import Index from "./pages/NewBankApplicationPage/Index";
 import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
+import { NewCompareLoanApplication } from "./pages/NewLoanComparisonPage/NewCompareLoanApplication";
+import { LoanEligibilityForm } from "./components/OtherComponents/SmartCompare/LoanEligibilityForm";
+import SmartComparePage from "./components/OtherComponents/SmartCompare/SmartComparePage";
+
 export const Context = createContext();
 
 const App = () => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [showSignInPopup, setShowSignInPopup] = useState(false);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.post(
-        "https://api-prod.tartanhq.com/aphrodite/api/auth/v1/login",
-        {
-          username: "Sandbox_RealVariable",
-          password: "Sandbox@1234",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
-          },
-        },
-      );
-      const token = response.data.token;
-      sessionStorage.setItem("token", token);
-      console.log(token, "token");
-      console.log(response.data, "response");
-      return response;
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
-
-  const payslip = async () => {
-    try {
-      //const token = sessionStorage.getItem("token");
-      const res = await axios.post(
-        "https://api-ext-prod.tartanhq.com/aphrodite/external/v1/intelligent-ocr",
-
-        {
-          name: "tarran",
-          phoneNumber: "XXXXXXXX",
-          email: "Test@tartanhq.com",
-          companyName: "APARAJITHA CORPORATE SERVICES PRIVATE LIMITED",
-          applicationId: "SidiDevTest",
-          mode: "PROD",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        },
-      );
-      console.log(res, "res payslip");
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
 
   useEffect(() => {
     AOS.init({ duration: 600 });
@@ -104,7 +55,12 @@ const App = () => {
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
             <Route path="sign-in" element={<HappirateSplitAuth />} />
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
-            <Route path="compare-loans" element={<LoanComparisonPage />} />
+            {/* <Route path="compare-loans" element={<LoanComparisonPage />} /> */}
+            {/* <Route
+              path="compare-loans"
+              element={<NewCompareLoanApplication />}
+            /> */}
+            <Route path="compare-loans" element={<SmartComparePage />} />
             {/* <Route path="process" element={<ApplicationPage />} /> */}
             <Route
               path="loan-tracking-dashboard"

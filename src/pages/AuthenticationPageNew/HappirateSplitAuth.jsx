@@ -94,6 +94,7 @@ export function HappirateSplitAuth() {
     try {
       const resp = await verifyOtp(payload);
       toast.success("OTP verified successfully");
+      sessionStorage.setItem("mobile_number", mobileNumber);
       navigate("/loan-application");
       setIsMobileVerified(true);
       setErrors({});
@@ -111,13 +112,13 @@ export function HappirateSplitAuth() {
   };
 
   return (
-    <AuroraBackdrop className="min-h-screen bg-gradient-to-br from-[#fdfcfd] via-[#f3e8ff] to-[#e9d5ff]">
+    <AuroraBackdrop className="min-h-[90vh] bg-gradient-to-br from-[#fdfcfd] via-[#f3e8ff] to-[#e9d5ff]">
       <Toaster richColors position="top-right" />
 
-      <div className="min-h-screen w-full">
+      <div className="w-full">
         <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
           {/* Left marketing panel */}
-          <section className="flex flex-col justify-center">
+          <section className="flex flex-col justify-center py-0">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
                 {/* <img
@@ -169,7 +170,7 @@ export function HappirateSplitAuth() {
           </section>
 
           {/* Right auth card */}
-          <section className="flex items-center justify-center lg:justify-end">
+          <section className="flex items-center justify-center py-0 lg:justify-end">
             <Card
               className={cn(
                 "w-full max-w-md border-border/70 bg-card/75 shadow-elev backdrop-blur",
