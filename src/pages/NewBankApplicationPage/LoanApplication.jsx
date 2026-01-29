@@ -25,13 +25,13 @@ import FormInput from "../../components/FormInput";
 import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
 import {
   // sendOtpToMobile,
   //verifyOtpApi,
   personalDetailsVerification,
   submitFinancialProfileDetails,
 } from "../../../src/api/api";
-
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
   { id: 2, title: "Review & Edit Employment and Credit Details" },
@@ -162,6 +162,7 @@ const buildEmploymentDetailsPayload = (data) => ({
 
 const LoanApplication = () => {
   const [currentStep, setCurrentStep] = useState(3);
+  const navigate = useNavigate();
 
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({
@@ -242,7 +243,8 @@ const LoanApplication = () => {
 
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
-    alert("Application submitted successfully!");
+    // alert("Application submitted successfully!");
+    navigate('/compare-loan')
   };
 
   const updateFormData = (field, value) => {

@@ -21,6 +21,9 @@ import LoanTrackingDashboard from "./pages/ApplicationStatusPage/LoanTrackingDas
 import { HappirateSplitAuth } from "./pages/AuthenticationPageNew/HappirateSplitAuth";
 //import Index from "./pages/NewBankApplicationPage/Index";
 import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
+// import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
+// import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
+import CompareLoanPage from "./pages/CompareLonePage/CompareLonePage";
 export const Context = createContext();
 
 const App = () => {
@@ -116,7 +119,7 @@ const App = () => {
               element={<FinancialSummaryPage />}
             />
             <Route path="loan-application" element={<LoanApplication />} />
-
+            <Route path="compare-loan" element={<CompareLoanPage />} />
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
