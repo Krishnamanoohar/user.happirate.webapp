@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -23,6 +23,10 @@ import { PrivacyPromiseDialog } from "./PrivacyPromiseDialog";
 import { clamp, formatINR } from "./utils";
 import type { LoanEligibilityInput, LoanOffer } from "./types";
 
+import { checkLoanEligibility } from "../../../api/api";
+import { toast, Toaster } from "sonner";
+import React from "react";
+
 export type EligibilityResult = {
   score: number; // 0-100
   maxEligibleAmount: number;
@@ -31,43 +35,26 @@ export type EligibilityResult = {
   offers: LoanOffer[];
 };
 
-const OFFERS: LoanOffer[] = [
-  {
-    id: "hdfc",
-    lender: "HDFC Bank",
-    interestApr: 10.5,
-    processingFeePct: 1.0,
-    tenureYears: 5,
-    maxAmount: 1_000_000,
-    badge: "Fast approval",
-  },
-  {
-    id: "bajaj",
-    lender: "Bajaj Finserv",
-    interestApr: 13.0,
-    processingFeePct: 1.25,
-    tenureYears: 3,
-    maxAmount: 500_000,
-    badge: "Lightning",
-  },
-  {
-    id: "sbi",
-    lender: "State Bank of India",
-    interestApr: 9.7,
-    processingFeePct: 0.35,
-    tenureYears: 6,
-    maxAmount: 1_200_000,
-    badge: "Low fee",
-  },
-  {
-    id: "axis",
-    lender: "Axis Bank",
-    interestApr: 10.25,
-    processingFeePct: 1.25,
-    tenureYears: 5,
-    maxAmount: 900_000,
-  },
-];
+type LoanEligibilityApiPayload = {
+  employmentType: "salaried" | "self-employed" | "freelancer";
+  monthlySalary: number;
+  employmentExperienceYears: number;
+  outstandingEMIAmount: number;
+  requiredLoanType: "personal" | "home" | "business" | "education";
+  requiredLoanAmount: number;
+  isCreditCardHolder: boolean;
+  creditCardOutstandingAmount?: number;
+  creditScore: number;
+  loanEnquiryCountLast12Months: number;
+};
+
+const OFFERS: LoanOffer[] = [];
+
+type Props = {
+  value: LoanEligibilityInput;
+  onChange: (next: LoanEligibilityInput) => void;
+  onEligibilityResult: (offers: LoanOffer[]) => void;
+};
 
 function computeEligibility(input: LoanEligibilityInput): EligibilityResult {
   const emiToIncomeRatio =
@@ -125,22 +112,22 @@ function computeEligibility(input: LoanEligibilityInput): EligibilityResult {
 
 const SAMPLE_INPUT: LoanEligibilityInput = {
   employmentType: "Self-employed",
-  experienceYears: 5,
-  monthlyIncome: 150_000,
-  outstandingEmi: 12_000,
+  experienceYears: 0,
+  monthlyIncome: 0,
+  outstandingEmi:0,
   loanType: "Personal",
-  loanAmount: 500_000,
+  loanAmount:0,
+  creditCardOutstandingAmount: 0,
   hasCreditCard: true,
-  enquiriesLast12m: 2,
-  creditScore: 760,
+  enquiriesLast12m: 0,
+  creditScore: 0,
 };
 
-type Props = {
-  value: LoanEligibilityInput;
-  onChange: (next: LoanEligibilityInput) => void;
-};
-
-export function LoanEligibilityForm({ value, onChange }: Props) {
+export function LoanEligibilityForm({
+  value,
+  onChange,
+  onEligibilityResult,
+}: Props) {
   const [state, setState] = useState<LoanEligibilityInput>({
     employmentType: "Self-employed",
     experienceYears: 5,
@@ -151,6 +138,7 @@ export function LoanEligibilityForm({ value, onChange }: Props) {
     hasCreditCard: true,
     enquiriesLast12m: 2,
     creditScore: 760,
+    creditCardOutstandingAmount: 0,
   });
 
   // const result = useMemo(() => computeEligibility(input), [input]);
@@ -162,6 +150,97 @@ export function LoanEligibilityForm({ value, onChange }: Props) {
   const [privacyOpen, setPrivacyOpen] = useState(false);
 
   const result = useMemo(() => computeEligibility(state), [state]);
+
+  function mapEligibilityInputToApiPayload(
+    state: LoanEligibilityInput,
+  ): LoanEligibilityApiPayload {
+    return {
+      employmentType:
+        state.employmentType === "Salaried"
+          ? "salaried"
+          : state.employmentType === "Self-employed"
+            ? "self-employed"
+            : "freelancer",
+
+      monthlySalary: state.monthlyIncome,
+
+      employmentExperienceYears: state.experienceYears,
+
+      outstandingEMIAmount: Math.round(state.outstandingEmi / 1000),
+
+      creditCardOutstandingAmount: state.hasCreditCard
+        ? state.creditCardOutstandingAmount
+        : 0,
+
+      requiredLoanType: state.loanType.toLowerCase() as any,
+
+      requiredLoanAmount: state.loanAmount,
+
+      isCreditCardHolder: state.hasCreditCard,
+
+      creditScore: state.creditScore,
+
+      loanEnquiryCountLast12Months: state.enquiriesLast12m,
+    };
+  }
+
+  const mapEligibilityResponseToOffers = (assessment: any[]): LoanOffer[] => {
+    return assessment
+      .filter((item) => item.eligible)
+      .map((item) => ({
+        id: item.bankName.toLowerCase(),
+        lender: item.bankName,
+        interestApr: Number(item.interestRateRange.replace("%", "")),
+        score: item.score || 0,
+        tenureYears: 5,
+        maxAmount: item.maxSanctionAmount,
+        badge: item.score >= 90 ? "Best rate" : undefined,
+      }));
+  };
+
+  function validateEligibilityForm(state: LoanEligibilityInput): string | null {
+    if (state.monthlyIncome <= 0) return "Monthly income is required";
+    if (state.creditScore < 300 || state.creditScore > 900)
+      return "Invalid credit score";
+    if (state.loanAmount < 10_000)
+      return "Loan amount must be at least ₹10,000";
+    if (state.experienceYears <= 0) return "Experience must be greater than 0";
+    if (state.outstandingEmi > state.monthlyIncome)
+      return "EMI cannot exceed monthly income";
+
+    return null;
+  }
+
+  const submitLoanEligibility = async () => {
+    const error = validateEligibilityForm(state);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    const payload = mapEligibilityInputToApiPayload(state);
+
+    try {
+      const res = await checkLoanEligibility(payload);
+
+      const mappedOffers = mapEligibilityResponseToOffers(
+        res.data.preliminaryAssessment,
+      );
+      onEligibilityResult(mappedOffers);
+
+      console.log("Eligibility API response:", res);
+
+      toast.success("Eligibility checked successfully");
+
+      setPrivacyOpen(true);
+    } catch (error) {
+      console.error("Failed to submit eligibility", error);
+      toast.error("Failed to check eligibility");
+    }
+  };
+
+  useEffect(() => {
+    setState(value);
+  }, [value]);
 
   const tierMeta =
     result.tier === "Excellent"
@@ -200,6 +279,7 @@ export function LoanEligibilityForm({ value, onChange }: Props) {
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
       />
+      {/* <Toaster richColors position="top-right" /> */}
 
       <Card className="glass grain shadow-elevated">
         <CardHeader className="pb-4">
@@ -397,6 +477,26 @@ export function LoanEligibilityForm({ value, onChange }: Props) {
               />
               <div className="text-sm text-muted-foreground">Yes</div>
             </div>
+            {state.hasCreditCard && (
+              <div className="space-y-2">
+                <Label>Credit card outstanding amount</Label>
+                <Input
+                  className="glass-strong ring-soft"
+                  inputMode="numeric"
+                  value={state.creditCardOutstandingAmount ?? 0}
+                  onChange={(e) =>
+                    setState((s) => ({
+                      ...s,
+                      creditCardOutstandingAmount: clamp(
+                        Number(e.target.value || 0),
+                        0,
+                        1_000_000,
+                      ),
+                    }))
+                  }
+                />
+              </div>
+            )}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -425,16 +525,11 @@ export function LoanEligibilityForm({ value, onChange }: Props) {
               type="button"
               variant="hero"
               className="w-full sm:w-auto"
-              onClick={(e) => {
-                // Radix can interpret the opening click as an outside interaction and immediately close.
-                // Defer opening to the next tick so the dialog reliably appears.
-                e.preventDefault();
-                e.stopPropagation();
-                window.setTimeout(() => setPrivacyOpen(true), 0);
-              }}
+              onClick={submitLoanEligibility}
             >
-              Find eligible loans
+              Compare Loans
             </Button>
+
             <Button
               type="button"
               variant="glass"

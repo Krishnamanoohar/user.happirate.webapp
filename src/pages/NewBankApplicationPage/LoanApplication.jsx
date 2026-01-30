@@ -140,7 +140,7 @@ const buildPersonalDetailsPayload = (data) => ({
   dateOfBirth: formatDateToDDMMYYYY(data.dateOfBirth),
   email: data.email,
   panCard: data.panCard,
-  aadharCard: normalizeAadhaarForApi(data.aadhaarCard), // 👈 SAME AS OLD
+  aadharCard: normalizeAadhaarForApi(data.aadhaarCard),
 });
 
 const buildEmploymentDetailsPayload = (data) => ({
@@ -163,7 +163,7 @@ const buildEmploymentDetailsPayload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(2); // Start from 1
+  const [currentStep, setCurrentStep] = useState(0); // Start from 1
   const [emailOptions, setEmailOptions] = useState([]);
 
   const navigate = useNavigate();
@@ -749,7 +749,7 @@ const LoanApplication = () => {
         {/* Form Content */}
         <div className="mt-8 space-y-6">
           {/* Step 1: Personal Details + Address */}
-          {currentStep === 1 && (
+          {currentStep === 0 && (
             <FormCard
               title="Review & Edit Personal Details"
               subtitle="Your details have been auto-fetched. You may edit any field if needed."
@@ -880,7 +880,7 @@ const LoanApplication = () => {
           )}
 
           {/* Step 2: Employment & Credit Details (no address) */}
-          {currentStep === 2 && (
+          {currentStep === 1 && (
             <FormCard
               title="Review & Edit Employment and Credit Details"
               subtitle="Please review and update your employment and credit information"
@@ -984,7 +984,7 @@ const LoanApplication = () => {
           )}
 
           {/* Step 3: Loan & Documents */}
-          {currentStep === 3 && (
+          {currentStep === 2 && (
             <FormCard
               title="Loan Requirement & Document Upload"
               subtitle="Select your loan type and upload required documents"
@@ -1079,7 +1079,7 @@ const LoanApplication = () => {
           )}
 
           {/* Step 4: Review & Submit - Enhanced */}
-          {currentStep === 4 && (
+          {currentStep === 3 && (
             <div className="space-y-6">
               {/* Header Summary Card */}
               <div className="bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground shadow-xl shadow-primary/25">

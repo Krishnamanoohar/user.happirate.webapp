@@ -2,6 +2,7 @@ export type EmploymentType = "Salaried" | "Self-employed" | "Freelancer";
 export type LoanType = "Personal" | "Home" | "Business" | "Education";
 
 export type LoanEligibilityInput = {
+  creditCardOutstandingAmount: any;
   employmentType: EmploymentType;
   experienceYears: number;
   monthlyIncome: number;
@@ -14,11 +15,11 @@ export type LoanEligibilityInput = {
 };
 
 export type LoanOffer = {
-  id: string;
-  lender: string;
-  interestApr: number;
-  processingFeePct: number;
-  tenureYears: number;
-  maxAmount: number;
-  badge?: string;
+    id: string;
+    lender: string;
+    interestApr: number;
+    score: number;
+    tenureYears: number;
+    maxAmount: number;
+    badge?: string;
 };
