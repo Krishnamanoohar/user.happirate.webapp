@@ -77,7 +77,7 @@ const App = () => {
               element={<FinancialSummaryPage />}
             />
             <Route path="loan-application" element={<LoanApplication />} />
-            <Route path="compare-loan" element={<CompareLoanPage />} />
+            <Route path="eligible-loans" element={<CompareLoanPage />} />
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

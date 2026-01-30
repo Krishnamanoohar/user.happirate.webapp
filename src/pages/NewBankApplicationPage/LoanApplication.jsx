@@ -25,7 +25,7 @@ import FormInput from "../../components/FormInput";
 import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   fetchCreditReport,
   // sendOtpToMobile,
@@ -164,7 +164,7 @@ const buildEmploymentDetailsPayload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(0); // Start from 1
+  const [currentStep, setCurrentStep] = useState(3); // Start from 1
   const [emailOptions, setEmailOptions] = useState([]);
 
   const navigate = useNavigate();
@@ -272,7 +272,7 @@ const LoanApplication = () => {
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
     // alert("Application submitted successfully!");
-    navigate('/compare-loan')
+    navigate("/compare-loan");
   };
 
   const updateFormData = (field, value) => {
@@ -290,11 +290,11 @@ const LoanApplication = () => {
 
     const residenceAddress =
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
-console.log((apiData.dateOfBirth).split("T")[0] )
+    console.log(apiData.dateOfBirth.split("T")[0]);
     return {
       firstName: apiData.firstName || "",
       lastName: apiData.lastName || "",
-      dateOfBirth: (apiData.dateOfBirth).split("T")[0] || "",
+      dateOfBirth: apiData.dateOfBirth.split("T")[0] || "",
       panCard: apiData.panCard || "",
       email: primaryEmail || [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
