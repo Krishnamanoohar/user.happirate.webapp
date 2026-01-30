@@ -25,6 +25,7 @@ import FormInput from "../../components/FormInput";
 import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
 import {
   fetchCreditReport,
   // sendOtpToMobile,
@@ -270,7 +271,8 @@ const LoanApplication = () => {
 
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
-    alert("Application submitted successfully!");
+    // alert("Application submitted successfully!");
+    navigate('/compare-loan')
   };
 
   const updateFormData = (field, value) => {
