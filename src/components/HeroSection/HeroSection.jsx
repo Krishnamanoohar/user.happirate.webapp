@@ -1,94 +1,97 @@
-import Squares from "../../ReactBitsComps/Squares Grid/Squares";
-import Noise from "../../ReactBitsComps/Noise/Noise";
-import Silk from "../../ReactBitsComps/SilkBaground/Silk";
-import Beams from "../../ReactBitsComps/BeamsBackground/Beams";
-import GlareHover from "../../ReactBitsComps/GlareHover/GlareHover";
-import DotGrid from "../../ReactBitsComps/DotGrid/DotGrid";
-import Particles from "../../ReactBitsComps/Particles/Particles";
-import Waves from "../../ReactBitsComps/Waves/Waves";
-import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
-import Header from "../Header/Header";
-import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
 import { useState } from "react";
+import AnimatedTable from "./AnimatedTableComp/AnimatedTable";
+import ShinyText from "../../ReactBitsComps/ShinyText/ShinyText";
+
 const HeroSection = () => {
   const [showVideo, setShowVideo] = useState(false);
 
   return (
-    <div className="relative w-full overflow-hidden dark-background">
-      <section id="hero" className="min-h-[100vh] hero section w-full">
+    <div className="relative w-full overflow-hidden pt-32 pb-24 pl-2 app-background min-h-screen">
+
+      <section className="min-h-screen hero w-full">
+
         <div
-          className="container hero-gradient mt-6"
+          className="container mx-auto max-w-7xl px-6"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <div className="flex flex-row justify-left items-center text-white relative">
-            <div className="col-lg-6 flex flex-col justify-end">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center text-white relative">
+
+            {/* LEFT CONTENT */}
+            <div className="flex flex-col justify-center max-w-xl">
+
               <div
                 className="hero-content"
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
+
+                {/* Badge */}
                 <div className="shiny-text shiny-white company-badge mb-4 w-min text-nowrap shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
                   <i className="bi bi-bank me-2"></i>
-                  <ShinyText text={"Empowering Smart Borrowers"} />
+                  <ShinyText text="Empowering Smart Borrowers" />
                 </div>
 
+                {/* Heading */}
                 <h1
-                  className="mb-4 text-[#180147] text-white"
-                  style={{
-                    color: "#180147",
-                    fontFamily: "var(--manrope-font)",
-                  }}
+                  className="mb-4 text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+                  style={{ fontFamily: "var(--manrope-font)" }}
                 >
-                  Compare Loans <br /> from Top Banks
-                  {/* Any Loan. Any Bank. Tailored for You. */}
-                  {/*  Compare Loans <br />
-                  From Top Banks <br />
-                  <span className="accent-text">
-                    Find Your Best Deal Instantly
-                  </span> */}
+                  Why Run Around? <br />
+                  Compare in One Click
                 </h1>
 
-                <p className="mb-4 mb-md-5" style={{ color: "white" }}>
-                  Compare the lowest rates, minimal fees, and flexible terms—all
-                  in one place. Save time, save money, and borrow smarter with
-                  complete transparency.
+                {/* Description */}
+                <p className="mb-4 text-slate-200 max-w-xl">
+                  Check rates, fees & tenures across banks and choose
+                  what works best for you.
+                  <br />
+                  <span className="font-semibold">
+                    Borrow Smart. Borrow Transparent.
+                  </span>
                 </p>
 
+                {/* Buttons */}
                 <div className="hero-buttons flex gap-4 mt-6">
+
                   <button
-                    href="sign-in"
                     className="vibrant-shadow-btn px-4 btn"
                     onClick={() => (window.location.href = "/sign-in")}
                   >
-                    Apply Loan
+                    Smart Compare
                   </button>
-                  {/* 
-                  <a
-                    href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
-                    className="shiny-text"
-                  >
-                    How It Works
-                  </a> */}
 
                   <div
-                    className="vibrant-shadow-btn"
-                    style={{ animationDuration: "2s", cursor: "pointer" }}
+                    className="vibrant-shadow-btn cursor-pointer"
+                    style={{ animationDuration: "2s" }}
                     onClick={() => setShowVideo(true)}
                   >
                     <i className="bi bi-play-circle"></i>
-                    <p className="mb-0">How it works</p>
+                    <p className="mb-0">Apply Now</p>
                   </div>
+
                 </div>
+
               </div>
             </div>
 
-            <AnimatedTable />
+
+            {/* RIGHT SIDE (GRADIENT TABLE) */}
+            <div className="w-full max-w-xl ml-auto body table-wrapper">
+  <AnimatedTable />
+</div>
+
+
           </div>
         </div>
+
+
+        {/* VIDEO MODAL */}
         {showVideo && (
-          <div className="fixed inset-0 bg-opacity-80 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+
             <div className="relative w-full max-w-2xl">
+
               <iframe
                 className="w-full h-64 md:h-96 rounded-lg"
                 src="https://www.youtube.com/embed/n93NmihKlVY"
@@ -104,9 +107,11 @@ const HeroSection = () => {
               >
                 ✖
               </button>
+
             </div>
           </div>
         )}
+
       </section>
     </div>
   );

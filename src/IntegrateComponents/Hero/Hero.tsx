@@ -87,14 +87,14 @@ export default function Hero() {
 
             {/* Heading */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-slate-900">Compare Loans from</span>
+              <span className="text-slate-900">Why Sum Around?</span>
               <br />
-              <span className="gradient-text">Top Banks</span>
+              <span className="gradient-text">Compare in One Click</span>
             </h1>
 
             {/* Description */}
             <p className="text-lg text-slate-600 leading-relaxed max-w-xl">
-              Compare the lowest rates, minimal fees, and flexible terms—all in one
+              lowest rates, minimal fees, and flexible terms—all in one
               place. Save time, save money, and borrow smarter with complete
               transparency.
             </p>
@@ -105,12 +105,12 @@ export default function Hero() {
                 Start Comparing
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="border-2 border-slate-200 text-slate-700 font-semibold px-8 py-6 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-300 group">
+              {/* <button className="border-2 border-slate-200 text-slate-700 font-semibold px-8 py-6 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-300 group">
                 <div className="w-8 h-8 rounded-full gradient-bg flex items-center justify-center mr-2 group-hover:scale-110 transition-transform">
                   <Play className="w-3 h-3 text-white fill-white ml-0.5" />
                 </div>
                 How it works
-              </button>
+              </button> */}
             </div>
 
             {/* Trust Indicators */}

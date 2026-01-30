@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Menu, X, ChevronDown, Building2 } from 'lucide-react'
+
+
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -16,10 +18,19 @@ const navLinks = [
   { name: 'Solutions', href: '#solutions' },
   { name: 'Get In Touch', href: '#contact' },
   { name: 'EMI Calculator', href: '#emi-calculator' },
-]
+  { name: 'Credit Health', href: '#credit-health' },
+  { 
+  name: 'How It Works', 
+  href: 'https://www.youtube.com/watch?v=n93NmihKlVY',
+  external: true
+  }
+
+  ]
+
 
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showVideo, setShowVideo] = useState(false)
      
   const isScrolled = scrollY > 50
 
@@ -45,53 +56,49 @@ export default function Navbar({ scrollY }: NavbarProps) {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            {/* Banks Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 text-slate-600 hover:text-indigo-600 font-medium transition-colors">
-                  <Building2 className="w-4 h-4" />
-                  Banks
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56 bg-white/95 backdrop-blur-xl border-indigo-100">
-                <DropdownMenuItem className="hover:bg-indigo-50 cursor-pointer">
-                  All Banks
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-indigo-50 cursor-pointer">
-                  Public Sector
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-indigo-50 cursor-pointer">
-                  Private Banks
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-indigo-50 cursor-pointer">
-                  NBFCs
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-indigo-50 cursor-pointer">
-                  International
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-black"
-              >
-                {link.name}
-                <span className="text-black" />
-              </a>
-            ))}
-          </div>
+                target={link.external ? "_blank" : "_self"}
+                rel={link.external ? "noopener noreferrer" : undefined}
+                className={`
+                    relative group
+                    h-full flex items-center
+                    font-medium transition-colors
+                ${isScrolled ? 'text-slate-900' : 'text-white'}
+                  hover:text-indigo-500
+                  cursor-pointer
+    `             }
+  >
+    {link.name}
+
+    {/* Underline */}
+    <span
+      className="
+        absolute left-0 -bottom-1
+        w-0 h-0.5
+        bg-indigo-500
+        group-hover:w-full
+        transition-all duration-300
+      "
+    />
+  </a>
+))}
+
+
+
+            </div>
+          
+
 
           {/* Sign In Button */}
           <div className="hidden lg:block">
-            <button
-              className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
+            <Button
+              className="gradient-bg text-white font-semibold px-6 py-2 !rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
             >
               Sign In
-            </button>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -121,20 +128,26 @@ export default function Navbar({ scrollY }: NavbarProps) {
               Banks
             </a>
             {navLinks.map((link) => (
-              <a
+              
+                <a
                 key={link.name}
                 href={link.href}
-                className="block text-slate-700 hover:text-indigo-600 font-medium py-2"
+                target={link.external ? "_blank" : "_self"}
+                rel={link.external ? "noopener noreferrer" : undefined}
                 onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-            <button
+                className="text-slate-700 hover:text-indigo-600 font-medium transition-colors block py-2"
+  >
+    {link.name}
+  </a>
+))}
+
+
+
+            <Button
               className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4"
             >
               Sign In
-            </button>
+            </Button>
           </div>
         </div>
       )}

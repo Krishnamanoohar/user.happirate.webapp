@@ -225,73 +225,109 @@ export default function AnimatedTable() {
   const loopingBanks = [...banks, ...banks];
 
   return (
-    <div className="absolute top-[0%] right-[-0%] bottom-0 rounded-2xl shadow-lg border-transparent overflow-hidden group w-[50%] h-[120%] max-w-3xl mx-auto backdrop-blur-md bg-gradient-to-br from-black via-neutral-900 to-zinc-800 shadow-white shadow-2xl bg-transparent shadow-[0_0_6px_#ffd700,0_0_12px_#ffbf00,0_0_24px_#ffaa00] gold-glow">
-      {/* shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]  */}
-      {/* Cards */}
-      <div className="flex justify-between m-4 gap-4 mb-0 rounded-xl">
-        {/* Total Disbursed Card */}
-        <div className="bg-black/80 border border-white/10 rounded-xl p-4 flex items-center justify-between grow-1 shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
-          <div>
-            <div className="text-sm text-gray-400 mb-1">Total Disbursed</div>
-            <div className="text-xl font-semibold">₹6,320 Lakh</div>
+    
+  <div className="relative rounded-2xl overflow-hidden w-full max-w-3xl mx-auto backdrop-blur-md bg-transparent shadow-[0_0_20px_rgba(255,255,255,0.25)]">
+
+    {/* Top Cards */}
+    <div className="flex justify-between m-4 gap-4 mb-0 rounded-xl">
+
+      {/* Total Disbursed */}
+      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-4 flex items-center justify-between flex-1 shadow-lg">
+        <div>
+          <div className="text-sm text-gray-300 mb-1">
+            Total Disbursed
           </div>
-          <Banknote className="w-6 h-6 opacity-80 text-white" />
-          {/* Or: <span className="text-2xl">💰</span> */}
+          <div className="text-xl font-semibold text-white">
+            ₹6,320 Lakh
+          </div>
         </div>
 
-        {/* Avg. Interest Rate Card */}
-        <div className="bg-black/80 border border-white/10 rounded-xl p-4 flex items-center justify-between grow-1 shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
-          <div>
-            <div className="text-sm text-gray-400 mb-1">Avg. Interest Rate</div>
-            <div className="text-xl font-semibold">7.34%</div>
-          </div>
-          <Percent className="w-6 h-6 opacity-80 text-white" />
-          {/* Or: <span className="text-2xl">📈</span> */}
-        </div>
+        <Banknote className="w-6 h-6 opacity-80 text-white" />
       </div>
 
-      {/* Background */}
-      <div className="mt-4 overflow-hidden">
-        <motion.div animate={controls}>
-          <div className="relative z-10 p-4 rounded-2xl space-y-8 overflow-hidden">
-            {loopingBanks?.map((bank, i) => (
-              <motion.div
-                key={i}
-                custom={i}
-                initial="hidden"
-                animate="visible"
-                variants={rowVariants}
-                className="flex items-center justify-between bg-transparent px-4 py-3 border border-white/10 rounded-xl text-white shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]"
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={bank.logo}
-                    alt={bank.name}
-                    className="h-10 w-10 object-contain"
-                  />
-                  <div>
-                    <div className="text-lg font-semibold">{bank.name}</div>
-                    <div className="text-sm text-gray-300">
-                      Interest: {bank.interest}
-                    </div>
+      {/* Avg Interest */}
+      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-4 flex items-center justify-between flex-1 shadow-lg">
+        <div>
+          <div className="text-sm text-gray-300 mb-1">
+            Avg. Interest Rate
+          </div>
+          <div className="text-xl font-semibold text-white">
+            7.34%
+          </div>
+        </div>
+
+        <Percent className="w-6 h-6 opacity-80 text-white" />
+      </div>
+
+    </div>
+
+
+    {/* Scrolling Banks */}
+    <div className="mt-4 overflow-hidden">
+
+      <motion.div animate={controls}>
+
+        <div className="relative z-10 p-4 rounded-2xl space-y-6">
+
+          {loopingBanks?.map((bank, i) => (
+
+            <motion.div
+              key={i}
+              custom={i}
+              initial="hidden"
+              animate="visible"
+              variants={rowVariants}
+              className="flex items-center justify-between bg-white/5 backdrop-blur-md px-4 py-3 border border-white/20 rounded-xl text-white shadow-md hover:bg-white/10 transition"
+            >
+
+              {/* Left */}
+              <div className="flex items-center gap-4">
+                <img
+                  src={bank.logo}
+                  alt={bank.name}
+                  className="h-10 w-10 object-contain"
+                />
+
+                <div>
+                  <div className="text-lg font-semibold">
+                    {bank.name}
+                  </div>
+
+                  <div className="text-sm text-gray-300">
+                    Interest: {bank.interest}
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <div className="text-white font-medium">{bank.amount}</div>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    className="text-white border-white hover:border-green-500 hover:text-green-400 transition-all mt-1"
-                    style={{ borderColor: "white", color: "white" }}
-                  >
-                    Apply
-                  </Button>
+              </div>
+
+
+              {/* Right */}
+              <div className="flex flex-col items-end">
+
+                <div className="text-white font-medium">
+                  {bank.amount}
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
+
+                <Button
+                  variant="outlined"
+                  size="small"
+                  className="text-white border-white hover:border-green-400 hover:text-green-400 transition-all mt-1"
+                  style={{ borderColor: "white", color: "white" }}
+                >
+                  Apply
+                </Button>
+
+              </div>
+
+            </motion.div>
+
+          ))}
+
+        </div>
+
+      </motion.div>
+
     </div>
-  );
+
+  </div>
+);
 }

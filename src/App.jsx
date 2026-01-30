@@ -22,6 +22,7 @@ import { HappirateSplitAuth } from "./pages/AuthenticationPageNew/HappirateSplit
 //import Index from "./pages/NewBankApplicationPage/Index";
 import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
 import Navbar from "./IntegrateComponents/Navbar/Navbar";
+import HeroSection from "./components/HeroSection/HeroSection";
 export const Context = createContext();
 
 const App = () => {
@@ -72,6 +73,7 @@ const App = () => {
               element={<FinancialSummaryPage />}
             />
             <Route path="loan-application" element={<LoanApplication />} />
+            {/* <Route path="Herosection" element={<HeroSection />} /> */}
 
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />

@@ -69,11 +69,12 @@ const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
       
-      <Hero/>
+      <HeroSection/>
       <BanksSection />
-      <EMICalculator />
+      
       <Features />
       <Footer />
+      
      
     </div>
   );

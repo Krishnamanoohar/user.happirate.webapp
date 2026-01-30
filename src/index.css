@@ -174,3 +174,53 @@
     color: #ffffff;
   }
 }
+.hero-bg {
+  background: linear-gradient(135deg, #1e3a8a, #312e81, #0f172a);
+  color: white;
+}
+
+.hero-gradient {
+  background: radial-gradient(
+    circle at top left,
+    rgba(255, 255, 255, 0.10),
+    transparent 60%
+  );
+  backdrop-filter: blur(4px);
+}
+
+.body {
+  /* Simple linear gradient */
+  background: linear-gradient(
+    135deg,        /* direction: diagonal */
+    #0f2027 0%,    /* dark blue/near-black */
+    #203a43 50%,   /* bluish mid tone */
+    #2c5364 100%   /* lighter slate blue */
+  );
+  min-height: 100vh;
+  margin: 0;
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.app-background {
+  background: linear-gradient(
+    140deg,
+    #0a1a43 0%,
+    #1f2e63 45%,
+    #243b7d 100%
+  );
+  background-attachment: fixed;
+  color: white;
+}
+
+
+
+.table-wrapper {
+  max-height: 600px;   /* adjust as needed */
+  overflow: hidden;   /* prevent page scroll */
+  display: flex;
+  flex-direction: column;
+}
