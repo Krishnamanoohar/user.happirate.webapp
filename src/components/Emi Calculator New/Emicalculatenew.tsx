@@ -125,7 +125,7 @@ function LoanTypeGrid({ value, onChange }: { value: LoanType; onChange: (v: Loan
                         onClick={() => onChange(id)}
                         aria-pressed={active}
                         className={cn(
-                            "group relative flex items-center justify-center gap-3 rounded-xl px-4 py-4 text-center transition-all",
+                            "group relative flex items-center justify-center gap-3 !rounded-md px-4 py-4 text-center transition-all",
 
                             // CARD BASE
                             "bg-[#0f1222]",
@@ -255,18 +255,16 @@ export function Emicalculatornew() {
     return (
         <section
             className="
-    mx-auto w-full max-w-6xl
-    px-4 pb-14 pt-10 md:px-6 md:pb-20
+    w-full
+    px-4 pb-14 pt-10 md:px-4 md:pb-20
     bg-[linear-gradient(135deg,#2e2f7a_0%,#1b1f5e_35%,#0b0f3b_65%,#05071f_100%)]
-    rounded-2xl
   "
         >
 
+
+
             <header className="mb-8">
-                <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs">
-                    <span className="h-1.5 w-1.5 rounded-full" />
-                    Fintech tools  instant estimates
-                </div>
+
                 <h1 className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-5xl text-white">
                     EMI Calculator
                 </h1>
@@ -299,7 +297,7 @@ export function Emicalculatornew() {
 
                         <LoanTypeGrid value={loanType} onChange={setLoanType} />
 
-                        <div className="grid gap-6">
+                        <div className="grid gap-6 text-white">
                             <SliderField
                                 label="Loan amount"
                                 value={principal}
@@ -347,7 +345,7 @@ export function Emicalculatornew() {
                                         setShowAll(false);
                                     }}
                                     className="
-              bg-slate-200
+              bg-slate-200 !rounded-md
               text-slate-800
               border border-slate-300
               shadow-none
@@ -366,7 +364,7 @@ export function Emicalculatornew() {
                                     onClick={() => setShowAll((s) => !s)}
                                     className="
               bg-blue-600 text-white
-              hover:bg-blue-700
+              hover:bg-blue-700 !rounded-md
               focus:ring-2 focus:ring-blue-500
             "
                                 >
@@ -436,7 +434,7 @@ export function Emicalculatornew() {
                                 variant="hero"
                                 className="
     w-full
-    rounded-full
+    !rounded-md
     bg-blue-600 text-white
     hover:bg-blue-700
     focus:ring-2 focus:ring-blue-500
@@ -457,31 +455,38 @@ export function Emicalculatornew() {
         bg-[#0f1222]
         border border-white/10
         shadow-[0_12px_32px_rgba(0,0,0,0.6)]
-      "
+    "
                     >
                         <div className="p-4 pb-0">
                             <TabsList
                                 className="
-      relative
-      grid w-full grid-cols-2
-      rounded-full
-      bg-[#1a1e2e]
-      p-1
-      shadow-inner
+        relative
+        grid w-full grid-cols-2
+        rounded-full
+        bg-[#1a1e2e]
+        p-0.5
+        gap-2
+        border-0
+        ring-0
+        !outline-none
+        shadow-none
     "
                             >
                                 <TabsTrigger
                                     value="schedule"
                                     className="
-        rounded-full
-        px-4 py-2
-        text-sm font-medium
-        text-white/70
-        transition-all
-        data-[state=active]:bg-[#0f1222]
-        data-[state=active]:text-white
-        data-[state=active]:shadow
-      "
+            !rounded-md
+            px-4 py-2
+            text-sm font-medium
+            text-white/70
+            transition-all duration-200
+            m-0.5
+            hover:text-white
+            data-[state=active]:text-white
+            data-[state=active]:bg-blue-600
+            data-[state=active]:mt-[3px]
+            data-[state=active]:mb-0.5
+        "
                                 >
                                     Schedule
                                 </TabsTrigger>
@@ -489,66 +494,106 @@ export function Emicalculatornew() {
                                 <TabsTrigger
                                     value="about"
                                     className="
-        rounded-full
-        px-4 py-2
-        text-sm font-medium
-        text-white/70
-        transition-all
-        data-[state=active]:bg-[#0f1222]
-        data-[state=active]:text-white
-        data-[state=active]:shadow
-      "
+            !rounded-md
+            px-4 py-2
+            text-sm font-medium
+            text-white/70
+            transition-all duration-200
+            m-0.5
+            hover:text-white
+            data-[state=active]:text-white
+            data-[state=active]:bg-blue-600
+            data-[state=active]:mt-[3px]
+            data-[state=active]:mb-0.5
+        "
                                 >
                                     About EMI
                                 </TabsTrigger>
                             </TabsList>
                         </div>
 
-
                         <TabsContent value="schedule" className="p-4 pt-3">
-                            <div className="mb-3 text-sm font-medium text-white">
-                                Amortization snapshot
+                            <div className="mb-4">
+
+                                <p className="text-sm font-small text-white mb-4">Amortization snapshot</p>
+
                             </div>
 
-                            <div className="max-h-[340px] overflow-auto rounded-xl border border-white/10 bg-[#14172c]">
-                                <table className="w-full text-sm">
-                                    <thead className="sticky top-0 bg-[#14172c]">
-                                        <tr className="text-left text-xs text-white/60">
-                                            <th className="p-3">Month</th>
-                                            <th className="p-3">EMI</th>
-                                            <th className="p-3">Interest</th>
-                                            <th className="p-3">Principal</th>
-                                            <th className="p-3">Balance</th>
+                            <div className="max-h-[340px] overflow-auto rounded-xl bg-[#0f1222] border-2 border-[#4a5568]">
+                                <style jsx>{`
+        .visible-table {
+            border-collapse: collapse;
+        }
+        .visible-table th {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        .visible-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        /* Remove the last row border */
+        .visible-table tr:last-child td {
+            border-bottom: none;
+        }
+    `}</style>
+
+                                <table className="w-full text-sm visible-table">
+                                    <thead className="sticky top-0 bg-[#2a2e3e] z-10">
+                                        <tr className="text-left text-xs">
+                                            <th className="p-3 font-medium text-white/80">Month</th>
+                                            <th className="p-3 font-medium text-white/80">EMI</th>
+                                            <th className="p-3 font-medium text-white/80">Interest</th>
+                                            <th className="p-3 font-medium text-white/80">Principal</th>
+                                            <th className="p-3 font-medium text-white/80">Balance</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         {(showAll ? schedule : schedule.slice(0, 12)).map((r) => (
-                                            <tr key={r.month} className="border-t border-white/10">
-                                                <td className="p-3 text-white/60">{r.month}</td>
-                                                <td className="p-3 text-white">{formatINR(r.emi)}</td>
-                                                <td className="p-3 text-white/60">{formatINR(r.interest)}</td>
+                                            <tr key={r.month}>
+                                                <td className="p-3 text-white/70">{r.month}</td>
+                                                <td className="p-3 text-white font-medium">{formatINR(r.emi)}</td>
+                                                <td className="p-3 text-white/70">{formatINR(r.interest)}</td>
                                                 <td className="p-3 text-white">{formatINR(r.principal)}</td>
-                                                <td className="p-3 text-white/60">{formatINR(r.balance)}</td>
+                                                <td className="p-3 text-white/70">{formatINR(r.balance)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
+
+
+
+
+                            {!showAll && (
+                                <div className="mt-3 text-xs text-white/60 text-center">
+                                    Showing first 12 months. Use "Full schedule" to expand.
+                                </div>
+                            )}
                         </TabsContent>
 
                         <TabsContent value="about" className="p-4 pt-3">
-                            <div className="space-y-3">
-                                <div className="text-sm font-medium text-white">What is EMI?</div>
+                            <div className="space-y-4">
+                                <div>
+
+                                    <h3 className="text-sm font-medium text-white mb-4">What is EMI?</h3>
+                                </div>
+
                                 <p className="text-sm text-white/70">
                                     EMI (Equated Monthly Installment) is a fixed monthly payment that covers both interest and principal.
                                     Your EMI changes when you tweak amount, rate, or tenure.
                                 </p>
-                                <div className="rounded-xl border border-border bg-secondary/30 p-3 text-xs  text-white">
-                                    <div className="font-medium  text-white">Formula (monthly)</div>
-                                    <div className="mt-1 font-mono">EMI = P × r × (1+r)^n / ((1+r)^n − 1)</div>
-                                    <div className="mt-2">P = principal • r = monthly interest rate • n = number of months</div>
+
+                                <div className="rounded-xl border border-white/10 bg-[#0f1222] p-4">
+                                    <div className="font-medium text-white mb-2">Formula (monthly)</div>
+                                    <div className="font-mono text-sm text-white/90 bg-[#14172c] p-3 rounded-lg">
+                                        EMI = P × r × (1+r)^n / ((1+r)^n − 1)
+                                    </div>
+                                    <div className="mt-3 text-xs text-white/60">
+                                        P = principal • r = monthly interest rate • n = number of months
+                                    </div>
                                 </div>
-                                <p className="text-xs  text-white">
+
+                                <p className="text-xs text-white/60 italic">
                                     Note: This is an estimate. Actual rates and fees may vary by lender and credit profile.
                                 </p>
                             </div>
