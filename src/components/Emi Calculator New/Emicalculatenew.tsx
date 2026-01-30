@@ -543,6 +543,14 @@ export function Emicalculatornew() {
                                     EMI (Equated Monthly Installment) is a fixed monthly payment that covers both interest and principal.
                                     Your EMI changes when you tweak amount, rate, or tenure.
                                 </p>
+                                <div className="rounded-xl border border-border bg-secondary/30 p-3 text-xs  text-white">
+                                    <div className="font-medium  text-white">Formula (monthly)</div>
+                                    <div className="mt-1 font-mono">EMI = P × r × (1+r)^n / ((1+r)^n − 1)</div>
+                                    <div className="mt-2">P = principal • r = monthly interest rate • n = number of months</div>
+                                </div>
+                                <p className="text-xs  text-white">
+                                    Note: This is an estimate. Actual rates and fees may vary by lender and credit profile.
+                                </p>
                             </div>
                         </TabsContent>
                     </Tabs>
@@ -562,7 +570,7 @@ export function Emicalculatornew() {
       shadow-[0_0_0_1px_rgba(153,92,245,0.35),0_14px_36px_rgba(0,0,0,0.6)]
     "
                 >
-                    <CardHeader>
+                    <CardHeader className={undefined}>
                         <CardTitle className="text-lg text-white">
                             How EMI is calculated
                         </CardTitle>
@@ -586,7 +594,7 @@ export function Emicalculatornew() {
       shadow-[0_0_0_1px_rgba(37,99,235,0.35),0_14px_36px_rgba(0,0,0,0.6)]
     "
                 >
-                    <CardHeader>
+                    <CardHeader className={undefined}>
                         <CardTitle className="text-lg text-white">
                             Why this helps
                         </CardTitle>
@@ -610,7 +618,7 @@ export function Emicalculatornew() {
       shadow-[0_0_0_1px_rgba(153,92,245,0.35),0_14px_36px_rgba(0,0,0,0.6)]
     "
                 >
-                    <CardHeader>
+                    <CardHeader className={undefined}>
                         <CardTitle className="text-lg text-white">
                             Using the calculator
                         </CardTitle>
