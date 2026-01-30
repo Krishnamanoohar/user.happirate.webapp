@@ -252,7 +252,7 @@ export default function BankApplicationPage() {
     console.log("VERIFY OTP PAYLOAD:", payload);
 
     try {
-      const response = await verifyOtpApi(payload);
+      //const response = await verifyOtpApi(payload);
       console.log(response, "response------------>");
       toast.success("Otp Verified Successfully");
       setIsMobileVerified(true);
@@ -521,9 +521,8 @@ export default function BankApplicationPage() {
                 <div key={name} className="md:col-span-1">
                   <label
                     htmlFor={name}
-                    className={`block mb-2 text-sm font-medium ${
-                      hasError ? "text-red-700" : "text-gray-900"
-                    }`}
+                    className={`block mb-2 text-sm font-medium ${hasError ? "text-red-700" : "text-gray-900"
+                      }`}
                   >
                     {label}
                   </label>
@@ -535,11 +534,10 @@ export default function BankApplicationPage() {
                         name={name}
                         type="file"
                         onChange={handleFileChange}
-                        className={`block w-full text-sm border rounded-lg cursor-pointer bg-gray-50 focus:outline-none ${
-                          hasError
-                            ? "border-red-500 text-red-900"
-                            : "border-gray-300 text-gray-900"
-                        }`}
+                        className={`block w-full text-sm border rounded-lg cursor-pointer bg-gray-50 focus:outline-none ${hasError
+                          ? "border-red-500 text-red-900"
+                          : "border-gray-300 text-gray-900"
+                          }`}
                       />
                       {displayValue && (
                         <p className="mt-1 text-xs text-gray-500">
@@ -555,15 +553,13 @@ export default function BankApplicationPage() {
                       value={displayValue}
                       onChange={handleChange}
                       disabled={disabled && isMobileVerified}
-                      className={`text-sm rounded-lg block w-full p-2.5 ${
-                        hasError
-                          ? "bg-red-50 border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500"
-                          : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-                      } ${
-                        disabled
+                      className={`text-sm rounded-lg block w-full p-2.5 ${hasError
+                        ? "bg-red-50 border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500"
+                        : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                        } ${disabled
                           ? "disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed"
                           : ""
-                      }`}
+                        }`}
                       placeholder={label}
                     />
                   )}
@@ -609,11 +605,10 @@ export default function BankApplicationPage() {
                 value={mobileNumber}
                 onChange={handleMobileChange}
                 disabled={isOtpSent && !errors.otp}
-                className={`text-sm rounded-lg block w-full p-2.5 ${
-                  errors.mobileNumber
-                    ? "border-red-500"
-                    : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                }`}
+                className={`text-sm rounded-lg block w-full p-2.5 ${errors.mobileNumber
+                  ? "border-red-500"
+                  : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  }`}
                 placeholder="10-digit mobile number"
               />
               {errors.mobileNumber && (
@@ -667,11 +662,10 @@ export default function BankApplicationPage() {
                       value={digit}
                       onChange={(e) => handleOtpChange(e, index)}
                       onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                      className={`w-12 h-12 text-center text-xl font-bold border-2 rounded-lg ${
-                        errors.otp
-                          ? "border-red-500"
-                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                      }`}
+                      className={`w-12 h-12 text-center text-xl font-bold border-2 rounded-lg ${errors.otp
+                        ? "border-red-500"
+                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
                     />
                   ))}
                 </div>
@@ -715,9 +709,8 @@ export default function BankApplicationPage() {
                   name="loanType"
                   value={formData.loanType}
                   onChange={handleChange}
-                  className={`text-sm rounded-lg block w-full p-2.5 ${
-                    errors.loanType ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`text-sm rounded-lg block w-full p-2.5 ${errors.loanType ? "border-red-500" : "border-gray-300"
+                    }`}
                 >
                   <option value="">-- Choose Loan Type --</option>
                   <option value="personal">Personal Loan</option>
@@ -746,9 +739,8 @@ export default function BankApplicationPage() {
                   name="loanAmount"
                   value={formData.loanAmount}
                   onChange={handleChange}
-                  className={`text-sm rounded-lg block w-full p-2.5 ${
-                    errors.loanAmount ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`text-sm rounded-lg block w-full p-2.5 ${errors.loanAmount ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="e.g., 500000"
                 />
                 {errors.loanAmount && (
@@ -842,11 +834,10 @@ export default function BankApplicationPage() {
                                 });
                               }}
                               className={`flex flex-col items-center justify-center h-28 w-full rounded-xl border-2 border-dashed cursor-pointer transition px-2
-              ${
-                errors[fieldKey]
-                  ? "border-red-400 bg-red-50"
-                  : "border-blue-300 bg-blue-50 hover:bg-blue-100"
-              }`}
+              ${errors[fieldKey]
+                                  ? "border-red-400 bg-red-50"
+                                  : "border-blue-300 bg-blue-50 hover:bg-blue-100"
+                                }`}
                             >
                               <svg
                                 className="w-8 h-8 text-blue-500 mb-1"
@@ -896,11 +887,10 @@ export default function BankApplicationPage() {
                             : ".pdf,.doc,.docx,.jpg,.png"
                         }
                         onChange={handleFileChange}
-                        className={`block w-full text-sm border rounded-lg cursor-pointer bg-white focus:outline-none ${
-                          errors[field.name]
-                            ? "border-red-500 text-red-900"
-                            : "border-gray-300 text-gray-900"
-                        }`}
+                        className={`block w-full text-sm border rounded-lg cursor-pointer bg-white focus:outline-none ${errors[field.name]
+                          ? "border-red-500 text-red-900"
+                          : "border-gray-300 text-gray-900"
+                          }`}
                       />
 
                       {formData[field.name] && (
@@ -995,7 +985,7 @@ export default function BankApplicationPage() {
                     >
                       <span className="font-medium">{label}:</span>
                       {typeof formData[key] === "object" &&
-                      key === "address" ? (
+                        key === "address" ? (
                         <div className="text-gray-700 font-light text-right">
                           <div>{formData[key].line1}</div>
                           <div>
