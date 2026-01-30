@@ -288,11 +288,11 @@ const LoanApplication = () => {
 
     const residenceAddress =
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
-
+console.log((apiData.dateOfBirth).split("T")[0] )
     return {
       firstName: apiData.firstName || "",
       lastName: apiData.lastName || "",
-      dateOfBirth: apiData.dateOfBirth || "",
+      dateOfBirth: (apiData.dateOfBirth).split("T")[0] || "",
       panCard: apiData.panCard || "",
       email: primaryEmail || [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
@@ -715,12 +715,13 @@ const LoanApplication = () => {
         ...prev,
         email: apiEmails[0] || "",
       }));
+
       console.log(
         "mapApiResponseToFormData",
-        mapApiResponseToFormData(resp.data, mobile),
+        mapApiResponseToFormData(resp.data.data, mobile),
       );
 
-      setFormData(mapApiResponseToFormData(resp.data, mobile));
+      setFormData(mapApiResponseToFormData(resp.data.data, mobile));
     } catch (error) {
       console.log("error in auto filling user details", error);
     }

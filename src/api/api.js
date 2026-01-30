@@ -50,8 +50,7 @@ const submitFinancialProfileDetails = async (payload) => {
 };
 
 export {
-  checkLoanEligibility,
-  personalDetailsVerification,
+  checkLoanEligibility, personalDetailsVerification,
   submitFinancialProfileDetails,
   sendOtpToMobile,
   verifyOtp,
