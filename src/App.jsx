@@ -24,6 +24,7 @@ import LoanApplication from "./pages/NewBankApplicationPage/LoanApplication";
 import { NewCompareLoanApplication } from "./pages/NewLoanComparisonPage/NewCompareLoanApplication";
 import { LoanEligibilityForm } from "./components/OtherComponents/SmartCompare/LoanEligibilityForm";
 import SmartComparePage from "./components/OtherComponents/SmartCompare/SmartComparePage";
+import HappirateSplitAuth2 from "./pages/Authentication Page/HappirateSplitAuth";
 
 export const Context = createContext();
 
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/" element={<IndexPage />} />
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
             <Route path="sign-in" element={<HappirateSplitAuth />} />
+            <Route path="sign-inn" element={<HappirateSplitAuth2 />} />
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
             {/* <Route path="compare-loans" element={<LoanComparisonPage />} /> */}
             {/* <Route

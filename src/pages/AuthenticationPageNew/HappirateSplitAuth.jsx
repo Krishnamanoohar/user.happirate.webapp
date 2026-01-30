@@ -2,7 +2,7 @@ import * as React from "react";
 // import happirateLogo from "@/assets/happirate-logo.png";
 import { AuroraBackdrop } from "../AuthenticationPageNew/AuroraBackdrop";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
+import { useState, useRef, useTransition, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,6 +18,9 @@ import { sendOtpToMobile, verifyOtp } from "../../../src/api/api";
 import { Navigate, useNavigate } from "react-router-dom";
 // import { ToastContainer } from "react-toastify";
 import { toast, Toaster } from "sonner";
+import { sendFirebaseOtpToMobileNumber } from "@/utils/const";
+import { auth } from "@/firebase/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 function Stat({ value, label }) {
   return (
@@ -29,15 +32,19 @@ function Stat({ value, label }) {
 }
 
 export function HappirateSplitAuth() {
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  // const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [resendCountDown, setResendCountDown] = useState(0);
+  const [recaptchaVerifier, setRecaptchaVerifier] = useState(null);
+  const [otpResult, setOtpResult] = useState(null);
   const [errors, setErrors] = useState({});
   const [isMobileVerified, setIsMobileVerified] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
@@ -67,7 +74,8 @@ export function HappirateSplitAuth() {
     try {
       await sendOtpToMobile(mobileNumber);
       toast.success(`OTP sent successfully to ${mobileNumber}`);
-      setShowOtp(true);
+      // setShowOtp(true);
+      setOtpResult(true);
       setErrors({});
     } catch (error) {
       console.error("OTP send failed", error);
@@ -77,6 +85,55 @@ export function HappirateSplitAuth() {
       });
     }
   };
+
+  // const handleSendOtp = async (e) => {
+  //   e.preventDefault();
+
+  //   if (mobileNumber.length !== 10) {
+  //     setErrors({
+  //       mobileNumber: "Please enter a valid 10-digit mobile number",
+  //     });
+  //     return;
+  //   }
+
+  //   setResendCountDown(60);
+
+  //   startTransition(async () => {
+  //     if (!recaptchaVerifier) {
+  //       return toast.error("RecaptchaVerifier is not initialized");
+  //     }
+  //   });
+
+  //   // if (!consentChecked) {
+  //   //   setErrors({ consent: "You must agree to the consent statement." });
+  //   //   return;
+  //   // }
+
+  //   try {
+  //     const confirmationResult = await signInWithPhoneNumber(
+  //       auth,
+  //       `+91${mobileNumber}`,
+  //       recaptchaVerifier,
+  //     );
+
+  //     setOtpResult(confirmationResult);
+  //     toast.success("OTP sent successfully");
+  //   } catch (error) {
+  //     console.error("OTP send failed", error);
+  //     setResendCountDown(0);
+  //     if (error.code === "auth/invalid-phone-number") {
+  //       toast.error("Invalid phone number. Please check the number.");
+  //     } else if (error.code === "auth/too-many-requests") {
+  //       toast.error("Too many requests, Please try again later.");
+  //     } else {
+  //       toast.error("Failed to send OTP, Please try again.");
+  //     }
+
+  //     // setErrors({
+  //     //   mobileNumber: "Failed to send OTP. Please try again.",
+  //     // });
+  //   }
+  // };
 
   const handleVerifyOtp = async (enteredOtp) => {
     if (enteredOtp.length !== 4) {
@@ -111,10 +168,28 @@ export function HappirateSplitAuth() {
     }
   };
 
+  useEffect(() => {
+    const recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      { size: "invisible" },
+    );
+
+    // setRea
+  }, [auth]);
+
+  useEffect(() => {
+    let timer;
+    if (resendCountDown > 0) {
+      timer = setTimeout(() => setResendCountDown(resendCountDown - 1), 1000);
+    }
+    return clearTimeout(timer);
+  }, [resendCountDown]);
+
   return (
     <AuroraBackdrop className="min-h-[90vh] bg-gradient-to-br from-[#fdfcfd] via-[#f3e8ff] to-[#e9d5ff]">
       <Toaster richColors position="top-right" />
-
+      <div id="recaptcha-container" style={{ display: "none" }}></div>
       <div className="w-full">
         <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
           {/* Left marketing panel */}
@@ -184,13 +259,13 @@ export function HappirateSplitAuth() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <Separator className="flex-1" />
                   <span className="text-xs text-muted-foreground">
                     OR CONTINUE WITH EMAIL
                   </span>
                   <Separator className="flex-1" />
-                </div>
+                </div> */}
 
                 <form onSubmit={handleSendOtp} className="space-y-4">
                   {/* MOBILE INPUT */}
@@ -203,11 +278,12 @@ export function HappirateSplitAuth() {
                       inputMode="numeric"
                       pattern="[0-9]{10}"
                       required
-                      disabled={showOtp}
+                      disabled={otpResult}
+                      placeholder="Enter your mobile number"
                     />
                   </div>
 
-                  {!showOtp && (
+                  {!otpResult && (
                     <Button
                       type="submit"
                       variant="hero"
@@ -218,7 +294,7 @@ export function HappirateSplitAuth() {
                   )}
 
                   {/* OTP INPUTS */}
-                  {showOtp && (
+                  {otpResult && (
                     <>
                       <div className="flex justify-center gap-3 pt-2">
                         {otp.map((digit, index) => (
@@ -235,11 +311,16 @@ export function HappirateSplitAuth() {
                           />
                         ))}
                       </div>
-
+                      <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
+                        <span>OTP sent successfully</span>
+                        <button className="text-purple-600 font-medium">
+                          Resend OTP
+                        </button>
+                      </div>
                       <Button
                         type="button"
                         variant="hero"
-                        className="w-full"
+                        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
                         onClick={() => handleVerifyOtp(otp.join(""))}
                       >
                         Verify OTP

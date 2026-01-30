@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-export default function HappirateSplitAuth() {
+export default function HappirateSplitAuth2() {
   const [step, setStep] = useState("MOBILE"); // MOBILE | OTP
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 

@@ -279,7 +279,7 @@ const LoanApplication = () => {
 
   const mapApiResponseToFormData = (apiData, mobile) => {
     // pick PRIMARY email
-    // const primaryEmail = apiData.emails?.[0]?.email || "";
+    const primaryEmail = apiData.emails?.[0]?.email || "";
 
     // pick RESIDENCE address (fallback to first)
     const addresses = Array.isArray(apiData?.addresses)
@@ -294,7 +294,7 @@ const LoanApplication = () => {
       lastName: apiData.lastName || "",
       dateOfBirth: apiData.dateOfBirth || "",
       panCard: apiData.panCard || "",
-      email: apiData?.emails || [],
+      email: primaryEmail || [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
 
