@@ -2,7 +2,7 @@ import { Lender } from '@/Data/lenders';
 import { cn } from '@/lib/utils';
 import { CheckCircle2, XCircle, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
 // import { Button } from '@/components/ui/button';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import React from 'react';
 
 interface DetailedComparisonProps {
@@ -27,9 +27,9 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
   }) => {
     const getIconColor = () => {
       switch (type) {
-        case 'pros': return 'text-approval';
-        case 'cons': return 'text-destructive';
-        case 'unique': return 'text-gold';
+        case 'pros': return 'text-green-600';
+        case 'cons': return 'text-red-600';
+        case 'unique': return 'text-blue-600';
         case 'restrictions': return 'text-warning';
       }
     };
@@ -69,12 +69,14 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
         {[lender1, lender2].map((lender) => (
           <div key={lender.id} className="card-elevated p-6">
             <div className="flex items-center gap-4 mb-4">
-              <div className={cn(
-                'w-14 h-14 rounded-xl flex items-center justify-center font-bold',
-                lender.type === 'Bank' ? 'bg-navy text-primary-foreground' : 'bg-trust text-primary-foreground'
-              )}>
-                {lender.logo.slice(0, 4)}
-              </div>
+                <div
+                  className={cn(
+                  'w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm text-white',
+                    lender.type === 'Bank' ? 'bg-slate-900' : 'bg-blue-500'
+                  )}
+                >
+                {lender.logo.slice(0, 3)}
+                </div>
               <div>
                 <h3 className="font-display text-xl font-bold">{lender.name}</h3>
                 <span className={cn(
@@ -99,7 +101,7 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
                 <div className="text-xs text-muted-foreground mb-1">Approval</div>
                 <div className={cn(
                   'font-bold text-lg',
-                  lender.approvalProbability >= 90 ? 'text-approval' : lender.approvalProbability >= 80 ? 'text-trust' : 'text-warning'
+                  lender.approvalProbability >= 90 ? 'text-green-600' : lender.approvalProbability >= 80 ? 'text-blue-600' : 'text-red-600'
                 )}>
                   {lender.approvalProbability}%
                 </div>
@@ -112,7 +114,7 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
 
             <Button 
               onClick={() => onSelectForLetter(lender)}
-              className="w-full gradient-primary hover:opacity-90 transition-opacity"
+              className="w-full gradient-primary hover:opacity-90 transition-opacity !rounded-xl"
             >
               Generate Pre-Sanction Letter
               <ArrowRight className="w-4 h-4 ml-2" />

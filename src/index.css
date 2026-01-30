@@ -110,6 +110,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --shadow-card: 0 0 0 1px hsl(260, 15%, 90%), 0 4px 12px hsl(260 25% 11% / 0.08);
+  --shadow-card-hover: 0 0 0 1px hsl(262, 83%, 58%), 0 8px 24px hsl(260 25% 11% / 0.12);
+  --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%) 0%, hsl(262, 83%, 68%) 100%);
+
+
 }
 
 .dark {
@@ -153,6 +158,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  .font-display {
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+  }
 }
 
 @layer components {
@@ -173,4 +181,36 @@
     background-color: #2563eb; /* blue-600 */
     color: #ffffff;
   }
+  .card-elevated {
+    @apply bg-card rounded-xl;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .card-elevated:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
 }
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+}
+.pdf-wrapper {
+  width: 794px;       /* A4 width at 96 DPI */
+  margin: 0 auto;
+  background: white;
+  padding: 16px;
+}
+

@@ -115,36 +115,6 @@ const CompareLonePage = () => {
       {/* Main Content */}
       <main className="container max-w-6xl py-10 md:py-14">
         {/* Main Tabs - Only show when not in detailed/letter views */}
-        {/* {(stage === 'compare' || stage === 'psl') && (
-          <div className="flex justify-center mb-8">
-            <div className="flex bg-secondary rounded-xl p-1.5 gap-1">
-              <button
-                onClick={() => setStage('compare')}
-                className={cn(
-                  'flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-semibold transition-all',
-                  stage === 'compare'
-                    ? 'bg-card shadow-md text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <GitCompare className="w-4 h-4" />
-                Compare Lenders
-              </button>
-              <button
-                onClick={handleOpenPSL}
-                className={cn(
-                  'flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-semibold transition-all',
-                  stage === 'psl'
-                    ? 'bg-card shadow-md text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <FileText className="w-4 h-4" />
-                Provisional Offer Letter
-              </button>
-            </div>
-          </div>
-        )} */}
         {(stage === 'compare' || stage === 'psl') && (
         <div className="flex justify-center mb-8">
           <div className="flex bg-gray-100 rounded-2xl p-1 shadow-sm">
@@ -184,7 +154,7 @@ const CompareLonePage = () => {
             {/* View Toggle & Selection Info */}
           <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="!text-2xl !font-bold text-gray-900">
             Compare {lenders.length} Lenders
           </h2>
           {selectedLenders.length > 0 && (
@@ -232,7 +202,7 @@ const CompareLonePage = () => {
             bg-gradient-to-r from-violet-500 to-purple-500
             hover:from-violet-600 hover:to-purple-600
             text-white font-semibold
-            px-6 h-11 rounded-xl
+            px-6 h-11 !rounded-xl
             shadow-md hover:shadow-lg
             transition-all duration-200
             flex items-center gap-2
@@ -246,11 +216,11 @@ const CompareLonePage = () => {
       </section>
             {/* Selected Lenders Chips */}
             {selectedLenders.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-6 ">
                 {selectedLenderObjects.map((lender) => (
                   <div
                     key={lender.id}
-                    className="inline-flex items-center gap-2 bg-trust-light text-trust px-3 py-1.5 rounded-full text-sm font-medium"
+                    className="inline-flex items-center gap-2 bg-trust-light text-trust px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-600"
                   >
                     {lender.name}
                     <button
@@ -308,7 +278,12 @@ const CompareLonePage = () => {
 
         {stage === 'detailed' && selectedLenderObjects.length === 2 && (
           <div>
-            <Button variant="ghost" onClick={handleBackToCompare} className="mb-6">
+            <Button variant="ghost" onClick={handleBackToCompare} className="mb-6             !rounded-xl
+            text-gray-500
+            transition-all
+            hover:bg-purple-600
+            hover:text-white
+            hover:shadow-md">
               ← Back to all lenders
             </Button>
             <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">

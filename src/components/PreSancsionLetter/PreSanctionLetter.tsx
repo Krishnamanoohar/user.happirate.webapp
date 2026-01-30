@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Lender } from '@/Data/lenders';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import {  CardTitle } from '@/components/ui/card';
 import { Card, CardHeader, CardContent } from '../ui/card';
 import { 
@@ -91,15 +91,20 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
 
   return (
     <div className="animate-slide-up max-w-4xl mx-auto pb-8">
-      <Button variant="ghost" onClick={onBack} className="mb-6 text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="w-4 h-4 mr-2" />
+      <Button variant="ghost" onClick={onBack} className="mb-6 text-muted-foreground hover:text-foreground !rounded-xl
+            text-gray-500
+            transition-all
+            hover:bg-purple-600
+            hover:text-white
+            hover:shadow-md">
+        <ArrowLeft className="w-4 h-4 mr-2 " />
         Back to Comparison
       </Button>
 
       {/* Main Letter Card */}
       <Card className="border-0 shadow-xl bg-card overflow-hidden">
         {/* Header Section */}
-        <CardHeader className="bg-gradient-to-r from-navy via-navy-light to-navy p-6 md:p-8 text-white">
+        {/* <CardHeader className="bg-gradient-to-r from-navy via-navy-light to-navy p-6 md:p-8 text-white">
           <div className="flex items-center gap-2 mb-4">
             <FileText className="w-5 h-5 text-gold" />
             <span className="text-gold font-medium text-sm uppercase tracking-wide">
@@ -110,7 +115,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center font-bold text-lg border border-white/20">
-                {lender.logo.slice(0, 4)}
+                {lender.logo.slice(0, 3)}
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold">{lender.name}</h2>
@@ -136,7 +141,61 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
               </div>
             </div>
           </div>
-        </CardHeader>
+        </CardHeader> */}
+        <CardHeader className="bg-gradient-to-r from-[#1b1630] via-[#2a2146] to-[#1b1630] p-6 md:p-8 text-white rounded-t-xl mt-4">
+  {/* Top Label */}
+  <div className="flex items-center gap-2 mb-6">
+    <FileText className="w-5 h-5 text-yellow-600" />
+    <span className="text-yellow-600 font-medium text-sm uppercase tracking-wide">
+      Estimated Pre-Sanction Approval Letter
+    </span>
+  </div>
+
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    {/* Left: Logo + Bank Info */}
+    <div className="flex items-center gap-4">
+      <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center font-bold text-lg border border-white/20">
+        {/* If no real logo image, use short name */}
+        {lender.shortName ?? lender.name.slice(0, 4).toUpperCase()}
+      </div>
+
+      <div>
+        <h2 className="font-display text-2xl !font-bold text-white">
+          {lender.name}
+        </h2>
+        <p className="text-white/70 text-sm">
+          {lender.type}
+        </p>
+      </div>
+    </div>
+
+    {/* Right: Meta Info */}
+    <div className="flex flex-col gap-2 text-sm md:text-right">
+      <div className="flex items-center gap-2 md:justify-end">
+        <User className="w-4 h-4 text-white/60" />
+        <span className="text-white/80">Applicant:</span>
+        <span className="font-medium">[Applicant Name]</span>
+      </div>
+
+      <div className="flex items-center gap-2 md:justify-end">
+        <Hash className="w-4 h-4 text-white/60" />
+        <span className="text-white/80">Ref ID:</span>
+        <span className="font-mono text-xs bg-white/10 px-2 py-0.5 rounded">
+          {referenceNumber}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2 md:justify-end">
+        <CalendarDays className="w-4 h-4 text-white/60" />
+        <span className="text-white/80">Date:</span>
+        <span className="font-medium">
+          {currentDate}
+        </span>
+      </div>
+    </div>
+  </div>
+</CardHeader>
+
 
         <CardContent className="p-6 md:p-8 space-y-6">
           {/* Loan Details Section */}
@@ -149,17 +208,17 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <div className="bg-gradient-to-br from-approval-light to-white rounded-xl p-4 border border-approval/20">
                 <div className="flex items-center gap-2 mb-2">
-                  <IndianRupee className="w-4 h-4 text-approval" />
+                  <IndianRupee className="w-4 h-4 text-green-600" />
                   <p className="text-xs text-muted-foreground">Est. Sanction Amount</p>
                 </div>
-                <p className="font-display text-xl font-bold text-approval">
+                <p className="font-display text-xl font-bold text-green-600">
                   Up to ₹{(estimatedAmount / 100000).toFixed(2)}L
                 </p>
               </div>
               
               <div className="bg-secondary/50 rounded-xl p-4 border border-border">
                 <div className="flex items-center gap-2 mb-2">
-                  <Percent className="w-4 h-4 text-primary" />
+                  <Percent className="w-4 h-4 text-violet-600" />
                   <p className="text-xs text-muted-foreground">Interest Rate (APR)</p>
                 </div>
                 <p className="font-bold text-lg">{lender.trueAPR}% – {lender.trueAPRMax}%</p>
@@ -194,15 +253,15 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                   <TrendingUp className="w-4 h-4 text-primary" />
                   <p className="text-xs text-muted-foreground">Approval Probability</p>
                 </div>
-                <p className="font-bold text-lg text-approval">{lender.approvalProbability}%</p>
+                <p className="font-bold text-lg text-green-600">{lender.approvalProbability}%</p>
               </div>
               
               <div className="bg-gradient-to-br from-gold-light to-white rounded-xl p-4 border border-gold/20 col-span-2 md:col-span-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Wallet className="w-4 h-4 text-gold" />
-                  <p className="text-xs text-muted-foreground">Estimated EMI</p>
+                  <Wallet className="w-4 h-4 text-yellow-600" />
+                  <p className="text-xs text-muted-foreground text-yellow-600">Estimated EMI</p>
                 </div>
-                <p className="font-display text-xl font-bold text-gold">
+                <p className="font-display text-xl font-bold text-yellow-500">
                   ₹{emi.toLocaleString('en-IN')}/mo
                 </p>
               </div>
@@ -213,7 +272,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           <div className="bg-gradient-to-br from-navy/5 to-transparent rounded-2xl p-6 border-2 border-navy/10">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-full bg-navy/10 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-navy" />
+                <Shield className="w-5 h-5 text-dark-600" />
               </div>
               <div>
                 <h3 className="font-display text-lg font-bold text-navy">
@@ -250,7 +309,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-dashed border-navy/10">
                   <span className="text-sm text-muted-foreground">Net Disbursal Amount</span>
-                  <span className="font-bold text-approval">₹{netDisbursalAmount.toLocaleString('en-IN')}</span>
+                  <span className="font-bold text-green-600">₹{netDisbursalAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-dashed border-navy/10">
                   <span className="text-sm text-muted-foreground">Repayment Mode</span>
@@ -263,7 +322,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
               </div>
             </div>
             
-            <div className="mt-4 p-3 bg-navy/5 rounded-lg border border-navy/10">
+            <div className="mt-4 p-3 bg-gray-200 rounded-lg border border-navy/10">
               <p className="text-sm font-semibold text-navy">
                 <Info className="w-4 h-4 inline mr-2" />
                 Total cost of credit includes interest, processing fees, insurance charges, and any third-party charges.
@@ -278,7 +337,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                 <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
               </div>
               <div className="flex-1">
-                <h4 className="font-display font-bold text-amber-800 dark:text-amber-300 mb-2">
+                <h4 className="font-display font-bold !text-amber-800 dark:text-amber-300 mb-2">
                   Cooling-Off / Look-Up Period
                 </h4>
                 <p className="text-sm text-amber-700 dark:text-amber-400 mb-4">
@@ -302,7 +361,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
 
           {/* Terms & Conditions Section */}
           <div className="bg-secondary/30 rounded-xl p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+            <h4 className="!font-semibold text-foreground mb-3 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-muted-foreground" />
               Terms & Conditions
             </h4>
@@ -337,23 +396,42 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           {/* Footer CTAs */}
           <div className="pt-4 border-t border-border">
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-navy to-navy-light hover:opacity-90 transition-opacity"
+              <Button
                 onClick={handleAccept}
+                className="
+                  h-12 
+                  px-8
+                  !rounded-md
+                  text-base 
+                  font-semibold 
+                  text-white
+                  bg-gradient-to-r from-[#1b1630] to-[#2a2146]
+                  shadow-lg shadow-black/20
+                  hover:opacity-90 
+                  active:scale-[0.98]
+                  transition-all
+                  flex items-center justify-center gap-2
+                "
               >
-                <CheckCircle className="w-5 h-5 mr-2" />
+                <CheckCircle className="w-5 h-5" />
                 Accept & Continue to Final Sanction
               </Button>
+
               <Button 
                 variant="outline" 
-                className="flex-1 h-12 text-base border-2"
+                className="flex-1 h-12 text-base border-2 hover:text-foreground !rounded-xl
+            text-gray-500
+            transition-all
+            hover:bg-purple-600
+            hover:text-white
+            hover:shadow-md"
               >
                 <Download className="w-5 h-5 mr-2" />
                 Download PDF
               </Button>
               <Button 
                 variant="secondary" 
-                className="flex-1 h-12 text-base"
+                className="flex-1 h-12 text-gray-200"
                 onClick={() => setShowReassessDialog(true)}
               >
                 <Clock className="w-5 h-5 mr-2" />
@@ -383,7 +461,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-center">
             <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-approval-light to-approval/20 flex items-center justify-center mb-4">
-              <ShieldCheck className="w-8 h-8 text-approval" />
+              <ShieldCheck className="w-8 h-8 text-green-600" />
             </div>
             <DialogTitle className="font-display text-2xl text-center">
               Offer Accepted! 🎉
@@ -436,7 +514,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           
           <div className="bg-secondary/50 rounded-xl p-4 mt-4 space-y-3">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-approval mt-0.5 flex-shrink-0" />
+              <ShieldCheck className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
                 Your details are encrypted and stored safely
               </p>
