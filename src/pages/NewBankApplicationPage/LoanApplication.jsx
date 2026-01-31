@@ -164,7 +164,7 @@ const buildEmploymentDetailsPayload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(3); // Start from 1
+  const [currentStep, setCurrentStep] = useState(1); // Start from 1
   const [emailOptions, setEmailOptions] = useState([]);
 
   const navigate = useNavigate();
@@ -747,7 +747,9 @@ const LoanApplication = () => {
         </div>
 
         {/* Step Indicator */}
-        <StepIndicator steps={steps} currentStep={currentStep} />
+        <div>
+          <StepIndicator steps={steps} currentStep={currentStep} />
+        </div>
 
         {/* Form Content */}
         <div className="mt-8 space-y-6">

@@ -29,10 +29,11 @@ import HappirateSplitAuth2 from "./pages/Authentication Page/HappirateSplitAuth"
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 import CompareLoanPage from "./pages/CompareLonePage/CompareLonePage";
-import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
+// import HappirateSplitAuth from "./pages/Authentication Page/HappirateSplitAuth";
 import CreditHealthReport from "./components/CreditHealthReport/CreditHealthReport";
 import OneScoreDashboard from "./components/Dashboard/Dashboard";
 import Emicalculatornew from "./components/Emi Calculator New/Emicalculatenew";
+import LandingApp from "./IntegratedComps/src/App";
 export const Context = createContext();
 
 const App = () => {
@@ -57,9 +58,10 @@ const App = () => {
         }}
       >
         <BrowserRouter>
-          <Header />
+          {/* <Header /> */}
           <Routes>
-            <Route path="/" element={<IndexPage />} />
+            {/* <Route path="/" element={<IndexPage />} /> */}
+            <Route path="/" element={<LandingApp />} />
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
             <Route path="sign-in" element={<HappirateSplitAuth />} />
             <Route path="sign-inn" element={<HappirateSplitAuth2 />} />
@@ -86,7 +88,10 @@ const App = () => {
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
 
-            <Route path="/credit-health-report" element={<CreditHealthReport />} />
+            <Route
+              path="/credit-health-report"
+              element={<CreditHealthReport />}
+            />
             <Route path="/oneboarddashboard" element={<OneScoreDashboard />} />
           </Routes>
           <Chatbot />
