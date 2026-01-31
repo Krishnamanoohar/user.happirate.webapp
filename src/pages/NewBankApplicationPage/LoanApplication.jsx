@@ -247,9 +247,9 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
-      const payload = buildFileUpload(formData);
       try {
-        const response = await handleDocumentUpload(payload);
+        console.log(documents);
+        const response = await handleDocumentUpload();
         console.log(response, "response");
       } catch (error) {
         console.log(error, "error");
@@ -382,320 +382,13 @@ const LoanApplication = () => {
         return;
       }
       const resp = await fetchCreditReport({ mobileNumber: mobile });
-      const apiData = resp?.data ?? resp;
+      console.log("credit report response", resp);
+      const apiData = resp?.data?.data;
+      sessionStorage.setItem("userId", apiData._id);
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);
         return;
       }
-      // const resp = {
-      //   data: {
-      //     fullName: "ARUN BAIKANI",
-      //     firstName: "BIRUDARAJU",
-      //     lastName: "MANOHAR",
-      //     middleName: "KRISHNA",
-      //     emails: [
-      //       {
-      //         email: "B.ARUN@MAIL.CA.IN",
-      //         type: "Primary",
-      //       },
-      //       {
-      //         email: "ARUN.BAIKAN@REALVARIABLE.COM",
-      //         type: "Primary",
-      //       },
-      //       {
-      //         email: "ARUNBAIKANI2000@GMAIL.COM",
-      //         type: "Primary",
-      //       },
-      //     ],
-      //     occupationCode: "04",
-      //     occupationName: "Others",
-      //     panCard: "DQQPA3737P",
-      //     dateOfBirth: "2000-05-19",
-      //     employmentStatus: "Others",
-      //     cibilScore: "737",
-      //     addresses: [
-      //       {
-      //         streetAddress:
-      //           "FIRST FLOOR PEARL ENCLAVE BANJARAHILLS ROAD NO 5 8 2 334 BY 5  SBI ENCLAVE",
-      //         pincode: "500034",
-      //         type: "Office",
-      //         state: "Telangana",
-      //       },
-      //       {
-      //         streetAddress:
-      //           "302 BK GUDA SR NAGAR 3RD FLOOR ROAD NO LIK 2 SR NAGAR HYDERABAD  LIG PARK",
-      //         pincode: "500038",
-      //         type: "Residence",
-      //         state: "Telangana",
-      //       },
-      //       {
-      //         streetAddress:
-      //           "2-29/5/T NEAR AMBEDKAR   STREET BASHEERABAD KAMMARPALLY",
-      //         pincode: "503225",
-      //         type: "Not Categorized",
-      //         state: "Andhra Pradesh",
-      //       },
-      //       {
-      //         streetAddress: "HYDERABAD HITECH CITY HYDERABAD HITECH CITY",
-      //         pincode: "500032",
-      //         type: "Office",
-      //         state: "Telangana",
-      //       },
-      //     ],
-      //     // city: null,
-      //     last6MonthsEnquiryCount: 2,
-      //     creaditCardUtilization: 98,
-      //     existingEmi: 31045,
-      //     settlements: 0,
-      //     emiBounces: 5,
-      //     ckycId: "30072076761054",
-      //     phoneNumbers: [
-      //       {
-      //         SerialNumber: "1297942604",
-      //         Number: "9346521702",
-      //       },
-      //       {
-      //         SerialNumber: "1297942603",
-      //         Number: "9346521702",
-      //       },
-      //       {
-      //         SerialNumber: "1359932387",
-      //         Number: "294971630",
-      //       },
-      //       {
-      //         SerialNumber: "1186343072",
-      //         Number: "7095196617",
-      //       },
-      //     ],
-      //     inquiryHistory: [
-      //       {
-      //         date: "2025-12-05",
-      //         bankName: "AXIS BANK",
-      //         amount: 10000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2025-08-22",
-      //         bankName: "HDFC BANK",
-      //         amount: 100000,
-      //         purpose: "Personal Loan",
-      //       },
-      //       {
-      //         date: "2025-05-15",
-      //         bankName: "TGB",
-      //         amount: 120000,
-      //         purpose: "Agriculture Loan",
-      //       },
-      //       {
-      //         date: "2025-01-06",
-      //         bankName: "ICICI BANK",
-      //         amount: 100000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-12-11",
-      //         bankName: "ICICI BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-11-19",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-11-14",
-      //         bankName: "IDFC FIRST BANK",
-      //         amount: 20000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-09-19",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-09-10",
-      //         bankName: "HDFC BANK",
-      //         amount: 50000,
-      //         purpose: "Personal Loan",
-      //       },
-      //       {
-      //         date: "2024-03-02",
-      //         bankName: "AXIS BANK",
-      //         amount: 10000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-03-01",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-02-16",
-      //         bankName: "KOTAK BANK",
-      //         amount: 50000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2024-02-16",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2023-08-20",
-      //         bankName: "WHIZDMFINANCE",
-      //         amount: 200000,
-      //         purpose: "Personal Loan",
-      //       },
-      //       {
-      //         date: "2023-08-02",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2023-06-20",
-      //         bankName: "KOTAK BANK",
-      //         amount: 50000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2023-06-09",
-      //         bankName: "HDFC BANK",
-      //         amount: 1000,
-      //         purpose: "Other / General Loan Enquiry",
-      //       },
-      //       {
-      //         date: "2023-02-27",
-      //         bankName: "BAJAJ FIN LTD",
-      //         amount: 25000,
-      //         purpose: "Personal Loan",
-      //       },
-      //     ],
-      //     totalCurrentBalance: 1335277,
-      //     tradelines: [
-      //       {
-      //         accountTypeCode: "10",
-      //         accountTypeName: "Credit Card / Unsecured Credit",
-      //         bank: "AXIS BANK",
-      //         currentBalance: "38095",
-      //         emiAmount: "-1",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "-1",
-      //         paymentHistoryStatus: "0,0,",
-      //         creditLimit: "39000",
-      //         loanAmount: 0,
-      //         collateralType: "Unsecured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //       {
-      //         accountTypeCode: "05",
-      //         accountTypeName: "Personal Loan",
-      //         bank: "HDFC BANK",
-      //         currentBalance: "469495",
-      //         emiAmount: "-1",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "12756",
-      //         paymentHistoryStatus: "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,",
-      //         creditLimit: "-1",
-      //         loanAmount: 0,
-      //         collateralType: "Unsecured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //       {
-      //         accountTypeCode: "69",
-      //         accountTypeName: "BNPL / Pay Later",
-      //         bank: "ADBIRLACAP",
-      //         currentBalance: "0",
-      //         emiAmount: "-1",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "-1",
-      //         paymentHistoryStatus: "0,0,0,0,0,0,0,0,0,0,0,0,",
-      //         creditLimit: "-1",
-      //         loanAmount: 0,
-      //         collateralType: "Unsecured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //       {
-      //         accountTypeCode: "06",
-      //         accountTypeName: "Consumer Loan",
-      //         bank: "HDFC BANK",
-      //         currentBalance: "0",
-      //         emiAmount: "-1",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "-1",
-      //         paymentHistoryStatus: "0,0,0,0,0,",
-      //         creditLimit: "-1",
-      //         loanAmount: 0,
-      //         collateralType: "Unsecured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //       {
-      //         accountTypeCode: "03",
-      //         accountTypeName: "Housing / Home Loan",
-      //         bank: "APTUS",
-      //         currentBalance: "737712",
-      //         emiAmount: "18289",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "-1",
-      //         paymentHistoryStatus:
-      //           "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,XXX,0,0,0,0,0,XXX,0,0,0,0,0,0,0,0,0,0,0,0,0,",
-      //         creditLimit: "-1",
-      //         loanAmount: 0,
-      //         collateralType: "Secured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //       {
-      //         accountTypeCode: "36",
-      //         accountTypeName: "Consumer Loan",
-      //         bank: "TGB",
-      //         currentBalance: "89975",
-      //         emiAmount: "-1",
-      //         amountOverdue: 0,
-      //         actualPaymentAmount: "-1",
-      //         paymentHistoryStatus:
-      //           "STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,STD,XXX,STD,STD,STD,STD,STD,STD,STD,STD,STD,",
-      //         creditLimit: "-1",
-      //         loanAmount: 0,
-      //         collateralType: "Secured",
-      //         repaymentTenure: null,
-      //         settlementAmount: -1,
-      //       },
-      //     ],
-      //     scoreFactors: [
-      //       {
-      //         code: null,
-      //         description: null,
-      //       },
-      //       {
-      //         code: null,
-      //         description: null,
-      //       },
-      //       {
-      //         code: null,
-      //         description: null,
-      //       },
-      //       {
-      //         code: null,
-      //         description: null,
-      //       },
-      //       {
-      //         code: null,
-      //         description: null,
-      //       },
-      //     ],
-      //   },
-      // };
 
       const apiEmails = Array.isArray(apiData.emails)
         ? apiData.emails.map((e) => e.email)
@@ -727,58 +420,72 @@ const LoanApplication = () => {
   /**
    * Upload loan documents + loan details
    */
+  // async function uploadFinancialDocsFrontend({
+  //   requestedLoanAmount,
+  //   requestedLoanTenure,
+  //   loanType,
+  //   itrFiles, // File[] (max 3)
+  //   payslips, // File[] (exact 3)
+  //   photo, // File (single)
+  // }) {
+  //   const formDocs = new FormData();
+  //   // ---- Text fields (req.body) ----
+  //   formDocs.append("requestedLoanAmount", requestedLoanAmount);
+  //   formDocs.append("requestedLoanTenure", requestedLoanTenure);
+  //   formDocs.append("loanType", loanType);
+
+  //   // ---- Files (req.files) ----
+  //   itrFiles.forEach((file) => {
+  //     formDocs.append("itr", file); // matches req.files.itr
+  //   });
+  //   payslips.forEach((file) => {
+  //     formDocs.append("payslips", file); // matches req.files.payslips
+  //   });
+  //   formDocs.append("photo", photo); // matches req.files.photo[0]
+  //   const response = await axios.post(
+  //     "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
+  //     formDocs,
+  //   );
+  //   return response.data;
+  // }
+
   async function uploadFinancialDocsFrontend({
+    userId,
     requestedLoanAmount,
     requestedLoanTenure,
     loanType,
-    itrFiles, // File[] (max 3)
-    payslips, // File[] (exact 3)
-    photo, // File (single)
   }) {
-    const formData = new FormData();
-
-    // ---- Text fields (req.body) ----
-    formData.append("requestedLoanAmount", requestedLoanAmount);
-    formData.append("requestedLoanTenure", requestedLoanTenure);
-    formData.append("loanType", loanType);
-
-    // ---- Files (req.files) ----
-    itrFiles.forEach((file) => {
-      formData.append("itr", file); // matches req.files.itr
-    });
-
-    payslips.forEach((file) => {
-      formData.append("payslips", file); // matches req.files.payslips
-    });
-
-    formData.append("photo", photo); // matches req.files.photo[0]
-
-    const response = await axios.post(
-      "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
-
-    return response.data;
+    try {
+      const resp = await axios.post(
+        "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
+        { userId, requestedLoanAmount, requestedLoanTenure, loanType },
+      );
+      console.log("Uploading resp", resp);
+      return true;
+    } catch (error) {
+      console.log("Error in uploading", error);
+    }
   }
+
   const handleDocumentUpload = async () => {
     try {
-      const response = await uploadFinancialDocsFrontend({
+      const userId = sessionStorage.getItem("userId");
+      const isUploaded = await uploadFinancialDocsFrontend({
+        userId,
         requestedLoanAmount: formData.loanAmount,
         requestedLoanTenure: formData.loanTenure,
         loanType: formData.loanType,
 
-        itrFiles: [documents.itr],
-        payslips: [documents.payslip1, documents.payslip2, documents.payslip3],
-        photo: documents.photo,
+        // itrFiles: [documents.itr],
+        // payslips: [documents.payslip1, documents.payslip2, documents.payslip3],
+        // photo: documents.photo,
       });
 
-      console.log("Upload success:", response);
-      toast.success("Documents uploaded successfully");
+      if (isUploaded) {
+        setCurrentStep(3)
+        toast.success("Documents uploaded successfully");
+        console.log("Upload success:", response);
+      }
     } catch (error) {
       console.error("Upload failed", error);
       toast.error(error.response?.data?.message || "Document upload failed");
