@@ -8,17 +8,17 @@ import Features from "./components/Features";
 import Footer from "./components/Footer";
 
 function LandingApp() {
-  const [scrollY, setScrollY] = useState(0);
+  // const [scrollY, setScrollY] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // useEffect(() => {
+  //   const handleScroll = () => setScrollY(window.scrollY);
+  //   window.addEventListener("scroll", handleScroll, { passive: true });
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <Navbar scrollY={scrollY} />
+      {/* <Navbar scrollY={scrollY} /> */}
       <main>
         <Hero />
         <BanksSection />
