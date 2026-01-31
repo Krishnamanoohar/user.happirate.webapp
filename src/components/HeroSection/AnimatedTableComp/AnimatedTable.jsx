@@ -230,7 +230,7 @@ export default function AnimatedTable() {
       {/* Cards */}
       <div className="flex justify-between m-4 gap-4 mb-0 rounded-xl">
         {/* Total Disbursed Card */}
-        <div className="bg-black/80 border border-white/10 rounded-xl p-4 flex items-center justify-between grow-1 shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
+        <div className="bg-black/80 border border-white/10 rounded-xl p-4 flex items-center justify-between grow-1 !shadow-[0_0_20px_5px_rgba(255,255,255,0.6)]">
           <div>
             <div className="text-sm text-gray-400 mb-1">Total Disbursed</div>
             <div className="text-xl font-semibold">₹6,320 Lakh</div>

@@ -1,34 +1,36 @@
-import { useState } from 'react'
-import { Menu, X, ChevronDown, Building2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useState } from "react";
+import { Menu, X, ChevronDown, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
-  scrollY: number
+  scrollY: number;
 }
 
 const navLinks = [
-  { name: 'Solutions', href: '#solutions' },
-  { name: 'Get In Touch', href: '#contact' },
-  { name: 'EMI Calculator', href: '#emi-calculator' },
-]
+  { name: "Solutions", href: "#solutions" },
+  { name: "Get In Touch", href: "#contact" },
+  { name: "EMI Calculator", href: "#emi-calculator" },
+  { name: "Credit Health", href: "/credit-health-report" },
+  { name: "Smart Compares", href: "" },
+];
 
 export default function Navbar({ scrollY }: NavbarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isScrolled = scrollY > 50
+  const isScrolled = scrollY > 50;
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-indigo-100/50'
-          : 'bg-transparent'
+          ? "bg-white/90 backdrop-blur-xl shadow-lg shadow-indigo-100/50"
+          : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,7 +48,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {/* Banks Dropdown */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-1 text-slate-600 hover:text-indigo-600 font-medium transition-colors">
                   <Building2 className="w-4 h-4" />
@@ -71,7 +73,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                   <span className="text-slate-700">International</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {navLinks.map((link) => (
               <a
@@ -87,9 +89,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
 
           {/* Sign In Button */}
           <div className="hidden lg:block">
-            <Button
-              className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
-            >
+            <Button className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105">
               Sign In
             </Button>
           </div>
@@ -130,14 +130,12 @@ export default function Navbar({ scrollY }: NavbarProps) {
                 {link.name}
               </a>
             ))}
-            <Button
-              className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4"
-            >
+            <Button className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4">
               Sign In
             </Button>
           </div>
         </div>
       )}
     </nav>
-  )
+  );
 }

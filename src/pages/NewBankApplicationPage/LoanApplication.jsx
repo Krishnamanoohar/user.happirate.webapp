@@ -32,8 +32,10 @@ import {
   //verifyOtpApi,
   personalDetailsVerification,
   submitFinancialProfileDetails,
+  updateCreditReport,
 } from "../../../src/api/api";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -63,39 +65,11 @@ const residentialStatuses = [
   { value: "family", label: "Living with Family" },
 ];
 
-// Mock fetched data (simulating auto-fetched from Aadhaar-linked data)
-const mockFetchedData = {
-  firstName: "Maya",
-  lastName: "Reddy",
-  dateOfBirth: "1992-09-22",
-  panCard: "FIHMP6789L",
-  email: "maya.reddy@example.com",
-  aadhaarCard: "3887 2202 4544",
-  mobileNumber: "8019904780",
-  employmentStatus: "salaried",
-  companyName: "NovaTech Services Pvt Ltd",
-  monthlyIncome: "78000",
-  residentialStatus: "rented",
-  addressLine1: "Flat 402, Green Valley Apartments",
-  city: "Hyderabad",
-  state: "Telangana",
-  pincode: "500084",
-  loanType: "education",
-  loanAmount: "500000",
-  cibilScore: "745",
-  recentEnquiries: "2",
-  settlements: "0",
-  emiBounces: "0",
-  creditCardUtilization: "35",
-  residentialStability: "3",
-  existingEmi: "15000",
-};
-
-const formatDateToDDMMYYYY = (isoDate) => {
-  if (!isoDate) return "";
-  const [y, m, d] = isoDate.split("-");
-  return `${d}-${m}-${y}`;
-};
+// const formatDateToDDMMYYYY = (isoDate) => {
+//   if (!isoDate) return "";
+//   const [y, m, d] = isoDate.split("-");
+//   return `${d}-${m}-${y}`;
+// };
 
 const normalizeAadhaarForApi = (value) =>
   value?.replace(/\D/g, "").replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3");
@@ -136,35 +110,38 @@ const validateEmploymentNumbers = (data) => {
 };
 
 const buildPersonalDetailsPayload = (data) => ({
+  mobileNumber: sessionStorage.getItem("mobile_number"),
   firstName: data.firstName,
   lastName: data.lastName,
-  dateOfBirth: formatDateToDDMMYYYY(data.dateOfBirth),
+  middleName: data.middleName,
+  dateOfBirth: data.dateOfBirth,
   email: data.email,
   panCard: data.panCard,
-  aadharCard: normalizeAadhaarForApi(data.aadhaarCard),
+  // aadharCard: normalizeAadhaarForApi(data.aadhaarCard),
+  // residentialType: data.residentialStatus,
+  addressLine1: data.addressLine1,
+  // city: data.city,
+  state: data.state,
+  pincode: data.pincode,
 });
 
 const buildEmploymentDetailsPayload = (data) => ({
-  employmentStatus: data.employmentStatus,
-  companyName: data.companyName,
-  uanNumber: data.uanNumber,
-  monthlyIncome: Number(data.monthlyIncome),
+  mobileNumber: sessionStorage.getItem("mobile_number"),
+  // employmentStatus: data.employmentStatus,
+  // companyName: data.companyName,
+  // uanNumber: data.uanNumber,
+  // monthlyIncome: Number(data.monthlyIncome),
   cibilScore: Number(data.cibilScore),
   recentEnquiries: Number(data.recentEnquiries),
   settlements: Number(data.settlements),
   emiBounces: Number(data.emiBounces),
   creditCardUtilization: Number(data.creditCardUtilization),
-  residentialStability: Number(data.residentialStability),
+  // residentialStability: Number(data.residentialStability),
   existingEmi: Number(data.existingEmi),
-  residentialType: data.residentialStatus,
-  addressLine1: data.addressLine1,
-  city: data.city,
-  state: data.state,
-  pincode: data.pincode,
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(1); // Start from 1
+  const [currentStep, setCurrentStep] = useState(0); // Start from 0
   const [emailOptions, setEmailOptions] = useState([]);
 
   const navigate = useNavigate();
@@ -211,56 +188,61 @@ const LoanApplication = () => {
 
   const handleNext = async () => {
     // STEP 1 → Personal Details API
-    if (currentStep === 1) {
+    if (currentStep === 0) {
       const panError = validatePan(formData.panCard);
       //const emailError = validateGmail(formData.email);
 
       if (panError) {
-        alert(panError);
+        toast.error(panError);
         return;
       }
       const payload = buildPersonalDetailsPayload(formData);
       console.log("Personal Details Payload:", payload);
 
       try {
-        await personalDetailsVerification(payload);
-        setCurrentStep(2);
+        const response = await updateCreditReport(payload);
+        console.log(response, "response");
+        toast.success("Personal details Submitted Sucessfully");
+        setCurrentStep(1);
       } catch (error) {
         console.error(
           "Personal details submission failed",
           error.response?.data || error.message,
         );
-        alert("Personal details submission failed");
+        toast.error("Personal details submission failed");
       }
       return;
     }
 
     // STEP 2 → Employment & Credit API
-    if (currentStep === 2) {
-      const errors = validateEmploymentNumbers(formData);
-      if (Object.keys(errors).length) {
-        alert("Please fix employment details");
-        return;
-      }
+    if (currentStep === 1) {
+      // const errors = validateEmploymentNumbers(formData);
+      // if (Object.keys(errors).length) {
+      //   alert("Please fix employment details");
+      //   return;
+      // }
 
       const payload = buildEmploymentDetailsPayload(formData);
 
       try {
-        await submitFinancialProfileDetails(payload);
-        setCurrentStep(3);
+        const response = await updateCreditReport(payload);
+        console.log(response, "response________----");
+        toast.success("Employment details Submitted Sucessfully");
+        setCurrentStep(2);
       } catch (error) {
         console.error(
           "Employment details submission failed",
           error.response?.data || error.message,
         );
-        alert("Employment details submission failed");
+        toast.error("Employment details submission failed");
       }
       return;
     }
 
     // STEP 3 → Documents (NO API in old code)
-    if (currentStep === 3) {
-      setCurrentStep(4);
+    if (currentStep === 2) {
+      toast.success("Documents Submitted Sucessfully");
+      setCurrentStep(3);
       return;
     }
   };
@@ -292,15 +274,15 @@ const LoanApplication = () => {
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
     console.log(apiData.dateOfBirth.split("T")[0]);
     return {
-      firstName: apiData.firstName || "",
-      lastName: apiData.lastName || "",
-      dateOfBirth: apiData.dateOfBirth.split("T")[0] || "",
-      panCard: apiData.panCard || "",
-      email: primaryEmail || [],
+      firstName: apiData.firstName ?? "",
+      lastName: apiData.lastName ?? "",
+      dateOfBirth: apiData.dateOfBirth.split("T")[0] ?? "",
+      panCard: apiData.panCard ?? "",
+      email: primaryEmail ?? [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
 
-      employmentStatus: apiData.employmentStatus?.toLowerCase() || "",
+      employmentStatus: apiData.employmentStatus?.toLowerCase() ?? "",
 
       companyName: "", // ❌ NOT PROVIDED
       monthlyIncome: "", // ❌ NOT PROVIDED
@@ -309,21 +291,21 @@ const LoanApplication = () => {
         ? residenceAddress.type.toLowerCase()
         : "",
 
-      addressLine1: residenceAddress?.streetAddress || "",
-      city: apiData.city || "",
-      state: residenceAddress.state || "",
-      pincode: residenceAddress.pincode || "",
+      addressLine1: residenceAddress?.streetAddress ?? "",
+      city: apiData.city ?? "",
+      state: residenceAddress.state ?? "",
+      pincode: residenceAddress.pincode ?? "",
 
       loanType: "", // ❌ USER INPUT
       loanAmount: "", // ❌ USER INPUT
 
-      cibilScore: apiData.cibilScore || "",
-      recentEnquiries: apiData.last6MonthsEnquiryCount || "",
-      settlements: apiData.settlements || "",
-      emiBounces: apiData.emiBounces || "",
-      creditCardUtilization: apiData.creaditCardUtilization || "",
+      cibilScore: apiData.cibilScore ?? "",
+      recentEnquiries: apiData.last6MonthsEnquiryCount ?? "",
+      settlements: apiData.settlements ?? "",
+      emiBounces: apiData.emiBounces ?? "",
+      creditCardUtilization: apiData.creaditCardUtilization ?? "",
       residentialStability: "", // ❌ NOT PROVIDED
-      existingEmi: apiData.existingEmi || "",
+      existingEmi: apiData.existingEmi ?? "",
     };
   };
 
@@ -735,6 +717,16 @@ const LoanApplication = () => {
 
   return (
     <div className="min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
       <div className="px-4 py-8 md:py-12">
         {/* Header */}
         <div className="justify-center text-center mb-8">
