@@ -248,7 +248,7 @@ const LoanApplication = () => {
   };
 
   const handleBack = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
   const handleSubmit = () => {
@@ -740,7 +740,7 @@ const LoanApplication = () => {
 
         {/* Step Indicator */}
         <div>
-          <StepIndicator steps={steps} currentStep={currentStep} />
+          <StepIndicator steps={steps} currentStep={currentStep + 1} />
         </div>
 
         {/* Form Content */}
@@ -1333,7 +1333,7 @@ const LoanApplication = () => {
           <Button
             variant="outline"
             onClick={handleBack}
-            disabled={currentStep === 1}
+            disabled={currentStep === 0}
             className="h-12 px-6 border-border hover:bg-muted"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
