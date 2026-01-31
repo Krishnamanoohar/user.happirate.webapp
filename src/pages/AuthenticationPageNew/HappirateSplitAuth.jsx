@@ -60,32 +60,6 @@ export function HappirateSplitAuth() {
     }
   };
 
-  const handleSendOtp = async (e) => {
-    e.preventDefault();
-
-    if (mobileNumber.length !== 10) {
-      setErrors({
-        mobileNumber: "Please enter a valid 10-digit mobile number",
-      });
-      toast.error("Please enter a valid mobile number");
-      return;
-    }
-
-    try {
-      await sendOtpToMobile(mobileNumber);
-      toast.success(`OTP sent successfully to ${mobileNumber}`);
-      // setShowOtp(true);
-      setOtpResult(true);
-      setErrors({});
-    } catch (error) {
-      console.error("OTP send failed", error);
-      toast.error("Failed to send OTP");
-      setErrors({
-        mobileNumber: "Failed to send OTP. Please try again.",
-      });
-    }
-  };
-
   // const handleSendOtp = async (e) => {
   //   e.preventDefault();
 
@@ -93,47 +67,73 @@ export function HappirateSplitAuth() {
   //     setErrors({
   //       mobileNumber: "Please enter a valid 10-digit mobile number",
   //     });
+  //     toast.error("Please enter a valid mobile number");
   //     return;
   //   }
 
-  //   setResendCountDown(60);
-
-  //   startTransition(async () => {
-  //     if (!recaptchaVerifier) {
-  //       return toast.error("RecaptchaVerifier is not initialized");
-  //     }
-  //   });
-
-  //   // if (!consentChecked) {
-  //   //   setErrors({ consent: "You must agree to the consent statement." });
-  //   //   return;
-  //   // }
-
   //   try {
-  //     const confirmationResult = await signInWithPhoneNumber(
-  //       auth,
-  //       `+91${mobileNumber}`,
-  //       recaptchaVerifier,
-  //     );
-
-  //     setOtpResult(confirmationResult);
-  //     toast.success("OTP sent successfully");
+  //     await sendOtpToMobile(mobileNumber);
+  //     toast.success(`OTP sent successfully to ${mobileNumber}`);
+  //     // setShowOtp(true);
+  //     setOtpResult(true);
+  //     setErrors({});
   //   } catch (error) {
   //     console.error("OTP send failed", error);
-  //     setResendCountDown(0);
-  //     if (error.code === "auth/invalid-phone-number") {
-  //       toast.error("Invalid phone number. Please check the number.");
-  //     } else if (error.code === "auth/too-many-requests") {
-  //       toast.error("Too many requests, Please try again later.");
-  //     } else {
-  //       toast.error("Failed to send OTP, Please try again.");
-  //     }
-
-  //     // setErrors({
-  //     //   mobileNumber: "Failed to send OTP. Please try again.",
-  //     // });
+  //     toast.error("Failed to send OTP");
+  //     setErrors({
+  //       mobileNumber: "Failed to send OTP. Please try again.",
+  //     });
   //   }
   // };
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+
+    if (mobileNumber.length !== 10) {
+      setErrors({
+        mobileNumber: "Please enter a valid 10-digit mobile number",
+      });
+      return;
+    }
+
+    setResendCountDown(60);
+
+    startTransition(async () => {
+      if (!recaptchaVerifier) {
+        return toast.error("RecaptchaVerifier is not initialized");
+      }
+    });
+
+    // if (!consentChecked) {
+    //   setErrors({ consent: "You must agree to the consent statement." });
+    //   return;
+    // }
+
+    try {
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        `+91${mobileNumber}`,
+        recaptchaVerifier,
+      );
+
+      setOtpResult(confirmationResult);
+      toast.success("OTP sent successfully");
+    } catch (error) {
+      console.error("OTP send failed", error);
+      setResendCountDown(0);
+      if (error.code === "auth/invalid-phone-number") {
+        toast.error("Invalid phone number. Please check the number.");
+      } else if (error.code === "auth/too-many-requests") {
+        toast.error("Too many requests, Please try again later.");
+      } else {
+        toast.error("Failed to send OTP, Please try again.");
+      }
+
+      // setErrors({
+      //   mobileNumber: "Failed to send OTP. Please try again.",
+      // });
+    }
+  };
 
   const handleVerifyOtp = async (enteredOtp) => {
     if (enteredOtp.length !== 4) {
@@ -169,13 +169,15 @@ export function HappirateSplitAuth() {
   };
 
   useEffect(() => {
-    const recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      { size: "invisible" },
-    );
+    const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+      size: "invisible",
+    });
 
-    // setRea
+    setRecaptchaVerifier(verifier);
+
+    return () => {
+      verifier.clear();
+    };
   }, [auth]);
 
   useEffect(() => {
@@ -189,28 +191,21 @@ export function HappirateSplitAuth() {
   return (
     <AuroraBackdrop className="min-h-[90vh] bg-gradient-to-br from-[#fdfcfd] via-[#f3e8ff] to-[#e9d5ff]">
       <Toaster richColors position="top-right" />
-      <div id="recaptcha-container" style={{ display: "none" }}></div>
+      <div id="recaptcha-container"></div>
       <div className="w-full">
         <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
           {/* Left marketing panel */}
           <section className="flex flex-col justify-center py-0">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
-                {/* <img
-                  src={happirateLogo}
-                  alt="Happirate"
-                  className="h-7 w-auto"
-                  loading="eager"
-                  decoding="async"
-                /> */}
-              </div>
+              {/* <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
+              </div> */}
               {/* <div className="text-sm text-muted-foreground">
                 Transparent • Privacy-first
               </div> */}
             </div>
 
             <div className="mt-8 space-y-4">
-              <h1 className="text-balance text-5xl font-semibold tracking-tight sm:text-6xl">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                 Compare &amp; Secure{" "}
                 <span className="text-primary">Smarter Loans</span>
               </h1>

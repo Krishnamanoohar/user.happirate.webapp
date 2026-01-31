@@ -26,6 +26,12 @@ body::-webkit-scrollbar {
   height: 0;
   display: none; /* Safari + Chrome */
 }
+.logo-font {
+  font-family: "Binate", sans-serif;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
 /* 
 body,
 * {

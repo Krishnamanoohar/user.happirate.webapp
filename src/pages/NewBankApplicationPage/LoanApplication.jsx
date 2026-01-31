@@ -129,10 +129,11 @@ const buildPersonalDetailsPayload = (data) => ({
 
 const buildEmploymentDetailsPayload = (data) => ({
   mobileNumber: sessionStorage.getItem("mobile_number"),
-  // employmentStatus: data.employmentStatus,
-  // companyName: data.companyName,
-  // uanNumber: data.uanNumber,
-  // monthlyIncome: Number(data.monthlyIncome),
+  employmentStatus: data.employmentStatus,
+  companyName: data.companyName,
+  uanNumber: data.uanNumber,
+  employmentExperience: data.employmentExperience,
+  monthlyIncome: Number(data.monthlyIncome),
   cibilScore: Number(data.cibilScore),
   recentEnquiries: Number(data.recentEnquiries),
   settlements: Number(data.settlements),
@@ -140,6 +141,8 @@ const buildEmploymentDetailsPayload = (data) => ({
   creditCardUtilization: Number(data.creditCardUtilization),
   // residentialStability: Number(data.residentialStability),
   existingEmi: Number(data.existingEmi),
+  employmentCategory: data.employmentCategory,
+  salaryMode: data.salaryMode,
 });
 const buildFileUpload = (data) => ({
   mobileNumber: sessionStorage.getItem("mobile_number"),
@@ -155,11 +158,14 @@ const LoanApplication = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    middleName: "",
     dateOfBirth: "",
     panCard: "",
     email: "",
     aadhaarCard: "",
     mobileNumber: "",
+    uanNumber: "",
+    employmentExperience: "",
     employmentStatus: "",
     companyName: "",
     monthlyIncome: "",
@@ -178,6 +184,7 @@ const LoanApplication = () => {
     residentialStability: "",
     existingEmi: "",
     loanTenure: "",
+    employmentCategory: "",
   });
 
   // Uploaded documents state
@@ -293,11 +300,12 @@ const LoanApplication = () => {
       email: primaryEmail ?? [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
+      uanNumber: apiData.uanNumber,
 
       employmentStatus: apiData.employmentStatus?.toLowerCase() ?? "",
-
-      companyName: "", // ❌ NOT PROVIDED
-      monthlyIncome: "", // ❌ NOT PROVIDED
+      employmentExperience: apiData.employmentExperience,
+      companyName: apiData.companyName,
+      monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
         ? residenceAddress.type.toLowerCase()
@@ -319,6 +327,8 @@ const LoanApplication = () => {
       residentialStability: "", // ❌ NOT PROVIDED
       existingEmi: apiData.existingEmi ?? "",
       loanTenure: apiData.loanTenure ?? "",
+      salaryMode: apiData.salaryMode ?? "",
+      employmentCategory: apiData.employmentCategory ?? "",
     };
   };
 
@@ -482,7 +492,7 @@ const LoanApplication = () => {
       });
 
       if (isUploaded) {
-        setCurrentStep(3)
+        setCurrentStep(3);
         toast.success("Documents uploaded successfully");
         console.log("Upload success:", response);
       }
@@ -553,6 +563,12 @@ const LoanApplication = () => {
                       label="Last Name"
                       value={formData.lastName}
                       onChange={(v) => updateFormData("lastName", v)}
+                      required
+                    />
+                    <FormInput
+                      label="Middle Name"
+                      value={formData.middleName}
+                      onChange={(v) => updateFormData("middleName", v)}
                       required
                     />
                     <FormInput
@@ -686,8 +702,16 @@ const LoanApplication = () => {
                     />
                     <FormInput
                       label="Employment Category"
-                      value={formData.companyName}
-                      onChange={(v) => updateFormData("Employment Category", v)}
+                      value={formData.employmentCategory}
+                      onChange={(v) => updateFormData("employmentCategory", v)}
+                      required
+                    />
+                    <FormInput
+                      label="Employment Experience"
+                      value={formData.employmentExperience || ""}
+                      onChange={(v) =>
+                        updateFormData("employmentExperience", v)
+                      }
                       required
                     />
                     <FormInput
@@ -706,8 +730,8 @@ const LoanApplication = () => {
                     />
                     <FormInput
                       label="Salary Mode"
-                      value={formData.monthlyIncome}
-                      onChange={(v) => updateFormData("Salary Mode", v)}
+                      value={formData.salaryMode}
+                      onChange={(v) => updateFormData("salaryMode", v)}
                       type="number"
                       required
                     />

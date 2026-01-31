@@ -7,6 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import happirateLogo from "../../../assets/images/happirateLogo.png";
+import TextLogo from "../../../assets/images/image.png";
 import { Navigate, useNavigate } from "react-router-dom";
 interface NavbarProps {
   scrollY: number;
@@ -37,14 +39,21 @@ export default function Navbar({ scrollY }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center group-hover:scale-105 transition-transform">
-              <span className="text-white font-bold text-xl">H</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight text-slate-900">
-              <a href="/">HAPPIRATE</a>
-            </span>
-          </a>
+          <div className="flex items-center">
+            <a href="/" className="flex items-center ">
+              <img
+                src={happirateLogo}
+                alt="Happirate logo"
+                className="h-20 w-20"
+              />
+
+              <img
+                src={TextLogo}
+                alt="Happirate text logo"
+                className="h-8 w-auto mt-1"
+              />
+            </a>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">

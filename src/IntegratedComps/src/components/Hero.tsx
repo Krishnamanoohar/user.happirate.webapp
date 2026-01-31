@@ -91,9 +91,10 @@ export default function Hero() {
 
             {/* Heading */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-slate-900">Compare Loans from</span>
-              <br />
-              <span className="gradient-text">Top Banks</span>
+              <span className="text-slate-900">Compare Loans from</span>&nbsp;
+              <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-400 bg-clip-text text-transparent">
+                Top Banks
+              </span>
             </h1>
 
             {/* Description */}
@@ -138,10 +139,10 @@ export default function Hero() {
                   </div>
                 ))}
               </div>
-              <div>
+              {/* <div>
                 <div className="font-semibold text-slate-900">50,000+</div>
                 <div className="text-sm text-slate-500">Happy Customers</div>
-              </div>
+              </div> */}
             </div>
           </div>
 

@@ -116,6 +116,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
 }
+@font-face {
+  font-family: "Denton";
+  src: url("/fonts/Denton-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Animation keyframes */
 @keyframes float {

@@ -21,9 +21,9 @@ function LandingApp() {
       {/* <Navbar scrollY={scrollY} /> */}
       <main>
         <Hero />
-        <BanksSection />
-        <EMICalculator />
         <Features />
+        <EMICalculator />
+        <BanksSection />
       </main>
       <Footer />
     </div>

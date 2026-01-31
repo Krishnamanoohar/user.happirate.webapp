@@ -40,7 +40,7 @@ const HeroSection = () => {
                     fontFamily: "var(--manrope-font)",
                   }}
                 >
-                  Compare Loans <br /> from Top Banks
+                  Compare Loans from Top Banks
                   {/* Any Loan. Any Bank. Tailored for You. */}
                   {/*  Compare Loans <br />
                   From Top Banks <br />
