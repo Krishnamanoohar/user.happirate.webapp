@@ -69,47 +69,7 @@ const CompareLonePage = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <header className="relative bg-gradient-to-br from-[#1a132f] via-[#2a1f4a] to-[#3b2a63] text-white py-24">
-  <div className="container max-w-6xl mx-auto px-4">
-    <div className="text-center animate-fade-in">
 
-      {/* Top Badge */}
-      <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-sm font-medium mb-8">
-        <Shield className="w-4 h-4" />
-        Trusted by 50,000+ borrowers
-      </div>
-
-      {/* Heading */}
-      <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4">
-        Compare Loans.<br />
-        <span className="text-white">Save Thousands.</span>
-      </h1>
-
-      {/* Subtitle */}
-      <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10">
-        Compare offers from 10+ top banks & NBFCs. Get the best rates, 
-        fastest approval, and lowest fees.
-      </p>
-
-      {/* Features */}
-      <div className="flex flex-wrap justify-center gap-8 text-sm md:text-base">
-        <div className="flex items-center gap-2 text-white/90">
-          <Zap className="w-5 h-5 text-yellow-400" />
-          <span>Instant comparison</span>
-        </div>
-        <div className="flex items-center gap-2 text-white/90">
-          <Award className="w-5 h-5 text-yellow-400" />
-          <span>Pre-approval in minutes</span>
-        </div>
-        <div className="flex items-center gap-2 text-white/90">
-          <Shield className="w-5 h-5 text-yellow-400" />
-          <span>100% secure</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</header>
 
 
       {/* Main Content */}
@@ -120,10 +80,11 @@ const CompareLonePage = () => {
           <div className="flex bg-gray-100 rounded-2xl p-1 shadow-sm">
             <button
               onClick={() => setStage('compare')}
+              
               className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all',
+                'flex items-center gap-2 px-6 py-3 !rounded-xl text-sm font-semibold transition-all',
                 stage === 'compare'
-                  ? 'bg-white text-black shadow-md'
+                  ? 'bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-semibold shadow-md'
                   : 'text-gray-500 hover:text-black'
               )}
             >
@@ -133,10 +94,11 @@ const CompareLonePage = () => {
 
             <button
               onClick={handleOpenPSL}
+              style={{ fontFamily: "sans-serif" }}
               className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all',
+                'flex items-center gap-2 px-6 py-3 !rounded-xl text-sm font-semibold transition-all',
                 stage === 'psl'
-                  ? 'bg-white text-black shadow-md'
+                  ? '  bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-semibold shadow-md'
                   : 'text-gray-500 hover:text-black'
               )}
             >
@@ -152,68 +114,78 @@ const CompareLonePage = () => {
           <div className="animate-fade-in">
 
             {/* View Toggle & Selection Info */}
-          <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-3">
-          <h2 className="!text-2xl !font-bold text-gray-900">
-            Compare {lenders.length} Lenders
-          </h2>
-          {selectedLenders.length > 0 && (
-            <span className="bg-indigo-50 text-indigo-600 text-xs font-semibold px-3 py-1 rounded-full">
-              {selectedLenders.length}/2 selected
-            </span>
-          )}
-        </div>
+            <section className="mb-8 flex flex-col gap-4">
+              {/* Line 1 - Center Title */}
+              <div className="flex justify-center">
+                <div className="bg-gray-100 px-8 py-3 rounded-2xl text-center">
+                  <h2
+                    style={{ fontFamily: "Denton" }}
+                    className="!text-[40px] !font-bold !text-black"
+                  >
+                    Compare {lenders.length} Lenders
+                  </h2>
 
-        <div className="flex items-center gap-4">
-          {/* Grid / Table Toggle */}
-          <div className="flex bg-gray-100 rounded-xl p-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={cn(
-                'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
-                viewMode === 'grid'
-                  ? 'bg-white shadow-sm text-gray-900'
-                  : 'text-gray-500 hover:text-gray-900'
-              )}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              Grid
-          </button>
+                  {selectedLenders.length > 0 && (
+                    <div className="mt-1">
+                      <span className="bg-white/30 text-black text-xs font-semibold px-3 py-1 rounded-full">
+                        {selectedLenders.length}/2 selected
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-      <button
-        onClick={() => setViewMode('table')}
-        className={cn(
-          'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
-          viewMode === 'table'
-            ? 'bg-white shadow-sm text-gray-900'
-            : 'text-gray-500 hover:text-gray-900'
-        )}
-      >
-        <Table className="w-4 h-4" />
-        Table
-      </button>
-        </div>
+              {/* Line 2 - Right Controls */}
+              <div className="flex justify-end items-center gap-4">
+                {/* Grid / Table Toggle */}
+                <div className="flex bg-gray-100 rounded-xl p-1">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={cn(
+                      'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                      viewMode === 'grid'
+                        ? 'bg-white shadow-sm text-gray-900'
+                        : 'text-gray-500 hover:text-gray-900'
+                    )}
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                    Grid
+                  </button>
 
-        {/* Compare Button */}
-        {selectedLenders.length === 2 && (
-        <Button
-          onClick={handleCompare}
-          className="
-            bg-gradient-to-r from-violet-500 to-purple-500
-            hover:from-violet-600 hover:to-purple-600
-            text-white font-semibold
-            px-6 h-11 !rounded-xl
-            shadow-md hover:shadow-lg
-            transition-all duration-200
-            flex items-center gap-2
-          "
-        >
-          Compare Now
-          <ArrowRight className="w-4 h-4" />
-        </Button>
-        )}
-      </div>
-      </section>
+                  <button
+                    onClick={() => setViewMode('table')}
+                    className={cn(
+                      'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                      viewMode === 'table'
+                        ? 'bg-white shadow-sm text-gray-900'
+                        : 'text-gray-500 hover:text-gray-900'
+                    )}
+                  >
+                    <Table className="w-4 h-4" />
+                    Table
+                  </button>
+                </div>
+
+                {/* Compare Button */}
+                {selectedLenders.length === 2 && (
+                  <Button
+                    onClick={handleCompare}
+                    className="
+                      bg-gradient-to-r from-violet-500 to-purple-500
+                      hover:from-violet-600 hover:to-purple-600
+                      text-white font-semibold
+                      px-6 h-11 !rounded-xl
+                      shadow-md hover:shadow-lg
+                      transition-all duration-200
+                      flex items-center gap-2
+                    "
+                  >
+                    Compare Now
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </section>
             {/* Selected Lenders Chips */}
             {selectedLenders.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6 ">
@@ -263,7 +235,7 @@ const CompareLonePage = () => {
             )}
 
             {/* Help Text */}
-            <p className="text-center text-muted-foreground text-sm mt-8">
+            <p className="text-center text-muted-foreground text-sm !mt-8">
               Select any 2 lenders to compare, or click "Apply Now" to get a pre-sanction letter directly
             </p>
           </div>
@@ -279,14 +251,15 @@ const CompareLonePage = () => {
         {stage === 'detailed' && selectedLenderObjects.length === 2 && (
           <div>
             <Button variant="ghost" onClick={handleBackToCompare} className="mb-6             !rounded-xl
-            text-gray-500
+            text-gray-600
+            !text-[18px]          
             transition-all
-            hover:bg-purple-600
+            hover:bg-purple-500
             hover:text-white
             hover:shadow-md">
               ← Back to all lenders
             </Button>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">
+            <h2 className="font-display !text-[40px] md:text-3xl !font-bold text-center mb-8">
               Side-by-Side Comparison
             </h2>
             <DetailedComparison

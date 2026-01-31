@@ -190,7 +190,7 @@ const isDisabled = (id) => {
                 e.stopPropagation();
                 onApplyNow(lender);
               }}
-              className="bg-violet-500 hover:bg-violet-600 text-white rounded-xl px-4"
+              className="bg-violet-500 hover:bg-violet-600 text-white !rounded-xl px-4"
             >
               Apply Now
             </Button>

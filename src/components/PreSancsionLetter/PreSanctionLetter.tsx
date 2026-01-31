@@ -3,6 +3,10 @@ import { Lender } from '@/Data/lenders';
 import { Button } from '../ui/button';
 import {  CardTitle } from '@/components/ui/card';
 import { Card, CardHeader, CardContent } from '../ui/card';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
+import { useRef } from 'react';
+import { Loader2 } from 'lucide-react';
 import { 
   Download, 
   FileText, 
@@ -45,6 +49,8 @@ interface PreSanctionLetterProps {
 }
 
 export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLetterProps) => {
+  const pdfRef = useRef<HTMLDivElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showReassessDialog, setShowReassessDialog] = useState(false);
 
@@ -53,6 +59,55 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
     month: 'long',
     year: 'numeric',
   });
+const handleDownloadPDF = async () => {
+  if (!pdfRef.current) return;
+  try{
+    setIsDownloading(true);
+  const element = pdfRef.current;
+
+  const originalOverflow = element.style.overflow;
+  element.style.overflow = 'visible';
+  const CROP_BOTTOM_PX = 150; 
+  const dataUrl = await toPng(element, {
+    cacheBust: true,
+    pixelRatio: 2,
+    height: element.scrollHeight  - CROP_BOTTOM_PX,
+    width: element.scrollWidth,
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left',
+    },
+  });
+
+  element.style.overflow = originalOverflow;
+
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const imgProps = pdf.getImageProperties(dataUrl);
+
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  // MULTI PAGE SUPPORT
+  let heightLeft = pdfHeight;
+  let position = 0;
+
+  pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, pdfHeight);
+  heightLeft -= pdf.internal.pageSize.getHeight();
+
+  while (heightLeft > 0) {
+    position = heightLeft - pdfHeight;
+    pdf.addPage();
+    pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pdf.internal.pageSize.getHeight();
+  }
+
+  pdf.save(`${lender.name}-Pre-Sanction-Letter.pdf`);
+  }
+  finally {
+    setIsDownloading(false);
+  }
+};
+
 
   const referenceNumber = `HPR/${lender.logo.toUpperCase()}/${Date.now().toString().slice(-8)}`;
   
@@ -91,6 +146,16 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
 
   return (
     <div className="animate-slide-up max-w-4xl mx-auto pb-8">
+      {isDownloading && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+          <div className="bg-white rounded-2xl px-8 py-6 flex items-center gap-3 shadow-xl">
+            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+            <span className="font-medium text-gray-700">
+              Generating PDF, please wait...
+            </span>
+          </div>
+        </div>
+      )}
       <Button variant="ghost" onClick={onBack} className="mb-6 text-muted-foreground hover:text-foreground !rounded-xl
             text-gray-500
             transition-all
@@ -102,46 +167,9 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
       </Button>
 
       {/* Main Letter Card */}
+      <div ref={pdfRef}>
       <Card className="border-0 shadow-xl bg-card overflow-hidden">
         {/* Header Section */}
-        {/* <CardHeader className="bg-gradient-to-r from-navy via-navy-light to-navy p-6 md:p-8 text-white">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="w-5 h-5 text-gold" />
-            <span className="text-gold font-medium text-sm uppercase tracking-wide">
-              Estimated Pre-Sanction Approval Letter
-            </span>
-          </div>
-          
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center font-bold text-lg border border-white/20">
-                {lender.logo.slice(0, 3)}
-              </div>
-              <div>
-                <h2 className="font-display text-2xl font-bold">{lender.name}</h2>
-                <p className="text-white/70 text-sm">{lender.type}</p>
-              </div>
-            </div>
-            
-            <div className="flex flex-col gap-2 text-sm md:text-right">
-              <div className="flex items-center gap-2 md:justify-end">
-                <User className="w-4 h-4 text-white/60" />
-                <span className="text-white/80">Applicant:</span>
-                <span className="font-medium">[Applicant Name]</span>
-              </div>
-              <div className="flex items-center gap-2 md:justify-end">
-                <Hash className="w-4 h-4 text-white/60" />
-                <span className="text-white/80">Ref ID:</span>
-                <span className="font-mono text-xs bg-white/10 px-2 py-0.5 rounded">{referenceNumber}</span>
-              </div>
-              <div className="flex items-center gap-2 md:justify-end">
-                <CalendarDays className="w-4 h-4 text-white/60" />
-                <span className="text-white/80">Date:</span>
-                <span className="font-medium">{currentDate}</span>
-              </div>
-            </div>
-          </div>
-        </CardHeader> */}
         <CardHeader className="bg-gradient-to-r from-[#1b1630] via-[#2a2146] to-[#1b1630] p-6 md:p-8 text-white rounded-t-xl mt-4">
   {/* Top Label */}
   <div className="flex items-center gap-2 mb-6">
@@ -160,7 +188,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
       </div>
 
       <div>
-        <h2 className="font-display text-2xl !font-bold text-white">
+        <h2 className="font-display !text-[40px] !font-bold text-white">
           {lender.name}
         </h2>
         <p className="text-white/70 text-sm">
@@ -425,13 +453,14 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             hover:bg-purple-600
             hover:text-white
             hover:shadow-md"
+            onClick={handleDownloadPDF}
               >
                 <Download className="w-5 h-5 mr-2" />
                 Download PDF
               </Button>
               <Button 
                 variant="secondary" 
-                className="flex-1 h-12 text-gray-200"
+                className="flex-1 h-12 text-gray-700 !bg-gray-200 !rounded-md"
                 onClick={() => setShowReassessDialog(true)}
               >
                 <Clock className="w-5 h-5 mr-2" />
@@ -441,6 +470,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           </div>
         </CardContent>
       </Card>
+      </div>
 
       {/* Happirate Branding */}
       <div className="text-center mt-6">
@@ -460,10 +490,11 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-approval-light to-approval/20 flex items-center justify-center mb-4">
-              <ShieldCheck className="w-8 h-8 text-green-600" />
+            <div className="mx-auto w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+              <ShieldCheck className="w-7 h-7 text-green-600" />
             </div>
-            <DialogTitle className="font-display text-2xl text-center">
+
+            <DialogTitle className="font-display text-2xl text-center !font-bold">
               Offer Accepted! 🎉
             </DialogTitle>
             <DialogDescription className="text-center text-base pt-2">
@@ -472,7 +503,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             </DialogDescription>
           </DialogHeader>
           
-          <div className="bg-secondary/50 rounded-xl p-4 mt-4">
+          <div className="!bg-gray-100 rounded-xl p-4 mt-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Loan Amount</span>
               <span className="font-bold">₹{(estimatedAmount / 100000).toFixed(2)} Lakhs</span>
@@ -488,20 +519,35 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           </div>
           
           <Button 
-            className="w-full mt-4 h-11 bg-gradient-to-r from-navy to-navy-light hover:opacity-90"
             onClick={handleRedirectToDashboard}
+            className="
+              w-full 
+              mt-4 
+              h-12 
+              px-6
+              !rounded-md
+              text-white
+              text-base 
+              font-medium
+              bg-gradient-to-r from-[#1b1630] to-[#2a2146]
+              shadow-lg shadow-black/20
+              hover:opacity-90
+              active:scale-[0.98]
+              transition-all
+            "
           >
             Go to Loan Tracking Dashboard
           </Button>
+
         </DialogContent>
       </Dialog>
 
       {/* Re-assess Later Dialog */}
       <Dialog open={showReassessDialog} onOpenChange={setShowReassessDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader className="text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-trust/20 to-trust/10 flex items-center justify-center mb-4">
-              <Lock className="w-8 h-8 text-trust" />
+            <div className="mx-auto w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+              <Lock className="w-7 h-7 text-blue-600" />
             </div>
             <DialogTitle className="font-display text-2xl text-center">
               Your Application is Secure
@@ -512,7 +558,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             </DialogDescription>
           </DialogHeader>
           
-          <div className="bg-secondary/50 rounded-xl p-4 mt-4 space-y-3">
+          <div className="bg-secondary/50 rounded-xl p-4 space-y-3">
             <div className="flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
@@ -533,19 +579,19 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             </div>
           </div>
           
-          <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
+          <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-start sm:space-x-2 gap-2 mt-4">
             <Button 
               variant="outline"
-              className="flex-1"
+              className="w-full sm:w-auto hover:text-foreground !rounded-xl text-gray-800 transition-all hover:bg-purple-600 hover:text-white hover:shadow-md"
               onClick={() => setShowReassessDialog(false)}
             >
               Continue Application
             </Button>
             <Button 
-              className="flex-1 bg-gradient-to-r from-trust to-navy hover:opacity-90"
-              onClick={() => {
-                setShowReassessDialog(false);
-                onBack();
+              className="w-full sm:w-auto !rounded-xl bg-gradient-to-r from-[#0066CC] to-[#003366] text-white px-6 py-3 hover:opacity-90" 
+              onClick={() => { 
+                setShowReassessDialog(false); 
+                onBack(); 
               }}
             >
               Save & Come Back Later

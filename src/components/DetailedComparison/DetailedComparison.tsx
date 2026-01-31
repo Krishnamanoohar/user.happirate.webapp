@@ -27,10 +27,10 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
   }) => {
     const getIconColor = () => {
       switch (type) {
-        case 'pros': return 'text-green-600';
-        case 'cons': return 'text-red-600';
-        case 'unique': return 'text-blue-600';
-        case 'restrictions': return 'text-warning';
+        case 'pros': return '!text-green-600';
+        case 'cons': return '!text-red-600';
+        case 'unique': return '!text-yellow-500';
+        case 'restrictions': return '!text-orange-500';
       }
     };
 
@@ -81,7 +81,8 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
                 <h3 className="font-display text-xl font-bold">{lender.name}</h3>
                 <span className={cn(
                   'text-sm px-2.5 py-0.5 rounded-full',
-                  lender.type === 'Bank' ? 'bg-navy/10 text-navy' : 'bg-trust/10 text-trust'
+                  lender.type === 'Bank' ? 'bg-gray-300'
+                    : 'bg-blue-200'
                 )}>
                   {lender.type}
                 </span>
@@ -125,7 +126,7 @@ export const DetailedComparison = ({ lender1, lender2, onSelectForLetter }: Deta
 
       {/* Detailed Comparison */}
       <div className="card-elevated p-6">
-        <h3 className="font-display text-xl font-bold mb-6 text-center">Detailed Comparison</h3>
+        <h3 className="font-display !text-[30px] !font-bold mb-6 text-center">Detailed Comparison</h3>
         
         <Section 
           title="Pros" 

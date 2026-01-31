@@ -48,12 +48,12 @@ export const LenderCard = ({ lender, isSelected, onSelect, disabled, onApplyNow 
             {lender.logo.slice(0, 4)}
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{lender.name}</h3>
+            <h3 className="font-semibold text-gray">{lender.name}</h3>
             <span
               className={cn(
                 'text-xs px-2 py-0.5 rounded-full',
                 lender.type === 'Bank'
-                  ? 'bg-gray-100 text-gray-700'
+                  ? 'bg-gray-200 text-gray-700'
                   : 'bg-blue-100 text-blue-600'
               )}
             >
