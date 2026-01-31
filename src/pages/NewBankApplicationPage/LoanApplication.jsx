@@ -36,6 +36,8 @@ import {
 } from "../../../src/api/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Navbar from "@/IntegratedComps/src/components/Navbar";
+import axios from "axios";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -139,6 +141,9 @@ const buildEmploymentDetailsPayload = (data) => ({
   // residentialStability: Number(data.residentialStability),
   existingEmi: Number(data.existingEmi),
 });
+const buildFileUpload = (data) => ({
+  mobileNumber: sessionStorage.getItem("mobile_number"),
+});
 
 const LoanApplication = () => {
   const [currentStep, setCurrentStep] = useState(0); // Start from 0
@@ -172,6 +177,7 @@ const LoanApplication = () => {
     creditCardUtilization: "",
     residentialStability: "",
     existingEmi: "",
+    loanTenure: "",
   });
 
   // Uploaded documents state
@@ -241,8 +247,14 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
-      toast.success("Documents Submitted Sucessfully");
-      setCurrentStep(3);
+      const payload = buildFileUpload(formData);
+      try {
+        const response = await handleDocumentUpload(payload);
+        console.log(response, "response");
+      } catch (error) {
+        console.log(error, "error");
+      }
+
       return;
     }
   };
@@ -306,6 +318,7 @@ const LoanApplication = () => {
       creditCardUtilization: apiData.creaditCardUtilization ?? "",
       residentialStability: "", // ❌ NOT PROVIDED
       existingEmi: apiData.existingEmi ?? "",
+      loanTenure: apiData.loanTenure ?? "",
     };
   };
 
@@ -711,671 +724,751 @@ const LoanApplication = () => {
     }
   };
 
+  /**
+   * Upload loan documents + loan details
+   */
+  async function uploadFinancialDocsFrontend({
+    requestedLoanAmount,
+    requestedLoanTenure,
+    loanType,
+    itrFiles, // File[] (max 3)
+    payslips, // File[] (exact 3)
+    photo, // File (single)
+  }) {
+    const formData = new FormData();
+
+    // ---- Text fields (req.body) ----
+    formData.append("requestedLoanAmount", requestedLoanAmount);
+    formData.append("requestedLoanTenure", requestedLoanTenure);
+    formData.append("loanType", loanType);
+
+    // ---- Files (req.files) ----
+    itrFiles.forEach((file) => {
+      formData.append("itr", file); // matches req.files.itr
+    });
+
+    payslips.forEach((file) => {
+      formData.append("payslips", file); // matches req.files.payslips
+    });
+
+    formData.append("photo", photo); // matches req.files.photo[0]
+
+    const response = await axios.post(
+      "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    return response.data;
+  }
+  const handleDocumentUpload = async () => {
+    try {
+      const response = await uploadFinancialDocsFrontend({
+        requestedLoanAmount: formData.loanAmount,
+        requestedLoanTenure: formData.loanTenure,
+        loanType: formData.loanType,
+
+        itrFiles: [documents.itr],
+        payslips: [documents.payslip1, documents.payslip2, documents.payslip3],
+        photo: documents.photo,
+      });
+
+      console.log("Upload success:", response);
+      toast.success("Documents uploaded successfully");
+    } catch (error) {
+      console.error("Upload failed", error);
+      toast.error(error.response?.data?.message || "Document upload failed");
+    }
+  };
+
   useEffect(() => {
     autoFillUserDetails();
   }, []);
 
   return (
-    <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20 ">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="light"
-      />
-      <div className="px-4 py-8 md:py-12 max-w-7xl w-full mt-10">
-        {/* Header */}
-        <div className="justify-center text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Loan Application
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Complete all steps to submit your application
-          </p>
-        </div>
+    <>
+      <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20 ">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="light"
+        />
+        <div className="px-4 py-8 md:py-12 max-w-7xl w-full mt-10">
+          {/* Header */}
+          <div className="justify-center text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              Loan Application
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              Complete all steps to submit your application
+            </p>
+          </div>
 
-        {/* Step Indicator */}
-        <div>
-          <StepIndicator steps={steps} currentStep={currentStep + 1} />
-        </div>
+          {/* Step Indicator */}
+          <div>
+            <StepIndicator steps={steps} currentStep={currentStep + 1} />
+          </div>
 
-        {/* Form Content */}
-        <div className="mt-8 space-y-6">
-          {/* Step 1: Personal Details + Address */}
-          {currentStep === 0 && (
-            <FormCard
-              title="Review & Edit Personal Details"
-              subtitle="Your details have been auto-fetched. You may edit any field if needed."
-            >
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 p-3 bg-accent/50 rounded-lg border border-accent mb-6">
-                  <User className="w-5 h-5 text-primary" />
-                  <p className="text-sm text-accent-foreground italic">
-                    *Review the pre-filled data. You may edit any field if
-                    needed.
-                  </p>
-                </div>
+          {/* Form Content */}
+          <div className="mt-8 space-y-6">
+            {/* Step 1: Personal Details + Address */}
+            {currentStep === 0 && (
+              <FormCard
+                title="Review & Edit Personal Details"
+                subtitle="Your details have been auto-fetched. You may edit any field if needed."
+              >
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 p-3 bg-accent/50 rounded-lg border border-accent mb-6">
+                    <User className="w-5 h-5 text-primary" />
+                    <p className="text-sm text-accent-foreground italic">
+                      *Review the pre-filled data. You may edit any field if
+                      needed.
+                    </p>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <FormInput
-                    label="First Name"
-                    value={formData.firstName}
-                    onChange={(v) => updateFormData("firstName", v)}
-                    required
-                  />
-                  <FormInput
-                    label="Last Name"
-                    value={formData.lastName}
-                    onChange={(v) => updateFormData("lastName", v)}
-                    required
-                  />
-                  <FormInput
-                    label="Date of Birth"
-                    value={formData.dateOfBirth}
-                    onChange={(v) => updateFormData("dateOfBirth", v)}
-                    type="date"
-                    required
-                  />
-                  <FormInput
-                    label="PAN Card"
-                    value={formData.panCard}
-                    disabled
-                    hint="PAN cannot be edited as it's verified from source"
-                  />
-                  {emailOptions.length > 1 ? (
-                    <FormSelect
-                      label="E-Mail ID"
-                      value={formData.email}
-                      onChange={(v) => updateFormData("email", v)}
-                      options={emailOptions.map((e) => ({
-                        value: e,
-                        label: e,
-                      }))}
-                      required
-                    />
-                  ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <FormInput
-                      label="E-Mail ID"
-                      value={formData.email}
-                      onChange={(v) => updateFormData("email", v)}
-                      type="email"
+                      label="First Name"
+                      value={formData.firstName}
+                      onChange={(v) => updateFormData("firstName", v)}
                       required
                     />
-                  )}
-
-                  <FormInput
-                    label="Aadhaar Card"
-                    value={formData.aadhaarCard}
-                    disabled
-                    hint="Aadhaar cannot be edited as it's verified from source"
-                  />
-                  <FormInput
-                    label="Mobile Number"
-                    value={formData.mobileNumber}
-                    onChange={(v) => updateFormData("mobileNumber", v)}
-                    type="tel"
-                    required
-                  />
-                </div>
-
-                {/* Address Section */}
-                <div className="space-y-6 mt-8 pt-6 border-t border-border">
-                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    Address Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                    <div className="md:col-span-2 space-y-2">
-                      <label className="text-sm font-medium text-foreground">
-                        Address Line 1
-                      </label>
-
-                      <textarea
-                        value={formData.addressLine1}
-                        onChange={(e) =>
-                          updateFormData("addressLine1", e.target.value)
-                        }
+                    <FormInput
+                      label="Last Name"
+                      value={formData.lastName}
+                      onChange={(v) => updateFormData("lastName", v)}
+                      required
+                    />
+                    <FormInput
+                      label="Date of Birth"
+                      value={formData.dateOfBirth}
+                      onChange={(v) => updateFormData("dateOfBirth", v)}
+                      type="date"
+                      required
+                    />
+                    <FormInput
+                      label="PAN Card"
+                      value={formData.panCard}
+                      disabled
+                      hint="PAN cannot be edited as it's verified from source"
+                    />
+                    {emailOptions.length > 1 ? (
+                      <FormSelect
+                        label="E-Mail ID"
+                        value={formData.email}
+                        onChange={(v) => updateFormData("email", v)}
+                        options={emailOptions.map((e) => ({
+                          value: e,
+                          label: e,
+                        }))}
                         required
-                        rows={3}
-                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
-               focus:outline-none focus:ring-2 focus:ring-primary"
                       />
-                    </div>
+                    ) : (
+                      <FormInput
+                        label="E-Mail ID"
+                        value={formData.email}
+                        onChange={(v) => updateFormData("email", v)}
+                        type="email"
+                        required
+                      />
+                    )}
 
-                    {/* <FormInput
+                    <FormInput
+                      label="Aadhaar Card"
+                      value={formData.aadhaarCard}
+                      disabled
+                      hint="Aadhaar cannot be edited as it's verified from source"
+                    />
+                    <FormInput
+                      label="Mobile Number"
+                      value={formData.mobileNumber}
+                      onChange={(v) => updateFormData("mobileNumber", v)}
+                      type="tel"
+                      required
+                    />
+                  </div>
+
+                  {/* Address Section */}
+                  <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                    <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Address Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+                      <div className="md:col-span-2 space-y-2">
+                        <label className="text-sm font-medium text-foreground">
+                          Address Line 1
+                        </label>
+
+                        <textarea
+                          value={formData.addressLine1}
+                          onChange={(e) =>
+                            updateFormData("addressLine1", e.target.value)
+                          }
+                          required
+                          rows={3}
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+               focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                      </div>
+
+                      {/* <FormInput
                       label="City"
                       value={formData.city}
                       onChange={(v) => updateFormData("city", v)}
                       required
                     /> */}
-                    <FormInput
-                      label="State"
-                      value={formData.state}
-                      onChange={(v) => updateFormData("state", v)}
-                      required
-                    />
-                    <FormInput
-                      label="Pincode"
-                      value={formData.pincode}
-                      onChange={(v) => updateFormData("pincode", v)}
-                      required
-                    />
-                    {/* <FormSelect
+                      <FormInput
+                        label="State"
+                        value={formData.state}
+                        onChange={(v) => updateFormData("state", v)}
+                        required
+                      />
+                      <FormInput
+                        label="Pincode"
+                        value={formData.pincode}
+                        onChange={(v) => updateFormData("pincode", v)}
+                        required
+                      />
+                      {/* <FormSelect
                       label="Residential Status"
                       value={formData.residentialStatus}
                       onChange={(v) => updateFormData("residentialStatus", v)}
                       options={residentialStatuses}
                     /> */}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </FormCard>
-          )}
+              </FormCard>
+            )}
 
-          {/* Step 2: Employment & Credit Details (no address) */}
-          {currentStep === 1 && (
-            <FormCard
-              title="Review & Edit Employment and Credit Details"
-              subtitle="Please review and update your employment and credit information"
-            >
-              {/* Employment Section */}
+            {/* Step 2: Employment & Credit Details (no address) */}
+            {currentStep === 1 && (
+              <FormCard
+                title="Review & Edit Employment and Credit Details"
+                subtitle="Please review and update your employment and credit information"
+              >
+                {/* Employment Section */}
+                <div className="space-y-6">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-primary" />
+                    Employment Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <FormSelect
+                      label="Employment Status"
+                      value={formData.employmentStatus}
+                      onChange={(v) => updateFormData("employmentStatus", v)}
+                      options={employmentStatuses}
+                      required
+                    />
+                    <FormInput
+                      label="Company Name"
+                      value={formData.companyName}
+                      onChange={(v) => updateFormData("companyName", v)}
+                      required
+                    />
+                    <FormInput
+                      label="Employment Category"
+                      value={formData.companyName}
+                      onChange={(v) => updateFormData("Employment Category", v)}
+                      required
+                    />
+                    <FormInput
+                      label="UAN / PF Number"
+                      value={formData.uanNumber || ""}
+                      onChange={(v) => updateFormData("uanNumber", v)}
+                      required
+                    />
+
+                    <FormInput
+                      label="Monthly Income (₹)"
+                      value={formData.monthlyIncome}
+                      onChange={(v) => updateFormData("monthlyIncome", v)}
+                      type="number"
+                      required
+                    />
+                    <FormInput
+                      label="Salary Mode"
+                      value={formData.monthlyIncome}
+                      onChange={(v) => updateFormData("Salary Mode", v)}
+                      type="number"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Credit Details Section */}
+                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-primary" />
+                    Credit Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <FormInput
+                      label="CIBIL Score"
+                      value={formData.cibilScore}
+                      onChange={(v) => updateFormData("cibilScore", v)}
+                      placeholder="Enter your CIBIL score"
+                    />
+                    <FormInput
+                      label="Recent Enquiries"
+                      value={formData.recentEnquiries}
+                      onChange={(v) => updateFormData("recentEnquiries", v)}
+                      placeholder="Number of recent credit enquiries"
+                    />
+                    <FormInput
+                      label="Settlements"
+                      value={formData.settlements}
+                      onChange={(v) => updateFormData("settlements", v)}
+                      placeholder="Any loan settlements"
+                    />
+                    <FormInput
+                      label="EMI Bounces"
+                      value={formData.emiBounces}
+                      onChange={(v) => updateFormData("emiBounces", v)}
+                      placeholder="Number of EMI bounces"
+                    />
+                    <FormInput
+                      label="Credit Card Utilization (%)"
+                      value={formData.creditCardUtilization}
+                      onChange={(v) =>
+                        updateFormData("creditCardUtilization", v)
+                      }
+                      placeholder="e.g., 40%"
+                    />
+                    <FormSelect
+                      label="Residential Stability"
+                      value={formData.residentialStability}
+                      onChange={(v) =>
+                        updateFormData("residentialStability", v)
+                      }
+                      placeholder="Select stability period"
+                      options={[
+                        { value: "1", label: "Less than 1 year" },
+                        { value: "3", label: "1-3 years" },
+                        { value: "5", label: "3-5 years" },
+                        { value: "10", label: "More than 5 years" },
+                      ]}
+                    />
+                    <FormInput
+                      label="Existing EMI (₹)"
+                      value={formData.existingEmi}
+                      onChange={(v) => updateFormData("existingEmi", v)}
+                      placeholder="Total existing EMI amount"
+                      type="number"
+                    />
+                  </div>
+                </div>
+              </FormCard>
+            )}
+
+            {/* Step 3: Loan & Documents */}
+            {currentStep === 2 && (
+              <FormCard
+                title="Loan Requirement & Document Upload"
+                subtitle="Select your loan type and upload required documents"
+              >
+                {/* Loan Details */}
+                <div className="space-y-6">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-1.5 h-5 bg-primary rounded-full" />
+                    Loan Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FormSelect
+                      label="Loan Type"
+                      value={formData.loanType}
+                      onChange={(v) => updateFormData("loanType", v)}
+                      options={loanTypes}
+                      required
+                    />
+                    <FormInput
+                      label="Desired Loan Amount (₹)"
+                      value={formData.loanAmount}
+                      onChange={(v) => updateFormData("loanAmount", v)}
+                      placeholder="Enter amount"
+                      type="number"
+                      required
+                    />
+                    <FormInput
+                      label="Desired Loan Tenure (₹)"
+                      value={formData.loanTenure}
+                      onChange={(v) => updateFormData("loanTenure", v)}
+                      placeholder="Enter amount"
+                      type="number"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Documents Section */}
+                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-1.5 h-5 bg-primary rounded-full" />
+                    Required Documents
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FileUploadZone
+                      label="Last 3 Years ITR/Form 16"
+                      required
+                      accept=".pdf,.jpg,.png"
+                      onFileSelect={(file) =>
+                        setDocuments((prev) => ({ ...prev, itr: file }))
+                      }
+                    />
+                    <FileUploadZone
+                      label="Applicant Photo"
+                      required
+                      accept=".jpg,.png,.jpeg"
+                      onFileSelect={(file) =>
+                        setDocuments((prev) => ({ ...prev, photo: file }))
+                      }
+                    />
+                  </div>
+
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium text-foreground mb-4">
+                      Last 3 Months Payslips
+                      <span className="text-destructive ml-1">*</span>
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <FileUploadZone
+                        label="Month 1"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip1: file }))
+                        }
+                      />
+                      <FileUploadZone
+                        label="Month 2"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip2: file }))
+                        }
+                      />
+                      <FileUploadZone
+                        label="Month 3"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip3: file }))
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </FormCard>
+            )}
+
+            {/* Step 4: Review & Submit - Enhanced */}
+            {currentStep === 3 && (
               <div className="space-y-6">
-                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-primary" />
-                  Employment Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <FormSelect
-                    label="Employment Status"
-                    value={formData.employmentStatus}
-                    onChange={(v) => updateFormData("employmentStatus", v)}
-                    options={employmentStatuses}
-                    required
-                  />
-                  <FormInput
-                    label="Company Name"
-                    value={formData.companyName}
-                    onChange={(v) => updateFormData("companyName", v)}
-                    required
-                  />
-                  <FormInput
-                    label="Employment Category"
-                    value={formData.companyName}
-                    onChange={(v) => updateFormData("Employment Category", v)}
-                    required
-                  />
-                  <FormInput
-                    label="UAN / PF Number"
-                    value={formData.uanNumber || ""}
-                    onChange={(v) => updateFormData("uanNumber", v)}
-                    required
-                  />
-
-                  <FormInput
-                    label="Monthly Income (₹)"
-                    value={formData.monthlyIncome}
-                    onChange={(v) => updateFormData("monthlyIncome", v)}
-                    type="number"
-                    required
-                  />
-                  <FormInput
-                    label="Salary Mode"
-                    value={formData.monthlyIncome}
-                    onChange={(v) => updateFormData("Salary Mode", v)}
-                    type="number"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Credit Details Section */}
-              <div className="space-y-6 mt-8 pt-6 border-t border-border">
-                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-primary" />
-                  Credit Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <FormInput
-                    label="CIBIL Score"
-                    value={formData.cibilScore}
-                    onChange={(v) => updateFormData("cibilScore", v)}
-                    placeholder="Enter your CIBIL score"
-                  />
-                  <FormInput
-                    label="Recent Enquiries"
-                    value={formData.recentEnquiries}
-                    onChange={(v) => updateFormData("recentEnquiries", v)}
-                    placeholder="Number of recent credit enquiries"
-                  />
-                  <FormInput
-                    label="Settlements"
-                    value={formData.settlements}
-                    onChange={(v) => updateFormData("settlements", v)}
-                    placeholder="Any loan settlements"
-                  />
-                  <FormInput
-                    label="EMI Bounces"
-                    value={formData.emiBounces}
-                    onChange={(v) => updateFormData("emiBounces", v)}
-                    placeholder="Number of EMI bounces"
-                  />
-                  <FormInput
-                    label="Credit Card Utilization (%)"
-                    value={formData.creditCardUtilization}
-                    onChange={(v) => updateFormData("creditCardUtilization", v)}
-                    placeholder="e.g., 40%"
-                  />
-                  <FormSelect
-                    label="Residential Stability"
-                    value={formData.residentialStability}
-                    onChange={(v) => updateFormData("residentialStability", v)}
-                    placeholder="Select stability period"
-                    options={[
-                      { value: "1", label: "Less than 1 year" },
-                      { value: "3", label: "1-3 years" },
-                      { value: "5", label: "3-5 years" },
-                      { value: "10", label: "More than 5 years" },
-                    ]}
-                  />
-                  <FormInput
-                    label="Existing EMI (₹)"
-                    value={formData.existingEmi}
-                    onChange={(v) => updateFormData("existingEmi", v)}
-                    placeholder="Total existing EMI amount"
-                    type="number"
-                  />
-                </div>
-              </div>
-            </FormCard>
-          )}
-
-          {/* Step 3: Loan & Documents */}
-          {currentStep === 2 && (
-            <FormCard
-              title="Loan Requirement & Document Upload"
-              subtitle="Select your loan type and upload required documents"
-            >
-              {/* Loan Details */}
-              <div className="space-y-6">
-                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-1.5 h-5 bg-primary rounded-full" />
-                  Loan Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <FormSelect
-                    label="Loan Type"
-                    value={formData.loanType}
-                    onChange={(v) => updateFormData("loanType", v)}
-                    options={loanTypes}
-                    required
-                  />
-                  <FormInput
-                    label="Desired Loan Amount (₹)"
-                    value={formData.loanAmount}
-                    onChange={(v) => updateFormData("loanAmount", v)}
-                    placeholder="Enter amount"
-                    type="number"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Documents Section */}
-              <div className="space-y-6 mt-8 pt-6 border-t border-border">
-                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                  <span className="w-1.5 h-5 bg-primary rounded-full" />
-                  Required Documents
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <FileUploadZone
-                    label="Last 3 Years ITR/Form 16"
-                    required
-                    accept=".pdf,.jpg,.png"
-                    onFileSelect={(file) =>
-                      setDocuments((prev) => ({ ...prev, itr: file }))
-                    }
-                  />
-                  <FileUploadZone
-                    label="Applicant Photo"
-                    required
-                    accept=".jpg,.png,.jpeg"
-                    onFileSelect={(file) =>
-                      setDocuments((prev) => ({ ...prev, photo: file }))
-                    }
-                  />
-                </div>
-
-                <div className="mt-6">
-                  <h4 className="text-sm font-medium text-foreground mb-4">
-                    Last 3 Months Payslips
-                    <span className="text-destructive ml-1">*</span>
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <FileUploadZone
-                      label="Month 1"
-                      required
-                      accept=".pdf,.jpg,.png"
-                      compact
-                      onFileSelect={(file) =>
-                        setDocuments((prev) => ({ ...prev, payslip1: file }))
-                      }
-                    />
-                    <FileUploadZone
-                      label="Month 2"
-                      required
-                      accept=".pdf,.jpg,.png"
-                      compact
-                      onFileSelect={(file) =>
-                        setDocuments((prev) => ({ ...prev, payslip2: file }))
-                      }
-                    />
-                    <FileUploadZone
-                      label="Month 3"
-                      required
-                      accept=".pdf,.jpg,.png"
-                      compact
-                      onFileSelect={(file) =>
-                        setDocuments((prev) => ({ ...prev, payslip3: file }))
-                      }
-                    />
+                {/* Header Summary Card */}
+                <div className="bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground shadow-xl shadow-primary/25">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">
+                        Application Summary
+                      </p>
+                      <h2 className="text-2xl font-bold">
+                        {formData.firstName} {formData.lastName}
+                      </h2>
+                      <p className="text-primary-foreground/80 mt-1">
+                        {formData.email}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">
+                        Requested Amount
+                      </p>
+                      <p className="text-3xl font-bold">
+                        ₹{Number(formData.loanAmount).toLocaleString("en-IN")}
+                      </p>
+                      <p className="text-primary-foreground/80 mt-1">
+                        {
+                          loanTypes.find((l) => l.value === formData.loanType)
+                            ?.label
+                        }
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </FormCard>
-          )}
 
-          {/* Step 4: Review & Submit - Enhanced */}
-          {currentStep === 3 && (
-            <div className="space-y-6">
-              {/* Header Summary Card */}
-              <div className="bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground shadow-xl shadow-primary/25">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <p className="text-primary-foreground/80 text-sm font-medium mb-1">
-                      Application Summary
-                    </p>
-                    <h2 className="text-2xl font-bold">
-                      {formData.firstName} {formData.lastName}
-                    </h2>
-                    <p className="text-primary-foreground/80 mt-1">
-                      {formData.email}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-primary-foreground/80 text-sm font-medium mb-1">
-                      Requested Amount
-                    </p>
-                    <p className="text-3xl font-bold">
-                      ₹{Number(formData.loanAmount).toLocaleString("en-IN")}
-                    </p>
-                    <p className="text-primary-foreground/80 mt-1">
-                      {
+                {/* Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Personal Details */}
+                  <SummarySection title="Personal Details" icon={User}>
+                    <SummaryRow
+                      label="Full Name"
+                      value={`${formData.firstName} ${formData.lastName}`}
+                      icon={User}
+                    />
+                    <SummaryRow
+                      label="Date of Birth"
+                      value={formData.dateOfBirth}
+                      icon={Calendar}
+                    />
+                    <SummaryRow
+                      label="Mobile"
+                      value={formData.mobileNumber}
+                      icon={Phone}
+                    />
+                    <SummaryRow
+                      label="Email"
+                      value={formData.email}
+                      icon={Mail}
+                    />
+                    <SummaryRow
+                      label="PAN Card"
+                      value={formData.panCard}
+                      icon={CreditCard}
+                      highlighted
+                    />
+                    <SummaryRow
+                      label="Aadhaar"
+                      value={formData.aadhaarCard}
+                      icon={CreditCard}
+                      highlighted
+                    />
+                  </SummarySection>
+
+                  {/* Address Details */}
+                  <SummarySection title="Address Details" icon={MapPin}>
+                    <SummaryRow
+                      label="Address"
+                      value={formData.addressLine1}
+                      icon={Home}
+                    />
+                    <SummaryRow
+                      label="City"
+                      value={formData.city}
+                      icon={Building}
+                    />
+                    <SummaryRow
+                      label="State"
+                      value={formData.state}
+                      icon={MapPin}
+                    />
+                    <SummaryRow label="Pincode" value={formData.pincode} />
+                    <SummaryRow
+                      label="Residential Status"
+                      value={
+                        residentialStatuses.find(
+                          (r) => r.value === formData.residentialStatus,
+                        )?.label || ""
+                      }
+                    />
+                  </SummarySection>
+
+                  {/* Employment Details */}
+                  <SummarySection title="Employment Details" icon={Briefcase}>
+                    <SummaryRow
+                      label="Status"
+                      value={
+                        employmentStatuses.find(
+                          (e) => e.value === formData.employmentStatus,
+                        )?.label || ""
+                      }
+                      icon={Briefcase}
+                    />
+                    <SummaryRow
+                      label="Company"
+                      value={formData.companyName}
+                      icon={Building}
+                    />
+                    <SummaryRow
+                      label="Monthly Income"
+                      value={`₹${Number(formData.monthlyIncome).toLocaleString("en-IN")}`}
+                      icon={IndianRupee}
+                      highlighted
+                    />
+                    <SummaryRow
+                      label="Existing EMI"
+                      value={`₹${Number(formData.existingEmi).toLocaleString("en-IN")}`}
+                    />
+                  </SummarySection>
+
+                  {/* Credit Details */}
+                  <SummarySection title="Credit Information" icon={CreditCard}>
+                    <SummaryRow
+                      label="CIBIL Score"
+                      value={formData.cibilScore}
+                      icon={CreditCard}
+                      highlighted
+                    />
+                    <SummaryRow
+                      label="Recent Enquiries"
+                      value={formData.recentEnquiries}
+                    />
+                    <SummaryRow
+                      label="EMI Bounces"
+                      value={formData.emiBounces}
+                    />
+                    <SummaryRow
+                      label="Credit Utilization"
+                      value={`${formData.creditCardUtilization}%`}
+                    />
+                    <SummaryRow
+                      label="Settlements"
+                      value={formData.settlements}
+                    />
+                  </SummarySection>
+                </div>
+
+                {/* Loan Details */}
+                <SummarySection title="Loan Requirements" icon={IndianRupee}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <SummaryRow
+                      label="Loan Type"
+                      value={
                         loanTypes.find((l) => l.value === formData.loanType)
-                          ?.label
+                          ?.label || ""
                       }
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Personal Details */}
-                <SummarySection title="Personal Details" icon={User}>
-                  <SummaryRow
-                    label="Full Name"
-                    value={`${formData.firstName} ${formData.lastName}`}
-                    icon={User}
-                  />
-                  <SummaryRow
-                    label="Date of Birth"
-                    value={formData.dateOfBirth}
-                    icon={Calendar}
-                  />
-                  <SummaryRow
-                    label="Mobile"
-                    value={formData.mobileNumber}
-                    icon={Phone}
-                  />
-                  <SummaryRow
-                    label="Email"
-                    value={formData.email}
-                    icon={Mail}
-                  />
-                  <SummaryRow
-                    label="PAN Card"
-                    value={formData.panCard}
-                    icon={CreditCard}
-                    highlighted
-                  />
-                  <SummaryRow
-                    label="Aadhaar"
-                    value={formData.aadhaarCard}
-                    icon={CreditCard}
-                    highlighted
-                  />
-                </SummarySection>
-
-                {/* Address Details */}
-                <SummarySection title="Address Details" icon={MapPin}>
-                  <SummaryRow
-                    label="Address"
-                    value={formData.addressLine1}
-                    icon={Home}
-                  />
-                  <SummaryRow
-                    label="City"
-                    value={formData.city}
-                    icon={Building}
-                  />
-                  <SummaryRow
-                    label="State"
-                    value={formData.state}
-                    icon={MapPin}
-                  />
-                  <SummaryRow label="Pincode" value={formData.pincode} />
-                  <SummaryRow
-                    label="Residential Status"
-                    value={
-                      residentialStatuses.find(
-                        (r) => r.value === formData.residentialStatus,
-                      )?.label || ""
-                    }
-                  />
-                </SummarySection>
-
-                {/* Employment Details */}
-                <SummarySection title="Employment Details" icon={Briefcase}>
-                  <SummaryRow
-                    label="Status"
-                    value={
-                      employmentStatuses.find(
-                        (e) => e.value === formData.employmentStatus,
-                      )?.label || ""
-                    }
-                    icon={Briefcase}
-                  />
-                  <SummaryRow
-                    label="Company"
-                    value={formData.companyName}
-                    icon={Building}
-                  />
-                  <SummaryRow
-                    label="Monthly Income"
-                    value={`₹${Number(formData.monthlyIncome).toLocaleString("en-IN")}`}
-                    icon={IndianRupee}
-                    highlighted
-                  />
-                  <SummaryRow
-                    label="Existing EMI"
-                    value={`₹${Number(formData.existingEmi).toLocaleString("en-IN")}`}
-                  />
-                </SummarySection>
-
-                {/* Credit Details */}
-                <SummarySection title="Credit Information" icon={CreditCard}>
-                  <SummaryRow
-                    label="CIBIL Score"
-                    value={formData.cibilScore}
-                    icon={CreditCard}
-                    highlighted
-                  />
-                  <SummaryRow
-                    label="Recent Enquiries"
-                    value={formData.recentEnquiries}
-                  />
-                  <SummaryRow label="EMI Bounces" value={formData.emiBounces} />
-                  <SummaryRow
-                    label="Credit Utilization"
-                    value={`${formData.creditCardUtilization}%`}
-                  />
-                  <SummaryRow
-                    label="Settlements"
-                    value={formData.settlements}
-                  />
-                </SummarySection>
-              </div>
-
-              {/* Loan Details */}
-              <SummarySection title="Loan Requirements" icon={IndianRupee}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <SummaryRow
-                    label="Loan Type"
-                    value={
-                      loanTypes.find((l) => l.value === formData.loanType)
-                        ?.label || ""
-                    }
-                    highlighted
-                  />
-                  <SummaryRow
-                    label="Loan Amount"
-                    value={`₹${Number(formData.loanAmount).toLocaleString("en-IN")}`}
-                    highlighted
-                  />
-                </div>
-              </SummarySection>
-
-              {/* Uploaded Documents */}
-              <SummarySection title="Uploaded Documents" icon={FileText}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                  <DocumentStatus
-                    label="ITR/Form 16"
-                    file={documents.itr}
-                    icon={FileText}
-                  />
-                  <DocumentStatus
-                    label="Applicant Photo"
-                    file={documents.photo}
-                    icon={User}
-                  />
-                  <DocumentStatus
-                    label="Payslip - Month 1"
-                    file={documents.payslip1}
-                    icon={FileText}
-                  />
-                  <DocumentStatus
-                    label="Payslip - Month 2"
-                    file={documents.payslip2}
-                    icon={FileText}
-                  />
-                  <DocumentStatus
-                    label="Payslip - Month 3"
-                    file={documents.payslip3}
-                    icon={FileText}
-                  />
-                </div>
-              </SummarySection>
-
-              {/* Terms & Consent */}
-              <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm">
-                <h3 className="text-base font-semibold text-foreground mb-4">
-                  Terms & Consent
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="terms"
-                      className="mt-0.5 border-primary data-[state=checked]:bg-primary"
-                      checked={termsAccepted}
-                      onCheckedChange={(checked) => setTermsAccepted(checked)}
+                      highlighted
                     />
-                    <label
-                      htmlFor="terms"
-                      className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
-                    >
-                      I hereby declare that all the information provided is true
-                      and accurate to the best of my knowledge. I authorize the
-                      bank to verify my details and make credit enquiries as
-                      necessary.
-                    </label>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="privacy"
-                      className="mt-0.5 border-primary data-[state=checked]:bg-primary"
-                      checked={privacyAccepted}
-                      onCheckedChange={(checked) => setPrivacyAccepted(checked)}
+                    <SummaryRow
+                      label="Loan Amount"
+                      value={`₹${Number(formData.loanAmount).toLocaleString("en-IN")}`}
+                      highlighted
                     />
-                    <label
-                      htmlFor="privacy"
-                      className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
-                    >
-                      I have read and agree to the{" "}
-                      <span className="text-primary underline cursor-pointer font-medium">
-                        Terms of Service
-                      </span>{" "}
-                      and{" "}
-                      <span className="text-primary underline cursor-pointer font-medium">
-                        Privacy Policy
-                      </span>
-                      .
-                    </label>
+                  </div>
+                </SummarySection>
+
+                {/* Uploaded Documents */}
+                <SummarySection title="Uploaded Documents" icon={FileText}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                    <DocumentStatus
+                      label="ITR/Form 16"
+                      file={documents.itr}
+                      icon={FileText}
+                    />
+                    <DocumentStatus
+                      label="Applicant Photo"
+                      file={documents.photo}
+                      icon={User}
+                    />
+                    <DocumentStatus
+                      label="Payslip - Month 1"
+                      file={documents.payslip1}
+                      icon={FileText}
+                    />
+                    <DocumentStatus
+                      label="Payslip - Month 2"
+                      file={documents.payslip2}
+                      icon={FileText}
+                    />
+                    <DocumentStatus
+                      label="Payslip - Month 3"
+                      file={documents.payslip3}
+                      icon={FileText}
+                    />
+                  </div>
+                </SummarySection>
+
+                {/* Terms & Consent */}
+                <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm">
+                  <h3 className="text-base font-semibold text-foreground mb-4">
+                    Terms & Consent
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="terms"
+                        className="mt-0.5 border-primary data-[state=checked]:bg-primary"
+                        checked={termsAccepted}
+                        onCheckedChange={(checked) => setTermsAccepted(checked)}
+                      />
+                      <label
+                        htmlFor="terms"
+                        className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
+                      >
+                        I hereby declare that all the information provided is
+                        true and accurate to the best of my knowledge. I
+                        authorize the bank to verify my details and make credit
+                        enquiries as necessary.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="privacy"
+                        className="mt-0.5 border-primary data-[state=checked]:bg-primary"
+                        checked={privacyAccepted}
+                        onCheckedChange={(checked) =>
+                          setPrivacyAccepted(checked)
+                        }
+                      />
+                      <label
+                        htmlFor="privacy"
+                        className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
+                      >
+                        I have read and agree to the{" "}
+                        <span className="text-primary underline cursor-pointer font-medium">
+                          Terms of Service
+                        </span>{" "}
+                        and{" "}
+                        <span className="text-primary underline cursor-pointer font-medium">
+                          Privacy Policy
+                        </span>
+                        .
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Navigation Buttons */}
-        <div className="mt-8 flex justify-between items-center">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={currentStep === 0}
-            className="h-12 px-6 border-border hover:bg-muted"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-
-          {currentStep < 4 && (
+          {/* Navigation Buttons */}
+          <div className="mt-8 flex justify-between items-center">
             <Button
-              onClick={handleNext}
-              className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
+              variant="outline"
+              onClick={handleBack}
+              disabled={currentStep === 0}
+              className="h-12 px-6 border-border hover:bg-muted"
             >
-              Next
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
             </Button>
-          )}
 
-          {currentStep === 4 && (
-            <Button
-              onClick={handleSubmit}
-              disabled={!termsAccepted || !privacyAccepted}
-              className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Submit Application
-            </Button>
-          )}
+            {currentStep < 4 && (
+              <Button
+                onClick={handleNext}
+                className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
+              >
+                Next
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            )}
+
+            {currentStep === 4 && (
+              <Button
+                onClick={handleSubmit}
+                disabled={!termsAccepted || !privacyAccepted}
+                className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Submit Application
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

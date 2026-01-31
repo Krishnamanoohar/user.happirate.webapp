@@ -14,9 +14,9 @@ export default function HappirateSplitAuth2() {
             <div className="bg-white shadow rounded-xl px-3 py-2 font-semibold text-sm">
               Happirate
             </div>
-            <span className="text-sm text-gray-600">
+            {/* <span className="text-sm text-gray-600">
               Transparent • Privacy-first
-            </span>
+            </span> */}
           </div>
           <p className="text-[48px] font-bold leading-tight text-gray-900">
             Compare & Secure

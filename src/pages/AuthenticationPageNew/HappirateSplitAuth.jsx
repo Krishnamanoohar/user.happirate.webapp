@@ -204,9 +204,9 @@ export function HappirateSplitAuth() {
                   decoding="async"
                 /> */}
               </div>
-              <div className="text-sm text-muted-foreground">
+              {/* <div className="text-sm text-muted-foreground">
                 Transparent • Privacy-first
-              </div>
+              </div> */}
             </div>
 
             <div className="mt-8 space-y-4">
