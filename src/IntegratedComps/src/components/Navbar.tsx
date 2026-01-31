@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { Navigate, useNavigate } from "react-router-dom";
 interface NavbarProps {
   scrollY: number;
 }
@@ -22,6 +22,7 @@ const navLinks = [
 
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const isScrolled = scrollY > 50;
 
@@ -41,7 +42,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
               <span className="text-white font-bold text-xl">H</span>
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900">
-              HAPPIRATE
+              <a href="/">HAPPIRATE</a>
             </span>
           </a>
 
@@ -89,7 +90,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
 
           {/* Sign In Button */}
           <div className="hidden lg:block">
-            <Button className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105">
+            <Button
+              className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
+              onClick={() => navigate("/sign-in")}
+            >
               Sign In
             </Button>
           </div>
