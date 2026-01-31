@@ -1,512 +1,625 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  CreditCard, 
+  TrendingUp, 
+  AlertCircle, 
+  CheckCircle, 
+  Clock, 
+  Shield, 
+  ChevronRight, 
+  Activity, 
+  Home, 
+  DollarSign, 
+  PieChart,
+  Bell,
+  Menu,
+  X,
+  Calendar,
+  ArrowLeft,
+  Info,
+  Sparkles,
+  Send,
+  FileText,
+  Mail,
+  Share2,
+  Download
+} from 'lucide-react';
 
-
-
-/* ================= ICONS ================= */
-
-const Icons = {
-    CreditCard: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>,
-    TrendingUp: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>,
-    AlertCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>,
-    CheckCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>,
-    Clock: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
-    Shield: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
-    ChevronRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>,
-    Activity: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>,
-    Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>,
-    DollarSign: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>,
-    PieChart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg>,
-    Bell: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>,
-    Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>,
-    X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>,
-    Calendar: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>,
-    ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>,
-    Info: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>,
-    Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M9 3v4" /><path d="M3 5h4" /><path d="M3 9h4" /></svg>,
-    Send: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" x2="11" y1="2" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>,
-    FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><line x1="10" x2="8" y1="9" y2="9" /></svg>,
-    Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
-    Share2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg>,
-    Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
+// --- ICON SYSTEM ---
+// Maps string names to actual Lucide components for safe rendering
+const IconMap = {
+    CreditCard, TrendingUp, AlertCircle, CheckCircle, Clock, Shield, ChevronRight, 
+    Activity, Home, DollarSign, PieChart, Bell, Menu, X, Calendar, ArrowLeft, 
+    Info, Sparkles, Send, FileText, Mail, Share2, Download
 };
 
 const Icon = ({ name, className }) => {
-    const IconComponent = Icons[name];
-    return IconComponent ? <div className={className}><IconComponent /></div> : null;
+    const LucideIcon = IconMap[name];
+    if (!LucideIcon) return null;
+    return <LucideIcon className={className} />;
 };
 
-
-/* ================= STATIC DATA ================= */
-
-
-
-
-/* ================= COMPONENTS ================= */
-
-
-
-/* ================= MAIN DASHBOARD ================= */
-import React, { useState, useEffect, useRef } from "react";
-import { Slider } from "@radix-ui/react-slider";
-export default function OneScoreDashboard() {
-    const [activeTab, setActiveTab] = useState("dashboard");
-    const [selectedAccount, setSelectedAccount] = useState(null);
-    const [selectedFactor, setSelectedFactor] = useState(null);
-    const [isAiOpen, setIsAiOpen] = useState(false);
-    const [isDownloading, setIsDownloading] = useState(false);
-
-    // Mock API response data - You should replace this with your actual data
-    const apiResponse = {
-        customer: {
-            name: "Arun Baikani",
-            score: 737,
-            lastUpdated: "26 Jan 2026",
-            nextUpdate: "26 Feb 2026"
+// --- MOCK DATA ---
+const MOCK_API_RESPONSE = {
+    customer: {
+        name: "Arun Baikani",
+        score: 737,
+        lastUpdated: "26 Jan 2026",
+        nextUpdate: "26 Feb 2026"
+    },
+    factors: {
+        paymentHistory: { status: "Excellent", percentage: 100, impact: "High", color: "text-[#4338ca]" },
+        creditUtilization: { status: "Poor", percentage: 97, impact: "High", color: "text-red-600" },
+        creditAge: { status: "Good", age: "5 Yrs 6 Mos", impact: "Medium", color: "text-[#4338ca]" },
+        totalAccounts: { status: "Good", count: 6, impact: "Low", color: "text-[#4338ca]" },
+        inquiries: { status: "Fair", count: 18, impact: "Medium", color: "text-orange-500" }
+    },
+    accounts: [
+        {
+            id: 1,
+            bank: "AXIS BANK",
+            type: "Credit Card",
+            accountNumber: "...8676",
+            balance: 38095,
+            limit: 39000,
+            status: "Active",
+            dateOpened: "09 Dec 2025",
+            lastPaymentDate: "01 Jan 2026",
+            iconName: "CreditCard",
+            alert: "High Utilization (97%)",
+            paymentHistory: [0, 0, 0, 0, 0, 0], 
+            isLoan: false
         },
-        factors: {
-            paymentHistory: { status: "Excellent", percentage: 100, impact: "High", color: "text-[#4338ca]" },
-            creditUtilization: { status: "Poor", percentage: 97, impact: "High", color: "text-red-600" },
-            creditAge: { status: "Good", age: "5 Yrs 6 Mos", impact: "Medium", color: "text-[#4338ca]" },
-            totalAccounts: { status: "Good", count: 6, impact: "Low", color: "text-[#4338ca]" },
-            inquiries: { status: "Fair", count: 18, impact: "Medium", color: "text-orange-500" }
+        {
+            id: 2,
+            bank: "APTUS",
+            type: "Housing Loan",
+            accountNumber: "...9677",
+            balance: 737712,
+            limit: 1052305, 
+            roi: "17.00%",
+            emi: "₹18,289",
+            tenure: "120 Months",
+            dateOpened: "31 Dec 2020",
+            lastPaymentDate: "10 Jan 2026",
+            status: "Active",
+            iconName: "Home",
+            alert: "High Interest Rate",
+            paymentHistory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XXX', 0], 
+            isLoan: true
         },
-        accounts: [
-            {
-                id: 1,
-                bank: "AXIS BANK",
-                type: "Credit Card",
-                accountNumber: "...8676",
-                balance: 38095,
-                limit: 39000,
-                status: "Active",
-                dateOpened: "09 Dec 2025",
-                lastPaymentDate: "01 Jan 2026",
-                iconName: "CreditCard",
-                alert: "High Utilization (97%)",
-                paymentHistory: [0, 0, 0, 0, 0, 0],
-                isLoan: false
-            },
-            {
-                id: 2,
-                bank: "APTUS",
-                type: "Housing Loan",
-                accountNumber: "...9677",
-                balance: 737712,
-                limit: 1052305,
-                roi: "17.00%",
-                emi: "₹18,289",
-                tenure: "120 Months",
-                dateOpened: "31 Dec 2020",
-                lastPaymentDate: "10 Jan 2026",
-                status: "Active",
-                iconName: "Home",
-                alert: "High Interest Rate",
-                paymentHistory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XXX', 0],
-                isLoan: true
-            },
-            {
-                id: 3,
-                bank: "HDFC BANK",
-                type: "Personal Loan",
-                accountNumber: "...3075",
-                balance: 469495,
-                limit: 575000,
-                roi: "11.5%",
-                emi: "₹12,756",
-                dateOpened: "13 Nov 2024",
-                lastPaymentDate: "07 Jan 2026",
-                status: "Active",
-                iconName: "DollarSign",
-                paymentHistory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                isLoan: true
-            },
-            {
-                id: 4,
-                bank: "TGB",
-                type: "Consumer Loan",
-                accountNumber: "...1192",
-                balance: 89975,
-                limit: 90000,
-                status: "Active",
-                roi: "7.00%",
-                emi: "₹2,500",
-                dateOpened: "10 Jun 2020",
-                lastPaymentDate: "14 Nov 2025",
-                iconName: "Activity",
-                paymentHistory: ['STD', 'STD', 'STD', 'STD', 'STD', 'STD', 'STD', 'XXX', 'STD', 'STD', 'STD', 'STD'],
-                isLoan: true
-            }
-        ],
-        offers: [
-            {
-                id: 1,
-                title: "Reduce your Home Loan EMI",
-                description: "Transfer your Aptus loan (17%) to HDFC at 8.75%. Save ₹2.5 Lakhs.",
-                action: "Check Eligibility",
-                tag: "High Savings",
-                color: "bg-white border border-blue-100"
-            },
-            {
-                id: 2,
-                title: "Credit Card Upgrade",
-                description: "Your Axis card utilization is high. Get a OneCard with ₹2L limit.",
-                action: "Apply Now",
-                tag: "Score Booster",
-                color: "bg-white border border-blue-100"
-            }
-        ]
-    };
-    const ScoreGauge = ({ score }) => {
-        const radius = 80;
-        const stroke = 12;
-        const normalizedRadius = radius - stroke * 2;
-        const circumference = normalizedRadius * 2 * Math.PI;
-        const strokeDashoffset = circumference - ((score - 300) / 600) * circumference;
-        let scoreColor = "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]";
-        if (score < 650) scoreColor = "text-red-300";
+        {
+            id: 3,
+            bank: "HDFC BANK",
+            type: "Personal Loan",
+            accountNumber: "...3075",
+            balance: 469495,
+            limit: 575000,
+            roi: "11.5%", 
+            emi: "₹12,756",
+            dateOpened: "13 Nov 2024",
+            lastPaymentDate: "07 Jan 2026",
+            status: "Active",
+            iconName: "DollarSign",
+            paymentHistory: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            isLoan: true
+        },
+        {
+            id: 4,
+            bank: "TGB",
+            type: "Consumer Loan",
+            accountNumber: "...1192",
+            balance: 89975,
+            limit: 90000,
+            status: "Active",
+            roi: "7.00%", 
+            emi: "₹2,500", 
+            dateOpened: "10 Jun 2020",
+            lastPaymentDate: "14 Nov 2025",
+            iconName: "Activity",
+            paymentHistory: ['STD', 'STD', 'STD', 'STD', 'STD', 'STD', 'STD', 'XXX', 'STD', 'STD', 'STD', 'STD'],
+            isLoan: true
+        }
+    ],
+    offers: [
+        {
+            id: 1,
+            title: "Reduce your Home Loan EMI",
+            description: "Transfer your Aptus loan (17%) to HDFC at 8.75%. Save ₹2.5 Lakhs.",
+            action: "Check Eligibility",
+            tag: "High Savings",
+            color: "bg-white border border-blue-100"
+        },
+        {
+            id: 2,
+            title: "Credit Card Upgrade",
+            description: "Your Axis card utilization is high. Get a OneCard with ₹2L limit.",
+            action: "Apply Now",
+            tag: "Score Booster",
+            color: "bg-white border border-blue-100"
+        }
+    ]
+};
 
-        return (
-            <div className="relative flex flex-col items-center justify-center p-6 bg-[#172554] rounded-3xl shadow-xl hover:shadow-2xl transition-all">
-                <div className="relative">
-                    <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
-                        <circle stroke="#FFFFFF" strokeWidth={stroke} strokeOpacity="0.1" fill="transparent" r={normalizedRadius} cx={radius} cy={radius} strokeLinecap="round" />
-                        <circle stroke="currentColor" strokeWidth={stroke} strokeDasharray={circumference + ' ' + circumference} style={{ strokeDashoffset, transition: 'stroke-dashoffset 1s ease-in-out' }} className={`${scoreColor}`} fill="transparent" r={normalizedRadius} cx={radius} cy={radius} strokeLinecap="round" />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-4xl font-bold text-white drop-shadow-md">{score}</span>
-                        <span className="text-xs text-indigo-100 uppercase tracking-wider mt-1">CIBIL Score</span>
-                    </div>
-                </div>
-                <div className="mt-4 text-center">
-                    <p className="text-indigo-100 text-sm">Last updated: {apiResponse.customer.lastUpdated}</p>
-                    <div className="flex items-center justify-center mt-2 space-x-2">
-                        <div className="px-2 py-1 bg-white/10 text-white text-xs rounded-full border border-white/20 flex items-center shadow-sm">
-                            <span className="mr-1"><Icon name="TrendingUp" className="w-3 h-3" /></span> Top 25% of borrowers
-                        </div>
-                    </div>
+// --- API SERVICES ---
+const API_BASE_URL = 'http://localhost:5000/api';
+
+const callGeminiAPI = async (prompt, contextData) => {
+    try {
+        // Attempt to call backend
+        const response = await fetch(`${API_BASE_URL}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, context: contextData })
+        });
+        
+        if (!response.ok) throw new Error("Backend unavailable");
+        
+        const data = await response.json();
+        return data.reply;
+    } catch (error) {
+        // Fallback response if backend is offline or fails
+        console.warn("AI Backend Offline, using local fallback logic.");
+        await new Promise(r => setTimeout(r, 1000)); // Simulate delay
+        
+        const p = prompt.toLowerCase();
+        if (p.includes("score")) return `Your score is **${contextData.customer.score}**. It's considered good, but paying down your Axis card will help boost it higher!`;
+        if (p.includes("axis")) return "Your **Axis Bank** card is at **97% utilization**. This is the main thing hurting your score right now. Try to pay off ₹15k.";
+        if (p.includes("loan")) return "Your **Aptus Housing Loan** interest (17%) is quite high. We recommend a balance transfer.";
+        
+        return "I can help you analyze your credit report. Try asking about your 'score', 'Axis Bank card', or 'loans'. (Note: AI is in offline mode)";
+    }
+};
+
+// --- SUB-COMPONENTS ---
+// These are defined BEFORE OneScoreDashboard to prevent ReferenceErrors
+
+const ScoreGauge = ({ score, lastUpdated }) => {
+    const radius = 80;
+    const stroke = 12;
+    const normalizedRadius = radius - stroke * 2;
+    const circumference = normalizedRadius * 2 * Math.PI;
+    const strokeDashoffset = circumference - ((score - 300) / 600) * circumference;
+    let scoreColor = "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]";
+    
+    if (score < 650) scoreColor = "text-red-300";
+    else if (score < 750) scoreColor = "text-yellow-300";
+    else scoreColor = "text-green-300";
+
+    return (
+        <div className="relative flex flex-col items-center justify-center p-8 bg-[#172554] rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="relative">
+                <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+                    <circle stroke="#FFFFFF" strokeWidth={stroke} strokeOpacity="0.1" fill="transparent" r={normalizedRadius} cx={radius} cy={radius} strokeLinecap="round" />
+                    <circle 
+                        stroke="currentColor" 
+                        strokeWidth={stroke} 
+                        strokeDasharray={circumference + ' ' + circumference} 
+                        style={{ strokeDashoffset, transition: 'stroke-dashoffset 1.5s ease-in-out' }} 
+                        className={scoreColor} 
+                        fill="transparent" 
+                        r={normalizedRadius} 
+                        cx={radius} 
+                        cy={radius} 
+                        strokeLinecap="round" 
+                    />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-5xl font-bold text-white drop-shadow-md">{score}</span>
+                    <span className="text-xs text-indigo-200 uppercase tracking-wider mt-1 font-semibold">CIBIL Score</span>
                 </div>
             </div>
-        );
-    };
-    const OfferCard = ({ offer }) => (
-        <div className={`relative overflow-hidden rounded-2xl p-5 mb-4 ${offer.color} shadow-sm transform transition hover:scale-[1.01]`}>
-            <div className="absolute top-0 right-0 p-3 opacity-[0.05] pointer-events-none">
-                <Icon name="DollarSign" className="w-24 h-24 text-blue-900" />
-            </div>
-            <div className="relative z-10">
-                <div className="inline-block px-2 py-1 bg-blue-100 rounded text-xs font-bold text-blue-700 mb-2 border border-blue-200">
-                    {offer.tag}
+            <div className="mt-6 text-center">
+                <p className="text-indigo-200 text-sm mb-2">Updated: {lastUpdated}</p>
+                <div className="inline-flex items-center px-3 py-1 bg-white/10 backdrop-blur-sm text-white text-xs font-medium rounded-full border border-white/20 shadow-sm">
+                    <TrendingUp className="w-3 h-3 mr-1.5" /> 
+                    Top 25% of borrowers
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">{offer.title}</h3>
-                <p className="text-slate-600 text-sm mb-4 max-w-[80%]">{offer.description}</p>
-                <button className="bg-slate-900 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-slate-800 transition-colors shadow-md">
-                    {offer.action}
-                </button>
             </div>
         </div>
     );
+};
 
+const FactorCard = ({ title, status, value, color, iconName, onClick }) => (
+    <div 
+        onClick={onClick} 
+        className="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1"
+    >
+        <div className="flex items-center space-x-4">
+            <div className={`p-3 rounded-xl bg-blue-50 group-hover:bg-blue-100 transition-colors text-blue-700`}>
+                <Icon name={iconName} className="w-6 h-6" />
+            </div>
+            <div>
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{title}</p>
+                <p className={`font-bold text-sm ${color.includes('#') ? `text-[${color}]` : color}`}>{status}</p>
+            </div>
+        </div>
+        <div className="text-right mt-2 flex justify-end items-center">
+            <p className="text-slate-900 font-bold text-lg">{value}</p>
+            <ChevronRight className="w-4 h-4 text-slate-400 ml-1 group-hover:translate-x-1 transition-transform" />
+        </div>
+    </div>
+);
 
-    const FactorCard = ({ title, status, value, color, iconName, onClick }) => (
-        <div onClick={onClick} className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all cursor-pointer group">
-            <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors text-blue-700`}>
-                    <Icon name={iconName} className="w-5 h-5" />
+const OfferCard = ({ offer }) => (
+    <div className={`relative overflow-hidden rounded-2xl p-5 mb-4 ${offer.color} shadow-sm transform transition hover:scale-[1.01]`}>
+        <div className="absolute top-0 right-0 p-3 opacity-[0.05] pointer-events-none"><DollarSign className="w-24 h-24 text-blue-900" /></div>
+        <div className="relative z-10">
+            <div className="inline-block px-2 py-1 bg-blue-100 rounded text-xs font-bold text-blue-700 mb-2 border border-blue-200">{offer.tag}</div>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">{offer.title}</h3>
+            <p className="text-slate-600 text-sm mb-4 max-w-[80%]">{offer.description}</p>
+            <button className="bg-slate-900 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-slate-800 transition-colors shadow-md">{offer.action}</button>
+        </div>
+    </div>
+);
+
+const AccountItem = ({ account, onClick }) => {
+    const utilization = account.limit ? Math.min((account.balance / account.limit) * 100, 100) : 0;
+    const isHighUtil = utilization > 50;
+    
+    return (
+        <div onClick={() => onClick(account)} className="group relative overflow-hidden bg-white border border-blue-100 rounded-2xl p-5 mb-4 cursor-pointer transition-all duration-300 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-blue-50 rounded-full blur-3xl group-hover:bg-blue-100 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+            
+            <div className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-4">
+                    <div className={`p-3.5 rounded-2xl bg-slate-50 border border-slate-100 shadow-inner group-hover:scale-105 transition-transform duration-300`}>
+                        <Icon name={account.iconName} className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                        <h4 className="text-lg font-bold text-slate-900 tracking-wide">{account.bank}</h4>
+                        <div className="flex items-center space-x-2 mt-0.5">
+                            <span className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded border border-slate-200">{account.type}</span>
+                            <span className="text-xs text-slate-400 tracking-wider font-mono">•••• {account.accountNumber.slice(-4)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="text-right">
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5 font-semibold">Current Balance</span>
+                        <span className="text-xl font-bold text-slate-900 tracking-tight">₹{account.balance.toLocaleString()}</span>
+                    </div>
+                </div>
+            </div>
+            <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-100 relative z-10">
+                <div className="flex items-center space-x-3">
+                    {account.alert ? (
+                        <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full border ${account.alert.includes('Interest') || isHighUtil ? 'bg-red-50 border-red-200 text-red-600' : 'bg-yellow-50 border-yellow-200 text-yellow-600'}`}>
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            <span className="text-xs font-semibold">{account.alert}</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-green-50 border border-green-200 text-green-600">
+                            <CheckCircle className="w-3.5 h-3.5" />
+                            <span className="text-xs font-semibold">Healthy</span>
+                        </div>
+                    )}
+                    {account.roi && <div className="hidden sm:block px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600"><span className="text-xs font-medium">{account.roi} ROI</span></div>}
+                </div>
+                
+                <div className="text-right pl-4 flex-1 max-w-[140px]">
+                    {account.limit && !account.isLoan ? (
+                        <div className="flex flex-col items-end w-full">
+                            <div className="flex justify-between w-full text-[10px] text-slate-500 mb-1.5 font-medium"><span>Limit Used</span><span className={isHighUtil ? 'text-red-500' : 'text-green-600'}>{Math.round(utilization)}%</span></div>
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full transition-all duration-1000 ${isHighUtil ? 'bg-red-500' : 'bg-blue-600'}`} style={{ width: `${utilization}%` }}></div></div>
+                        </div>
+                    ) : (
+                        <div className="text-[10px] uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-1 rounded border border-slate-200 inline-block">Active Loan</div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AccountDetailView = ({ account, onBack }) => {
+    const utilization = Math.min((account.balance / account.limit) * 100, 100);
+    const progressColor = utilization > 90 ? 'bg-red-500' : utilization > 50 ? 'bg-yellow-500' : 'bg-green-500';
+
+    return (
+        <div className="animate-fade-in-up">
+            <div className="flex items-center space-x-3 mb-6">
+                <button onClick={onBack} className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200 shadow-sm"><ArrowLeft className="w-5 h-5 text-slate-600" /></button>
+                <h1 className="text-xl font-bold text-slate-900">{account.bank} Details</h1>
+            </div>
+            
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg mb-6 relative overflow-hidden">
+                 <div className="absolute top-0 right-0 -mr-8 -mt-8 w-48 h-48 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+                <div className="flex items-start justify-between mb-6 relative z-10">
+                    <div>
+                        <p className="text-slate-500 text-sm font-medium mb-1 uppercase tracking-wide">{account.type}</p>
+                        <h2 className="text-4xl font-extrabold text-slate-900">₹{account.balance.toLocaleString()}</h2>
+                        <p className="text-xs text-slate-500 mt-2 font-medium">Current Outstanding Balance</p>
+                    </div>
+                    <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 text-blue-600 shadow-sm">
+                        <Icon name={account.iconName} className="w-8 h-8" />
+                    </div>
+                </div>
+
+                <div className="mb-2 relative z-10">
+                    <div className="flex justify-between text-xs text-slate-500 mb-2 font-medium">
+                        <span>{account.isLoan ? "Principal Repaid" : "Credit Limit Used"}</span>
+                        <span className={utilization > 50 ? 'text-red-500' : 'text-green-600'}>{Math.round(utilization)}%</span>
+                    </div>
+                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                        <div className={`h-full ${progressColor} rounded-full transition-all duration-1000`} style={{ width: `${utilization}%` }}></div>
+                    </div>
+                    <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+                         <span>₹0</span>
+                         <span>Total Limit: ₹{account.limit.toLocaleString()}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                    <p className="text-slate-500 text-xs mb-1 font-bold uppercase">Interest Rate</p>
+                    <p className="text-slate-900 font-bold text-lg">{account.roi || "N/A"}</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                     <p className="text-slate-500 text-xs mb-1 font-bold uppercase">Monthly EMI</p>
+                     <p className="text-slate-900 font-bold text-lg">{account.emi || "N/A"}</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                     <p className="text-slate-500 text-xs mb-1 font-bold uppercase">Date Opened</p>
+                     <div className="flex items-center text-slate-900 font-semibold text-sm">
+                        <Calendar className="w-4 h-4 mr-2 text-blue-600" />
+                        {account.dateOpened}
+                     </div>
+                </div>
+                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                     <p className="text-slate-500 text-xs mb-1 font-bold uppercase">Last Payment</p>
+                     <div className="flex items-center text-slate-900 font-semibold text-sm">
+                        <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                        {account.lastPaymentDate}
+                     </div>
+                </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm mb-6">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-slate-900 font-bold text-sm">Payment History</h3>
+                    <span className="text-xs text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200 font-medium">Recent 12 Months</span>
+                </div>
+                <div className="flex justify-between items-center px-2">
+                    {account.paymentHistory.map((status, index) => (
+                        <div key={index} className="flex flex-col items-center group relative">
+                            <div className={`w-3 h-3 md:w-4 md:h-4 rounded-full mb-2 transition-all duration-300 group-hover:scale-125 ${status === 0 || status === 'STD' ? 'bg-green-500' : status === 'XXX' ? 'bg-slate-300' : 'bg-red-500'}`}></div>
+                            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-[10px] text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-20 pointer-events-none">
+                                {status === 0 || status === 'STD' ? 'On Time' : status === 'XXX' ? 'Unknown' : 'Delayed'}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-3 flex justify-between text-[10px] text-slate-400 uppercase tracking-widest font-bold">
+                    <span>Dec</span><span>Jan</span>
+                </div>
+            </div>
+
+            {account.alert && (
+                <div className="bg-red-50 border border-red-100 rounded-xl p-5 flex items-start space-x-4 shadow-sm">
+                    <div className="p-2 bg-red-100 rounded-full">
+                        <Info className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                        <h4 className="text-red-800 font-bold text-sm">Attention Needed</h4>
+                        <p className="text-red-600 text-xs mt-1 leading-relaxed">
+                            This account has a {account.alert.toLowerCase()}. 
+                            {account.isLoan ? " Consider a balance transfer to lower interest." : " Try to keep utilization below 30% to boost your score."}
+                        </p>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const FactorDetailView = ({ factorKey, data, onBack }) => {
+    const factorContent = {
+        paymentHistory: {
+            title: "Payment History",
+            desc: "Payment history accounts for 35% of your credit score. It shows whether you've made your past credit payments on time.",
+            tip: "Always pay at least the minimum amount due on time to keep this factor green.",
+            iconName: "CheckCircle"
+        },
+        creditUtilization: {
+            title: "Credit Utilization",
+            desc: "This accounts for 30% of your score. It is the ratio of your outstanding credit card balances to your total credit card limits.",
+            tip: "A utilization ratio above 30% signals high risk to lenders. Try to pay down balances.",
+            iconName: "PieChart"
+        },
+        creditAge: {
+            title: "Age of Accounts",
+            desc: "This accounts for 15% of your score. It averages the age of your open credit accounts.",
+            tip: "Avoid closing old credit cards, as they help increase your average credit age.",
+            iconName: "Clock"
+        },
+        totalAccounts: {
+            title: "Total Accounts",
+            desc: "This makes up 10% of your score. It looks at the total number of open and closed accounts.",
+            tip: "A healthy mix of secured (loans) and unsecured (cards) credit is beneficial.",
+            iconName: "CreditCard"
+        },
+        inquiries: {
+            title: "Hard Inquiries",
+            desc: "This accounts for 10% of your score. Hard inquiries occur when a lender checks your credit for a new application.",
+            tip: "Limit new credit applications. Multiple inquiries in a short time can lower your score.",
+            iconName: "Activity"
+        }
+    };
+
+    const content = factorContent[factorKey];
+    const displayValue = data.percentage ? `${data.percentage}%` : (data.age || data.count);
+
+    return (
+        <div className="animate-fade-in-up">
+            <div className="flex items-center space-x-3 mb-6">
+                <button onClick={onBack} className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200 shadow-sm"><ArrowLeft className="w-5 h-5 text-slate-600" /></button>
+                <h1 className="text-xl font-bold text-slate-900">{content.title}</h1>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg mb-6">
+                <div className="flex items-start justify-between">
+                    <div>
+                        <p className="text-slate-500 text-sm mb-1 font-medium">Current Status</p>
+                        <h2 className={`text-3xl font-extrabold ${data.color.replace('text-', 'text-')}`.replace('text-[', 'text-[').replace(']', ']')}>{data.status}</h2> 
+                    </div>
+                    <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 text-blue-600 shadow-sm">
+                        <Icon name={content.iconName} className="w-6 h-6" />
+                    </div>
+                </div>
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                    <p className="text-slate-900 font-bold text-xl">{displayValue}</p>
+                    <p className="text-slate-500 text-xs mt-1 font-medium uppercase tracking-wide">Measured Value</p>
+                </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                <h3 className="font-bold text-slate-900 mb-3">What does this mean?</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{content.desc}</p>
+            </div>
+
+            <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100 flex gap-4 shadow-sm">
+                <div className="p-2 bg-white rounded-full shadow-sm h-fit">
+                    <Sparkles className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                    <p className="text-slate-500 text-xs uppercase tracking-wide">{title}</p>
-                    <p className={`font-semibold text-sm ${color.includes('#') ? `text-[${color}]` : color}`}>{status}</p>
+                    <h4 className="font-bold text-blue-900 text-sm">Pro Tip</h4>
+                    <p className="text-blue-700 text-sm mt-1 leading-relaxed">{content.tip}</p>
                 </div>
-            </div>
-            <div className="text-right">
-                <p className="text-slate-900 font-bold">{value}</p>
-                <div className="ml-auto mt-1"><Icon name="ChevronRight" className="w-4 h-4 text-slate-400" /></div>
             </div>
         </div>
     );
+};
 
-    const AccountItem = ({ account, onClick }) => {
-        const utilization = account.limit ? Math.min((account.balance / account.limit) * 100, 100) : 0;
-        const isHighUtil = utilization > 50;
+const FinancialAssistant = ({ onClose, apiResponse }) => {
+    const [messages, setMessages] = useState([
+        { role: 'assistant', text: "Hi Arun! I'm FinAI, your credit assistant. 🤖\n\nI've analyzed your report. How can I help you save money or improve your score today?" }
+    ]);
+    const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef(null);
 
-        return (
-            <div onClick={() => onClick(account)} className="group relative overflow-hidden bg-white border border-blue-100 rounded-2xl p-5 mb-4 cursor-pointer transition-all duration-300 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-blue-50 rounded-full blur-3xl group-hover:bg-blue-100 transition-all duration-500"></div>
-                <div className="flex items-center justify-between relative z-10">
-                    <div className="flex items-center space-x-4">
-                        <div className={`p-3.5 rounded-2xl bg-slate-50 border border-slate-100 shadow-inner group-hover:scale-105 transition-transform duration-300`}>
-                            <Icon name={account.iconName} className="w-6 h-6 text-blue-600" />
-                        </div>
-                        <div>
-                            <h4 className="text-lg font-bold text-slate-900 tracking-wide">{account.bank}</h4>
-                            <div className="flex items-center space-x-2 mt-0.5">
-                                <span className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded border border-slate-200">{account.type}</span>
-                                <span className="text-xs text-slate-400 tracking-wider font-mono">•••• {account.accountNumber.slice(-4)}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <div className="flex flex-col items-end">
-                            <span className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">Current Balance</span>
-                            <span className="text-xl font-bold text-slate-900 tracking-tight">₹{account.balance.toLocaleString()}</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-100 relative z-10">
-                    <div className="flex items-center space-x-3">
-                        {account.alert ? (
-                            <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full border ${account.alert.includes('Interest') || isHighUtil ? 'bg-red-50 border-red-200 text-red-600' : 'bg-yellow-50 border-yellow-200 text-yellow-600'}`}>
-                                <Icon name="AlertCircle" className="w-3.5 h-3.5" />
-                                <span className="text-xs font-semibold">{account.alert}</span>
-                            </div>
-                        ) : (
-                            <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-green-50 border border-green-200 text-green-600">
-                                <Icon name="CheckCircle" className="w-3.5 h-3.5" />
-                                <span className="text-xs font-semibold">Healthy Account</span>
-                            </div>
-                        )}
-                        {account.roi && <div className="hidden sm:block px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600"><span className="text-xs font-medium">{account.roi} ROI</span></div>}
-                    </div>
-                    <div className="text-right pl-4">
-                        {account.limit && !account.isLoan ? (
-                            <div className="flex flex-col items-end w-32">
-                                <div className="flex justify-between w-full text-[10px] text-slate-500 mb-1.5 font-medium"><span>Limit Used</span><span className={isHighUtil ? 'text-red-500' : 'text-green-600'}>{Math.round(utilization)}%</span></div>
-                                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full transition-all duration-1000 ${isHighUtil ? 'bg-red-500' : 'bg-blue-600'}`} style={{ width: `${utilization}%` }}></div></div>
-                            </div>
-                        ) : (
-                            <div className="text-[10px] uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-1 rounded border border-slate-200">Active Loan</div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        );
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+    const handleSend = async (textOverride = null) => {
+        const textToSend = textOverride || input;
+        if (!textToSend.trim()) return;
+
+        setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
+        setInput("");
+        setIsLoading(true);
+
+        const response = await callGeminiAPI(textToSend, apiResponse);
+
+        setMessages(prev => [...prev, { role: 'assistant', text: response }]);
+        setIsLoading(false);
     };
 
+    const QuickPrompt = ({ text }) => (
+        <button onClick={() => handleSend(text)} className="bg-blue-50 border border-blue-200 text-blue-600 text-xs px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors whitespace-nowrap font-medium shadow-sm">{text}</button>
+    );
 
-
-    const AccountDetailView = ({ account, onBack }) => {
-        console.log("AccountDetailView received account:", account); // Debug log
-
-        if (!account) {
-            return (
-                <div className="animate-fade-in-up">
-                    <div className="flex items-center space-x-3 mb-6">
-                        <button onClick={onBack} className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200">
-                            <Icon name="ArrowLeft" className="w-5 h-5 text-slate-600" />
-                        </button>
-                        <h1 className="text-xl font-bold text-slate-900">No Account Selected</h1>
+    return (
+        <div className="fixed inset-y-0 right-0 w-full md:w-[400px] bg-white shadow-2xl z-[60] flex flex-col animate-slide-in-right border-l border-slate-200 text-slate-800">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-white shadow-sm z-10">
+                <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md">
+                        <Sparkles className="w-5 h-5 text-white" />
                     </div>
-                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center">
-                        <Icon name="AlertCircle" className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                        <p className="text-slate-600">No account data available. Please go back and select an account.</p>
-                    </div>
-                </div>
-            );
-        }
-
-        const utilization = Math.min((account.balance / account.limit) * 100, 100);
-        const progressColor = utilization > 90 ? 'bg-red-500' : utilization > 50 ? 'bg-yellow-500' : 'bg-green-500';
-        const progressTextColor = utilization > 90 ? 'text-red-600' : utilization > 50 ? 'text-yellow-600' : 'text-green-600';
-        const progressBgColor = utilization > 90 ? 'bg-red-50' : utilization > 50 ? 'bg-yellow-50' : 'bg-green-50';
-
-        return (
-            <div className="animate-fade-in-up">
-                <div className="flex items-center space-x-3 mb-6">
-                    <button onClick={onBack} className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200">
-                        <Icon name="ArrowLeft" className="w-5 h-5 text-slate-600" />
-                    </button>
-                    <h1 className="text-xl font-bold text-slate-900">{account.bank} Details</h1>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg mb-6">
-                    <div className="flex items-start justify-between mb-6">
-                        <div>
-                            <p className="text-slate-500 text-sm mb-1">{account.type}</p>
-                            <h2 className="text-3xl font-bold text-slate-900">₹{account.balance.toLocaleString()}</h2>
-                            <p className="text-xs text-slate-500 mt-1">Current Balance</p>
-                        </div>
-                        <div className="p-3 bg-blue-50 rounded-xl border border-blue-100 text-blue-600">
-                            <Icon name={account.iconName} className="w-6 h-6" />
-                        </div>
-                    </div>
-
-                    {/* Radix UI Slider Style Utilization Bar */}
-                    <div className="mb-2">
-                        <div className="flex justify-between items-center mb-3">
-                            <div className="flex items-center gap-1.5">
-                                <svg
-                                    className="w-4 h-4 text-slate-500"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={1.5}
-                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                    />
-                                </svg>
-                                <span className="text-sm text-slate-600">
-                                    {account.isLoan ? "Principal Repaid" : "Credit Utilization"}
-                                </span>
-                            </div>
-                            <span className={`text-sm font-semibold ${progressTextColor}`}>
-                                {Math.round(utilization)}%
-                            </span>
-                        </div>
-
-                        {/* Slider Track */}
-                        <div className="relative">
-                            <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full ${progressColor} rounded-full transition-all duration-500`}
-                                    style={{ width: `${utilization}%` }}
-                                ></div>
-                            </div>
-
-                            {/* Slider Thumb */}
-                            <div
-                                className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white border-2 border-slate-300 rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"
-                                style={{ left: `calc(${utilization}% - 10px)` }}
-                            >
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className={`w-1.5 h-1.5 rounded-full ${progressColor}`}></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Slider Labels */}
-                        <div className="flex justify-between mt-3">
-                            <div className="text-xs text-slate-500">
-                                <div className="flex items-center gap-1">
-                                    <div className="w-2 h-2 rounded-full bg-slate-300"></div>
-                                    <span>₹0</span>
-                                </div>
-                            </div>
-                            <div className="text-xs text-slate-500">
-                                <div className="flex items-center gap-1">
-                                    <div className="w-2 h-2 rounded-full bg-slate-300"></div>
-                                    <span>Limit: ₹{account.limit.toLocaleString()}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Utilization Status Indicator */}
-                        <div className={`mt-4 px-3 py-2 rounded-lg ${progressBgColor} border ${progressTextColor.replace('text', 'border')} border-opacity-30`}>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className={`w-2 h-2 rounded-full ${progressColor}`}></div>
-                                    <span className={`text-xs font-medium ${progressTextColor}`}>
-                                        {utilization > 90 ? "Critical" : utilization > 50 ? "Moderate" : "Good"}
-                                    </span>
-                                </div>
-                                <span className="text-xs text-slate-600">
-                                    {utilization > 90 ? "Above 90%" : utilization > 50 ? "50-90%" : "Below 50%"}
-                                </span>
-                            </div>
-                        </div>
+                    <div>
+                        <h3 className="font-bold text-slate-900 text-sm">FinAI Assistant</h3>
+                        <p className="text-[10px] text-green-600 flex items-center font-medium bg-green-50 px-2 py-0.5 rounded-full w-fit mt-0.5">
+                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></span> Online
+                        </p>
                     </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p className="text-slate-500 text-xs mb-1">Interest Rate</p>
-                        <p className="text-slate-900 font-semibold">{account.roi || "N/A"}</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p className="text-slate-500 text-xs mb-1">Monthly EMI</p>
-                        <p className="text-slate-900 font-semibold">{account.emi || "N/A"}</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p className="text-slate-500 text-xs mb-1">Date Opened</p>
-                        <div className="flex items-center text-slate-900 font-semibold text-sm">
-                            <span className="mr-1.5">
-                                <Icon name="Calendar" className="w-3 h-3 text-blue-600" />
-                            </span>
-                            {account.dateOpened}
+                <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors"><X className="w-5 h-5" /></button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 bg-slate-50 scroll-smooth">
+                {messages.map((msg, idx) => (
+                    <div key={idx} className={`flex mb-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[85%] rounded-2xl p-3.5 text-sm shadow-sm ${
+                            msg.role === 'user' 
+                                ? 'bg-blue-600 text-white rounded-br-none' 
+                                : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
+                        }`}>
+                            {msg.text.split('\n').map((line, i) => (
+                                <p key={i} className={i > 0 ? 'mt-2' : ''} dangerouslySetInnerHTML={{ 
+                                    __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+                                }} />
+                            ))}
                         </div>
                     </div>
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <p className="text-slate-500 text-xs mb-1">Last Payment</p>
-                        <div className="flex items-center text-slate-900 font-semibold text-sm">
-                            <span className="mr-1.5">
-                                <Icon name="Clock" className="w-3 h-3 text-blue-600" />
-                            </span>
-                            {account.lastPaymentDate}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm mb-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-slate-900 font-semibold text-sm">Payment History</h3>
-                        <span className="text-xs text-green-700 bg-green-50 px-2 py-1 rounded border border-green-200">
-                            Recent 12 Months
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center px-1">
-                        {account.paymentHistory && account.paymentHistory.map((status, index) => (
-                            <div key={index} className="flex flex-col items-center group relative">
-                                <div
-                                    className={`w-3 h-3 rounded-full mb-2 ${status === 0 || status === 'STD' ? 'bg-green-500' :
-                                        status === 'XXX' ? 'bg-slate-300' : 'bg-red-500'
-                                        }`}
-                                ></div>
-                                <div className="absolute -top-8 bg-slate-800 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-                                    {status === 0 || status === 'STD' ? 'On Time' :
-                                        status === 'XXX' ? 'Unknown' : 'Delayed'}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mt-3 flex justify-between text-[10px] text-slate-400 uppercase tracking-widest">
-                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
-                        <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
-                    </div>
-                </div>
-
-                {account.alert && (
-                    <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-start space-x-3">
-                        <Icon name="Info" className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <h4 className="text-red-800 font-medium text-sm">Attention Needed</h4>
-                            <p className="text-red-600 text-xs mt-1">
-                                This account has {account.alert.toLowerCase()}. {account.isLoan ? "Consider a balance transfer." : "Try to keep utilization below 30%."}
-                            </p>
+                ))}
+                
+                {isLoading && (
+                    <div className="flex justify-start mb-4">
+                        <div className="bg-white border border-slate-200 rounded-2xl rounded-bl-none p-4 shadow-sm flex items-center space-x-2 w-fit">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-75"></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-150"></div>
                         </div>
                     </div>
                 )}
+                <div ref={messagesEndRef} />
             </div>
-        );
-    };
 
-    const FinancialAssistant = ({ onClose }) => (
-        <div className="fixed right-0 top-0 w-full md:w-[360px] h-full bg-white shadow-xl p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold">FinAI Assistant</h3>
-                <button onClick={onClose}><Icon name="X" /></button>
+            <div className="p-3 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+                <QuickPrompt text="How do I increase my score?" />
+                <QuickPrompt text="Analyze my Axis Bank card" />
+                <QuickPrompt text="What offers do you have?" />
             </div>
-            <p className="text-sm text-slate-600">
-                Pay down your Axis Bank credit card to reduce 97% utilization.
-            </p>
+
+            <div className="p-4 bg-white border-t border-slate-100 pb-8">
+                <div className="flex items-center space-x-2 bg-slate-50 rounded-full px-4 py-2 border border-slate-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                    <input 
+                        type="text" 
+                        value={input} 
+                        onChange={(e) => setInput(e.target.value)} 
+                        onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
+                        placeholder="Ask anything about your finances..." 
+                        className="flex-1 bg-transparent outline-none text-sm text-slate-900 placeholder-slate-400" 
+                    />
+                    <button 
+                        onClick={() => handleSend()} 
+                        disabled={isLoading || !input.trim()} 
+                        className="p-2 bg-blue-600 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors shadow-md transform hover:scale-105 active:scale-95"
+                    >
+                        <Send className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
         </div>
     );
+};
 
-    const handlePrint = () => window.print();
+const ReportView = ({ apiResponse }) => {
+    const [isDownloading, setIsDownloading] = useState(false);
 
-    const handleWhatsApp = () => {
-        alert("Report Sent to WhatsApp! 📱\n\n(In a real app, this would trigger a backend API to send the PDF via WhatsApp Business API)");
-    };
-
-    const handleGmail = () => {
-        alert("Report Sent to Gmail! 📧\n\n(In a real app, this would trigger an email service like SendGrid)");
+    const sendReport = async (type) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/send-report`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, mobileNumber: "9346521702" })
+            });
+            const data = await res.json();
+            alert(data.message);
+        } catch (e) {
+            setTimeout(() => alert(`Report successfully sent to your ${type}!`), 500);
+        }
     };
 
     const handleDownload = () => {
         setIsDownloading(true);
         const element = document.getElementById('report-content');
-
-        if (typeof html2pdf !== 'undefined') {
+        
+        // Safe check for html2pdf
+        if (window.html2pdf) {
             const opt = {
                 margin: [0.5, 0.5],
                 filename: `Happirate_Report_${apiResponse.customer.name.replace(/\s+/g, '_')}.pdf`,
@@ -514,395 +627,433 @@ export default function OneScoreDashboard() {
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            html2pdf().set(opt).from(element).save()
+            
+            window.html2pdf().set(opt).from(element).save()
                 .then(() => setIsDownloading(false))
                 .catch((err) => {
                     console.error("PDF Gen Error:", err);
                     setIsDownloading(false);
-                    window.print();
+                    window.print(); // Fallback
                 });
         } else {
+            console.warn("html2pdf library not found. Falling back to browser print.");
             window.print();
             setIsDownloading(false);
         }
     };
-    const FactorDetailView = ({ factorKey, data, onBack }) => {
-        const factorContent = {
-            paymentHistory: {
-                title: "Payment History",
-                desc: "Payment history accounts for 35% of your credit score. It shows whether you've made your past credit payments on time.",
-                tip: "Always pay at least the minimum amount due on time to keep this factor green.",
-                iconName: "CheckCircle"
-            },
-            creditUtilization: {
-                title: "Credit Utilization",
-                desc: "This accounts for 30% of your score. It is the ratio of your outstanding credit card balances to your total credit card limits.",
-                tip: "A utilization ratio above 30% signals high risk to lenders. Try to pay down balances.",
-                iconName: "PieChart"
-            },
-            creditAge: {
-                title: "Age of Accounts",
-                desc: "This accounts for 15% of your score. It averages the age of your open credit accounts.",
-                tip: "Avoid closing old credit cards, as they help increase your average credit age.",
-                iconName: "Clock"
-            },
-            totalAccounts: {
-                title: "Total Accounts",
-                desc: "This makes up 10% of your score. It looks at the total number of open and closed accounts.",
-                tip: "A healthy mix of secured (loans) and unsecured (cards) credit is beneficial.",
-                iconName: "CreditCard"
-            },
-            inquiries: {
-                title: "Hard Inquiries",
-                desc: "This accounts for 10% of your score. Hard inquiries occur when a lender checks your credit for a new application.",
-                tip: "Limit new credit applications. Multiple inquiries in a short time can lower your score.",
-                iconName: "Activity"
-            }
-        };
-
-        const content = factorContent[factorKey];
-        const displayValue = data.percentage ? `${data.percentage}%` : (data.age || data.count);
-
-        return (
-            <div className="animate-fade-in-up">
-                <div className="flex items-center space-x-3 mb-6">
-                    <button onClick={onBack} className="p-2 hover:bg-white rounded-full transition-colors border border-transparent hover:border-slate-200">
-                        <Icon name="ArrowLeft" className="w-5 h-5 text-slate-600" />
-                    </button>
-                    <h1 className="text-xl font-bold text-slate-900">{content.title}</h1>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg mb-6">
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <p className="text-slate-500 text-sm mb-1">Status</p>
-                            <h2 className={`text-3xl font-bold ${data.color.replace('text-', 'text-')}`.replace('text-[', 'text-[').replace(']', ']')}>{data.status}</h2>
-                        </div>
-                        <div className="p-3 bg-blue-50 rounded-xl border border-blue-100 text-blue-600">
-                            <Icon name={content.iconName} className="w-6 h-6" />
-                        </div>
-                    </div>
-                    <div className="mt-6">
-                        <p className="text-slate-900 font-semibold text-lg">{displayValue}</p>
-                        <p className="text-slate-500 text-xs mt-1">Current Value</p>
-                    </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
-                    <h3 className="font-bold text-slate-900 mb-2">What does this mean?</h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">{content.desc}</p>
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex gap-3">
-                    <Icon name="Sparkles" className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                        <h4 className="font-bold text-blue-900 text-sm">Pro Tip</h4>
-                        <p className="text-blue-700 text-xs mt-1">{content.tip}</p>
-                    </div>
-                </div>
-            </div>
-        );
-    };
 
     return (
-        <div className="min-h-screen bg-[#EFF6FF] p-4">
-            {/* Tabs */}
-            <div className="flex gap-2 mb-6">
-                {["Dashboard", "Accounts", "Reports", "Offers"].map(tab => (
-                    <button
-                        key={tab}
-                        onClick={() => {
-                            setActiveTab(tab);
-                            setSelectedAccount(null);
-                        }}
-                        className={`px-4 py-2 rounded ${activeTab === tab ? "bg-blue-600 text-white" : "bg-white"}`}
-                    >
-                        {tab}
+        <div className="animate-fade-in-up max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 no-print">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900">Professional Credit Report</h1>
+                    <p className="text-slate-500">Comprehensive financial analysis for {apiResponse.customer.name}</p>
+                </div>
+                <div className="flex gap-2">
+                    <button onClick={() => sendReport('whatsapp')} className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm hover:shadow-md">
+                        <Share2 className="w-4 h-4" /> WhatsApp
                     </button>
-                ))}
+                    <button onClick={() => sendReport('email')} className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm hover:shadow-md">
+                        <Mail className="w-4 h-4" /> Gmail
+                    </button>
+                    <button onClick={handleDownload} disabled={isDownloading} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-70 disabled:cursor-wait shadow-sm hover:shadow-md">
+                        <Download className="w-4 h-4" /> 
+                        {isDownloading ? 'Generating...' : 'PDF Download'}
+                    </button>
+                </div>
             </div>
-            <main className="max-w-4xl mx-auto px-4 py-8 relative z-10">
-                {activeTab === 'Dashboard' && !selectedAccount && !selectedFactor && (
-                    <div className="animate-fade-in-up">
-                        <div className="mb-8">
-                            <h1 className="text-2xl font-bold text-slate-900">Hello, {apiResponse.customer.name}</h1>
-                            <p className="text-slate-500">Here is your financial health overview.</p>
+
+            <div id="report-content" className="bg-white p-12 rounded-none shadow-2xl border border-slate-200 print-container relative overflow-hidden min-h-[1000px]">
+                {/* Subtle Watermark */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                    <h1 className="text-9xl font-bold text-slate-100 rotate-[-45deg] select-none">HAPPIRATE</h1>
+                </div>
+
+                <div className="relative z-10">
+                    {/* Header */}
+                    <div className="border-b-2 border-slate-100 pb-8 mb-8 flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-md">H</div>
+                            <div>
+                                <div className="text-3xl font-extrabold text-slate-900 tracking-tight">Happirate</div>
+                                <div className="text-sm text-slate-500 font-medium">Financial Wellness Report</div>
+                            </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <ScoreGauge score={apiResponse.customer.score} />
-                            <div className="flex flex-col space-y-4">
-                                <div className="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                                    <h3 className="text-slate-900 font-semibold mb-3 flex items-center"><span className="mr-2 text-red-500"><Icon name="AlertCircle" className="w-4 h-4" /></span> Action Required</h3>
-                                    <p className="text-slate-600 text-sm mb-3">Your credit utilization on <b>Axis Bank Credit Card</b> is <b>97%</b>. High utilization negatively impacts your score.</p>
-                                    <button className="text-sm text-blue-600 font-medium hover:text-blue-700 flex items-center">View Tips to improve <span className="ml-1"><Icon name="ChevronRight" className="w-4 h-4" /></span></button>
+                        <div className="text-right">
+                            <div className="text-xl font-bold text-slate-900">{apiResponse.customer.name}</div>
+                            <div className="text-sm text-slate-500">Report Date: {new Date().toLocaleDateString()}</div>
+                        </div>
+                    </div>
+
+                    {/* Executive Summary */}
+                    <div className="mb-10">
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-wider flex items-center">
+                            <span className="w-1 h-6 bg-blue-600 mr-3 rounded-full"></span> Executive Summary
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <div className="text-sm text-slate-500 mb-1 font-medium uppercase">CIBIL Score</div>
+                                <div className="text-4xl font-extrabold text-blue-600">{apiResponse.customer.score}</div>
+                                <div className="text-xs text-green-600 font-bold mt-2 bg-green-100 px-2 py-1 rounded-full w-fit">Excellent</div>
+                            </div>
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <div className="text-sm text-slate-500 mb-1 font-medium uppercase">Total Active Debt</div>
+                                <div className="text-4xl font-extrabold text-slate-900">₹12.45L</div>
+                                <div className="text-xs text-slate-500 font-medium mt-2">Across 4 Accounts</div>
+                            </div>
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <div className="text-sm text-slate-500 mb-1 font-medium uppercase">Overall Health</div>
+                                <div className="text-4xl font-extrabold text-orange-500">Fair</div>
+                                <div className="text-xs text-orange-600 font-bold mt-2 bg-orange-100 px-2 py-1 rounded-full w-fit">Action Required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Analysis Section */}
+                    <div className="mb-10">
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 uppercase tracking-wider flex items-center">
+                             <span className="w-1 h-6 bg-blue-600 mr-3 rounded-full"></span> Deep Dive Analysis
+                        </h2>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-5 p-5 bg-red-50/50 rounded-xl border border-red-100">
+                                <div className="p-2 bg-red-100 rounded-lg text-red-600"><AlertCircle className="w-6 h-6" /></div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 text-lg">High Credit Utilization (Critical)</h3>
+                                    <p className="text-slate-600 mt-1 leading-relaxed">
+                                        Your Axis Bank Credit Card utilization is currently at <span className="font-bold text-red-600 bg-red-100 px-1 rounded">97%</span> (₹38,095 / ₹39,000). 
+                                        Lenders view anything above 30% as high risk. This is the single biggest factor dragging down your score.
+                                    </p>
                                 </div>
-                                <div className="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                                    <h3 className="text-slate-900 font-semibold mb-3 flex items-center"><span className="mr-2 text-green-500"><Icon name="TrendingUp" className="w-4 h-4" /></span> Score Simulation</h3>
-                                    <p className="text-slate-600 text-sm">Paying off <b>₹15,000</b> on your credit card could boost your score by <b>+22 points</b>.</p>
+                            </div>
+                            
+                            <div className="flex items-start gap-5 p-5 bg-green-50/50 rounded-xl border border-green-100">
+                                <div className="p-2 bg-green-100 rounded-lg text-green-600"><CheckCircle className="w-6 h-6" /></div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 text-lg">Excellent Payment History</h3>
+                                    <p className="text-slate-600 mt-1 leading-relaxed">
+                                        You have a flawless <span className="font-bold text-green-600 bg-green-100 px-1 rounded">100%</span> on-time payment record. 
+                                        Consistency is key, and you are doing great here. Keep this up!
+                                    </p>
+                                </div>
+                            </div>
+
+                             <div className="flex items-start gap-5 p-5 bg-blue-50/50 rounded-xl border border-blue-100">
+                                <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Info className="w-6 h-6" /></div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 text-lg">Interest Rate Optimization</h3>
+                                    <p className="text-slate-600 mt-1 leading-relaxed">
+                                        Your Aptus Housing Loan is currently at <span className="font-bold">17.00%</span> interest. 
+                                        Market rates for similar profiles are around 8.50%. This gap indicates you are overpaying significantly on interest.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <h2 className="text-lg font-bold text-slate-900 mb-4">Score Factors</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                            <FactorCard
-                                title="Payment History"
-                                status={apiResponse.factors.paymentHistory.status}
-                                value={`${apiResponse.factors.paymentHistory.percentage}%`}
-                                color={apiResponse.factors.paymentHistory.color}
-                                iconName="CheckCircle"
-                                onClick={() => setSelectedFactor('paymentHistory')}
-                            />
-                            <FactorCard
-                                title="Credit Utilization"
-                                status={apiResponse.factors.creditUtilization.status}
-                                value={`${apiResponse.factors.creditUtilization.percentage}%`}
-                                color={apiResponse.factors.creditUtilization.color}
-                                iconName="PieChart"
-                                onClick={() => setSelectedFactor('creditUtilization')}
-                            />
-                            <FactorCard
-                                title="Age of Accounts"
-                                status={apiResponse.factors.creditAge.status}
-                                value={apiResponse.factors.creditAge.age}
-                                color={apiResponse.factors.creditAge.color}
-                                iconName="Clock"
-                                onClick={() => setSelectedFactor('creditAge')}
-                            />
-                            <FactorCard
-                                title="Total Accounts"
-                                status={apiResponse.factors.totalAccounts.status}
-                                value={apiResponse.factors.totalAccounts.count}
-                                color={apiResponse.factors.totalAccounts.color}
-                                iconName="CreditCard"
-                                onClick={() => setSelectedFactor('totalAccounts')}
-                            />
-                            <FactorCard
-                                title="Hard Inquiries"
-                                status={apiResponse.factors.inquiries.status}
-                                value={apiResponse.factors.inquiries.count}
-                                color={apiResponse.factors.inquiries.color}
-                                iconName="Activity"
-                                onClick={() => setSelectedFactor('inquiries')}
-                            />
-                        </div>
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-bold text-slate-900">Recommended for You</h2>
-                            <button onClick={() => activeTab('offers')} className="text-sm text-blue-600 hover:text-blue-700">See all</button>
-                        </div>
-                        <div>
-                            {apiResponse.offers.slice(0, 1).map(offer => (
-                                <OfferCard key={offer.id} offer={offer} />
-                            ))}
-                        </div>
                     </div>
-                )}
 
-                {selectedFactor && (
-                    <FactorDetailView
-                        factorKey={selectedFactor}
-                        data={apiResponse.factors[selectedFactor]}
-                        onBack={() => setSelectedFactor(null)}
-                    />
-                )}
-            </main>
-            {/* Accounts List */}
-            {activeTab === "Accounts" && !selectedAccount && (
-                <div className="space-y-4">
-                    {apiResponse.accounts.map(acc => (
-                        <AccountItem
-                            key={acc.id}
-                            account={acc}
-                            onClick={setSelectedAccount}
-                        />
+                    {/* Action Plan */}
+                    <div className="mb-10 p-6 bg-slate-900 rounded-2xl text-white shadow-xl relative overflow-hidden">
+                         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-20"></div>
+                        <h2 className="text-lg font-bold mb-4 uppercase tracking-wider border-b border-slate-700 pb-4">Recommended Action Plan</h2>
+                        <ul className="space-y-4 relative z-10">
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">1</span>
+                                <div>
+                                    <strong className="block text-blue-200">Immediate Action</strong>
+                                    <span className="text-slate-300 text-sm">Pay down at least ₹25,000 on your Axis Bank credit card to bring utilization below 30%.</span>
+                                </div>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">2</span>
+                                <div>
+                                    <strong className="block text-blue-200">Balance Transfer</strong>
+                                    <span className="text-slate-300 text-sm">Apply for a Housing Loan Balance Transfer with HDFC or SBI to cut your EMI by almost half.</span>
+                                </div>
+                            </li>
+                             <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">3</span>
+                                <div>
+                                    <strong className="block text-blue-200">Credit Pause</strong>
+                                    <span className="text-slate-300 text-sm">Avoid applying for new personal loans for 90 days to let your score recover from recent inquiries.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Disclaimer */}
+                    <div className="mt-auto pt-8 border-t border-slate-200 text-center">
+                        <p className="text-xs text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                            This report is generated by Happirate Financial Services based on credit data available as of {new Date().toLocaleDateString()}. 
+                            This document is confidential and intended solely for the use of the individual to whom it is addressed. 
+                            Not a legal document.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- MAIN DASHBOARD COMPONENT ---
+
+const OneScoreDashboard = () => {
+    const [activeTab, setActiveTab] = useState('dashboard');
+    const [selectedAccount, setSelectedAccount] = useState(null);
+    const [selectedFactor, setSelectedFactor] = useState(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isAiOpen, setIsAiOpen] = useState(false);
+    const [apiResponse, setApiResponse] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Initial Fetch on Load
+    useEffect(() => {
+        // In a real login flow, this ID comes from auth
+        const demoMobile = "9346521702"; 
+
+        fetch(`${API_BASE_URL}/dashboard`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobileNumber: demoMobile })
+        })
+        .then(res => res.json())
+        .then(data => {
+            setApiResponse(data);
+            setIsLoading(false);
+        })
+        .catch(err => {
+            console.warn("Backend unavailable, using mock data for preview.", err);
+            // Fallback to mock data if backend fails
+            setApiResponse(MOCK_API_RESPONSE);
+            setIsLoading(false);
+        });
+    }, []);
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        setSelectedAccount(null);
+        setSelectedFactor(null);
+    };
+
+    if (isLoading) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#EFF6FF] text-slate-500 space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <p className="font-medium animate-pulse">Loading Happirate Dashboard...</p>
+        </div>
+    );
+
+    if (!apiResponse) return <div className="min-h-screen flex items-center justify-center bg-[#EFF6FF] text-red-500">Failed to load data.</div>;
+
+    return (
+        <div className="min-h-screen bg-[#EFF6FF] text-slate-900 font-sans selection:bg-blue-200 selection:text-blue-900 relative overflow-x-hidden">
+            {/* STICKY HEADER */}
+            <header className="sticky top-0 z-50 bg-[#EFF6FF]/90 backdrop-blur-md border-b border-blue-200/50 shadow-sm transition-all duration-300">
+                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <div className="flex items-center space-x-2.5">
+                        <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md text-white font-bold text-xl">
+                            H
+                        </div>
+                        <span className="text-xl font-bold tracking-tight text-slate-900">Happirate</span>
+                    </div>
+                    
+                    {/* Desktop Nav */}
+                    <div className="hidden md:flex items-center space-x-1 bg-white/50 p-1 rounded-full border border-blue-100">
+                        {['dashboard', 'accounts', 'offers', 'report'].map((tab) => (
+                            <button 
+                                key={tab}
+                                onClick={() => handleTabChange(tab)}
+                                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                                    activeTab === tab 
+                                    ? 'bg-blue-600 text-white shadow-md transform scale-105' 
+                                    : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'
+                                }`}
+                            >
+                                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                        <button className="relative text-slate-500 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-full">
+                            <Bell className="w-5 h-5" />
+                            <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#EFF6FF]"></span>
+                        </button>
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 border border-blue-200 flex items-center justify-center text-sm font-bold text-blue-700 shadow-inner">
+                            AB
+                        </div>
+                        <button className="md:hidden text-slate-700 p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            {/* Mobile Nav */}
+            {isMobileMenuOpen && (
+                <div className="md:hidden bg-white border-b border-blue-100 p-4 shadow-lg animate-slide-in-right">
+                    {['dashboard', 'accounts', 'offers', 'report'].map((tab) => (
+                        <button 
+                            key={tab}
+                            onClick={() => { handleTabChange(tab); setIsMobileMenuOpen(false); }} 
+                            className={`block w-full text-left py-3 px-4 rounded-lg mb-1 font-medium transition-colors ${
+                                activeTab === tab ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'
+                            }`}
+                        >
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        </button>
                     ))}
                 </div>
             )}
 
-            {/* Account Detail View */}
-            {selectedAccount && (
-                <AccountDetailView
-                    account={selectedAccount}
-                    onBack={() => setSelectedAccount(null)}
-                />
-            )}
-            {/* Reports */}
-            {activeTab === "Reports" && (
-                <div className="animate-fade-in-up max-w-4xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 no-print">
+            {/* MAIN CONTENT AREA */}
+            <main className="max-w-4xl mx-auto px-4 py-8 relative z-10 min-h-[calc(100vh-64px)]">
+                
+                {/* DASHBOARD TAB */}
+                {activeTab === 'dashboard' && !selectedAccount && !selectedFactor && (
+                    <div className="animate-fade-in-up space-y-8">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div>
+                                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Hello, {apiResponse.customer.name} 👋</h1>
+                                <p className="text-slate-500 mt-1">Here is your financial health overview for {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric'})}.</p>
+                            </div>
+                            <div className="text-sm font-medium px-3 py-1 bg-green-100 text-green-700 rounded-full w-fit">
+                                Credit Health: Good
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <ScoreGauge score={apiResponse.customer.score} lastUpdated={apiResponse.customer.lastUpdated} />
+                            
+                            <div className="flex flex-col space-y-4">
+                                <div className="bg-white p-6 rounded-3xl border border-red-100 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+                                    <div className="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                                    <h3 className="text-slate-900 font-bold mb-3 flex items-center relative z-10">
+                                        <div className="p-1.5 bg-red-100 rounded-lg mr-2 text-red-600"><AlertCircle className="w-5 h-5" /></div>
+                                        Action Required
+                                    </h3>
+                                    <p className="text-slate-600 text-sm mb-4 leading-relaxed relative z-10">
+                                        Your credit utilization on <b>Axis Bank Credit Card</b> is <span className="text-red-600 font-bold">97%</span>. High utilization negatively impacts your score.
+                                    </p>
+                                    <button className="text-sm text-blue-600 font-bold hover:text-blue-800 flex items-center relative z-10 group-hover:translate-x-1 transition-transform">
+                                        View Tips to improve <ChevronRight className="w-4 h-4 ml-1" />
+                                    </button>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-3xl border border-green-100 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+                                    <div className="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                                    <h3 className="text-slate-900 font-bold mb-3 flex items-center relative z-10">
+                                        <div className="p-1.5 bg-green-100 rounded-lg mr-2 text-green-600"><TrendingUp className="w-5 h-5" /></div>
+                                        Score Simulation
+                                    </h3>
+                                    <p className="text-slate-600 text-sm relative z-10">
+                                        Paying off <b className="text-slate-900">₹15,000</b> on your credit card could boost your score by <b className="text-green-600">+22 points</b>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
-                            <h1 className="text-2xl font-bold text-slate-900">
-                                Professional Credit Report
-                            </h1>
-                            <p className="text-slate-500">
-                                Comprehensive financial analysis for {apiResponse.customer.name}
-                            </p>
+                            <h2 className="text-xl font-bold text-slate-900 mb-4 px-1">Score Factors</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <FactorCard title="Payment History" status={apiResponse.factors.paymentHistory.status} value={`${apiResponse.factors.paymentHistory.percentage}%`} color={apiResponse.factors.paymentHistory.color} iconName="CheckCircle" onClick={() => setSelectedFactor('paymentHistory')} />
+                                <FactorCard title="Credit Utilization" status={apiResponse.factors.creditUtilization.status} value={`${apiResponse.factors.creditUtilization.percentage}%`} color={apiResponse.factors.creditUtilization.color} iconName="PieChart" onClick={() => setSelectedFactor('creditUtilization')} />
+                                <FactorCard title="Age of Accounts" status={apiResponse.factors.creditAge.status} value={apiResponse.factors.creditAge.age} color={apiResponse.factors.creditAge.color} iconName="Clock" onClick={() => setSelectedFactor('creditAge')} />
+                                <FactorCard title="Total Accounts" status={apiResponse.factors.totalAccounts.status} value={apiResponse.factors.totalAccounts.count} color={apiResponse.factors.totalAccounts.color} iconName="CreditCard" onClick={() => setSelectedFactor('totalAccounts')} />
+                                <FactorCard title="Hard Inquiries" status={apiResponse.factors.inquiries.status} value={apiResponse.factors.inquiries.count} color={apiResponse.factors.inquiries.color} iconName="Activity" onClick={() => setSelectedFactor('inquiries')} />
+                            </div>
                         </div>
 
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleWhatsApp}
-                                className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                            >
-                                <Icon name="Share2" className="w-4 h-4" /> WhatsApp
-                            </button>
-
-                            <button
-                                onClick={handleGmail}
-                                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                            >
-                                <Icon name="Mail" className="w-4 h-4" /> Gmail
-                            </button>
-
-                            <button
-                                onClick={handleDownload}
-                                disabled={isDownloading}
-                                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-70 disabled:cursor-wait"
-                            >
-                                <Icon name="Download" className="w-4 h-4" />
-                                {isDownloading ? "Downloading..." : "PDF"}
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* FULL REPORT CONTENT */}
-                    <div id="report-content" className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 print-container relative overflow-hidden">
-                        {/* Watermark Layer */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04]">
-                            <img
-                                src="./WhatsApp%20Image%202026-01-02%20at%2018.54.30.jpg"
-                                alt=""
-                                className="w-96 h-96 object-contain"
-                                onError={(e) => { e.target.style.display = 'none'; }}
-                            />
-                        </div>
-
-                        {/* Report Content - z-10 ensures it sits above watermark */}
-                        <div className="relative z-10">
-                            {/* Report Header */}
-                            <div className="border-b border-slate-200 pb-6 mb-6 flex justify-between items-center">
-                                <div>
-                                    <div className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                                        <img
-                                            src="./WhatsApp%20Image%202026-01-02%20at%2018.54.30.jpg"
-                                            alt="Happirate Logo"
-                                            className="h-8 w-auto object-contain"
-                                            onError={(e) => { e.target.src = "https://placehold.co/100x40/transparent/3C539C?text=Happirate"; }}
-                                        />
-                                        Happirate
-                                    </div>
-                                    <div className="text-sm text-slate-500 mt-1">Generated on: {new Date().toLocaleDateString()}</div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-lg font-bold text-slate-900">{apiResponse.customer.name}</div>
-                                    <div className="text-sm text-slate-500">ID: #USER-8923-AB</div>
-                                </div>
+                        <div>
+                            <div className="flex items-center justify-between mb-4 px-1">
+                                <h2 className="text-xl font-bold text-slate-900">Recommended for You</h2>
+                                <button onClick={() => handleTabChange('offers')} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">See all offers</button>
                             </div>
-
-                            {/* Executive Summary */}
-                            <div className="mb-8">
-                                <h2 className="text-lg font-bold text-slate-900 mb-4 border-l-4 border-blue-600 pl-3">Executive Summary</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <div className="text-sm text-slate-500 mb-1">CIBIL Score</div>
-                                        <div className="text-3xl font-bold text-blue-600">{apiResponse.customer.score}</div>
-                                        <div className="text-xs text-green-600 font-medium mt-1">Top 25% of borrowers</div>
-                                    </div>
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <div className="text-sm text-slate-500 mb-1">Total Debt</div>
-                                        <div className="text-3xl font-bold text-slate-900">₹12.45L</div>
-                                        <div className="text-xs text-slate-500 mt-1">Across 4 active accounts</div>
-                                    </div>
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <div className="text-sm text-slate-500 mb-1">Credit Health</div>
-                                        <div className="text-3xl font-bold text-orange-500">Fair</div>
-                                        <div className="text-xs text-slate-500 mt-1">Needs attention on utilization</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Key Insights */}
-                            <div className="mb-8">
-                                <h2 className="text-lg font-bold text-slate-900 mb-4 border-l-4 border-blue-600 pl-3">Credit Factors Analysis</h2>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-4 p-4 bg-red-50 rounded-xl border border-red-100">
-                                        <Icon name="AlertCircle" className="w-5 h-5 text-red-600 mt-0.5" />
-                                        <div>
-                                            <h3 className="font-semibold text-slate-900">High Credit Utilization (Critical)</h3>
-                                            <p className="text-sm text-slate-600 mt-1">
-                                                Your Axis Bank Credit Card utilization is at <span className="font-bold text-red-600">97%</span> (₹38,095 / ₹39,000).
-                                                This is the primary factor suppressing your score. Recommended utilization is below 30%.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-4 p-4 bg-green-50 rounded-xl border border-green-100">
-                                        <Icon name="CheckCircle" className="w-5 h-5 text-green-600 mt-0.5" />
-                                        <div>
-                                            <h3 className="font-semibold text-slate-900">Excellent Payment History</h3>
-                                            <p className="text-sm text-slate-600 mt-1">
-                                                You have a <span className="font-bold text-green-600">100%</span> on-time payment record across all active loans and credit cards.
-                                                This is a strong foundation for future credit approvals.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                                        <Icon name="Info" className="w-5 h-5 text-blue-600 mt-0.5" />
-                                        <div>
-                                            <h3 className="font-semibold text-slate-900">Loan Portfolio Mix</h3>
-                                            <p className="text-sm text-slate-600 mt-1">
-                                                You have a healthy mix of secured (Housing Loan) and unsecured (Personal Loan, Credit Card) credit.
-                                                However, the interest rate on your Aptus Housing Loan (<span className="font-bold">17%</span>) is significantly above market average.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Action Plan */}
-                            <div className="mb-8">
-                                <h2 className="text-lg font-bold text-slate-900 mb-4 border-l-4 border-blue-600 pl-3">Recommended Action Plan</h2>
-                                <ul className="list-disc list-inside space-y-2 text-slate-700 ml-2">
-                                    <li><strong>Immediate:</strong> Pay down at least ₹25,000 on your Axis Bank credit card to reduce utilization below 30%.</li>
-                                    <li><strong>Short Term:</strong> Apply for a Housing Loan Balance Transfer. Switching to a bank like HDFC or SBI could lower your rate from 17% to ~8.50%.</li>
-                                    <li><strong>Monitoring:</strong> Avoid new credit inquiries for the next 3 months to let your score recover.</li>
-                                </ul>
-                            </div>
-
-                            {/* Footer */}
-                            <div className="mt-12 pt-6 border-t border-slate-200 text-center text-xs text-slate-400">
-                                <p>This report is generated by Happirate Financial Services. Data is based on the latest CIBIL fetch.</p>
-                                <p className="mt-1">Confidential • For Personal Use Only</p>
+                            <div className="grid gap-4">
+                                {apiResponse.offers.slice(0, 1).map(offer => (
+                                    <OfferCard key={offer.id} offer={offer} />
+                                ))}
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-            {activeTab === 'Offers' && !selectedAccount && (
-                <div className="animate-fade-in-up">
-                    <div className="mb-6"><h1 className="text-2xl font-bold text-slate-900">Curated Offers</h1><p className="text-slate-500">Personalized financial products based on your credit profile.</p></div>
-                    <div className="grid gap-6">
-                        {apiResponse.offers.map(offer => (
-                            <OfferCard key={offer.id} offer={offer} />
-                        ))}
-                        <div className="bg-white p-6 rounded-2xl border border-blue-100 shadow-sm flex flex-col md:flex-row items-center justify-between">
-                            <div className="mb-4 md:mb-0"><h3 className="text-lg font-bold text-slate-900 mb-1">Pre-Approved Personal Loan</h3><p className="text-slate-500 text-sm">Unlock up to ₹5 Lakhs instantly at 10.99%.</p></div>
-                            <button className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors">View Details</button>
+                )}
+
+                {/* FACTOR DETAIL VIEW */}
+                {selectedFactor && (
+                    <FactorDetailView 
+                        factorKey={selectedFactor} 
+                        data={apiResponse.factors[selectedFactor]} 
+                        onBack={() => setSelectedFactor(null)} 
+                    />
+                )}
+
+                {/* ACCOUNTS TAB */}
+                {activeTab === 'accounts' && !selectedAccount && (
+                    <div className="animate-fade-in-up">
+                        <div className="mb-8">
+                            <h1 className="text-2xl font-bold text-slate-900">Active Accounts</h1>
+                            <p className="text-slate-500">Manage your loans and credit cards.</p>
+                        </div>
+                        <div className="space-y-4">
+                            {apiResponse.accounts.map(account => (
+                                <AccountItem key={account.id} account={account} onClick={setSelectedAccount} />
+                            ))}
+                        </div>
+                        <div className="mt-8 p-6 border-2 border-dashed border-slate-200 rounded-2xl text-center hover:bg-white transition-colors cursor-pointer group">
+                            <p className="text-slate-500 text-sm font-medium group-hover:text-slate-700">Found a discrepancy in your report?</p>
+                            <button className="mt-2 text-blue-600 font-bold hover:underline">Raise a Dispute</button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* AI Button */}
-            {!isAiOpen && (
-                <button
-                    onClick={() => setIsAiOpen(true)}
-                    className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg"
-                >
-                    <Icon name="Sparkles" />
-                </button>
-            )}
+                {/* ACCOUNT DETAIL VIEW */}
+                {selectedAccount && (
+                    <AccountDetailView 
+                        account={selectedAccount} 
+                        onBack={() => setSelectedAccount(null)} 
+                    />
+                )}
 
-            {isAiOpen && <FinancialAssistant onClose={() => setIsAiOpen(false)} />}
+                {/* OFFERS TAB */}
+                {activeTab === 'offers' && !selectedAccount && (
+                    <div className="animate-fade-in-up">
+                        <div className="mb-8">
+                            <h1 className="text-2xl font-bold text-slate-900">Curated Offers</h1>
+                            <p className="text-slate-500">Personalized financial products based on your credit profile.</p>
+                        </div>
+                        <div className="grid gap-6">
+                            {apiResponse.offers.map(offer => (
+                                <OfferCard key={offer.id} offer={offer} />
+                            ))}
+                            <div className="bg-white p-6 rounded-2xl border border-blue-100 shadow-sm flex flex-col md:flex-row items-center justify-between hover:shadow-md transition-shadow">
+                                <div className="mb-4 md:mb-0">
+                                    <h3 className="text-lg font-bold text-slate-900 mb-1">Pre-Approved Personal Loan</h3>
+                                    <p className="text-slate-600 text-sm">Unlock up to ₹5 Lakhs instantly at 10.99%.</p>
+                                </div>
+                                <button className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-slate-500/30">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* REPORT TAB */}
+                {activeTab === 'report' && !selectedAccount && (
+                    <ReportView apiResponse={apiResponse} />
+                )}
+
+                {/* AI FLOATING BUTTON */}
+                {!isAiOpen && (
+                    <button 
+                        onClick={() => setIsAiOpen(true)}
+                        className="fixed bottom-8 right-8 p-4 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl hover:scale-110 transition-transform z-50 animate-bounce-subtle border-4 border-white/20"
+                        title="Chat with FinAI"
+                    >
+                        <Sparkles className="w-6 h-6" />
+                    </button>
+                )}
+
+                {/* AI MODAL */}
+                {isAiOpen && <FinancialAssistant onClose={() => setIsAiOpen(false)} apiResponse={apiResponse} />}
+            </main>
         </div>
     );
-}
+};
+
+export default OneScoreDashboard;

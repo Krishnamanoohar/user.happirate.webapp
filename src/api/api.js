@@ -43,9 +43,20 @@ const submitFinancialProfileDetails = async (payload) => {
   console.log(resp, "resp");
   return resp;
 };
+const creditHealthReport = async (payload) => {
+  const resp = await axios.post(
+    "https://m3pmjfgx-3000.inc1.devtunnels.ms/customer/credit-health-report",
+    payload,
+    {
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+  return resp;
+};
 
 export {
   checkLoanEligibility,
   personalDetailsVerification,
   submitFinancialProfileDetails,
+  creditHealthReport
 };
