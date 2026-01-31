@@ -54,6 +54,20 @@ const submitFinancialProfileDetails = async (payload) => {
   console.log(resp, "resp");
   return resp;
 };
+const creditHealthCalculator = async () => {
+  const mobileNumber = sessionStorage.getItem("mobile_number");
+
+  if (!mobileNumber) {
+    throw new Error("Mobile number not found in session storage");
+  }
+
+  const resp = await apiClient.post("/credit-health-calculator", {
+    mobileNumber,
+  });
+
+  console.log("Credit Health Calculator Response:", resp);
+  return resp;
+};
 
 export {
   checkLoanEligibility, personalDetailsVerification,
@@ -61,5 +75,6 @@ export {
   sendOtpToMobile,
   verifyOtp,
   fetchCreditReport,
-  updateCreditReport
+  updateCreditReport,
+  creditHealthCalculator
 };
