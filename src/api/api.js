@@ -34,12 +34,19 @@ const fetchCreditReport = async (payload) => {
   console.log("Response for credit report", resp);
   return resp;
 };
-const  updateCreditReport= async (payload) => {
+const updateCreditReport = async (payload) => {
   const resp = await apiClient.post("/update-credit-report", payload);
   console.log("Response for credit report", resp);
   return resp;
 };
 
+const fetchEligibleLoanProducts = async () => {
+  const mobile = sessionStorage.getItem("mobile_number")
+  const resp = await apiClient.post("/provisional-credit-assesment", {
+    mobileNumber: mobile
+  })
+  return resp
+}
 
 const personalDetailsVerification = async (payload) => {
   const resp = await apiClient.post("/submit-personal-details", payload);
@@ -61,5 +68,6 @@ export {
   sendOtpToMobile,
   verifyOtp,
   fetchCreditReport,
-  updateCreditReport
+  updateCreditReport,
+  fetchEligibleLoanProducts
 };

@@ -144,6 +144,7 @@ const buildEmploymentDetailsPayload = (data) => ({
   employmentCategory: data.employmentCategory,
   salaryMode: data.salaryMode,
 });
+
 const buildFileUpload = (data) => ({
   mobileNumber: sessionStorage.getItem("mobile_number"),
 });
@@ -264,6 +265,11 @@ const LoanApplication = () => {
 
       return;
     }
+
+    // Proceed to fetch eligible loans
+    if (currentStep === 3) {
+      navigate("/eligible-loans")
+    }
   };
 
   const handleBack = () => {
@@ -295,6 +301,7 @@ const LoanApplication = () => {
     return {
       firstName: apiData.firstName ?? "",
       lastName: apiData.lastName ?? "",
+      middleName: apiData.middleName ?? "",
       dateOfBirth: apiData.dateOfBirth.split("T")[0] ?? "",
       panCard: apiData.panCard ?? "",
       email: primaryEmail ?? [],
@@ -403,8 +410,8 @@ const LoanApplication = () => {
       const apiEmails = Array.isArray(apiData.emails)
         ? apiData.emails.map((e) => e.email)
         : [];
-
-      setEmailOptions(apiEmails);
+      const unqEmails = new Set(apiEmails)
+      setEmailOptions(unqEmails);
 
       setFormData((prev) => ({
         ...prev,
@@ -560,15 +567,15 @@ const LoanApplication = () => {
                       required
                     />
                     <FormInput
-                      label="Last Name"
-                      value={formData.lastName}
-                      onChange={(v) => updateFormData("lastName", v)}
-                      required
-                    />
-                    <FormInput
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
+                      required
+                    />
+                    <FormInput
+                      label="Last Name"
+                      value={formData.lastName}
+                      onChange={(v) => updateFormData("lastName", v)}
                       required
                     />
                     <FormInput
@@ -917,7 +924,8 @@ const LoanApplication = () => {
                         Application Summary
                       </p>
                       <h2 className="text-2xl font-bold">
-                        {formData.firstName} {formData.lastName}
+                        {formData.firstName} {formData.middleName}{" "}
+                        {formData.lastName}
                       </h2>
                       <p className="text-primary-foreground/80 mt-1">
                         {formData.email}
@@ -946,7 +954,7 @@ const LoanApplication = () => {
                   <SummarySection title="Personal Details" icon={User}>
                     <SummaryRow
                       label="Full Name"
-                      value={`${formData.firstName} ${formData.lastName}`}
+                      value={`${formData.firstName} ${formData.middleName} ${formData.lastName}`}
                       icon={User}
                     />
                     <SummaryRow

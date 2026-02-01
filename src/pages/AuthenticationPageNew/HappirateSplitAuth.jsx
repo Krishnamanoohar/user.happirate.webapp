@@ -60,32 +60,6 @@ export function HappirateSplitAuth() {
     }
   };
 
-  // const handleSendOtp = async (e) => {
-  //   e.preventDefault();
-
-  //   if (mobileNumber.length !== 10) {
-  //     setErrors({
-  //       mobileNumber: "Please enter a valid 10-digit mobile number",
-  //     });
-  //     toast.error("Please enter a valid mobile number");
-  //     return;
-  //   }
-
-  //   try {
-  //     await sendOtpToMobile(mobileNumber);
-  //     toast.success(`OTP sent successfully to ${mobileNumber}`);
-  //     // setShowOtp(true);
-  //     setOtpResult(true);
-  //     setErrors({});
-  //   } catch (error) {
-  //     console.error("OTP send failed", error);
-  //     toast.error("Failed to send OTP");
-  //     setErrors({
-  //       mobileNumber: "Failed to send OTP. Please try again.",
-  //     });
-  //   }
-  // };
-
   const handleSendOtp = async (e) => {
     e.preventDefault();
 
@@ -93,47 +67,74 @@ export function HappirateSplitAuth() {
       setErrors({
         mobileNumber: "Please enter a valid 10-digit mobile number",
       });
+      toast.error("Please enter a valid mobile number");
       return;
     }
 
-    setResendCountDown(60);
-
-    startTransition(async () => {
-      if (!recaptchaVerifier) {
-        return toast.error("RecaptchaVerifier is not initialized");
-      }
-    });
-
-    // if (!consentChecked) {
-    //   setErrors({ consent: "You must agree to the consent statement." });
-    //   return;
-    // }
-
     try {
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        `+91${mobileNumber}`,
-        recaptchaVerifier,
-      );
-
-      setOtpResult(confirmationResult);
-      toast.success("OTP sent successfully");
+      const resp = await sendOtpToMobile(mobileNumber);
+      console.log("resp", resp)
+      toast.success(`${resp?.data?.otp} OTP sent successfully to ${mobileNumber}`);
+      // setShowOtp(true);
+      setOtpResult(true);
+      setErrors({});
     } catch (error) {
       console.error("OTP send failed", error);
-      setResendCountDown(0);
-      if (error.code === "auth/invalid-phone-number") {
-        toast.error("Invalid phone number. Please check the number.");
-      } else if (error.code === "auth/too-many-requests") {
-        toast.error("Too many requests, Please try again later.");
-      } else {
-        toast.error("Failed to send OTP, Please try again.");
-      }
-
-      // setErrors({
-      //   mobileNumber: "Failed to send OTP. Please try again.",
-      // });
+      toast.error("Failed to send OTP");
+      setErrors({
+        mobileNumber: "Failed to send OTP. Please try again.",
+      });
     }
   };
+
+  // const handleSendOtp = async (e) => {
+  //   e.preventDefault();
+
+  //   if (mobileNumber.length !== 10) {
+  //     setErrors({
+  //       mobileNumber: "Please enter a valid 10-digit mobile number",
+  //     });
+  //     return;
+  //   }
+
+  //   setResendCountDown(60);
+
+  //   startTransition(async () => {
+  //     if (!recaptchaVerifier) {
+  //       return toast.error("RecaptchaVerifier is not initialized");
+  //     }
+  //   });
+
+  //   // if (!consentChecked) {
+  //   //   setErrors({ consent: "You must agree to the consent statement." });
+  //   //   return;
+  //   // }
+
+  //   try {
+  //     const confirmationResult = await signInWithPhoneNumber(
+  //       auth,
+  //       `+91${mobileNumber}`,
+  //       recaptchaVerifier,
+  //     );
+
+  //     setOtpResult(confirmationResult);
+  //     toast.success("OTP sent successfully");
+  //   } catch (error) {
+  //     console.error("OTP send failed", error);
+  //     setResendCountDown(0);
+  //     if (error.code === "auth/invalid-phone-number") {
+  //       toast.error("Invalid phone number. Please check the number.");
+  //     } else if (error.code === "auth/too-many-requests") {
+  //       toast.error("Too many requests, Please try again later.");
+  //     } else {
+  //       toast.error("Failed to send OTP, Please try again.");
+  //     }
+
+  //     // setErrors({
+  //     //   mobileNumber: "Failed to send OTP. Please try again.",
+  //     // });
+  //   }
+  // };
 
   const handleVerifyOtp = async (enteredOtp) => {
     if (enteredOtp.length !== 4) {
