@@ -34,11 +34,7 @@ const HeroSection = () => {
                 </div>
 
                 <h1
-                  className="mb-4 text-[#180147] text-white"
-                  style={{
-                    color: "#180147",
-                    fontFamily: "var(--manrope-font)",
-                  }}
+                  className="mb-4 text-[#180147] text-white font-['Denton']"
                 >
                   Compare Loans from Top Banks
                   {/* Any Loan. Any Bank. Tailored for You. */}

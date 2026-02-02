@@ -94,9 +94,9 @@ export default function EMICalculator() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full gradient-bg-light border border-indigo-100 mb-4">
               <Calculator className="w-4 h-4 text-indigo-600" />
-              <span className="text-sm font-medium text-indigo-700">EMI Calculator</span>
+              <span className="text-sm font-medium text-indigo-700 font-['Denton']">EMI Calculator</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4 font-['Denton']">
               Calculate Your <span className="gradient-text">Monthly EMI</span>
             </h2>
             <p className="text-slate-600 mb-8 leading-relaxed">

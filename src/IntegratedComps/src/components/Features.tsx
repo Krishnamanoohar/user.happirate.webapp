@@ -48,10 +48,10 @@ function FeatureCard({
       </div>
 
       {/* Content */}
-      <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
+      <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors font-['Denton']">
         {title}
       </h3>
-      <p className="text-slate-600 leading-relaxed">{description}</p>
+      <p className="text-slate-600 leading-relaxed ">{description}</p>
 
       {/* Learn More Link */}
       <div className="mt-5 flex items-center gap-2 text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
@@ -64,14 +64,14 @@ function FeatureCard({
 
 const features = [
   {
-    icon: <Shield className="w-7 h-7 text-white" />,
+    icon: <Shield className="w-7 h-7 text-white " />,
     title: "Personal Loan",
     description:
       "Bridge the gap between your dreams and reality. Whether you’re planning a destination wedding, a long-overdue renovation, or an unexpected adventure, we provide the capital without the wait.",
     gradient: "from-indigo-500 to-blue-600",
   },
   {
-    icon: <Zap className="w-7 h-7 text-white" />,
+    icon: <Zap className="w-7 h-7 font-['Denton'] text-white" />,
     title: "Business Loan",
     description:
       "Don't let cash flow hold back your ambition. Our collateral-free financing is built for the modern entrepreneur, giving you the agility to seize opportunities the moment they arise.",
@@ -179,7 +179,7 @@ export default function Features() {
           }`}
         >
           <div className="glass-card rounded-3xl p-8 lg:p-12 max-w-4xl mx-auto">
-            <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-4">
+            <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-4 font-['Denton']">
               Ready to Find Your Perfect Loan?
             </h3>
             <p className="text-slate-600 mb-8 max-w-xl mx-auto">

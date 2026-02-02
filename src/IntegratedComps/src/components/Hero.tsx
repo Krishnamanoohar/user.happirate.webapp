@@ -90,7 +90,7 @@ export default function Hero() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight font-['Denton']">
               <span className="text-slate-900">Compare Loans from</span>&nbsp;
               <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-400 bg-clip-text text-transparent">
                 Top Banks
@@ -177,7 +177,7 @@ export default function Hero() {
             {/* Featured Banks Preview */}
             <div className="glass-card rounded-3xl p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">Featured Banks</h3>
+                <h3 className="font-semibold text-slate-900 font-['Denton']">Featured Banks</h3>
                 <span className="text-sm text-indigo-600 font-medium cursor-pointer hover:underline">
                   View All
                 </span>

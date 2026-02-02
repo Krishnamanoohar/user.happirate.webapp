@@ -770,8 +770,8 @@
                         {activeTab === 'dashboard' && !selectedAccount && !selectedFactor && (
                             <div className="animate-fade-in-up">
                                 <div className="mb-8">
-                                    <h1 className="text-2xl font-bold text-slate-900">Hello, {apiResponse.customer.name}</h1>
-                                    <p className="text-slate-500">Here is your financial health overview.</p>
+                                    <h1 className="text-2xl font-bold text-slate-900 font-['Denton']">Hello, {apiResponse.customer.name}</h1>
+                                    <p className="text-slate-500 font-['Denton']">Here is your financial health overview.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                                     <ScoreGauge score={apiResponse.customer.score} />
@@ -787,7 +787,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <h2 className="text-lg font-bold text-slate-900 mb-4">Score Factors</h2>
+                                <h2 className="text-lg font-bold text-slate-900 mb-4 font-['Denton']">Score Factors</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                                     <FactorCard 
                                         title="Payment History" 
@@ -831,7 +831,7 @@
                                     />
                                 </div>
                                 <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-lg font-bold text-slate-900">Recommended for You</h2>
+                                    <h2 className="text-lg font-bold text-slate-900 font-['Denton']">Recommended for You</h2>
                                     <button onClick={() => handleTabChange('offers')} className="text-sm text-blue-600 hover:text-blue-700">See all</button>
                                 </div>
                                 <div>

@@ -203,16 +203,16 @@ const FooterSection = () => {
             </div>
 
             <div className="col-lg-2 col-md-3 footer-links">
-              <h4>Loan Categories</h4>
+              <h4 className="font-['Denton']">Loan Categories</h4>
               <ul>
                 <li>
-                  <a href="#">Personal Loans</a>
+                  <a href="#" >Personal Loans</a>
                 </li>
                 <li>
-                  <a href="#">Home Loans</a>
+                  <a href="#" >Home Loans</a>
                 </li>
                 <li>
-                  <a href="#">Education Loans</a>
+                  <a href="#" >Education Loans</a>
                 </li>
                 <li>
                   <a href="#">Business Loans</a>

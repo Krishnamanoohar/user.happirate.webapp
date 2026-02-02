@@ -5,20 +5,20 @@ export default function HappirateSplitAuth2() {
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#f3e6ff] via-[#f0e9ff] to-[#ecebff] flex items-center justify-center px-3">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#f3e6ff] via-[#f0e9ff] to-[#ecebff] flex items-center justify-center px-3 font-['Denton']">
       {/* MAIN FLEX CONTAINER */}
-      <div className="max-w-7xl w-full flex items-center justify-between gap-20 mt-10">
+      <div className="max-w-7xl w-full flex items-center justify-between gap-20 mt-10 font-['Denton']">
         {/* LEFT PANEL */}
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-12">
-            <div className="bg-white shadow rounded-xl px-3 py-2 font-semibold text-sm">
+        <div className="flex-1 font-['Denton']">
+          <div className="flex items-center gap-3 mb-12 ">
+            <div className="bg-white shadow rounded-xl px-3 py-2 font-semibold text-sm ">
               Happirate
             </div>
             {/* <span className="text-sm text-gray-600">
               Transparent • Privacy-first
             </span> */}
           </div>
-          <p className="text-[48px] font-bold leading-tight text-gray-900">
+          <p className="text-[48px]  font-['Denton']">
             Compare & Secure
             <br />
             <span className="text-[#7C3AED]">Smarter Loans</span>
@@ -51,12 +51,12 @@ export default function HappirateSplitAuth2() {
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="flex-1 flex justify-end">
+        <div className="flex-1 flex justify-end font-['Denton']">
           <div className="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl p-7">
             {/* ===== MOBILE STEP ===== */}
             {step === "MOBILE" && (
               <>
-                <p className="text-2xl font-bold text-gray-900 text-center mb-1">
+                <p className="text-2xl font-bold text-gray-900 text-center mb-1 font-['Denton']">
                   Welcome back
                 </p>
                 <p className="text-gray-600 text-center text-sm mb-5">

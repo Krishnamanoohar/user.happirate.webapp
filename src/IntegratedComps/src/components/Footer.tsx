@@ -77,6 +77,60 @@ export default function Footer() {
             </Button>
           </div>
         </div>
+        {/* Contact Section - Right Aligned */}
+{/* <div className="flex justify-end py-12">
+  <div className="w-full max-w-lg bg-slate-800/60 backdrop-blur-md rounded-xl p-6">
+    
+    <h3 className="text-2xl font-bold text-white mb-2">
+      Send Us a Message
+    </h3>
+
+    <p className="text-slate-400 mb-6">
+      Want to know which loan suits you best? Send us your query and
+      our team will get back with the right guidance.
+    </p>
+
+    <form className="space-y-4">
+      <input
+        type="text"
+        placeholder="Your Name"
+        className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+      />
+
+      <input
+        type="email"
+        placeholder="Your Email"
+        className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+      />
+
+      <input
+        type="tel"
+        placeholder="Your Mobile Number"
+        className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+      />
+
+      <input
+        type="text"
+        placeholder="Subject"
+        className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+      />
+
+      <textarea
+        rows={5}
+        placeholder="Message"
+        className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+      />
+
+      <button
+        type="submit"
+        className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-indigo-600 transition"
+      >
+        Send Message
+      </button>
+    </form>
+  </div>
+</div> */}
+
 
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 py-12">

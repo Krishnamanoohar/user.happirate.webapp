@@ -239,9 +239,9 @@ export default function BanksSection() {
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-100 mb-4">
               <Building2 className="w-4 h-4 text-indigo-600" />
-              <span className="text-sm font-medium text-indigo-700">Partner Banks</span>
+              <span className="text-sm font-medium text-indigo-700 font-['Denton']">Partner Banks</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 font-['Denton']">
               Compare <span className="gradient-text">20+ Banks</span>
             </h2>
             <p className="text-slate-600 mt-2 max-w-xl">

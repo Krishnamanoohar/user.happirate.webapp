@@ -238,7 +238,7 @@ export default function EMICalculatorSection() {
         <div className="text-white p-0 flex flex-col md:flex-row gap-4 pb-4 px-0 md:px-0">
           {/* Card 1 */}
           <div className="w-full border border-[#4c45a5] rounded-2xl p-6 md:p-8 leading-relaxed glass-background emi-info-card">
-            <h3 className="text-lg font-semibold text-[#2f2f2f] mb-3">
+            <h3 className="text-lg font-semibold text-[#2f2f2f] mb-3 font-['Denton']">
               How to Calculate Your Monthly Installments
             </h3>
             <p className="text-white text-sm mb-2">

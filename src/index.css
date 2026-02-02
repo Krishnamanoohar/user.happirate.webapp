@@ -214,3 +214,52 @@
   padding: 16px;
 }
 
+@font-face {
+  font-family: "Denton";
+  src: url("/fonts/Denton-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Outer container */
+.ticker-container {
+  width: 100%;
+  overflow: hidden;
+  background: #f3f4f6;
+  padding: 8px 0;
+}
+
+/* Moving track */
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 18s linear infinite;
+}
+
+/* Content wrapper */
+.ticker-content {
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Each item */
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: black;
+  margin-right: 2rem;
+}
+
+/* Animation */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}

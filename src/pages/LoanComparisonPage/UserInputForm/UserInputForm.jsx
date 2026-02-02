@@ -196,7 +196,7 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
               <div className="col-md-6">
                 <label className="form-label">Loan Type</label>
                 <select
-                  className="form-control text-white custom-select"
+                  className="form-control text-white custom-select "
                   required
                   value={loanType}
                   onChange={(e) => {
@@ -204,11 +204,11 @@ const UserInputForm = ({ onSubmit, formData, setFormData }) => {
                     setTenure("");
                   }}
                 >
-                  <option value="">Select Type</option>
-                  <option value="personal">Personal Loan</option>
-                  <option value="business">Business Loan</option>
-                  <option value="home">Home Loan</option>
-                  <option value="education">Education Loan</option>
+                  <option value="" className="font-['Denton']">Select Type</option>
+                  <option value="personal" className="font-['Denton']">Personal Loan</option>
+                  <option value="business" className="font-['Denton']">Business Loan</option>
+                  <option value="home" className="font-['Denton']">Home Loan</option>
+                  <option value="education" className="font-['Denton']">Education Loan</option>
                 </select>
               </div>
 
