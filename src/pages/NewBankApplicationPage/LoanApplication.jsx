@@ -38,6 +38,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/IntegratedComps/src/components/Navbar";
 import axios from "axios";
+import Loader from "@/ReactBitsComps/Loader/Loader";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -152,6 +153,7 @@ const buildFileUpload = (data) => ({
 const LoanApplication = () => {
   const [currentStep, setCurrentStep] = useState(0); // Start from 0
   const [emailOptions, setEmailOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -201,6 +203,7 @@ const LoanApplication = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleNext = async () => {
+    setIsLoading(true);
     // STEP 1 → Personal Details API
     if (currentStep === 0) {
       const panError = validatePan(formData.panCard);
@@ -208,6 +211,7 @@ const LoanApplication = () => {
 
       if (panError) {
         toast.error(panError);
+        setIsLoading(false);
         return;
       }
       const payload = buildPersonalDetailsPayload(formData);
@@ -224,6 +228,8 @@ const LoanApplication = () => {
           error.response?.data || error.message,
         );
         toast.error("Personal details submission failed");
+      } finally {
+        setIsLoading(false);
       }
       return;
     }
@@ -249,6 +255,8 @@ const LoanApplication = () => {
           error.response?.data || error.message,
         );
         toast.error("Employment details submission failed");
+      } finally {
+        setIsLoading(false);
       }
       return;
     }
@@ -261,6 +269,8 @@ const LoanApplication = () => {
         console.log(response, "response");
       } catch (error) {
         console.log(error, "error");
+      } finally {
+        setIsLoading(false);
       }
 
       return;
@@ -268,7 +278,8 @@ const LoanApplication = () => {
 
     // Proceed to fetch eligible loans
     if (currentStep === 3) {
-      navigate("/eligible-loans")
+      setIsLoading(false);
+      navigate("/eligible-loans");
     }
   };
 
@@ -410,7 +421,7 @@ const LoanApplication = () => {
       const apiEmails = Array.isArray(apiData.emails)
         ? apiData.emails.map((e) => e.email)
         : [];
-      const unqEmails = new Set(apiEmails)
+      const unqEmails = new Set(apiEmails);
       setEmailOptions(unqEmails);
 
       setFormData((prev) => ({
@@ -506,6 +517,7 @@ const LoanApplication = () => {
     } catch (error) {
       console.error("Upload failed", error);
       toast.error(error.response?.data?.message || "Document upload failed");
+    } finally {
     }
   };
 
@@ -1187,10 +1199,20 @@ const LoanApplication = () => {
             {currentStep < 4 && (
               <Button
                 onClick={handleNext}
-                className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
+                disabled={isLoading}
+                className={cn(
+                  "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center justify-center",
+                  isLoading ? "cursor-not-allowed" : "cursor-pointer",
+                )}
               >
-                Next
-                <ArrowRight className="w-4 h-4 ml-2" />
+                {isLoading ? (
+                  <Loader size={20} />
+                ) : (
+                  <>
+                    Next
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </>
+                )}
               </Button>
             )}
 

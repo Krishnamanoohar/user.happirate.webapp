@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -28,21 +29,23 @@ function FeatureCard({
   delay,
   isVisible,
 }: FeatureCardProps) {
+  const navigate = useNavigate();
+
   return (
     <div
-      className={`group relative bg-purple-50 rounded-3xl p-6 lg:p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-indigo-200/50 transition-all duration-500 hover:-translate-y-2 ${
+      className={`group relative bg-gradient-to-br from-purple-100 via-violet-100 to-indigo-100 rounded-3xl p-6 lg:p-8 shadow-lg shadow-purple-200/40 hover:shadow-xl hover:shadow-purple-300/40 transition-all duration-500 hover:-translate-y-2 border border-gray-300 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      {/* Gradient Border Effect */}
+      {/* ✅ FIX 1: gradient overlay must not block clicks */}
       <div
-        className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300  border-purple-400`}
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`}
       />
 
       {/* Icon */}
       <div
-        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+        className={`w-14 h-14 rounded-2xl bg-[#7c3bed] ${gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
       >
         {icon}
       </div>
@@ -53,10 +56,13 @@ function FeatureCard({
       </h3>
       <p className="text-slate-600 leading-relaxed">{description}</p>
 
-      {/* Learn More Link */}
-      <div className="mt-5 flex items-center gap-2 text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Apply Now */}
+      <div
+        className="mt-5 flex items-center gap-2 text-indigo-600 font-medium cursor-pointer"
+        onClick={() => navigate("/sign-in")}
+      >
         <span className="text-sm">Apply Now</span>
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        <ArrowRight className="w-4 h-4" />
       </div>
     </div>
   );

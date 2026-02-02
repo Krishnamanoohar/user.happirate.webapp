@@ -68,7 +68,7 @@ const App = () => {
         }}
       >
         <BrowserRouter>
-          <Navbar scrollY={scrollY}/>
+          <Navbar scrollY={scrollY} />
 
           <Routes>
             {/* <Route path="/" element={<IndexPage />} /> */}
@@ -99,10 +99,10 @@ const App = () => {
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
 
-            <Route
+            {/* <Route
               path="/credit-health-report"
-              element={<CreditHealthReport />}
-            />
+              element={<OneScoreDashboard />}
+            /> */}
             <Route path="/oneboarddashboard" element={<OneScoreDashboard />} />
           </Routes>
           <Chatbot />

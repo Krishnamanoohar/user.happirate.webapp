@@ -27,7 +27,7 @@ import SignInPopup from "../SignInPage/SignInPopup";
 const IndexPage = () => {
   return (
     <div className={styles.indexPage}>
-      <HeroSection />
+      {/* <HeroSection /> */}
       {/* <BottomScroller /> */}
       {/* <div className="border-y-2">
         <CurvedLoop
