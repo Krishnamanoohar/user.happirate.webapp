@@ -29,7 +29,7 @@ function LandingApp() {
         {/* <FeaturesCardsSection /> */}
         <KimiFeaturesSection /> 
         {/* <CallToActionSection2 /> */}
-        {/* <EMICalculator /> */}
+        <EMICalculator />
         <BanksSection />
       </main>
       <Footer />
