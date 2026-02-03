@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { Lock, LogIn } from "lucide-react";
 import {
   User,
   CreditCard,
@@ -1378,6 +1379,50 @@ const DashboardView = ({ reportData, analysis, setActiveTab }) => {
     </div>
   );
 };
+// Using Lucide icons for a crisp look
+
+const PortfolioGate = ({ onLogin }) => {
+  return (
+    <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50 rounded-2xl border border-slate-200">
+      <div className="max-w-md w-full text-center space-y-6">
+        {/* Icon & Visual Guard */}
+        <div className="relative mx-auto w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+          <Lock className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
+          <div className="absolute inset-0 rounded-full border-4 border-blue-50 border-t-blue-500 animate-spin-slow" />
+        </div>
+
+        {/* Content Section */}
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold text-slate-900 tracking-tight">
+            Personal Financial Portfolio
+          </h2>
+          <p className="text-slate-500 text-sm leading-relaxed">
+            Your financial health data, credit insights, and customized
+            portfolio tracking are protected. Sign in to access your secure
+            dashboard.
+          </p>
+        </div>
+
+        {/* Action Button */}
+        <button
+          onClick={onLogin}
+          className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-slate-200"
+        >
+          <LogIn className="w-4 h-4" />
+          <span>Login to View Portfolio</span>
+          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </button>
+
+        {/* Trust Badge */}
+        <div className="pt-4 border-t border-slate-100">
+          <p className="text-[11px] uppercase tracking-widest text-slate-400 font-medium">
+            256-bit Encrypted Security
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // --- Main App Component ---
 
@@ -1671,15 +1716,15 @@ export default function GeminiCreditHealthReport() {
     });
   }, [reportData, accountFilter, typeFilter, bankSearch]);
 
-  const fetchDashboardData = async () =>{
-    const resp = await fetchRawResponseOfUser()
-    setJsonData(resp?.data?.data?.rawData)
-    console.log("resp", resp)
-  }
+  const fetchDashboardData = async () => {
+    const resp = await fetchRawResponseOfUser();
+    setJsonData(resp?.data?.data?.rawData);
+    console.log("resp", resp);
+  };
 
-  useEffect(()=>{
-    fetchDashboardData()
-  },[])
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   // if (!jsonData) {
   //   return (
@@ -1742,6 +1787,7 @@ export default function GeminiCreditHealthReport() {
   //   );
   // }
 
+  if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-12">
       {/* Header */}
