@@ -8,6 +8,19 @@
   background: linear-gradient(to right, #ffffff, #6dd5fa, #2980b9); */
 }
 
+.hover-list {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+button {
+  cursor: pointer;
+}
+
 .bg-primary {
   background-color: #7c3bed !important;
 }

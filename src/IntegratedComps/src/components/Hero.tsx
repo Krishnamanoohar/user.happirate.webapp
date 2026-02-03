@@ -35,11 +35,11 @@ function StatCard({ icon, label, value, delay }: StatCardProps) {
   return (
     <div
       ref={cardRef}
-      className={`glass-card rounded-2xl p-5 hover-lift transition-all duration-500 ${
+      className={`h-full flex flex-col items-center justify-between p-4 rounded-2xl bg-slate-50/80 hover:bg-white hover:shadow-lg transition-all duration-300 cursor-pointer group glass-card rounded-2xl p-5 hover-lift transition-all duration-500 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="w-full flex items-center justify-between mb-3">
         <span className="text-slate-500 text-sm font-medium">{label}</span>
         <div className="w-8 h-8 rounded-lg gradient-bg-light flex items-center justify-center">
           {icon}

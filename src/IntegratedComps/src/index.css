@@ -80,16 +80,17 @@
   }
 
   .hover-lift {
-    @apply transition-all duration-300 ease-out !important;
+    /* @apply transition-all duration-300 ease-out !important; */
+     box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2) !important;
   }
 
   .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2) !important;
+    /* box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2) !important; */
   }
 
   .glow-purple {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 40px rgba(86, 66, 134, 0.3);
   }
 
   .text-balance {

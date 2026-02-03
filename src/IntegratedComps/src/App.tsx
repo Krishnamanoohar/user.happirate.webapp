@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import CallToActionSection2 from "@/components/CallToActionSection2/CallToActionSection2";
 import FeaturesCardsSection from "@/components/FeaturesCardsSection/FeaturesCardsSection";
 import GetInTouchSection from "@/components/GetInTouchSection/GetInTouchSection";
+import KimiFeaturesSection from "@/components/FeaturesSection/KimiFeaturesSection";
 
 function LandingApp() {
   // const [scrollY, setScrollY] = useState(0);
@@ -25,7 +26,8 @@ function LandingApp() {
       <main>
         <Hero />
         <Features />
-        <FeaturesCardsSection />
+        {/* <FeaturesCardsSection /> */}
+        <KimiFeaturesSection /> 
         {/* <CallToActionSection2 /> */}
         {/* <EMICalculator /> */}
         <BanksSection />

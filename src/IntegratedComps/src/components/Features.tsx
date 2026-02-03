@@ -157,7 +157,7 @@ export default function Features() {
               Why Choose Us
             </span>
           </div>
-          <h2 className="lg:text-4xl font-bold text-slate-900 mb-4 text-4xl font-['Denton']">
+          <h2 className="lg:text-4xl font-bold text-slate-900 mb-4 text-4xl">
             Solutions
           </h2>
           <p className="text-slate-600 text-lg leading-relaxed">
