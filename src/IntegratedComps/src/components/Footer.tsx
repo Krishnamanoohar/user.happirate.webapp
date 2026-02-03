@@ -77,7 +77,7 @@ export default function Footer() {
             </Button>
           </div>
         </div>
-        {/* Contact Section - Right Aligned */}
+        {/* Contact Section - Right Aligned  */}
 {/* <div className="flex justify-end py-12">
   <div className="w-full max-w-lg bg-slate-800/60 backdrop-blur-md rounded-xl p-6">
     

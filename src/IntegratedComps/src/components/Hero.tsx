@@ -57,6 +57,7 @@ export default function Hero() {
 
   useEffect(() => {
     setIsVisible(true);
+    setOpen(false);
   }, []);
 
   return (

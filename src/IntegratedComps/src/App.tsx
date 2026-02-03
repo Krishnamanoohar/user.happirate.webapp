@@ -7,7 +7,9 @@ import EMICalculator from "./components/EMICalculator";
 import Features from "./components/Features";
 import Footer from "./components/Footer";
 import Scrolling from "./components/Scrolling";
-import ContactSection from "@/components/ContactSection/ContactSection";
+import ContactSection from "./components/ContactSection";
+import { Routes, Route } from "react-router-dom";
+
 
 
 
@@ -29,9 +31,9 @@ function LandingApp() {
         <Features />
         <EMICalculator />
         <BanksSection />
-        {/* <ContactSection /> */}
+        <ContactSection />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -16,7 +16,7 @@ interface NavbarProps {
 
 const navLinks = [
   { name: "Solutions", href: "#solutions" },
-  { name: "Get In Touch", href: "#contact" },
+  { name: "Get In Touch", href: "#contact-section" },
   { name: "EMI Calculator", href: "#emi-calculator" },
   { name: "Credit Health", href: "/credit-health-report" },
   { name: "Smart Compares", href: "" },
