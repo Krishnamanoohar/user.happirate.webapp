@@ -107,7 +107,7 @@ const App = () => {
             /> */}
             {/* <Route path="/oneboarddashboard" element={<OneScoreDashboard />} /> */}
             <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
-            <Route path="/credit-health-report-2" element={<GeminiCreditHealthReport />} />
+            <Route path="/credit-health-report-2" element={<OneScoreDashboard />} />
           </Routes>
           <Chatbot />
           <SignInPopup />
