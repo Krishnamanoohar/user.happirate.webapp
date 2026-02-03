@@ -54,7 +54,7 @@ const callGeminiAPI = async (prompt) => {
   const apiKey = ""; // API Key injected by environment
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${import.meta.env.VITE_APP_AI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -998,7 +998,7 @@ const ChatWidget = ({ reportData, analysis }) => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: `Hi ${reportData?.name.split(" ")[0]}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
+      text: `Hi ${sessionStorage.getItem("username").split(" ")}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -1259,14 +1259,14 @@ const DashboardView = ({ reportData, analysis, setActiveTab }) => {
       </div>
 
       {/* 2. Score Card (1 Column) */}
-      <div className="col-span-full md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col items-center justify-center">
+      {/* <div className="col-span-full md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col items-center justify-center">
         <h3 className="text-slate-500 font-medium mb-2 uppercase text-xs tracking-wider">
           Credit Score
         </h3>
         <div className="relative w-full flex justify-center">
           <ScoreGauge score={reportData?.score} />
         </div>
-      </div>
+      </div> */}
 
       {/* 3. Profile Summary (1 Column) */}
       <div

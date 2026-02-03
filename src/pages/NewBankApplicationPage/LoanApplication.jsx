@@ -439,6 +439,8 @@ const LoanApplication = () => {
         mapApiResponseToFormData(resp.data.data, mobile),
       );
 
+      sessionStorage.setItem("username", `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`)
+
       setFormData(mapApiResponseToFormData(resp.data.data, mobile));
     } catch (error) {
       console.log("error in auto filling user details", error);

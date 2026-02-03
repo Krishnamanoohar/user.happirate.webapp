@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import happirateLogo from "../../../assets/images/happirateLogo.png";
 import TextLogo from "../../../assets/images/image.png";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 interface NavbarProps {
   scrollY: number;
 }
@@ -25,8 +25,26 @@ const navLinks = [
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const isScrolled = scrollY > 50;
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setUser(null);
+    setIsDropdownOpen(false);
+    navigate("/sign-in"); // Or redirect to home "/"
+  };
+
+  useEffect(() => {
+    const mobile = sessionStorage.getItem("mobile_number");
+    const name = sessionStorage.getItem("username");
+
+    if (mobile) {
+      setUser({ mobile, username: name });
+    }
+  }, [sessionStorage.getItem("username")]);
 
   return (
     <nav
@@ -98,13 +116,47 @@ export default function Navbar({ scrollY }: NavbarProps) {
           </div>
 
           {/* Sign In Button */}
-          <div className="hidden lg:block">
-            <Button
-              className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
-              onClick={() => navigate("/sign-in")}
-            >
-              Sign In
-            </Button>
+          <div className="hidden lg:block relative">
+            {user ? (
+              // --- LOGGED IN STATE ---
+              <div className="relative">
+                {/* Avatar Button */}
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-10 h-10 rounded-full gradient-bg text-white bg-indigo-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-indigo-500"
+                >
+                  {user?.username?.charAt(0).toUpperCase()}
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 origin-top-right transform transition-all duration-200">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm text-gray-900 font-medium truncate">
+                        {user.username}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user.mobile}
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 flex items-center gap-2"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // --- LOGGED OUT STATE (Original Code) ---
+              <Button
+                className="gradient-bg text-white font-semibold px-6 py-2 rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105"
+                onClick={() => navigate("/sign-in")}
+              >
+                Sign In
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -143,6 +195,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                 {link.name}
               </a>
             ))}
+
             <Button className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4">
               Sign In
             </Button>

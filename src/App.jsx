@@ -109,7 +109,7 @@ const App = () => {
             <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
             <Route path="/credit-health-report-2" element={<GeminiCreditHealthReport />} />
           </Routes>
-          <Chatbot />
+          {/* <Chatbot /> */}
           <SignInPopup />
         </BrowserRouter>
       </Context.Provider>
