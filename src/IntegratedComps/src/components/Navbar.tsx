@@ -39,7 +39,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center relative left-[-30px]">
             <a href="/" className="flex items-center ">
               <img
                 src={happirateLogo}

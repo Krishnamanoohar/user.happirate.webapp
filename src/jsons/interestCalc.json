@@ -1,0 +1,55 @@
+{
+    "status": "SUCCESS",
+    "assessmentType": "PRELIMINARY",
+    "results": [
+        {
+            "bankId": "hdfc",
+            "bankName": "HDFC Bank",
+            "finalScore": 108.59,
+            "minRequiredScore": 20,
+            "eligible": true,
+            "breakdown": {
+                "cibilScore": 75.225,
+                "dti": 28.3684,
+                "employerCategory": 0,
+                "experience": 5
+            },
+            "interest": null
+        },
+        {
+            "bankId": "axis",
+            "bankName": "Axis Bank",
+            "finalScore": null,
+            "minRequiredScore": 20,
+            "eligible": false,
+            "breakdown": {
+                "cibilScore": null,
+                "dti": 5.6737,
+                "employerCategory": 0,
+                "experience": 5
+            },
+            "interest": null
+        },
+        {
+            "bankId": "icici",
+            "bankName": "ICICI Bank",
+            "finalScore": 0,
+            "minRequiredScore": 0,
+            "eligible": true,
+            "breakdown": {},
+            "interest": null
+        },
+        {
+            "bankId": "bajaj",
+            "bankName": "Bajaj Finserv",
+            "finalScore": null,
+            "minRequiredScore": 0,
+            "eligible": false,
+            "breakdown": {
+                "cibilScore": null,
+                "dti": 4.0526
+            },
+            "interest": null
+        }
+    ]
+}

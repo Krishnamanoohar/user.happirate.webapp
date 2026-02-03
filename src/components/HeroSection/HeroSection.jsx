@@ -86,6 +86,7 @@ const HeroSection = () => {
             <AnimatedTable />
           </div>
         </div>
+        
         {showVideo && (
           <div className="fixed inset-0 bg-opacity-80 flex items-center justify-center z-50">
             <div className="relative w-full max-w-2xl">

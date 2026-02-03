@@ -1,0 +1,578 @@
+{
+    "status": {
+        "code": 200,
+        "type": "success",
+        "message": "Report Generated Successfully"
+    },
+    "message": "Report Generated Successfully",
+    "data": {
+        "GetCustomerAssetsResponse": {
+            "ResponseStatus": "Success",
+            "ResponseKey": "370b30c573638b08:5327d4f4:19c0dee1931:-1abf",
+            "GetCustomerAssetsSuccess": {
+                "Asset": {
+                    "Status": "Active",
+                    "SafetyCheckFailure": false,
+                    "ExpirationDate": "2028-01-30T13:47:44.283+05:30",
+                    "CreationDate": "2026-01-30T13:47:44.284+05:30",
+                    "TrueLinkCreditReport": {
+                        "ReferenceKey": "10470259728",
+                        "currentversion": "5.0",
+                        "Borrower": {
+                            "Birth": {
+                                "date": "1997-02-11+05:30",
+                                "partitionSet": "0",
+                                "BirthDate": {
+                                    "month": "2",
+                                    "year": "1997",
+                                    "day": "11"
+                                },
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "age": "0"
+                            },
+                            "borrowerKey": "6989349896",
+                            "BorrowerAddress": [
+                                {
+                                    "Dwelling": {
+                                        "symbol": "04",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "Ownership": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "addressOrder": "0",
+                                    "dateReported": "2017-10-31+05:30",
+                                    "partitionSet": "0",
+                                    "CreditAddress": {
+                                        "SerialNumber": "962302699",
+                                        "AddressType": "",
+                                        "StreetAddress": "M/G/M R SHANTI HARI 1057 Q, ROAD NO. 45 JUBILEE HILLS HYDERABAD HYDERABAD TELANGANA",
+                                        "City": "",
+                                        "PostalCode": "500033",
+                                        "Region": "36"
+                                    },
+                                    "Origin": {
+                                        "symbol": "CORP BANK",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "enrichMode": "R",
+                                    "Source": {
+                                        "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                        "InquiryDate": "2026-01-30+05:30",
+                                        "Locale": "en_IN",
+                                        "BorrowerKey": "6989349896",
+                                        "Bureau": {
+                                            "symbol": "CIBIL",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        }
+                                    }
+                                },
+                                {
+                                    "Dwelling": {
+                                        "symbol": "02",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "Ownership": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "addressOrder": "1",
+                                    "dateReported": "2017-09-30+05:30",
+                                    "partitionSet": "1",
+                                    "CreditAddress": {
+                                        "SerialNumber": "962302698",
+                                        "AddressType": "",
+                                        "StreetAddress": "M/G/M R SHANTI HARI 1057 Q, ROAD NO. 45 JUBILEE HILLS HYDERABAD HYDERABAD TELANGANA",
+                                        "City": "",
+                                        "PostalCode": "500033",
+                                        "Region": "36"
+                                    },
+                                    "Origin": {
+                                        "symbol": "CORP BANK",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "enrichMode": "R",
+                                    "Source": {
+                                        "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                        "InquiryDate": "2026-01-30+05:30",
+                                        "Locale": "en_IN",
+                                        "BorrowerKey": "6989349896",
+                                        "Bureau": {
+                                            "symbol": "CIBIL",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        }
+                                    }
+                                }
+                            ],
+                            "CreditScore": {
+                                "CreditScoreModel": {
+                                    "symbol": "CIBILTUSC3",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "CreditScoreFactor": [
+                                    {
+                                        "bureauCode": "00",
+                                        "Factor": {
+                                            "symbol": "00",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        },
+                                        "FactorText": [
+                                            "No Valid Factors",
+                                            "We're sorry, but the adverse factors affecting your Credit Score are currently unavailable. Factors that may affect your score include: payment history, outstanding debt, credit account history, recent inquiries, types of credit and other features such as bankruptcies and collection accounts."
+                                        ]
+                                    },
+                                    {
+                                        "bureauCode": "00",
+                                        "Factor": {
+                                            "symbol": "00",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        },
+                                        "FactorText": [
+                                            "No Valid Factors",
+                                            "We're sorry, but the adverse factors affecting your Credit Score are currently unavailable. Factors that may affect your score include: payment history, outstanding debt, credit account history, recent inquiries, types of credit and other features such as bankruptcies and collection accounts."
+                                        ]
+                                    },
+                                    {
+                                        "bureauCode": "00",
+                                        "Factor": {
+                                            "symbol": "00",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        },
+                                        "FactorText": [
+                                            "No Valid Factors",
+                                            "We're sorry, but the adverse factors affecting your Credit Score are currently unavailable. Factors that may affect your score include: payment history, outstanding debt, credit account history, recent inquiries, types of credit and other features such as bankruptcies and collection accounts."
+                                        ]
+                                    },
+                                    {
+                                        "bureauCode": "00",
+                                        "Factor": {
+                                            "symbol": "00",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        },
+                                        "FactorText": [
+                                            "No Valid Factors",
+                                            "We're sorry, but the adverse factors affecting your Credit Score are currently unavailable. Factors that may affect your score include: payment history, outstanding debt, credit account history, recent inquiries, types of credit and other features such as bankruptcies and collection accounts."
+                                        ]
+                                    },
+                                    {
+                                        "bureauCode": "00",
+                                        "Factor": {
+                                            "symbol": "00",
+                                            "description": "",
+                                            "rank": "100000",
+                                            "abbreviation": ""
+                                        },
+                                        "FactorText": [
+                                            "No Valid Factors",
+                                            "We're sorry, but the adverse factors affecting your Credit Score are currently unavailable. Factors that may affect your score include: payment history, outstanding debt, credit account history, recent inquiries, types of credit and other features such as bankruptcies and collection accounts."
+                                        ]
+                                    }
+                                ],
+                                "NoScoreReason": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "riskScore": "1",
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "scoreName": "CIBILTransUnionScore3"
+                            },
+                            "Gender": "Male",
+                            "CreditStatement": {
+                                "StatementType": {
+                                    "symbol": "DISPUTE",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "statement": "",
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "dateUpdated": ""
+                            },
+                            "EmailAddress": {
+                                "serialNumber": "85470258",
+                                "Email": "THEDIRECTORSHASHANK@GMAIL.COM"
+                            },
+                            "IdentifierPartition": {
+                                "Identifier": [
+                                    {
+                                        "ID": {
+                                            "Id": "6989349896",
+                                            "IdentifierName": "SocialId"
+                                        },
+                                        "Source": {
+                                            "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                            "InquiryDate": "2026-01-30+05:30",
+                                            "Locale": "en_IN",
+                                            "BorrowerKey": "6989349896",
+                                            "Bureau": {
+                                                "symbol": "CIBIL",
+                                                "description": "",
+                                                "rank": "100000",
+                                                "abbreviation": ""
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "ID": {
+                                            "SerialNumber": "445139907",
+                                            "Id": "L1274537",
+                                            "IdentifierName": "PassportId"
+                                        },
+                                        "enrichMode": "R",
+                                        "Source": {
+                                            "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                            "InquiryDate": "2026-01-30+05:30",
+                                            "Locale": "en_IN",
+                                            "BorrowerKey": "6989349896",
+                                            "Bureau": {
+                                                "symbol": "CIBIL",
+                                                "description": "",
+                                                "rank": "100000",
+                                                "abbreviation": ""
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "BorrowerName": {
+                                "Name": {
+                                    "Forename": "RAGHUMUDRI SHASHANK"
+                                },
+                                "partitionSet": "0",
+                                "NameType": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                }
+                            },
+                            "BorrowerTelephone": {
+                                "partitionSet": "0",
+                                "PhoneNumber": {
+                                    "SerialNumber": "912272177",
+                                    "Number": "9010224409"
+                                },
+                                "enrichMode": "R",
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "PhoneType": {
+                                    "symbol": "01",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                }
+                            }
+                        },
+                        "SafetyCheckPassed": true,
+                        "Frozen": "",
+                        "Message": {
+                            "Code": {
+                                "symbol": "",
+                                "description": "",
+                                "rank": "100000",
+                                "abbreviation": ""
+                            },
+                            "text": "",
+                            "Type": {
+                                "symbol": "ZZ",
+                                "description": "",
+                                "rank": "100000",
+                                "abbreviation": ""
+                            }
+                        },
+                        "Sources": {
+                            "Source": {
+                                "InquiryDate": "2026-01-30T13:47:44.000+05:30",
+                                "Bureau": {
+                                    "symbol": "CIBIL",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "OriginalData": "eyJjb250cm9sRGF0YSI6eyJzdWNjZXNzIjp0cnVlfSwicmVzcG9uc2VUeXBlIjoiSElUIiwiSUNSU19TdWJqZWN0SW5xdWlyeUJ5VFVFRl9SZXNwb25zZSI6eyJoZWFkZXIiOnsibXNnUmVmTnVtIjoiMWU1YjdlN2ItNzgyYS00NmU1LWFiY2EtZmJhMzJlNzlmOGU1In0sInN1Y2Nlc3MiOnRydWUsInRpbWVzdGFtcCI6IjIwMjYtMDEtMzBUMTM6NDc6NDQrMDUzMCIsImR1cGxpY2F0ZWRJbnF1aXJ5IjpmYWxzZSwiZWNuIjoxMDQ3MDI1OTcyOCwiZmlyc3RFY24iOjY5ODkzNDk4OTYsInN1YmplY3RSZXR1cm5Db2RlIjoxLCJzdWJqZWN0IjpbeyJmaWQiOjU0MDQ2MzAwMiwibmFtZSI6eyJuYW1lMSI6IlJBR0hVTVVEUkkgU0hBU0hBTksiLCJkb2IiOiIxOTk3MDIxMSIsImdlbmRlciI6IjIiLCJlcnJvckNvZGVTZWdtZW50IjoiWloifSwiaWQiOlt7InNlcmlhbE51bWJlciI6NDQ1MTM5OTA3LCJpZFR5cGUiOiIwMiIsImlkTnVtYmVyIjoiTDEyNzQ1MzciLCJlbnJpY2hNb2RlIjoiUiJ9XSwidGVsZXBob25lIjpbeyJzZXJpYWxOdW1iZXIiOjkxMjI3MjE3NywidGVsZXBob25lVHlwZSI6IjAxIiwidGVsZXBob25lTnVtYmVyIjoiOTAxMDIyNDQwOSIsImVucmljaE1vZGUiOiJSIn1dLCJhZGRyZXNzIjpbeyJzZXJpYWxOdW1iZXIiOjk2MjMwMjY5OSwibGluZTEiOiJNL0cvTSBSIFNIQU5USSBIQVJJIiwibGluZTIiOiIxMDU3IFEsIFJPQUQgTk8uIDQ1IiwibGluZTMiOiJKVUJJTEVFIEhJTExTIEhZREVSQUJBRCIsImxpbmU0IjoiSFlERVJBQkFEIiwibGluZTUiOiJURUxBTkdBTkEiLCJzdGF0ZUNvZGUiOiIzNiIsInBpbkNvZGUiOjUwMDAzMywiYWRkcmVzc0NhdGVnb3J5IjoiMDQiLCJyZXBvcnRlZERhdGUiOiIyMDE3MTAzMSIsImVucmljaE1vZGUiOiJSIiwibWVtYmVyU2hvcnROYW1lIjoiQ09SUCBCQU5LIn0seyJzZXJpYWxOdW1iZXIiOjk2MjMwMjY5OCwibGluZTEiOiJNL0cvTSBSIFNIQU5USSBIQVJJIiwibGluZTIiOiIxMDU3IFEsIFJPQUQgTk8uIDQ1IiwibGluZTMiOiJKVUJJTEVFIEhJTExTIEhZREVSQUJBRCIsImxpbmU0IjoiSFlERVJBQkFEIiwibGluZTUiOiJURUxBTkdBTkEiLCJzdGF0ZUNvZGUiOiIzNiIsInBpbkNvZGUiOjUwMDAzMywiYWRkcmVzc0NhdGVnb3J5IjoiMDIiLCJyZXBvcnRlZERhdGUiOiIyMDE3MDkzMCIsImVucmljaE1vZGUiOiJSIiwibWVtYmVyU2hvcnROYW1lIjoiQ09SUCBCQU5LIn1dLCJlbWFpbCI6W3sic2VyaWFsTnVtYmVyIjo4NTQ3MDI1OCwiZW1haWxJRCI6IlRIRURJUkVDVE9SU0hBU0hBTktAR01BSUwuQ09NIn1dLCJhY2NvdW50IjpbeyJzZXJpYWxOdW1iZXIiOjEwMTMyMTUzNTMsImZpbGVTaW5jZURhdGUiOiIyMDE4MDQyOCIsImFjY291bnROdW1iZXIiOiI1NjA1MTYwMDAwNDMzMDEiLCJhY2NvdW50VHlwZSI6IjE1IiwibWVtYmVyS29iIjoiQk4iLCJtZW1iZXJDb2RlIjoxMTcwMDAxLCJtZW1iZXJTaG9ydE5hbWUiOiJVTklPTiBCQU5LIiwib3duZXJzaGlwSW5kaWNhdG9yIjoiMSIsImRhdGVPcGVuZWQiOiIyMDE2MTAxNyIsImRhdGVDbG9zZWQiOiIyMDE3MDEwMiIsInJlcG9ydGVkRGF0ZSI6IjIwMTgwMzMxIiwiaGlnaENyZWRpdEFtb3VudCI6NTAwMDAwLCJjdXJyZW50QmFsYW5jZSI6MCwiYW1vdW50T3ZlcmR1ZSI6MCwicGF5bWVudEhpc3RvcnkiOls5MDEsOTAxLDkwMSw5MDEsOTAxLDkwMSw5MDFdLCJwYXltZW50SGlzdFN0YXJ0RGF0ZSI6IjIwMTgwMzAxIiwicGF5bWVudEhpc3RFbmREYXRlIjoiMjAxNzA5MDEiLCJ2YWx1ZU9mQ29sbGF0ZXJhbCI6LTEsImNyZWRpdExpbWl0IjotMSwiY2FzaExpbWl0IjotMSwicmF0ZU9mSW50ZXJlc3QiOi0xLjAsInJlcGF5bWVudFRlbnVyZSI6MSwiRU1JQW1vdW50Ijo1MDAwMDAsIndyaXR0ZW5PZmZBbXRUb3RhbCI6LTEsIndyaXR0ZW5PZmZBbXRQcmluY2lwYWwiOi0xLCJzZXR0bGVtZW50QW1vdW50IjotMSwiYWN0dWFsUGF5bWVudEFtb3VudCI6NTAwMDAwfV0sImlucXVpcnkiOlt7ImVucUNvbnRyb2xOdW0iOjg2MjA1NzIzOTMsImRhdGVPZklucXVpcnkiOiIyMDI1MDExOCIsImlucXVpcnlQdXJwb3NlIjoiMTAiLCJpbnF1aXJ5QW1vdW50IjoxMDAwLCJtZW1iZXJLb2IiOiJCRiIsIm1lbWJlckNvZGUiOjIwMzc3ODgsIm1lbWJlclNob3J0TmFtZSI6IkFNRVgiLCJpbnF1aXJ5UnVsZXNJZCI6MTAwMCwic2VydmljZUNvZGVJZCI6NDUzLCJpbnF1aXJ5UnVsZXMiOnsiaW5xdWlyeVJ1bGVzSWQiOjEwMDAsImFsbG93RW5yaWNobWVudCI6dHJ1ZSwiYWxsb3dFdmVudEdlbmVyYXRpb24iOnRydWUsImltcGFjdEF0dHJpYnV0ZXMiOnRydWUsImltcGFjdFNjb3JlIjp0cnVlLCJpc0JpbGxhYmxlIjp0cnVlLCJuZXdTdWJqZWN0Q3JlYXRpb24iOnRydWUsInBhcnRPZkNJUiI6dHJ1ZSwibWVyZ2VUeXBlIjoiUCIsImRlc2NyaXB0aW9uIjoiZm9ybWVyIGhhcmQgaW5xdWlyeSJ9fV0sImNkciI6e30sImVtcGxveW1lbnQiOnt9LCJzY29yZXMiOlt7InNjb3JlTmFtZSI6IkNJQklMVFVTQzMiLCJzY29yZUNhcmROYW1lIjoiMDgiLCJzY29yZUNhcmRWZXJzaW9uIjoiMTAiLCJzY29yZURhdGUiOiIzMDAxMjAyNiIsInNjb3JlIjoiMDAwLTEiLCJleGNsdXNpb25Db2RlcyI6W3siZXhjbHVzaW9uQ29kZU5hbWUiOiJleGNsdXNpb25Db2RlMSIsImV4Y2x1c2lvbkNvZGVWYWx1ZSI6IjAwIn0seyJleGNsdXNpb25Db2RlTmFtZSI6ImV4Y2x1c2lvbkNvZGUyIiwiZXhjbHVzaW9uQ29kZVZhbHVlIjoiMDAifSx7ImV4Y2x1c2lvbkNvZGVOYW1lIjoiZXhjbHVzaW9uQ29kZTMiLCJleGNsdXNpb25Db2RlVmFsdWUiOiIwMCJ9LHsiZXhjbHVzaW9uQ29kZU5hbWUiOiJleGNsdXNpb25Db2RlNCIsImV4Y2x1c2lvbkNvZGVWYWx1ZSI6IjAwIn0seyJleGNsdXNpb25Db2RlTmFtZSI6ImV4Y2x1c2lvbkNvZGU1IiwiZXhjbHVzaW9uQ29kZVZhbHVlIjoiMDAifSx7ImV4Y2x1c2lvbkNvZGVOYW1lIjoiZXhjbHVzaW9uQ29kZTYiLCJleGNsdXNpb25Db2RlVmFsdWUiOiIwMCJ9LHsiZXhjbHVzaW9uQ29kZU5hbWUiOiJleGNsdXNpb25Db2RlNyIsImV4Y2x1c2lvbkNvZGVWYWx1ZSI6IjAwIn0seyJleGNsdXNpb25Db2RlTmFtZSI6ImV4Y2x1c2lvbkNvZGU5IiwiZXhjbHVzaW9uQ29kZVZhbHVlIjoiMDAifSx7ImV4Y2x1c2lvbkNvZGVOYW1lIjoiZXhjbHVzaW9uQ29kZTEwIiwiZXhjbHVzaW9uQ29kZVZhbHVlIjoiMDAifV0sInJlYXNvbkNvZGVzIjpbeyJyZWFzb25Db2RlTmFtZSI6InJlYXNvbkNvZGUxIiwicmVhc29uQ29kZVZhbHVlIjoiMDAifSx7InJlYXNvbkNvZGVOYW1lIjoicmVhc29uQ29kZTIiLCJyZWFzb25Db2RlVmFsdWUiOiIwMCJ9LHsicmVhc29uQ29kZU5hbWUiOiJyZWFzb25Db2RlMyIsInJlYXNvbkNvZGVWYWx1ZSI6IjAwIn0seyJyZWFzb25Db2RlTmFtZSI6InJlYXNvbkNvZGU0IiwicmVhc29uQ29kZVZhbHVlIjoiMDAifSx7InJlYXNvbkNvZGVOYW1lIjoicmVhc29uQ29kZTUiLCJyZWFzb25Db2RlVmFsdWUiOiIwMCJ9XSwiZXJyb3JDb2RlIjoiMDAwMDAifV19XSwiZXJyb3IiOltdfX0="
+                            }
+                        },
+                        "DeceasedIndicator": false,
+                        "FraudIndicator": false,
+                        "TradeLinePartition": {
+                            "accountTypeAbbreviation": "",
+                            "accountTypeDescription": "",
+                            "accountTypeSymbol": "15",
+                            "Tradeline": {
+                                "DisputeFlag": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "creditorName": "UNION BANK",
+                                "dateClosed": "2017-01-02+05:30",
+                                "branch": "",
+                                "highBalance": "500000",
+                                "dateOpened": "2016-10-17+05:30",
+                                "dateReported": "2018-03-31+05:30",
+                                "accountsSoldTo": "",
+                                "bureau": "",
+                                "writtenOffAmtTotal": "-1",
+                                "PayStatus": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "currentBalance": "0",
+                                "subscriberCode": "1170001",
+                                "AccountDesignator": {
+                                    "symbol": "1",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "accountNumber": "560516000043301",
+                                "AccountCondition": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "IndustryCode": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "thirdPartyName": "",
+                                "GrantedTrade": {
+                                    "interestRate": "-1.00",
+                                    "PaymentFrequency": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "serialNumber": "1013215353",
+                                    "PayStatusHistory": {
+                                        "endDate": "2017-09-01+05:30",
+                                        "startDate": "2018-03-01+05:30",
+                                        "MonthlyPayStatus": [
+                                            {
+                                                "date": "2018-03-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2018-02-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2018-01-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2017-12-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2017-11-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2017-10-01+05:30",
+                                                "status": "STD"
+                                            },
+                                            {
+                                                "date": "2017-09-01+05:30",
+                                                "status": "STD"
+                                            }
+                                        ],
+                                        "status": "STD,STD,STD,STD,STD,STD,STD,"
+                                    },
+                                    "EMIAmount": "500000",
+                                    "WorstPayStatus": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "CashLimit": "-1",
+                                    "AccountType": {
+                                        "symbol": "15",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "CreditType": {
+                                        "symbol": "15",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "actualPaymentAmount": "500000",
+                                    "termMonths": "1",
+                                    "CreditLimit": "-1",
+                                    "CollateralType": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    },
+                                    "amountPastDue": "0",
+                                    "collateral": "-1",
+                                    "TermType": {
+                                        "symbol": "",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "VerificationIndicator": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "noOfParticipants": "",
+                                "OpenClosed": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "position": "0",
+                                "settlementAmount": "-1",
+                                "writtenOffPrincipal": "-1"
+                            }
+                        },
+                        "InquiryPartition": {
+                            "Inquiry": {
+                                "amount": "1000",
+                                "IndustryCode": {
+                                    "symbol": "",
+                                    "description": "",
+                                    "rank": "100000",
+                                    "abbreviation": ""
+                                },
+                                "inquiryType": "10",
+                                "subscriberName": "AMEX",
+                                "enqControlNum": "8620572393",
+                                "description": "",
+                                "subscriberNumber": "",
+                                "bureau": "",
+                                "Source": {
+                                    "Reference": "1e5b7e7b-782a-46e5-abca-fba32e79f8e5",
+                                    "InquiryDate": "2026-01-30+05:30",
+                                    "Locale": "en_IN",
+                                    "BorrowerKey": "6989349896",
+                                    "Bureau": {
+                                        "symbol": "CIBIL",
+                                        "description": "",
+                                        "rank": "100000",
+                                        "abbreviation": ""
+                                    }
+                                },
+                                "inquiryDate": "2025-01-18+05:30"
+                            }
+                        }
+                    },
+                    "AssetId": "25390589011",
+                    "Type": "SingleCreditReport"
+                }
+            }
+        }
+    }
+}

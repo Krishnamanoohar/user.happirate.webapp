@@ -1,0 +1,123 @@
+{
+  "_id": {
+    "$oid": "6979dea65717e9a74e7ce0ea"
+  },
+  "id": "ruleset-1769586101319",
+  "bankId": "axis",
+  "bankName": "Axis Bank",
+  "productType": "Personal Loan",
+  "criteria": [
+    {
+      "id": "c-bd9c3764-1b38-4356-af19-0bfa9e7f5fc6",
+      "type": "cibil_score",
+      "operator": "gte",
+      "value": [
+        {
+          "id": "46583900-913b-4aa4-a5c0-9cd0ac2ccf74",
+          "from": 750,
+          "to": 900,
+          "minMarks": 85,
+          "maxMarks": 100
+        },
+        {
+          "id": "460b8b32-d25e-4730-acbe-704f785c0daa",
+          "from": 700,
+          "to": 749,
+          "minMarks": 70,
+          "maxMarks": 84
+        },
+        {
+          "id": "a12f5f27-e25e-45fc-baee-28ae2a4f934a",
+          "from": 650,
+          "to": 699,
+          "minMarks": 60,
+          "maxMarks": 69
+        },
+        {
+          "id": "fd241a1d-f09d-4f5a-bd34-993a9295c37a",
+          "from": 600,
+          "to": 649,
+          "minMarks": 40,
+          "maxMarks": 59
+        },
+        {
+          "id": "876eddc9-c727-4f7f-8984-f99094aa6d2e",
+          "from": 300,
+          "to": 599,
+          "minMarks": 0,
+          "maxMarks": 39
+        }
+      ],
+      "weight": 0
+    },
+    {
+      "id": "c-d5450187-6427-450d-b087-9dfe110a9c7c",
+      "type": "monthly_income",
+      "operator": "gte",
+      "value": 30000,
+      "weight": 8
+    },
+    {
+      "id": "c-4db7587a-56c3-470a-ad36-cfb97d7b8f36",
+      "type": "foir",
+      "operator": "lte",
+      "value": 60,
+      "weight": 7
+    },
+    {
+      "id": "c-f19f7de4-2d86-4c65-8979-96307aad67b7",
+      "type": "employer_category",
+      "operator": "in",
+      "value": [
+        "A",
+        "B"
+      ],
+      "weight": 6
+    },
+    {
+      "id": "c-0a844d8d-59dc-4497-950d-bb4addce5e9f",
+      "type": "employment_type",
+      "operator": "eq",
+      "value": "Salaried",
+      "weight": 5
+    },
+    {
+      "id": "c-ad6c4799-07a9-4158-9d6d-d908198f0234",
+      "type": "employment_experience",
+      "operator": "gte",
+      "value": 1.2,
+      "weight": 5
+    },
+    {
+      "id": "c-aa31351e-d87c-44f5-b349-b0f8b6f4311c",
+      "type": "tenure",
+      "operator": "between",
+      "value": [
+        6,
+        72
+      ],
+      "weight": 5
+    },
+    {
+      "id": "c-36fad23a-c621-4412-aaa0-4c179388a314",
+      "type": "city_tier",
+      "operator": "in",
+      "value": [
+        "1",
+        "2"
+      ],
+      "weight": 5
+    }
+  ],
+  "minScore": 20,
+  "isActive": true,
+  "version": 1,
+  "createdBy": "Admin",
+  "createdAt": {
+    "$date": "2026-01-28T07:41:41.319Z"
+  },
+  "updatedAt": {
+    "$date": "2026-01-28T07:41:41.319Z"
+  },
+  "__v": 0
+}

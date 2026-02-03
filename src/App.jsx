@@ -35,6 +35,8 @@ import OneScoreDashboard from "./components/Dashboard/Dashboard";
 import Emicalculatornew from "./components/Emi Calculator New/Emicalculatenew";
 import LandingApp from "./IntegratedComps/src/App";
 import Navbar from "./IntegratedComps/src/components/Navbar";
+import KimiCreditHealthReport from "./components/CreditHealthReport/KimiCreditHealthReport";
+import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCreditHealthReport";
 export const Context = createContext();
 
 const App = () => {
@@ -75,7 +77,7 @@ const App = () => {
             <Route path="/" element={<LandingApp />} />
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
             <Route path="sign-in" element={<HappirateSplitAuth />} />
-            <Route path="sign-inn" element={<HappirateSplitAuth2 />} />
+            {/* <Route path="sign-inn" element={<HappirateSplitAuth2 />} /> */}
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
             {/* <Route path="compare-loans" element={<LoanComparisonPage />} /> */}
             {/* <Route
@@ -103,7 +105,9 @@ const App = () => {
               path="/credit-health-report"
               element={<OneScoreDashboard />}
             /> */}
-            <Route path="/oneboarddashboard" element={<OneScoreDashboard />} />
+            {/* <Route path="/oneboarddashboard" element={<OneScoreDashboard />} /> */}
+            <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
+            <Route path="/credit-health-report-2" element={<GeminiCreditHealthReport />} />
           </Routes>
           <Chatbot />
           <SignInPopup />

@@ -1,0 +1,65 @@
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > npm start
+
+> node.happirate.server@0.0.0 start
+> node ./bin/www
+
+[dotenv@17.2.3] injecting env (16) from .env -- tip: ⚙️  override existing env vars with { override: true }
+....................................................................................................
+Testing Server started successfully on port 3000
+....................................................................................................
+(node:60224) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60224) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+Database connected
+POST /api/customer/send-otp-to-mobile 200 76.829 ms - 81
+OTP 6972 mobile number 9849512111
+POST /api/customer/validate-otp 200 100.736 ms - 58
+Resolve KYC called for: 9849512111
+Auth Response: {
+  token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc3MDAzMDEwOCwiaWF0IjoxNzcwMDEyMTA4fQ.D-PLHChZzBR50u0vHKgRCPn8CFD2cHCYn2vE4RyVpPdT7mdZSkj-qmN69q16mEOKutsJWYgvriKEiJ53ZzHa6A'
+}
+MOBILE TO PAN TESTING
+PAN NUMBER Retrieved: undefined
+KYC Error: Failed to retrieve PAN. Stopping process to save costs.
+POST /api/customer/fetch-credit-report 500 1018.273 ms - 101
+^C
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > clear
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > npm start
+
+> node.happirate.server@0.0.0 start
+> node ./bin/www
+
+[dotenv@17.2.3] injecting env (16) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+....................................................................................................
+Production Server started successfully on port 3000
+....................................................................................................
+(node:60595) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60595) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+Database connected
+Resolve KYC called for: 9849512111
+Auth Response: {
+  token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc3MDAzMDE1NSwiaWF0IjoxNzcwMDEyMTU1fQ.piRsRZe4-09q7yt0rPoy8QN9yjFSlxpyPSgy7VJLAy932NPW9T2RoMxc8p7C_yzQDExIsPh3lNtvPcNxnXZX8g'
+}
+MOBILE TO PAN TESTING
+PAN NUMBER Retrieved: AIWPR0170J
+Individual Details Retrieved: Yes
+Initiating IDSPAY Cibil Call...
+NAME NAKKA RAMANA
+mobile 9849512111
+pan AIWPR0170J
+gender male
+IDSPAY CIBIL API Error: {
+  status: {
+    code: 500,
+    type: 'error',
+    message: 'Request cannot be processed. '
+  },
+  message: 'Request cannot be processed. ',
+  error: []
+}
+KYC Error: Request failed with status code 500
+POST /api/customer/fetch-credit-report 500 26300.965 ms - 81
+^C
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > 
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > c

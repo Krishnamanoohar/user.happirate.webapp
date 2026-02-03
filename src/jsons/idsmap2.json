@@ -1,0 +1,110 @@
+{
+  "firstName": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerName.Name.Forename",
+    "notes": "May contain full name; split required"
+  },
+
+  "lastName": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerName.Name.Forename",
+    "derive": "last token after splitting full name"
+  },
+
+  "email": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.EmailAddress[0].Email"
+  },
+
+  "panCard": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.IdentifierPartition.Identifier[1].ID.Id"
+  },
+
+  "dateOfBirth": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Birth.date"
+  },
+
+  "employmentStatus": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Employer.OccupationCode.symbol",
+    "notes": "Requires mapping to salaried/self-employed"
+  },
+
+  "cibilScore": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.CreditScore.riskScore"
+  },
+
+  "companyName": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.creditorName",
+    "notes": "Creditor name, NOT employer; do not auto-fill"
+  },
+
+  "uanNumber": {
+    "path": null,
+    "notes": "Not available from bureau"
+  },
+
+  "aadharCard": {
+    "path": null,
+    "notes": "Not available from bureau"
+  },
+
+  "monthlyIncome": {
+    "path": null,
+    "notes": "Never provided by bureau"
+  },
+
+  "creditCardUtilization": {
+    "derive": {
+      "numerator": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.currentBalance",
+      "denominator": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.CreditLimit"
+    },
+    "formula": "sum(currentBalance) / sum(CreditLimit)"
+  },
+
+  "residentialStability": {
+    "derive": {
+      "from": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.dateReported",
+      "to": "currentDate"
+    },
+    "formula": "years_between(from, to)"
+  },
+
+  "existingEmi": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.EMIAmount",
+    "aggregate": "sum"
+  },
+
+  "residentialType": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.Dwelling.symbol"
+  },
+
+  "recentEnquiries": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.InquiryPartition.Inquiry",
+    "aggregate": "count"
+  },
+
+  "settlements": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.settlementAmount",
+    "derive": "count where settlementAmount > 0"
+  },
+
+  "emiBounces": {
+    "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.PayStatusHistory.status",
+    "derive": "count non-zero / non-STD values"
+  },
+
+  "address": {
+    "streetAddress": [
+      {
+        "type": "current",
+        "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.StreetAddress"
+      }
+    ],
+    "city": {
+      "derive": "parse from StreetAddress"
+    },
+    "state": {
+      "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.Region"
+    },
+    "pincode": {
+      "path": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.PostalCode"
+    }
+  }
+}

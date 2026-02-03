@@ -1,0 +1,434 @@
+{
+  "krishnaSir": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": "200",
+        "uan_list": [
+          "101458433232",
+          "100209451770"
+        ]
+      },
+      "applicationId": "088e61dd-d4c7-42b4-a77d-9038c56f9ae6",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "6c9aaaf7-b5c0-4ae4-984e-af86edfc286b",
+        "input": {
+          "mobileNo": "9866556732"
+        },
+        "timestamp": "2026-01-31 17:43:03"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "380",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTU4MiwiaWF0IjoxNzY5ODYxNTgyfQ.y0JXMju-iOCrOmwfInJCtsZHkoV3kVR-FRXCBLUv-nyYcw3kyDofVTVo2aTFAJorudLMBh3ww5O-CQz0sqzU2Q",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9866556732\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "srujan": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": "200",
+        "uan_list": [
+          "101967918683"
+        ]
+      },
+      "applicationId": "26371e6b-3ef5-454f-af3d-136053aad527",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "15c45a09-2a53-4158-ab2c-39e2594da4bc",
+        "input": {
+          "mobileNo": "9398469598"
+        },
+        "timestamp": "2026-01-31 18:30:32"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "365",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg4MjQzMiwiaWF0IjoxNzY5ODY0NDMyfQ.EXVJ-7avkYcONVNi1F1hEDqFPnn1T6lvHkwwPXBuV0_XEhFxP1zPG6QfkZCvboPHRDLbuIKs645KH4HUMxltLA",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9398469598\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "manohar": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": 400,
+        "message": "Provided mobile number doesn't have any UAN."
+      },
+      "applicationId": "1a8c9bbc-1eee-4a4b-8098-79063afba3b1",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "299cf99a-88d1-4177-93a1-a117959843d6",
+        "input": {
+          "mobileNo": "9346926366"
+        },
+        "timestamp": "2026-01-31 17:37:29"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "392",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTI0OSwiaWF0IjoxNzY5ODYxMjQ5fQ.R-2uI11hjRDiMk8jFPZFbF2YL0k9oZvebKnekSZR-9C26JW-ObW_i1ZKUED1LT3RX7Um8fjFcaKvSyinVSM8wg",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9346926366\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "sanjana": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": 400,
+        "message": "Provided mobile number doesn't have any UAN."
+      },
+      "applicationId": "c3b05f18-c89f-4d20-a1ca-1c4ea40fc0f5",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "500eea07-27cc-47c2-877e-ba679098e347",
+        "input": {
+          "mobileNo": "8019904780"
+        },
+        "timestamp": "2026-01-31 17:38:37"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "392",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTMxNywiaWF0IjoxNzY5ODYxMzE3fQ.fjEcMJ3zumuNqfIBfeRvLG2S_wdyCMMkamHFGKKatbWj9DCRrAQ_Ib6TXTw4rD5gUpBLsiK_EAPcx6_F5aW4dQ",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"8019904780\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "vaniMam": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": 400,
+        "message": "Provided mobile number doesn't have any UAN."
+      },
+      "applicationId": "f1da0656-29cd-4f94-a16c-d4875dee83a0",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "e30f49ea-af62-457f-b383-3b806678e2af",
+        "input": {
+          "mobileNo": "9963187799"
+        },
+        "timestamp": "2026-01-31 17:40:04"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "392",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTQwNCwiaWF0IjoxNzY5ODYxNDA0fQ.rWZOMbHRgvuXvRN_yLZJP_sbMxlIGrqHzo6Uine2ANj2HsxZiZzsvjNM884UQKI0JeK9J_4IH9W0tega3ImVMw",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9963187799\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "vaniMam2": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": 400,
+        "message": "Provided mobile number doesn't have any UAN."
+      },
+      "applicationId": "7dff48f3-ab12-4b10-8f36-e97972467249",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "be505555-e9b4-4580-beda-3b47da8cfb54",
+        "input": {
+          "mobileNo": "9949013737"
+        },
+        "timestamp": "2026-01-31 17:41:21"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "392",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTQ4MCwiaWF0IjoxNzY5ODYxNDgwfQ.QhvdJb9J9qEa0ShazP_RcoWYwYD4ikrQYSgqEmlExHUCwRS2OhDZb5OnvCTxdXLMiHmzwJLpiZmozdjfujZWVA",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9949013737\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  },
+  "rahul": {
+    "data": {
+      "endUserId": "Dashboard-realtime-KYC",
+      "response": {
+        "code": 400,
+        "message": "Provided mobile number doesn't have any UAN."
+      },
+      "applicationId": "ee9e022e-87a9-4e13-9636-468e02cd3f3c",
+      "status": {
+        "statusCode": 200,
+        "statusMessage": "EPFO - Get UAN from Mobile(V3) Request Processed",
+        "transactionId": "1865a467-360a-4e3d-8d88-755c7fc1e92b",
+        "input": {
+          "mobileNo": "9989950202"
+        },
+        "timestamp": "2026-01-31 17:42:16"
+      }
+    },
+    "status": 200,
+    "statusText": "",
+    "headers": {
+      "content-length": "392",
+      "content-type": "application/json"
+    },
+    "config": {
+      "transitional": {
+        "silentJSONParsing": true,
+        "forcedJSONParsing": true,
+        "clarifyTimeoutError": false
+      },
+      "adapter": [
+        "xhr",
+        "http",
+        "fetch"
+      ],
+      "transformRequest": [
+        null
+      ],
+      "transformResponse": [
+        null
+      ],
+      "timeout": 30000,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTUzNiwiaWF0IjoxNzY5ODYxNTM2fQ.d-TdleMjwaiiKkRFejbAd-9RLJMORW6U4TMNCXxMOgLJU7v67Nd5ZdK0f3pEtwPyiuj4aLaxhDuHKcogU5R3hw",
+        "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+      },
+      "baseURL": "https://api-prod.tartanhq.com",
+      "method": "post",
+      "url": "/aphrodite/external/v1/verification",
+      "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"fetch-uan-from-mobile-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"mobileNo\":\"9989950202\"}}",
+      "allowAbsoluteUrls": true
+    },
+    "request": {}
+  }
+}

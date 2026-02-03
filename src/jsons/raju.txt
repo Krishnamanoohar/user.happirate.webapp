@@ -1,0 +1,537 @@
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > npm start
+
+> node.happirate.server@0.0.0 start
+> node ./bin/www
+
+[dotenv@17.2.3] injecting env (16) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Server started successfully on port  3000
+(node:38184) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38184) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+Database connected
+req.body { mobileNumber: '9346521702' }
+POST /api/customer/provisional-credit-assesment/ 200 202.611 ms - 213
+^C
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > clear
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > npm start
+
+> node.happirate.server@0.0.0 start
+> node ./bin/www
+
+[dotenv@17.2.3] injecting env (16) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+Server started successfully on port  3000
+(node:38784) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38784) [MONGOOSE] Warning: Duplicate schema index on {"panCard":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+Database connected
+POST /api/customer/send-otp-to-mobile 200 209.919 ms - 81
+OTP 5612 mobile number 8341823818
+POST /api/customer/validate-otp 200 171.711 ms - 58
+Resolve KYC called for: 8341823818
+Auth Response: {
+  token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTk3NTEyMCwiaWF0IjoxNzY5OTU3MTIwfQ.3jHAvkRgPBaf3sGwSPFERl-NQA-KcotcZBGta42drAvD2ErT-YMXxwr1fSgEzPWrSwhA4aV1F4AdBHA1j6FfvQ'
+}
+MOBILE TO PAN TESTING
+PAN NUMBER Retrieved: AGCPB9198C
+Individual Details Retrieved: Yes
+Initiating IDSPAY Cibil Call...
+NAME SRINIVASA RAJU BIRUDARAJU
+mobile 8341823818
+pan AGCPB9198C
+gender male
+CIBIL Data Retrieved successfully {
+  fullName: 'SRINIVASA RAJU BIRUDARAJU',
+  firstName: 'SRINIVASA',
+  lastName: 'BIRUDARAJU',
+  middleName: 'RAJU',
+  emails: [
+    { email: 'IAMRAJU26081968@GMAIL.COM', type: 'Primary' },
+    { email: 'BKRISHNAMANOHAR001@GMAIL.COM', type: 'Primary' },
+    { email: 'B.SRINIVASARAJU@LICINDIA.COM', type: 'Primary' },
+    { email: 'SRINIVASARAJU547@GMAIL.COM', type: 'Primary' }
+  ],
+  occupationCode: '04',
+  occupationName: 'Others',
+  panCard: 'AGCPB9198C',
+  dateOfBirth: '1968-08-26',
+  employmentStatus: 'Others',
+  cibilScore: '765',
+  addresses: [
+    {
+      streetAddress: 'PHASE III GAYATHRI NAGAR HNO 5-2-393/15P BANK COLONY SAHEBNAGAR',
+      pincode: '500070',
+      type: 'Residence',
+      state: 'Telangana'
+    },
+    {
+      streetAddress: 'C/O: B ANANTHA RAJU 5-2-393/1SP, GAYATHRI NAGAR, PHASE 3 BANK COLONY, SAHEB NAGAR KALAN TELANGANA 500070',
+      pincode: '500070',
+      type: 'Residence',
+      state: 'Telangana'
+    },
+    {
+      streetAddress: 'C/O: B ANANTHA RAJU 5-2-393/1SP, GAYATHRI NAGAR, PHASE 3 BANK COLONY, SAHEB NAGAR KALAN',
+      pincode: '500070',
+      type: 'Residence',
+      state: 'Telangana'
+    },
+    {
+      streetAddress: 'S O B ANANTHA RAJU HNO 18 1561 VASAVINAG HANUMANPET  MIRYALAGUDA MIRYALAGUDA MIRYALAGUDA TELANGANA',
+      pincode: '508207',
+      type: 'Residence',
+      state: 'Telangana'
+    }
+  ],
+  city: null,
+  last6MonthsEnquiryCount: 1,
+  creaditCardUtilization: -0,
+  existingEmi: 160375,
+  settlements: 0,
+  emiBounces: 117,
+  ckycId: '30045080117738',
+  phoneNumbers: [
+    { SerialNumber: '1825384644', Number: '918341823818' },
+    { SerialNumber: '974968430', Number: '8341823818' },
+    { SerialNumber: '2283917568', Number: '918341790568' },
+    { SerialNumber: '2002606049', Number: '919502358001' }
+  ],
+  inquiryHistory: [
+    {
+      date: '2025-10-20',
+      bankName: 'UNION BANK',
+      amount: 530000,
+      purpose: 'Unknown Purpose'
+    },
+    {
+      date: '2025-07-27',
+      bankName: 'BAJAJ FIN LTD',
+      amount: 2000000,
+      purpose: 'Personal Loan'
+    },
+    {
+      date: '2025-06-19',
+      bankName: 'IDFC FIRST BANK',
+      amount: 10000,
+      purpose: 'Personal Loan'
+    },
+    {
+      date: '2025-03-14',
+      bankName: 'BAJAJ FIN LTD',
+      amount: 150000,
+      purpose: 'Personal Loan'
+    },
+    {
+      date: '2024-10-18',
+      bankName: 'UNION BANK',
+      amount: 530000,
+      purpose: 'Unknown Purpose'
+    },
+    {
+      date: '2024-10-15',
+      bankName: 'DBS',
+      amount: 50000,
+      purpose: 'Other / General Loan Enquiry'
+    },
+    {
+      date: '2024-07-16',
+      bankName: 'LIC HSG',
+      amount: 4000000,
+      purpose: 'Auto Loan'
+    },
+    {
+      date: '2024-01-06',
+      bankName: 'BAJAJ FIN LTD',
+      amount: 30000,
+      purpose: 'Consumer Loan'
+    },
+    {
+      date: '2023-10-22',
+      bankName: 'UNION BANK',
+      amount: 530000,
+      purpose: 'Unknown Purpose'
+    },
+    {
+      date: '2023-08-23',
+      bankName: 'AU SFB',
+      amount: 100,
+      purpose: 'Other / General Loan Enquiry'
+    },
+    {
+      date: '2023-08-23',
+      bankName: 'INDUSIND BANK',
+      amount: 50000,
+      purpose: 'Other / General Loan Enquiry'
+    },
+    {
+      date: '2023-03-16',
+      bankName: 'INDUSIND BANK',
+      amount: 50000,
+      purpose: 'Other / General Loan Enquiry'
+    },
+    {
+      date: '2023-03-04',
+      bankName: 'IDFC FIRST BANK',
+      amount: 20000,
+      purpose: 'Other / General Loan Enquiry'
+    }
+  ],
+  totalCurrentBalance: 10442176,
+  tradelines: [
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'LIC HSG',
+      currentBalance: '3432472',
+      emiAmount: '37346',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '06',
+      accountTypeName: 'Consumer Loan',
+      bank: 'BAJAJ FIN LTD',
+      currentBalance: '0',
+      emiAmount: '2784',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '06',
+      accountTypeName: 'Consumer Loan',
+      bank: 'BAJAJ FIN LTD',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '06',
+      accountTypeName: 'Consumer Loan',
+      bank: 'BAJAJ FIN LTD',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '06',
+      accountTypeName: 'Consumer Loan',
+      bank: 'KOTAK BANK',
+      currentBalance: '0',
+      emiAmount: '3195',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '06',
+      accountTypeName: 'Consumer Loan',
+      bank: 'KOTAK BANK',
+      currentBalance: '0',
+      emiAmount: '1400',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '03',
+      accountTypeName: 'Housing / Home Loan',
+      bank: 'LIC HSG',
+      currentBalance: '1755627',
+      emiAmount: '20643',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '05',
+      accountTypeName: 'Personal Loan',
+      bank: 'UNION BANK',
+      currentBalance: '194913',
+      emiAmount: '10570',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,44,14,0,0,0,13,14,STD,14,14,13,0,0,0,0,0,0,0,0,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,STD,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'LIC HSG',
+      currentBalance: '848886',
+      emiAmount: '9456',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,XXX,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '08',
+      accountTypeName: 'Education Loan',
+      bank: 'CANARA BANK',
+      currentBalance: '983426',
+      emiAmount: '10643',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,STD,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'LIC HSG',
+      currentBalance: '2541983',
+      emiAmount: '32570',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '10',
+      accountTypeName: 'Credit Card / Unsecured Credit',
+      bank: 'ICICI BANK',
+      currentBalance: '-1',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,900,891,859,831,801,770,740,709,679,648,617,586,556,',
+      creditLimit: '55000',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'AADHAR',
+      currentBalance: '0',
+      emiAmount: '24054',
+      amountOverdue: 0,
+      actualPaymentAmount: '144324',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,XXX,XXX,XXX,XXX,XXX,XXX,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '07',
+      accountTypeName: 'Gold Loan',
+      bank: 'UNION BANK',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'STD,STD,STD,STD,STD,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '07',
+      accountTypeName: 'Gold Loan',
+      bank: 'KARUR VYSYA',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'STD,STD,STD,STD,STD,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '53',
+      accountTypeName: 'Other',
+      bank: 'SBI',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'STD,XXX,STD,STD,0,0,0,0,0,0,0,0,0,0,90,90,90,90,90,90,90,90,62,31,1,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '07',
+      accountTypeName: 'Gold Loan',
+      bank: 'KARUR VYSYA',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,STD,XXX,STD,STD,STD,STD,STD,STD,STD,STD,STD,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '07',
+      accountTypeName: 'Gold Loan',
+      bank: 'UNION BANK',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'STD,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '00',
+      accountTypeName: 'Other',
+      bank: 'UNION BANK',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,XXX,XXX,XXX,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '04',
+      accountTypeName: 'Business Loan',
+      bank: 'LAKSHMI VILAS LICENCECANCELLED',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'STD,94,63,64,94,64,64,63,64,33,32,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '07',
+      accountTypeName: 'Gold Loan',
+      bank: 'AXIS BANK',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Unsecured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'SBI',
+      currentBalance: '684870',
+      emiAmount: '7714',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: '0,0,0,XXX,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    },
+    {
+      accountTypeCode: '02',
+      accountTypeName: 'Housing Loan (Secured)',
+      bank: 'ICICI BANK',
+      currentBalance: '0',
+      emiAmount: '-1',
+      amountOverdue: 0,
+      actualPaymentAmount: '-1',
+      paymentHistoryStatus: 'XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,XXX,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,',
+      creditLimit: '-1',
+      loanAmount: 0,
+      collateralType: 'Secured',
+      repaymentTenure: null,
+      settlementAmount: -1
+    }
+  ],
+  scoreFactors: [
+    { code: null, description: null },
+    { code: null, description: null },
+    { code: null, description: null },
+    { code: null, description: null },
+    { code: null, description: null }
+  ]
+}
+KYC Error: CreditProfile validation failed: monthlyIncome: Path `monthlyIncome` is required., employmentExperience: Path `employmentExperience` is required., companyName: Path `companyName` is required., employmentStatus: `Others` is not a valid enum value for path `employmentStatus`.
+POST /api/customer/fetch-credit-report 500 14719.792 ms - 320
+^C
+realvariable in ~/Documents/Krishna_Manohar/Github_Repos/Personal_Repos/node.happirate.server [dev-cibil] > 

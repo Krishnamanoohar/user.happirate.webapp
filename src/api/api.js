@@ -62,6 +62,16 @@ const submitFinancialProfileDetails = async (payload) => {
   return resp;
 };
 
+const fetchRawResponseOfUser = async () => {
+  try {
+    const mobile = sessionStorage.getItem("mobile_number")
+    const resp = await axios.post(`${localUrl}/fetch-credit-health`, { mobileNumber: mobile })
+    return resp
+  } catch (error) {
+    console.log("Error in fetching user raw response", error)
+  }
+}
+
 export {
   checkLoanEligibility, personalDetailsVerification,
   submitFinancialProfileDetails,
@@ -69,5 +79,6 @@ export {
   verifyOtp,
   fetchCreditReport,
   updateCreditReport,
-  fetchEligibleLoanProducts
+  fetchEligibleLoanProducts,
+  fetchRawResponseOfUser
 };

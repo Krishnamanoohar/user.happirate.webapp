@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Landmark, Play, TrendingUp, Wallet, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { motion, useAnimation } from "framer-motion";
+import AnimatedTable from "@/components/HeroSection/AnimatedTableComp/AnimatedTable";
 
 interface StatCardProps {
   icon: React.ReactNode;

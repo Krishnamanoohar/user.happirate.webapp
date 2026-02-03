@@ -1,0 +1,216 @@
+{
+    "krishnaSir": {
+        "data": {
+            "endUserId": "Dashboard-realtime-KYC",
+            "response": {
+                "employment_data": [
+                    {
+                        "uan": "101458433232",
+                        "name": "MEKA VENKATA MURALI KRISHNA",
+                        "guardian_name": "MEKA PARTHASARATHY",
+                        "establishment_name": "REAL VARIABLE DIGITAL ASSETSERVICES PRIVATE LIMITED",
+                        "member_id": "APHYD19582150000010021",
+                        "date_of_joining": "02/05/2019",
+                        "date_of_exit": "28/01/2025",
+                        "last_pf_submitted": "",
+                        "last_pf_submitted_by_employer": ""
+                    }
+                ]
+            },
+            "applicationId": "042be8e7-cc26-443b-a1d3-c3cc633e253d",
+            "status": {
+                "statusCode": 200,
+                "statusMessage": "Employment History - UAN Request Processed",
+                "input": {
+                    "uan": "101458433232"
+                },
+                "timestamp": "2026-01-31 17:48:50"
+            }
+        },
+        "status": 200,
+        "statusText": "",
+        "headers": {
+            "content-length": "606",
+            "content-type": "application/json"
+        },
+        "config": {
+            "transitional": {
+                "silentJSONParsing": true,
+                "forcedJSONParsing": true,
+                "clarifyTimeoutError": false
+            },
+            "adapter": [
+                "xhr",
+                "http",
+                "fetch"
+            ],
+            "transformRequest": [
+                null
+            ],
+            "transformResponse": [
+                null
+            ],
+            "timeout": 30000,
+            "xsrfCookieName": "XSRF-TOKEN",
+            "xsrfHeaderName": "X-XSRF-TOKEN",
+            "maxContentLength": -1,
+            "maxBodyLength": -1,
+            "env": {},
+            "headers": {
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTkyMiwiaWF0IjoxNzY5ODYxOTIyfQ.S84V9z9ECHROsBUszf-r6U4a-cpoS3sn-fGMOpBRYpPToWaKSBqOqCQDRR_dXZYUjnzJTcmKbvNDIJBcPw6fsQ",
+                "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+            },
+            "baseURL": "https://api-prod.tartanhq.com",
+            "method": "post",
+            "url": "/aphrodite/external/v1/verification",
+            "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"employment-history-from-uan-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"uan\":\"101458433232\"}}",
+            "allowAbsoluteUrls": true
+        },
+        "request": {}
+    },
+    "krishnaSir2": {
+        "data": {
+            "endUserId": "Dashboard-realtime-KYC",
+            "response": {
+                "employment_data": [
+                    {
+                        "uan": "100209451770",
+                        "name": "KRISHNA",
+                        "guardian_name": "PARTHA SARTHY M",
+                        "establishment_name": "APIDC VENTURE CAPITAL PVT LTD,",
+                        "member_id": "APHYD00279760000000007",
+                        "date_of_joining": "01/09/1997",
+                        "date_of_exit": "08/08/2014",
+                        "last_pf_submitted": "",
+                        "last_pf_submitted_by_employer": ""
+                    }
+                ]
+            },
+            "applicationId": "778c245f-6c6c-4641-80d1-70d953e8df57",
+            "status": {
+                "statusCode": 200,
+                "statusMessage": "Employment History - UAN Request Processed",
+                "input": {
+                    "uan": "100209451770"
+                },
+                "timestamp": "2026-01-31 17:48:56"
+            }
+        },
+        "status": 200,
+        "statusText": "",
+        "headers": {
+            "content-length": "562",
+            "content-type": "application/json"
+        },
+        "config": {
+            "transitional": {
+                "silentJSONParsing": true,
+                "forcedJSONParsing": true,
+                "clarifyTimeoutError": false
+            },
+            "adapter": [
+                "xhr",
+                "http",
+                "fetch"
+            ],
+            "transformRequest": [
+                null
+            ],
+            "transformResponse": [
+                null
+            ],
+            "timeout": 30000,
+            "xsrfCookieName": "XSRF-TOKEN",
+            "xsrfHeaderName": "X-XSRF-TOKEN",
+            "maxContentLength": -1,
+            "maxBodyLength": -1,
+            "env": {},
+            "headers": {
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg3OTkyMiwiaWF0IjoxNzY5ODYxOTIyfQ.S84V9z9ECHROsBUszf-r6U4a-cpoS3sn-fGMOpBRYpPToWaKSBqOqCQDRR_dXZYUjnzJTcmKbvNDIJBcPw6fsQ",
+                "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+            },
+            "baseURL": "https://api-prod.tartanhq.com",
+            "method": "post",
+            "url": "/aphrodite/external/v1/verification",
+            "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"employment-history-from-uan-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"uan\":\"100209451770\"}}",
+            "allowAbsoluteUrls": true
+        },
+        "request": {}
+    },
+    "srujan": {
+        "data": {
+            "endUserId": "Dashboard-realtime-KYC",
+            "response": {
+                "employment_data": [
+                    {
+                        "uan": "101967918683",
+                        "name": "KOLLA SRUJAN",
+                        "guardian_name": "KOLLA SURESH BABU",
+                        "establishment_name": "REAL VARIABLE DIGITAL ASSETSERVICES PRIVATE LIMITED",
+                        "member_id": "APHYD19582150000010095",
+                        "date_of_joining": "01/06/2023",
+                        "date_of_exit": "31/10/2025",
+                        "last_pf_submitted": "01/11/2025",
+                        "last_pf_submitted_by_employer": "11/12/2025"
+                    }
+                ]
+            },
+            "applicationId": "542a97fa-435d-4a76-9603-cf8ea1914d41",
+            "status": {
+                "statusCode": 200,
+                "statusMessage": "EPFO - Fetch by UAN V2 Request Processed",
+                "transactionId": "7f197284-c6e6-4091-8b44-9900cbe68cd9",
+                "input": {
+                    "uan": "101967918683"
+                },
+                "timestamp": "2026-01-31 18:30:42"
+            }
+        },
+        "status": 200,
+        "statusText": "",
+        "headers": {
+            "content-length": "663",
+            "content-type": "application/json"
+        },
+        "config": {
+            "transitional": {
+                "silentJSONParsing": true,
+                "forcedJSONParsing": true,
+                "clarifyTimeoutError": false
+            },
+            "adapter": [
+                "xhr",
+                "http",
+                "fetch"
+            ],
+            "transformRequest": [
+                null
+            ],
+            "transformResponse": [
+                null
+            ],
+            "timeout": 30000,
+            "xsrfCookieName": "XSRF-TOKEN",
+            "xsrfHeaderName": "X-XSRF-TOKEN",
+            "maxContentLength": -1,
+            "maxBodyLength": -1,
+            "env": {},
+            "headers": {
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X1JlYWxWYXJpYWJsZSIsImV4cCI6MTc2OTg4MjQzMiwiaWF0IjoxNzY5ODY0NDMyfQ.EXVJ-7avkYcONVNi1F1hEDqFPnn1T6lvHkwwPXBuV0_XEhFxP1zPG6QfkZCvboPHRDLbuIKs645KH4HUMxltLA",
+                "x-api-key": "meLYZlnaaU6pSlOjhsAUeJ56Q1ZNze45WoNpWtei"
+            },
+            "baseURL": "https://api-prod.tartanhq.com",
+            "method": "post",
+            "url": "/aphrodite/external/v1/verification",
+            "data": "{\"category\":\"employment-verification-unconsented\",\"type\":\"employment-history-from-uan-v2\",\"applicationId\":\"Dashboard-realtime-KYC\",\"data\":{\"uan\":\"101967918683\"}}",
+            "allowAbsoluteUrls": true
+        },
+        "request": {}
+    }
+}

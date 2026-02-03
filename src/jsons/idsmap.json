@@ -1,0 +1,42 @@
+{
+  "identity": {
+    "fullName": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerName.Name.Forename",
+    "dateOfBirth": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Birth.date",
+    "pan": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.IdentifierPartition.Identifier[1].ID.Id",
+    "ckycId": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.IdentifierPartition.Identifier[2].ID.Id",
+    "mobileNumber": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerTelephone[0].PhoneNumber.Number",
+    "email": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.EmailAddress[0].Email"
+  },
+
+  "creditScore": {
+    "score": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.CreditScore.riskScore",
+    "scoreFactors": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.CreditScore.CreditScoreFactor[].FactorText"
+  },
+
+  "inquiries": {
+    "inquiryDate": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.InquiryPartition.Inquiry.inquiryDate",
+    "inquiryPurpose": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.InquiryPartition.Inquiry.inquiryType"
+  },
+
+  "tradeLines": {
+    "accountType": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.AccountType.symbol",
+    "currentBalance": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.currentBalance",
+    "emiAmount": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.EMIAmount",
+    "paymentHistoryStatus": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.PayStatusHistory.status",
+    "creditLimit": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.CreditLimit",
+    "amountOverdue": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.amountPastDue"
+  },
+
+  "employmentAndAddress": {
+    "occupationCode": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Employer.OccupationCode.symbol",
+    "address": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.StreetAddress",
+    "residenceType": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.Dwelling.symbol",
+    "addressDateReported": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.dateReported"
+  },
+
+  "loanCharacteristics": {
+    "collateralType": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.CollateralType.symbol",
+    "repaymentTenureMonths": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.GrantedTrade.termMonths",
+    "settlementAmount": "data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[].Tradeline.settlementAmount"
+  }
+}

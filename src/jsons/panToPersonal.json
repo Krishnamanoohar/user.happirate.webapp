@@ -1,0 +1,35 @@
+{
+    "endUserId": "prod",
+    "response": {
+        "code": 200,
+        "pan": "GKRPM0508Q",
+        "maskedAadhaar": "XXXXXXXX1544",
+        "lastFourDigit": "1544",
+        "typeOfHolder": "Individual or Person",
+        "name": "BIRUDARAJU KRISHNA MANOHAR",
+        "firstName": "BIRUDARAJU",
+        "middleName": "KRISHNA",
+        "lastName": "MANOHAR",
+        "gender": "M",
+        "dob": "28/10/2002",
+        "address": "     India ",
+        "city": "",
+        "state": "",
+        "country": "INDIA",
+        "pincode": "",
+        "mobile_no": "XXXXXXXXXX",
+        "email": "***********@*****.***",
+        "isValid": true,
+        "aadhaarSeedingStatus": true,
+        "tax": true
+    },
+    "applicationId": "f51b43a2-eab7-4210-935f-c1172b6f62bd",
+    "status": {
+        "statusCode": 200,
+        "statusMessage": "PAN Detailed Verification (Contact Details) V4 Request Processed",
+        "input": {
+            "panNumber": "GKRPM0508Q"
+        },
+        "timestamp": "2026-01-27 20:09:58"
+    }
+}

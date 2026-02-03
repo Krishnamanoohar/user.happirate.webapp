@@ -1,0 +1,23 @@
+formData Key,JSON Path / Value Source
+firstName,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerName.Name.Forename
+lastName,(Not explicitly separated in JSON; usually the last part of Forename)
+email,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.EmailAddress[0].Email
+panCard,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.IdentifierPartition.Identifier[1].ID.Id
+dateOfBirth,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Birth.date
+employmentStatus,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.Employer.OccupationCode.description
+cibilScore,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.CreditScore.riskScore
+companyName,"data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[0].Tradeline.creditorName (Note: Report shows creditors, not employer name)"
+uanNumber,(Not available in this JSON)
+aadharCard,(Not available in this JSON)
+monthlyIncome,(Not available in this JSON)
+creditCardUtilization,Derived from TradeLinePartition[0].Tradeline.highBalance vs CreditLimit
+residentialStability,Calculated from BorrowerAddress.dateReported to current date
+existingEmi,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[2].Tradeline.GrantedTrade.EMIAmount
+residentialType,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.Dwelling.symbol
+recentEnquiries,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.InquiryPartition.Inquiry (Count of array)
+settlements,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.TradeLinePartition[i].Tradeline.settlementAmount
+emiBounces,Found in TradeLinePartition[i].Tradeline.GrantedTrade.PayStatusHistory.status (Look for non-zero)
+addressLine1,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.StreetAddress
+city,(Contained within StreetAddress string)
+state,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.Region
+pincode,data.GetCustomerAssetsResponse.GetCustomerAssetsSuccess.Asset.TrueLinkCreditReport.Borrower.BorrowerAddress.CreditAddress.PostalCode

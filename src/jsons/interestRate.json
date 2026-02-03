@@ -1,0 +1,110 @@
+{
+    "bankId": "bajaj",
+    "bankName": "Bajaj Finserv",
+    "loanProduct": "Personal Loan",
+    "minInterestRate": 8,
+    "maxInterestRate": 18,
+    "adjustments": [
+        {
+            "id": "adj-21d373e5-de97-43aa-887c-303186e40a19",
+            "type": "monthly_income",
+            "operator": "gte",
+            "value": 0,
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-7e9006dd-3532-416e-befc-000eec35fec0",
+            "type": "foir",
+            "operator": "lte",
+            "value": 0,
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-59861e92-b98c-4dc7-8b24-0239898ec6e9",
+            "type": "employment_experience",
+            "operator": "gte",
+            "value": 0,
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-128ed323-5dd1-455b-8e87-0e712f314f41",
+            "type": "employer_category",
+            "operator": "in",
+            "value": [
+                "A"
+            ],
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-39e014aa-0823-470a-ab9b-2513e20298d7",
+            "type": "employment_type",
+            "operator": "eq",
+            "value": "Salaried",
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-b98fe93d-d56b-4d48-88aa-b4b885fcf027",
+            "type": "age",
+            "operator": "gte",
+            "value": 18,
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-2f5114e0-7e51-4a2a-a528-a1fa46436ce1",
+            "type": "loan_amount",
+            "operator": "gte",
+            "value": 0,
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-2975ab8e-8709-485e-97a4-fa976b46952b",
+            "type": "city_tier",
+            "operator": "in",
+            "value": [
+                "1"
+            ],
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-bf2b8e93-2ea8-41b6-9bdd-053c7122b853",
+            "type": "banking_relationship",
+            "operator": "eq",
+            "value": "true",
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        },
+        {
+            "id": "adj-f46a4ae7-c5ff-4632-81e7-1959eaa320af",
+            "type": "salary_mode",
+            "operator": "in",
+            "value": [
+                "Bank Transfer"
+            ],
+            "adjustment": -0.5,
+            "adjustmentType": "percentage_point",
+            "reason": "Good CIBIL Score"
+        }
+    ],
+    "isActive": true,
+    "id": "ir-policy-1769612731115",
+    "createdAt": "2026-01-28T15:05:31.115Z",
+    "updatedAt": "2026-01-28T15:05:31.115Z",
+    "createdBy": "Admin"
+}
