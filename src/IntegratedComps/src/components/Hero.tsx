@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import AnimatedTable from "@/components/HeroSection/AnimatedTableComp/AnimatedTable";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -56,10 +57,25 @@ export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+    useEffect(() => {
+    setIsVisible(true);
+    const storedName = sessionStorage.getItem("mobile_number");
+    setUserName(storedName);
+  }, []);
+  const handleApplyNow = () => {
+    sessionStorage.setItem("redirectAfterLogin", "/loan-application");
+    if (userName) {
+       navigate("/loan-application")
+    } else {
+       navigate("/sign-in")
+    }
+  };
 
   return (
     <section
@@ -111,7 +127,7 @@ export default function Hero() {
               <Button
                 size="lg"
                 className="gradient-bg text-white font-semibold px-8 py-6 rounded-full hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 group"
-                onClick={() => (window.location.pathname = "/sign-in")}
+                onClick={handleApplyNow}
               >
                 Apply Now
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

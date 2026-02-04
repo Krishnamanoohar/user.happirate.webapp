@@ -154,6 +154,8 @@ const LoanApplication = () => {
   const [currentStep, setCurrentStep] = useState(0); // Start from 0
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [pageLoading, setPageLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -189,6 +191,44 @@ const LoanApplication = () => {
     loanTenure: "",
     employmentCategory: "",
   });
+  const validateStep = () => {
+  const newErrors = {};
+
+  if (currentStep === 0) {
+    if (!formData.firstName) newErrors.firstName = "First name is required";
+    if (!formData.middleName) newErrors.middleName = "Middle name is required";
+    if (!formData.lastName) newErrors.lastName = "Last name is required";
+    if (!formData.dateOfBirth) newErrors.dateOfBirth = "DOB is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.addressLine1) newErrors.addressLine1 = "Address is required";
+    if (!formData.state) newErrors.state = "State is required";
+    if (!formData.pincode) newErrors.pincode = "Pincode is required";
+    if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
+  }
+
+  if (currentStep === 1) {
+    if (!formData.employmentStatus || formData.employmentStatus.trim() === "")
+      newErrors.employmentStatus = "Employment Status is Required";
+    if (!formData.companyName)
+      newErrors.companyName = "Company Name is Required";
+    if (!formData.monthlyIncome)
+      newErrors.monthlyIncome = "Monthly Income is Required";
+    if (!formData.employmentCategory) newErrors.employmentCategory = "Employment Category is required"
+    if (!formData.cibilScore) newErrors.cibilScore = "CIBIL Score is Required";
+    if (!formData.employmentExperience) newErrors.employmentExperience = "Employment Experience is Required";
+    if (!formData.uanNumber) newErrors.uanNumber ="UAN/PF Number is required";
+    if (!formData.salaryMode) newErrors.salaryMode = "Salary Mode is required";
+  }
+
+  if (currentStep === 2) {
+    if (!formData.loanType) newErrors.loanType = "Loan Type is Required";
+    if (!formData.loanAmount) newErrors.loanAmount = "Loan Amount is Required";
+    if (!formData.loanTenure) newErrors.loanTenure = "Loan Tenure Required";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   // Uploaded documents state
   const [documents, setDocuments] = useState({
@@ -203,6 +243,10 @@ const LoanApplication = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleNext = async () => {
+      if (!validateStep()) {
+    toast.error("Please fill all required fields");
+    return;
+  }
     setIsLoading(true);
     // STEP 1 → Personal Details API
     if (currentStep === 0) {
@@ -295,6 +339,13 @@ const LoanApplication = () => {
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   const mapApiResponseToFormData = (apiData, mobile) => {
@@ -402,6 +453,7 @@ const LoanApplication = () => {
 
   const autoFillUserDetails = async () => {
     try {
+      setPageLoading(true);
       const mobile = sessionStorage.getItem("mobile_number");
       console.log(mobile, "mobile");
 
@@ -444,6 +496,9 @@ const LoanApplication = () => {
       setFormData(mapApiResponseToFormData(resp.data.data, mobile));
     } catch (error) {
       console.log("error in auto filling user details", error);
+    }finally{
+          setPageLoading(false);
+
     }
   };
 
@@ -510,11 +565,10 @@ const LoanApplication = () => {
         // payslips: [documents.payslip1, documents.payslip2, documents.payslip3],
         // photo: documents.photo,
       });
-
       if (isUploaded) {
         setCurrentStep(3);
         toast.success("Documents uploaded successfully");
-        console.log("Upload success:", response);
+        // console.log("Upload success:", response);
       }
     } catch (error) {
       console.error("Upload failed", error);
@@ -526,6 +580,27 @@ const LoanApplication = () => {
   useEffect(() => {
     autoFillUserDetails();
   }, []);
+
+if (pageLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
+        
+        {/* Sub Message */}
+        <p className="text-2xl font-bold text-primary">
+          Loading your credit profile...
+        </p>
+
+        {/* Horizontal Loader */}
+        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-full bg-blue-600 animate-loader-bar" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 
   return (
     <>
@@ -579,18 +654,21 @@ const LoanApplication = () => {
                       value={formData.firstName}
                       onChange={(v) => updateFormData("firstName", v)}
                       required
+                      error={errors.firstName}
                     />
                     <FormInput
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
                       required
+                      error={errors.middleName}
                     />
                     <FormInput
                       label="Last Name"
                       value={formData.lastName}
                       onChange={(v) => updateFormData("lastName", v)}
                       required
+                      error={errors.lastName}
                     />
                     <FormInput
                       label="Date of Birth"
@@ -598,12 +676,14 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("dateOfBirth", v)}
                       type="date"
                       required
+                      error={errors.dateOfBirth}
                     />
                     <FormInput
                       label="PAN Card"
                       value={formData.panCard}
                       disabled
                       hint="PAN cannot be edited as it's verified from source"
+                      error={errors.panCard}
                     />
                     {emailOptions.length > 1 ? (
                       <FormSelect
@@ -615,6 +695,7 @@ const LoanApplication = () => {
                           label: e,
                         }))}
                         required
+                        error={errors.email}
                       />
                     ) : (
                       <FormInput
@@ -623,6 +704,7 @@ const LoanApplication = () => {
                         onChange={(v) => updateFormData("email", v)}
                         type="email"
                         required
+                        error={errors.email}
                       />
                     )}
 
@@ -631,6 +713,7 @@ const LoanApplication = () => {
                       value={formData.aadhaarCard}
                       disabled
                       hint="Aadhaar cannot be edited as it's verified from source"
+                      error={errors.aadhaarCard}
                     />
                     <FormInput
                       label="Mobile Number"
@@ -638,6 +721,7 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("mobileNumber", v)}
                       type="tel"
                       required
+                      error={errors.mobileNumber}
                     />
                   </div>
 
@@ -676,12 +760,14 @@ const LoanApplication = () => {
                         value={formData.state}
                         onChange={(v) => updateFormData("state", v)}
                         required
+                        error={errors.state}
                       />
                       <FormInput
                         label="Pincode"
                         value={formData.pincode}
                         onChange={(v) => updateFormData("pincode", v)}
                         required
+                        error={errors.pincode}
                       />
                       {/* <FormSelect
                       label="Residential Status"
@@ -714,18 +800,21 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("employmentStatus", v)}
                       options={employmentStatuses}
                       required
+                      error={errors.employmentStatus}
                     />
                     <FormInput
                       label="Company Name"
                       value={formData.companyName}
                       onChange={(v) => updateFormData("companyName", v)}
                       required
+                      error={errors.companyName}
                     />
                     <FormInput
                       label="Employment Category"
                       value={formData.employmentCategory}
                       onChange={(v) => updateFormData("employmentCategory", v)}
                       required
+                      error={errors.employmentCategory}
                     />
                     <FormInput
                       label="Employment Experience"
@@ -734,12 +823,14 @@ const LoanApplication = () => {
                         updateFormData("employmentExperience", v)
                       }
                       required
+                      error={errors.employmentExperience}
                     />
                     <FormInput
                       label="UAN / PF Number"
                       value={formData.uanNumber || ""}
                       onChange={(v) => updateFormData("uanNumber", v)}
                       required
+                      error={errors.uanNumber}
                     />
 
                     <FormInput
@@ -748,14 +839,21 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("monthlyIncome", v)}
                       type="number"
                       required
+                      error={errors.monthlyIncome}
                     />
                     <FormInput
-                      label="Salary Mode"
-                      value={formData.salaryMode}
-                      onChange={(v) => updateFormData("salaryMode", v)}
-                      type="number"
-                      required
-                    />
+                    label="Salary Mode"
+                    value={formData.salaryMode}
+                    onChange={(v) => {
+                      if (Number(v) >= 0) {
+                        updateFormData("salaryMode", v);
+                      }
+                    }}
+                    type="number"
+                    min={0}
+                    required
+                    error={errors.salaryMode}
+                  />
                   </div>
                 </div>
 
@@ -771,24 +869,28 @@ const LoanApplication = () => {
                       value={formData.cibilScore}
                       onChange={(v) => updateFormData("cibilScore", v)}
                       placeholder="Enter your CIBIL score"
+                      error={errors.cibilScore}
                     />
                     <FormInput
                       label="Recent Enquiries"
                       value={formData.recentEnquiries}
                       onChange={(v) => updateFormData("recentEnquiries", v)}
                       placeholder="Number of recent credit enquiries"
+                      error={errors.recentEnquiries}
                     />
                     <FormInput
                       label="Settlements"
                       value={formData.settlements}
                       onChange={(v) => updateFormData("settlements", v)}
                       placeholder="Any loan settlements"
+                      error={errors.settlements}
                     />
                     <FormInput
                       label="EMI Bounces"
                       value={formData.emiBounces}
                       onChange={(v) => updateFormData("emiBounces", v)}
                       placeholder="Number of EMI bounces"
+                      error={errors.emiBounces}
                     />
                     <FormInput
                       label="Credit Card Utilization (%)"
@@ -797,6 +899,7 @@ const LoanApplication = () => {
                         updateFormData("creditCardUtilization", v)
                       }
                       placeholder="e.g., 40%"
+                      error={errors.creditCardUtilization}
                     />
                     <FormSelect
                       label="Residential Stability"
@@ -818,6 +921,7 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("existingEmi", v)}
                       placeholder="Total existing EMI amount"
                       type="number"
+                      error={errors.existingEmi}
                     />
                   </div>
                 </div>
@@ -843,6 +947,7 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("loanType", v)}
                       options={loanTypes}
                       required
+                      error={errors.loanType}
                     />
                     <FormInput
                       label="Desired Loan Amount (₹)"
@@ -851,6 +956,7 @@ const LoanApplication = () => {
                       placeholder="Enter amount"
                       type="number"
                       required
+                      error={errors.loanAmount}
                     />
                     <FormInput
                       label="Desired Loan Tenure (₹)"
@@ -859,6 +965,7 @@ const LoanApplication = () => {
                       placeholder="Enter amount"
                       type="number"
                       required
+                      error={errors.loanTenure}
                     />
                   </div>
                 </div>

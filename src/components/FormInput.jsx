@@ -13,6 +13,7 @@ const FormInput = ({
   className,
   disabled,
   hint,
+  error
 }) => {
   return (
     <div className={cn("space-y-2", className)}>
@@ -28,13 +29,16 @@ const FormInput = ({
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
         className={cn(
-          "h-12 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 placeholder:text-muted-foreground/60",
-          disabled
-            ? "bg-muted text-muted-foreground cursor-not-allowed"
-            : "bg-card",
+          "w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2",
+          error
+            ? "border-red-500 focus:ring-red-500"
+            : "border-input focus:ring-primary"
         )}
       />
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+            {error && (
+        <p className="text-xs text-red-500">{error}</p>
+      )}
     </div>
   );
 };

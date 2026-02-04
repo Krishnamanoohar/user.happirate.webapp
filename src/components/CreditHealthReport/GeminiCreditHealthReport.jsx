@@ -49,6 +49,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { fetchRawResponseOfUser } from "@/api/api";
+import DashboardLoader from "./CreditHealthLoader";
 
 // --- Global API Helper ---
 const callGeminiAPI = async (prompt) => {
@@ -999,7 +1000,7 @@ const ChatWidget = ({ reportData, analysis }) => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: `Hi ${sessionStorage.getItem("username").split(" ")}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
+      text: `Hi ${sessionStorage.getItem("username")?.split(" ")}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -1108,11 +1109,10 @@ const ChatWidget = ({ reportData, analysis }) => {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-                    msg.role === "user"
-                      ? "bg-blue-600 text-white rounded-tr-none"
-                      : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
-                  }`}
+                  className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.role === "user"
+                    ? "bg-blue-600 text-white rounded-tr-none"
+                    : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
+                    }`}
                 >
                   {msg.text}
                 </div>
@@ -1144,11 +1144,10 @@ const ChatWidget = ({ reportData, analysis }) => {
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
-                className={`p-1.5 rounded-full transition-colors ${
-                  input.trim() && !loading
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-slate-300 text-slate-500 cursor-not-allowed"
-                }`}
+                className={`p-1.5 rounded-full transition-colors ${input.trim() && !loading
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-slate-300 text-slate-500 cursor-not-allowed"
+                  }`}
               >
                 <Send size={16} />
               </button>
@@ -1160,11 +1159,10 @@ const ChatWidget = ({ reportData, analysis }) => {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-4 rounded-full shadow-xl transition-all duration-300 flex items-center justify-center ${
-          isOpen
-            ? "bg-slate-700 rotate-90 scale-0 opacity-0 hidden"
-            : "bg-blue-600 hover:bg-blue-700 text-white scale-100 opacity-100"
-        }`}
+        className={`p-4 rounded-full shadow-xl transition-all duration-300 flex items-center justify-center ${isOpen
+          ? "bg-slate-700 rotate-90 scale-0 opacity-0 hidden"
+          : "bg-blue-600 hover:bg-blue-700 text-white scale-100 opacity-100"
+          }`}
       >
         <MessageSquare size={24} />
       </button>
@@ -1381,7 +1379,12 @@ const DashboardView = ({ reportData, analysis, setActiveTab }) => {
 };
 // Using Lucide icons for a crisp look
 
-const PortfolioGate = ({ onLogin }) => {
+const PortfolioGate = () => {
+  const handleLogin = () => {
+    // store where user wanted to go
+    sessionStorage.setItem("redirectAfterLogin", "/credit-health-report");
+    window.location.pathname = "/sign-in";
+  };
   return (
     <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50 rounded-2xl border border-slate-200">
       <div className="max-w-md w-full text-center space-y-6">
@@ -1405,7 +1408,7 @@ const PortfolioGate = ({ onLogin }) => {
 
         {/* Action Button */}
         <button
-          onClick={onLogin}
+          onClick={handleLogin}
           className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-slate-200"
         >
           <LogIn className="w-4 h-4" />
@@ -1609,8 +1612,8 @@ export default function GeminiCreditHealthReport() {
     const utilizationPct =
       creditCardUtilization.limit > 0
         ? Math.round(
-            (creditCardUtilization.balance / creditCardUtilization.limit) * 100,
-          )
+          (creditCardUtilization.balance / creditCardUtilization.limit) * 100,
+        )
         : 0;
 
     if (utilizationPct > 30) {
@@ -1717,13 +1720,21 @@ export default function GeminiCreditHealthReport() {
   }, [reportData, accountFilter, typeFilter, bankSearch]);
 
   const fetchDashboardData = async () => {
+    // const resp = await fetchRawResponseOfUser();
+    // setJsonData(resp?.data?.data?.rawData);
+    // console.log("resp", resp);
+      try {
+    setLoading(true);
     const resp = await fetchRawResponseOfUser();
     setJsonData(resp?.data?.data?.rawData);
-    console.log("resp", resp);
+  } finally {
+    setLoading(false);
+  }
   };
 
   useEffect(() => {
-    fetchDashboardData();
+    sessionStorage.getItem("mobile_number") ?
+      fetchDashboardData() : ""
   }, []);
 
   // if (!jsonData) {
@@ -1786,8 +1797,11 @@ export default function GeminiCreditHealthReport() {
   //     </div>
   //   );
   // }
+    const [loading, setLoading] = useState(true);
 
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
+  if (loading) return <DashboardLoader />;
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-12">
       {/* Header */}
@@ -1859,11 +1873,10 @@ export default function GeminiCreditHealthReport() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 text-sm font-medium capitalize border-b-2 transition-colors whitespace-nowrap ${
-                  activeTab === tab
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-slate-500 hover:text-slate-700"
-                }`}
+                className={`px-6 py-3 text-sm font-medium capitalize border-b-2 transition-colors whitespace-nowrap ${activeTab === tab
+                  ? "border-blue-600 text-blue-600"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
+                  }`}
               >
                 {tab === "dashboard" ? (
                   <span className="flex items-center gap-2">
@@ -1992,11 +2005,10 @@ export default function GeminiCreditHealthReport() {
                       <button
                         key={filter}
                         onClick={() => setAccountFilter(filter)}
-                        className={`px-3 py-1 text-xs font-medium rounded-md capitalize transition-all ${
-                          accountFilter === filter
-                            ? "bg-white text-blue-600 shadow-sm"
-                            : "text-slate-500 hover:text-slate-700"
-                        }`}
+                        className={`px-3 py-1 text-xs font-medium rounded-md capitalize transition-all ${accountFilter === filter
+                          ? "bg-white text-blue-600 shadow-sm"
+                          : "text-slate-500 hover:text-slate-700"
+                          }`}
                       >
                         {filter}
                       </button>

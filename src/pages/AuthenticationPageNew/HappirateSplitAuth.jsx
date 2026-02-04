@@ -61,7 +61,17 @@ export function HappirateSplitAuth() {
       otpRefs[index + 1].current?.focus();
     }
   };
-
+  const handleOtpKeyDown = (e, index) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const enteredOtp = otp.join("");
+    if (enteredOtp.length === 4) {
+      handleVerifyOtp(enteredOtp);
+    }
+  } else if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    otpRefs[index - 1].current?.focus();
+  }
+};
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -161,7 +171,13 @@ export function HappirateSplitAuth() {
       const resp = await verifyOtp(payload);
       toast.success("OTP verified successfully");
       sessionStorage.setItem("mobile_number", mobileNumber);
-      navigate("/loan-application");
+      
+      const redirect =
+      sessionStorage.getItem("redirectAfterLogin") || "/";
+
+      navigate(redirect);
+      sessionStorage.removeItem("redirectAfterLogin");
+
       setIsMobileVerified(true);
       setErrors({});
     } catch (error) {
@@ -319,8 +335,9 @@ export function HappirateSplitAuth() {
                               id={`otp-${index}`}
                               value={digit}
                               onChange={(e) =>
-                                handleOtpChange(e.target.value, index)
-                              }
+                                          handleOtpChange(e.target.value, index)
+                                        }
+                              onKeyDown={(e) => handleOtpKeyDown(e, index)}
                               maxLength={1}
                               className="h-12 w-12 rounded-md border border-border text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
                             />

@@ -218,3 +218,11 @@
   background: white;
   padding: 16px;
 }
+@keyframes loaderBar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-loader-bar {
+  animation: loaderBar 2s linear infinite;
+}
