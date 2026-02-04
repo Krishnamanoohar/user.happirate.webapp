@@ -72,6 +72,17 @@ const fetchRawResponseOfUser = async () => {
   }
 }
 
+const fetchChatResponse = async ({ contextData, message }) => {
+  try {
+    const userId = sessionStorage.getItem("userId")
+    const resp = await apiClient.post("/chat-handler", { userId, message, contextData })
+    console.log("Response of chat", resp)
+    return resp?.data?.reply
+  } catch (error) {
+    console.log("Error in handling chat", error)
+  }
+}
+
 export {
   checkLoanEligibility, personalDetailsVerification,
   submitFinancialProfileDetails,
@@ -80,5 +91,6 @@ export {
   fetchCreditReport,
   updateCreditReport,
   fetchEligibleLoanProducts,
-  fetchRawResponseOfUser
+  fetchRawResponseOfUser,
+  fetchChatResponse
 };

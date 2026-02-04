@@ -37,6 +37,8 @@ import LandingApp from "./IntegratedComps/src/App";
 import Navbar from "./IntegratedComps/src/components/Navbar";
 import KimiCreditHealthReport from "./components/CreditHealthReport/KimiCreditHealthReport";
 import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCreditHealthReport";
+// import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
+
 export const Context = createContext();
 
 const App = () => {
@@ -107,7 +109,8 @@ const App = () => {
             /> */}
             {/* <Route path="/oneboarddashboard" element={<OneScoreDashboard />} /> */}
             <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
-            <Route path="/credit-health-report-2" element={<OneScoreDashboard />} />
+            {/* <Route path="/credit-health-reportt" element={<CreditPortfolio />} /> */}
+            {/* <Route path="/credit-health-report-2" element={<OneScoreDashboard />} /> */}
           </Routes>
           {/* <Chatbot /> */}
           <SignInPopup />

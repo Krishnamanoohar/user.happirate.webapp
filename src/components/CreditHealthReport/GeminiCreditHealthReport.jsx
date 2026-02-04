@@ -47,25 +47,15 @@ import {
   Zap,
   ChevronRight,
 } from "lucide-react";
-import axios from "axios";
-import { fetchRawResponseOfUser } from "@/api/api";
+import { fetchChatResponse, fetchRawResponseOfUser } from "@/api/api";
 
 // --- Global API Helper ---
-const callGeminiAPI = async (prompt) => {
-  const apiKey = ""; // API Key injected by environment
+const callGeminiAPI = async (contextData, prompt) => {
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${import.meta.env.VITE_APP_AI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      },
-    );
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const response = await fetchChatResponse(contextData, prompt);
+    console.log("response fo the chat", response)
+    // const data = await response.json();
+    return response
   } catch (error) {
     console.error("Gemini API Error:", error);
     throw error;
@@ -73,7 +63,6 @@ const callGeminiAPI = async (prompt) => {
 };
 
 // --- Utility Functions for Polymorphic Data ---
-
 const normalizeArray = (data) => {
   if (!data) return [];
   if (Array.isArray(data)) return data;
@@ -993,13 +982,12 @@ const InsightsView = ({ analysis }) => {
 };
 
 // --- Chatbot Component ---
-
 const ChatWidget = ({ reportData, analysis }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: `Hi ${sessionStorage.getItem("username").split(" ")}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
+      text: `Hi ${sessionStorage.getItem("username")?.split(" ")}! I'm your Credit Assistant. I've analyzed your report. Ask me anything about your score, loans, or how to improve.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -1040,20 +1028,22 @@ const ChatWidget = ({ reportData, analysis }) => {
         .slice(0, 10),
     };
 
-    const systemPrompt = `You are CreditWise, an expert financial assistant. You are talking to ${reportData.name}. 
-        Here is their credit report summary: ${JSON.stringify(contextData)}.
+    // const systemPrompt = `You are CreditWise, an expert financial assistant. You are talking to ${reportData.name}. 
+    //     Here is their credit report summary: ${JSON.stringify(contextData)}.
         
-        Rules:
-        1. Be concise, professional, and encouraging.
-        2. Answer strictly based on the provided JSON data.
-        3. If asked about improving score, use the 'Recommendations' provided.
-        4. If asked about debt, mention the specific numbers.
-        5. Keep responses under 3 sentences unless asked for a detailed list.`;
+    //     Rules:
+    //     1. Be concise, professional, and encouraging.
+    //     2. Answer strictly based on the provided JSON data.
+    //     3. If asked about improving score, use the 'Recommendations' provided.
+    //     4. If asked about debt, mention the specific numbers.
+    //     5. Keep responses under 3 sentences unless asked for a detailed list.`;
 
     try {
-      const aiText = await callGeminiAPI(
-        `${systemPrompt}\n\nUser Question: ${userMsg.text}`,
-      );
+      const aiText = await callGeminiAPI({
+        contextData,
+        message: userMsg.text,
+      });
+      console.log("AI TEXT", aiText)
       setMessages((prev) => [
         ...prev,
         {
@@ -1085,7 +1075,7 @@ const ChatWidget = ({ reportData, analysis }) => {
                 <Bot size={20} />
               </div>
               <div>
-                <h3 className="font-bold text-sm">CreditWise Assistant</h3>
+                <h3 className="font-bold text-sm">HappiRate Assistant</h3>
                 <p className="text-[10px] text-blue-100 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>{" "}
                   Online
@@ -1118,6 +1108,7 @@ const ChatWidget = ({ reportData, analysis }) => {
                 </div>
               </div>
             ))}
+
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-white text-slate-500 border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2 text-xs flex items-center gap-1 shadow-sm">
@@ -1127,6 +1118,7 @@ const ChatWidget = ({ reportData, analysis }) => {
                 </div>
               </div>
             )}
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -1173,7 +1165,6 @@ const ChatWidget = ({ reportData, analysis }) => {
 };
 
 // --- New Dashboard Component ---
-
 const DashboardView = ({ reportData, analysis, setActiveTab }) => {
   // Default state matches the static design initially
   const [recommendation, setRecommendation] = useState({
@@ -1224,40 +1215,8 @@ const DashboardView = ({ reportData, analysis, setActiveTab }) => {
   }, [reportData?.score, analysis?.totalBalance, analysis?.utilizationPct]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-min">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-min">
       {/* 1. Recommended for You Section (Full Width) */}
-      <div className="col-span-full mb-2">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-xl font-bold text-slate-800">
-            Recommended for You
-          </h2>
-          <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
-            See all offers
-          </button>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="z-10 relative max-w-lg">
-            <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide mb-2 inline-block">
-              {recommendation.tag}
-            </span>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">
-              {recommendation.title}
-            </h3>
-            <p className="text-sm text-slate-500 mb-4">
-              {recommendation.description}
-            </p>
-            <button className="bg-slate-900 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200">
-              Check Eligibility
-            </button>
-          </div>
-
-          {/* Dollar Sign Illustration - Preserved specific style */}
-          <div className="hidden md:block text-slate-100 absolute right-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <DollarSign size={140} strokeWidth={1} />
-          </div>
-        </div>
-      </div>
 
       {/* 2. Score Card (1 Column) */}
       {/* <div className="col-span-full md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col items-center justify-center">
@@ -1376,11 +1335,43 @@ const DashboardView = ({ reportData, analysis, setActiveTab }) => {
           )}
         </div>
       </div>
+      <div className="col-span-full mb-2">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-bold text-slate-800">
+            Recommended for You
+          </h2>
+          <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+            See all offers
+          </button>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="z-10 relative max-w-lg">
+            <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide mb-2 inline-block">
+              {recommendation?.tag || ""}
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">
+              {recommendation?.title || ""}
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">
+              {recommendation?.description || ""}
+            </p>
+            <button className="bg-slate-900 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200">
+              Check Eligibility
+            </button>
+          </div>
+
+          {/* Dollar Sign Illustration - Preserved specific style */}
+          <div className="hidden md:block text-slate-100 absolute right-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <DollarSign size={140} strokeWidth={1} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-// Using Lucide icons for a crisp look
 
+// Using Lucide icons for a crisp look
 const PortfolioGate = ({ onLogin }) => {
   return (
     <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50 rounded-2xl border border-slate-200">
@@ -1425,7 +1416,6 @@ const PortfolioGate = ({ onLogin }) => {
 };
 
 // --- Main App Component ---
-
 export default function GeminiCreditHealthReport() {
   const [jsonData, setJsonData] = useState(null);
   const [jsonInput, setJsonInput] = useState("");
@@ -1726,67 +1716,6 @@ export default function GeminiCreditHealthReport() {
     fetchDashboardData();
   }, []);
 
-  // if (!jsonData) {
-  //   return (
-  //     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans text-slate-800">
-  //       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8">
-  //         <div className="text-center mb-8">
-  //           <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-200">
-  //             <FileText className="text-white" size={32} />
-  //           </div>
-  //           <h1 className="text-2xl font-bold text-slate-800">CIBIL Report Viewer</h1>
-  //           <p className="text-slate-500 mt-2">Upload or paste your JSON report to visualize your credit history.</p>
-  //         </div>
-
-  //         <div className="space-y-6">
-  //           <div className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer relative">
-  //             <input
-  //               type="file"
-  //               accept=".json"
-  //               onChange={handleFileUpload}
-  //               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-  //             />
-  //             <Upload className="mx-auto text-slate-400 mb-2" />
-  //             <p className="text-sm font-medium text-slate-600">Click to upload JSON file</p>
-  //           </div>
-
-  //           <div className="relative">
-  //             <div className="absolute inset-0 flex items-center">
-  //               <div className="w-full border-t border-slate-200"></div>
-  //             </div>
-  //             <div className="relative flex justify-center text-sm">
-  //               <span className="px-2 bg-white text-slate-500">Or paste JSON content</span>
-  //             </div>
-  //           </div>
-
-  //           <div>
-  //             <textarea
-  //               className="w-full h-40 p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 outline-none resize-none"
-  //               placeholder='Paste raw JSON data here...'
-  //               value={jsonInput}
-  //               onChange={(e) => setJsonInput(e.target.value)}
-  //             />
-  //           </div>
-
-  //           {error && (
-  //             <div className="p-3 rounded-lg bg-rose-50 text-rose-600 text-sm flex items-center gap-2">
-  //               <AlertTriangle size={16} />
-  //               {error}
-  //             </div>
-  //           )}
-
-  //           <button
-  //             onClick={handleParse}
-  //             className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-200"
-  //           >
-  //             Analyze Report
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-12">
@@ -1956,10 +1885,12 @@ export default function GeminiCreditHealthReport() {
                             className="text-sm text-slate-600 pb-3 border-b border-slate-50 last:border-0 last:pb-0"
                           >
                             <div className="font-medium text-slate-800 mb-1">
-                              Address {i + 1}
+                              {i + 1}
                             </div>
-                            {a.line1 || a.StreetAddress} {a.line2} {a.City}{" "}
-                            {a.State} - {a.PostalCode || a.pinCode}
+                            <div className="w-[50%]">
+                              {a.line1 || a.StreetAddress} {a.line2} {a.City}{" "}
+                              {a.State} - {a.PostalCode || a.pinCode}
+                            </div>
                           </li>
                         );
                       })
