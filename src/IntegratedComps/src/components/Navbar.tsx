@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { User } from 'lucide-react';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,11 +17,11 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { name: "Solutions", href: "#solutions" },
-  { name: "Get In Touch", href: "#contact" },
-  { name: "EMI Calculator", href: "#emi-calculator" },
+  { name: "Solutions", href: "/#solutions" },
+  { name: "Smart Compare", href: "" },
+  // { name: "EMI Calculator", href: "#emi-calculator" },
   { name: "Credit Health", href: "/credit-health-report" },
-  { name: "Smart Compares", href: "" },
+  { name: "Get In Touch", href: "/#contact" },
 ];
 
 export default function Navbar({ scrollY }: NavbarProps) {
@@ -125,7 +127,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="w-10 h-10 rounded-full gradient-bg text-white bg-indigo-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-indigo-500"
                 >
-                  {user?.username?.charAt(0).toUpperCase()}
+                  {/* {user?.username?.charAt(0).toUpperCase()} */}
+                  <User />
+
+                  
                 </button>
 
                 {/* Dropdown Menu */}

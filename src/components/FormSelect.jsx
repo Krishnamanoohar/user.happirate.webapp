@@ -16,6 +16,7 @@ const FormSelect = ({
   options,
   required,
   className,
+  error,
 }) => {
   return (
     <div className={cn("space-y-2", className)}>
@@ -24,7 +25,15 @@ const FormSelect = ({
         {required && <span className="text-destructive ml-1">*</span>}
       </Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-12 bg-card border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+          <SelectTrigger
+            aria-invalid={!!error}
+            className={cn(
+              "h-12 bg-card border transition-all duration-200 focus:ring-2",
+              error
+                ? "border-red-500 ring-red-500/20 data-[state=open]:border-red-500"
+                : "border-border focus:border-primary focus:ring-primary/20"
+            )}
+          >
           <SelectValue
             placeholder={placeholder || `Select ${label.toLowerCase()}`}
           />
@@ -37,6 +46,9 @@ const FormSelect = ({
           ))}
         </SelectContent>
       </Select>
+      {error && (
+        <p className="text-xs text-red-500">{error}</p>
+      )}
     </div>
   );
 };
