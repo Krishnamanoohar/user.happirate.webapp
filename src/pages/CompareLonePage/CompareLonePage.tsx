@@ -7,6 +7,7 @@ import { PreSanctionLetter } from "@/components/PreSancsionLetter/PreSanctionLet
 import { ProvisionalOfferLetter } from "@/components/ProvisionalOfferLetter/ProvisionalOfferLetter";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import FunnyLoader from "./CompareLoanPageLoader";
 import {
   LayoutGrid,
   Table,
@@ -35,6 +36,8 @@ const CompareLonePage = () => {
     null,
   );
   const [lenders, setLenders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
 
   const handleSelectLender = (id: string) => {
     if (selectedLenders.includes(id)) {
@@ -80,6 +83,7 @@ const CompareLonePage = () => {
 
   const handleFetchEligibleLoans = async () => {
     try {
+      setLoading(true);
       const resp = await fetchEligibleLoanProducts();
       const banks = resp.data.banks.map((bank) => {
         const {
@@ -127,9 +131,10 @@ const CompareLonePage = () => {
       console.log("resp", resp);
     } catch (error) {
       console.log("Error in fetching products", error);
+    } finally {
+        setLoading(false);
     }
   };
-
   useEffect(() => {
     handleFetchEligibleLoans();
   }, []);
@@ -138,7 +143,7 @@ const CompareLonePage = () => {
     selectedLenders.includes(l.id),
   );
 
-  return (
+  return (   
     <div className="min-h-screen justify-center bg-background">
       {/* Hero Section */}
       <header className="relative bg-gradient-to-br from-[#1a132f] via-[#2a1f4a] to-[#3b2a63] text-white py-24">
@@ -298,23 +303,27 @@ const CompareLonePage = () => {
                 </div>
               )}
               {/* Lenders Display */}
-              {viewMode === "grid" ? (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                  {lenders.map((lender) => (
-                    <LenderCard
-                      key={lender.id}
-                      lender={lender}
-                      isSelected={selectedLenders.includes(lender.id)}
-                      onSelect={handleSelectLender}
-                      disabled={
-                        selectedLenders.length >= 2 &&
-                        !selectedLenders.includes(lender.id)
-                      }
-                      onApplyNow={handleApplyNow}
-                    />
-                  ))}
-                </div>
-              ) : (
+                {loading ? (
+                  <div className="flex justify-center py-16">
+                    <FunnyLoader />
+                  </div>
+                ) : viewMode === "grid" ? (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    {lenders.map((lender) => (
+                      <LenderCard
+                        key={lender.id}
+                        lender={lender}
+                        isSelected={selectedLenders.includes(lender.id)}
+                        onSelect={handleSelectLender}
+                        disabled={
+                          selectedLenders.length >= 2 &&
+                          !selectedLenders.includes(lender.id)
+                        }
+                        onApplyNow={handleApplyNow}
+                      />
+                    ))}
+                  </div>
+                ) : (
                 <div className="card-elevated overflow-hidden">
                   <ComparisonTable
                     lenders={lenders}

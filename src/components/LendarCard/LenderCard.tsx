@@ -92,8 +92,8 @@ export const LenderCard = ({ lender, isSelected, onSelect, disabled, onApplyNow 
             <Percent className="w-3.5 h-3.5" />
             True APR
           </div>
-          <div className="font-semibold text-gray-900">
-            {lender.trueAPR}% – {lender.trueAPRMax}%
+          <div className="font-semibold text-gray-900 mt-3 ml-2">
+            {lender.trueAPR}%
           </div>
         </div>
       </div>
