@@ -366,7 +366,7 @@ export function HappirateSplitAuth() {
                     )}
                   </form>
 
-                  <p className="text-center text-sm text-muted-foreground">
+                  {/* <p className="text-center text-sm text-muted-foreground">
                     Don&apos;t have an account?{" "}
                     <a
                       className="text-primary underline-offset-4 hover:underline"
@@ -374,7 +374,7 @@ export function HappirateSplitAuth() {
                     >
                       Sign up
                     </a>
-                  </p>
+                  </p> */}
                   <p className="text-center text-xs text-gary-500">
                     By continuing, you agree to our{" "}
                     <a

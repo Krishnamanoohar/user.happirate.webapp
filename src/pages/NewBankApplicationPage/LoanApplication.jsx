@@ -196,7 +196,7 @@ const LoanApplication = () => {
 
   if (currentStep === 0) {
     if (!formData.firstName) newErrors.firstName = "First name is required";
-    if (!formData.middleName) newErrors.middleName = "Middle name is required";
+    // if (!formData.middleName) newErrors.middleName = "Middle name is required";
     if (!formData.lastName) newErrors.lastName = "Last name is required";
     if (!formData.dateOfBirth) newErrors.dateOfBirth = "DOB is required";
     if (!formData.email) newErrors.email = "Email is required";
@@ -660,7 +660,7 @@ if (pageLoading) {
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
-                      required
+                      // required
                       error={errors.middleName}
                     />
                     <FormInput
