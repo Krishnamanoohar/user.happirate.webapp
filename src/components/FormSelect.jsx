@@ -24,7 +24,9 @@ const FormSelect = ({
         {label}
         {required && <span className="text-destructive ml-1">*</span>}
       </Label>
-      <Select value={value} onValueChange={onChange}>
+      <Select  value={value ?? ""}
+        onValueChange={(v) => onChange(v === "__empty__" ? "" : v)}>
+        
           <SelectTrigger
             aria-invalid={!!error}
             className={cn(

@@ -56,6 +56,7 @@ const loanTypes = [
 ];
 
 const employmentStatuses = [
+  // { value: "", label: "Select Employment Status" },
   { value: "salaried", label: "Salaried" },
   { value: "self-employed", label: "Self Employed" },
   { value: "business", label: "Business Owner" },
@@ -73,6 +74,9 @@ const residentialStatuses = [
 //   const [y, m, d] = isoDate.split("-");
 //   return `${d}-${m}-${y}`;
 // };
+const getTodayISODate = () => {
+  return new Date().toISOString().split("T")[0];
+};
 
 const normalizeAadhaarForApi = (value) =>
   value?.replace(/\D/g, "").replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3");
@@ -192,43 +196,59 @@ const LoanApplication = () => {
     employmentCategory: "",
   });
   const validateStep = () => {
-  const newErrors = {};
+    const newErrors = {};
 
-  if (currentStep === 0) {
-    if (!formData.firstName) newErrors.firstName = "First name is required";
-    // if (!formData.middleName) newErrors.middleName = "Middle name is required";
-    if (!formData.lastName) newErrors.lastName = "Last name is required";
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = "DOB is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.addressLine1) newErrors.addressLine1 = "Address is required";
-    if (!formData.state) newErrors.state = "State is required";
-    if (!formData.pincode) newErrors.pincode = "Pincode is required";
-    if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
-  }
+    if (currentStep === 0) {
+      if (!formData.firstName) newErrors.firstName = "First name is required";
+      // if (!formData.middleName) newErrors.middleName = "Middle name is required";
+      if (!formData.lastName) newErrors.lastName = "Last name is required";
+      if (!formData.dateOfBirth) {
+        newErrors.dateOfBirth = "DOB is required";
+      } else {
+        const today = getTodayISODate();
+        if (formData.dateOfBirth > today) {
+          newErrors.dateOfBirth = "Date of birth cannot be in the future";
+        }
+      }
+      if (!formData.email) newErrors.email = "Email is required";
+      if (!formData.addressLine1) newErrors.addressLine1 = "Address is required";
+      if (!formData.state) newErrors.state = "State is required";
+      if (!formData.pincode) newErrors.pincode = "Pincode is required";
+      if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
+    }
 
-  if (currentStep === 1) {
-    if (!formData.employmentStatus || formData.employmentStatus.trim() === "")
-      newErrors.employmentStatus = "Employment Status is Required";
-    if (!formData.companyName)
-      newErrors.companyName = "Company Name is Required";
-    if (!formData.monthlyIncome)
-      newErrors.monthlyIncome = "Monthly Income is Required";
-    if (!formData.employmentCategory) newErrors.employmentCategory = "Employment Category is required"
-    if (!formData.cibilScore) newErrors.cibilScore = "CIBIL Score is Required";
-    if (!formData.employmentExperience) newErrors.employmentExperience = "Employment Experience is Required";
-    if (!formData.uanNumber) newErrors.uanNumber ="UAN/PF Number is required";
-    if (!formData.salaryMode) newErrors.salaryMode = "Salary Mode is required";
-  }
+    if (currentStep === 1) {
+      if (!formData.employmentStatus || formData.employmentStatus.trim() === "")
+        newErrors.employmentStatus = "Employment Status is Required";
+      if (!formData.companyName)
+        newErrors.companyName = "Company Name is Required";
+      if (!formData.monthlyIncome)
+        newErrors.monthlyIncome = "Monthly Income is Required";
+      if (!formData.employmentCategory) newErrors.employmentCategory = "Employment Category is required"
+      if (!formData.cibilScore) newErrors.cibilScore = "CIBIL Score is Required";
+      if (!formData.employmentExperience) {newErrors.employmentExperience = "Employment Experience is Required"}
+      else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
+        newErrors.employmentExperience = "Only numbers allowed (e.g. 1 or 1.5)";
+      }
+      if (!formData.uanNumber) newErrors.uanNumber = "UAN/PF Number is required";
+      if (!formData.salaryMode) newErrors.salaryMode = "Salary Mode is required";
+      if (!formData.recentEnquiries) newErrors.recentEnquiries = "Recent Enquiries is Required";
+      if (!formData.emiBounces) newErrors.emiBounces = "EMI Bounces is required"
+      if (!formData.creditCardUtilization) newErrors.creditCardUtilization = "Credit Card Utilization is required"
+      if (!formData.residentialStability) newErrors.residentialStability = "Residential Stability is required"
+      if (!formData.existingEmi) newErrors.existingEmi = "Existing EMI is required"
+      if (!formData.settlements) newErrors.settlements = "Settlements is required"
+    }
 
-  if (currentStep === 2) {
-    if (!formData.loanType) newErrors.loanType = "Loan Type is Required";
-    if (!formData.loanAmount) newErrors.loanAmount = "Loan Amount is Required";
-    if (!formData.loanTenure) newErrors.loanTenure = "Loan Tenure Required";
-  }
+    if (currentStep === 2) {
+      if (!formData.loanType) newErrors.loanType = "Loan Type is Required";
+      if (!formData.loanAmount) newErrors.loanAmount = "Loan Amount is Required";
+      if (!formData.loanTenure) newErrors.loanTenure = "Loan Tenure Required";
+    }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // Uploaded documents state
   const [documents, setDocuments] = useState({
@@ -241,12 +261,21 @@ const LoanApplication = () => {
 
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [consentError, setConsentError] = useState(false);
+
 
   const handleNext = async () => {
-      if (!validateStep()) {
-    toast.error("Please fill all required fields");
-    return;
-  }
+if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
+      setConsentError(true);
+      toast.error("Please accept Terms & Privacy Policy");
+      return;
+    } else {
+      setConsentError(false);
+    }
+    if (!validateStep()) {
+      toast.error("Please fill all required fields");
+      return;
+    }
     setIsLoading(true);
     // STEP 1 → Personal Details API
     if (currentStep === 0) {
@@ -415,15 +444,15 @@ const LoanApplication = () => {
   );
 
   const SummaryRow = ({ label, value, icon: Icon, highlighted }) => (
-    <div className="flex justify-between items-center py-2.5 border-b border-border/30 last:border-0">
+    <div className="flex justify-between items-start gap-4 py-2.5 border-b border-border/30 last:border-0">
       <span className="text-muted-foreground text-sm flex items-center gap-2">
         {Icon && <Icon className="w-4 h-4 text-primary/60" />}
         {label}
       </span>
       <span
         className={cn(
-          "text-sm font-medium",
-          highlighted ? "text-primary font-semibold" : "text-foreground",
+          "text-sm font-medium text-right max-w-[60%] break-words whitespace-normal leading-relaxed",
+          highlighted ? "text-primary font-semibold" : "text-foreground"
         )}
       >
         {value || "—"}
@@ -496,8 +525,8 @@ const LoanApplication = () => {
       setFormData(mapApiResponseToFormData(resp.data.data, mobile));
     } catch (error) {
       console.log("error in auto filling user details", error);
-    }finally{
-          setPageLoading(false);
+    } finally {
+      setPageLoading(false);
 
     }
   };
@@ -580,25 +609,24 @@ const LoanApplication = () => {
   useEffect(() => {
     autoFillUserDetails();
   }, []);
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
 
-if (pageLoading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
-        
-        {/* Sub Message */}
-        <p className="text-2xl font-bold text-primary">
-          Loading your credit profile...
-        </p>
+          {/* Sub Message */}
+          <p className="text-2xl font-bold text-primary">
+            Loading your credit profile...
+          </p>
 
-        {/* Horizontal Loader */}
-        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-600 animate-loader-bar" />
+          {/* Horizontal Loader */}
+          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-full bg-blue-600 animate-loader-bar" />
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 
 
@@ -661,7 +689,7 @@ if (pageLoading) {
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
                       // required
-                      error={errors.middleName}
+                      // error={errors.middleName}
                     />
                     <FormInput
                       label="Last Name"
@@ -675,6 +703,7 @@ if (pageLoading) {
                       value={formData.dateOfBirth}
                       onChange={(v) => updateFormData("dateOfBirth", v)}
                       type="date"
+                      max={getTodayISODate()}   // ✅ prevents future selection
                       required
                       error={errors.dateOfBirth}
                     />
@@ -743,10 +772,20 @@ if (pageLoading) {
                             updateFormData("addressLine1", e.target.value)
                           }
                           required
+                          error={errors.addressLine1}
                           rows={3}
-                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
-               focus:outline-none focus:ring-2 focus:ring-primary"
+                            className={cn(
+                              "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                              errors.addressLine1
+                                ? "border border-destructive focus:ring-destructive"
+                                : "border border-input focus:ring-primary"
+                            )}
                         />
+                        {errors.addressLine1 && (
+                          <p className="text-sm text-destructive mt-1">
+                            {errors.addressLine1}
+                          </p>
+                        )}
                       </div>
 
                       {/* <FormInput
@@ -817,14 +856,22 @@ if (pageLoading) {
                       error={errors.employmentCategory}
                     />
                     <FormInput
-                      label="Employment Experience"
-                      value={formData.employmentExperience || ""}
-                      onChange={(v) =>
-                        updateFormData("employmentExperience", v)
-                      }
-                      required
-                      error={errors.employmentExperience}
-                    />
+                        label="Employment Experience (Years)"
+                        placeholder="e.g. 1.5"
+                        value={formData.employmentExperience || ""}
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        inputMode="decimal"
+                        onChange={(v) => {
+                          // allow only numbers + decimal
+                          if (/^\d*\.?\d*$/.test(v)) {
+                            updateFormData("employmentExperience", v);
+                          }
+                        }}
+                        required
+                        error={errors.employmentExperience}
+                      />
                     <FormInput
                       label="UAN / PF Number"
                       value={formData.uanNumber || ""}
@@ -842,18 +889,19 @@ if (pageLoading) {
                       error={errors.monthlyIncome}
                     />
                     <FormInput
-                    label="Salary Mode"
-                    value={formData.salaryMode}
-                    onChange={(v) => {
-                      if (Number(v) >= 0) {
-                        updateFormData("salaryMode", v);
-                      }
-                    }}
-                    type="number"
-                    min={0}
-                    required
-                    error={errors.salaryMode}
-                  />
+                      label="Salary Mode"
+                      value={formData.salaryMode}
+                      type="text"
+                      placeholder="Salary Mode"
+                      onChange={(v) => {
+                        // allow only letters + spaces
+                        if (/^[a-zA-Z\s]*$/.test(v)) {
+                          updateFormData("salaryMode", v);
+                        }
+                      }}
+                      required
+                      error={errors.salaryMode}
+                    />
                   </div>
                 </div>
 
@@ -869,6 +917,7 @@ if (pageLoading) {
                       value={formData.cibilScore}
                       onChange={(v) => updateFormData("cibilScore", v)}
                       placeholder="Enter your CIBIL score"
+                      required
                       error={errors.cibilScore}
                     />
                     <FormInput
@@ -876,6 +925,7 @@ if (pageLoading) {
                       value={formData.recentEnquiries}
                       onChange={(v) => updateFormData("recentEnquiries", v)}
                       placeholder="Number of recent credit enquiries"
+                      required
                       error={errors.recentEnquiries}
                     />
                     <FormInput
@@ -883,6 +933,7 @@ if (pageLoading) {
                       value={formData.settlements}
                       onChange={(v) => updateFormData("settlements", v)}
                       placeholder="Any loan settlements"
+                      required
                       error={errors.settlements}
                     />
                     <FormInput
@@ -890,6 +941,7 @@ if (pageLoading) {
                       value={formData.emiBounces}
                       onChange={(v) => updateFormData("emiBounces", v)}
                       placeholder="Number of EMI bounces"
+                      required
                       error={errors.emiBounces}
                     />
                     <FormInput
@@ -899,6 +951,7 @@ if (pageLoading) {
                         updateFormData("creditCardUtilization", v)
                       }
                       placeholder="e.g., 40%"
+                      required
                       error={errors.creditCardUtilization}
                     />
                     <FormSelect
@@ -908,12 +961,14 @@ if (pageLoading) {
                         updateFormData("residentialStability", v)
                       }
                       placeholder="Select stability period"
+                      required
                       options={[
                         { value: "1", label: "Less than 1 year" },
                         { value: "3", label: "1-3 years" },
                         { value: "5", label: "3-5 years" },
                         { value: "10", label: "More than 5 years" },
                       ]}
+                      error={errors.residentialStability}
                     />
                     <FormInput
                       label="Existing EMI (₹)"
@@ -921,6 +976,7 @@ if (pageLoading) {
                       onChange={(v) => updateFormData("existingEmi", v)}
                       placeholder="Total existing EMI amount"
                       type="number"
+                      required
                       error={errors.existingEmi}
                     />
                   </div>
@@ -959,7 +1015,7 @@ if (pageLoading) {
                       error={errors.loanAmount}
                     />
                     <FormInput
-                      label="Desired Loan Tenure (₹)"
+                      label="Desired Loan Tenure (months)"
                       value={formData.loanTenure}
                       onChange={(v) => updateFormData("loanTenure", v)}
                       placeholder="Enter amount"
@@ -1246,12 +1302,21 @@ if (pageLoading) {
                     Terms & Consent
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
+                    <div className={cn(
+                        "flex items-start space-x-3 p-3 rounded-md border",
+                        consentError && !termsAccepted
+                          ? "border-destructive bg-destructive/5"
+                          : "border-border"
+                      )}>
                       <Checkbox
                         id="terms"
                         className="mt-0.5 border-primary data-[state=checked]:bg-primary"
                         checked={termsAccepted}
-                        onCheckedChange={(checked) => setTermsAccepted(checked)}
+                        onCheckedChange={(checked) => {
+                        setTermsAccepted(checked);
+                        if (checked && privacyAccepted) setConsentError(false);
+                      }}
+
                       />
                       <label
                         htmlFor="terms"
@@ -1263,14 +1328,20 @@ if (pageLoading) {
                         enquiries as necessary.
                       </label>
                     </div>
-                    <div className="flex items-start space-x-3">
+                    <div className={cn(
+                        "flex items-start space-x-3 p-3 rounded-md border",
+                        consentError && !privacyAccepted
+                          ? "border-destructive bg-destructive/5"
+                          : "border-border"
+                      )}>
                       <Checkbox
                         id="privacy"
                         className="mt-0.5 border-primary data-[state=checked]:bg-primary"
                         checked={privacyAccepted}
-                        onCheckedChange={(checked) =>
-                          setPrivacyAccepted(checked)
-                        }
+                        onCheckedChange={(checked) => {
+                          setPrivacyAccepted(checked);
+                          if (checked && termsAccepted) setConsentError(false);
+                        }}
                       />
                       <label
                         htmlFor="privacy"
@@ -1289,6 +1360,11 @@ if (pageLoading) {
                     </div>
                   </div>
                 </div>
+                {consentError && (
+                <p className="text-sm text-destructive mt-2">
+                  Please accept Terms & Privacy Policy to continue
+                </p>
+              )}
               </div>
             )}
           </div>
@@ -1310,8 +1386,10 @@ if (pageLoading) {
                 onClick={handleNext}
                 disabled={isLoading}
                 className={cn(
-                  "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center justify-center",
-                  isLoading ? "cursor-not-allowed" : "cursor-pointer",
+                  "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25",
+                  isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
                 )}
               >
                 {isLoading ? (
