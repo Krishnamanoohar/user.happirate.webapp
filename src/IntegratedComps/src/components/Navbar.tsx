@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { User } from 'lucide-react';
+import { User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -27,7 +27,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   // const [user, setUser] = useState(null);
-  const [user, setUser] = useState<{ mobile: string; username: string | null } | null>(null);
+  const [user, setUser] = useState<{
+    mobile: string;
+    username: string | null;
+  } | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -49,22 +52,22 @@ export default function Navbar({ scrollY }: NavbarProps) {
   //   }
   // }, [sessionStorage.getItem("username")]);
   useEffect(() => {
-  const loadUser = () => {
-    const mobile = sessionStorage.getItem("mobile_number");
-    const name = sessionStorage.getItem("username");
+    const loadUser = () => {
+      const mobile = sessionStorage.getItem("mobile_number");
+      const name = sessionStorage.getItem("username");
 
-    if (mobile) {
-      setUser({ mobile, username: name });
-    } else {
-      setUser(null);
-    }
-  };
+      if (mobile) {
+        setUser({ mobile, username: name });
+      } else {
+        setUser(null);
+      }
+    };
 
-  loadUser();
+    loadUser();
 
-  window.addEventListener("storage", loadUser);
-  return () => window.removeEventListener("storage", loadUser);
-}, []);
+    window.addEventListener("storage", loadUser);
+    return () => window.removeEventListener("storage", loadUser);
+  }, []);
 
   return (
     <nav
@@ -147,8 +150,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
                 >
                   {/* {user?.username?.charAt(0).toUpperCase()} */}
                   <User />
-
-                  
                 </button>
 
                 {/* Dropdown Menu */}
@@ -219,7 +220,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
               </a>
             ))}
 
-            <Button className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4">
+            <Button
+              className="w-full gradient-bg text-white font-semibold py-3 rounded-full mt-4"
+              onClick={() => navigate("/sign-in")}
+            >
               Sign In
             </Button>
           </div>

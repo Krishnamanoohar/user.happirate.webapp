@@ -24,7 +24,7 @@ const SmartComparePage = () => {
 
   return (
     <div className="min-h-screen bg-app">
-      <main className="mx-auto w-full max-w-6xl px-6 pb-16">
+      <main className="mx-auto w-full max-w-6xl px-6 pb-16 pt-24">
         <section className="grid gap-8 pb-10 pt-4 lg:grid-cols-12 lg:items-start">
           {/* LEFT — FORM */}
           <div className="lg:col-span-7">

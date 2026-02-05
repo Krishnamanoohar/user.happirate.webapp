@@ -211,10 +211,12 @@ const LoanApplication = () => {
         }
       }
       if (!formData.email) newErrors.email = "Email is required";
-      if (!formData.addressLine1) newErrors.addressLine1 = "Address is required";
+      if (!formData.addressLine1)
+        newErrors.addressLine1 = "Address is required";
       if (!formData.state) newErrors.state = "State is required";
       if (!formData.pincode) newErrors.pincode = "Pincode is required";
-      if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
+      if (!formData.mobileNumber)
+        newErrors.mobileNumber = "Mobile number is required";
     }
 
     if (currentStep === 1) {
@@ -224,25 +226,43 @@ const LoanApplication = () => {
         newErrors.companyName = "Company Name is Required";
       if (!formData.monthlyIncome)
         newErrors.monthlyIncome = "Monthly Income is Required";
-      if (!formData.employmentCategory) newErrors.employmentCategory = "Employment Category is required"
-      if (!formData.cibilScore) newErrors.cibilScore = "CIBIL Score is Required";
-      if (!formData.employmentExperience) {newErrors.employmentExperience = "Employment Experience is Required"}
-      else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
+      if (!formData.employmentCategory)
+        newErrors.employmentCategory = "Employment Category is required";
+      if (!formData.cibilScore)
+        newErrors.cibilScore = "CIBIL Score is Required";
+      if (!formData.employmentExperience) {
+        newErrors.employmentExperience = "Employment Experience is Required";
+      } else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
         newErrors.employmentExperience = "Only numbers allowed (e.g. 1 or 1.5)";
       }
-      if (!formData.uanNumber) newErrors.uanNumber = "UAN/PF Number is required";
-      if (!formData.salaryMode) newErrors.salaryMode = "Salary Mode is required";
-      if (!formData.recentEnquiries) newErrors.recentEnquiries = "Recent Enquiries is Required";
-      if (!formData.emiBounces) newErrors.emiBounces = "EMI Bounces is required"
-      if (!formData.creditCardUtilization) newErrors.creditCardUtilization = "Credit Card Utilization is required"
-      if (!formData.residentialStability) newErrors.residentialStability = "Residential Stability is required"
-      if (!formData.existingEmi) newErrors.existingEmi = "Existing EMI is required"
-      if (!formData.settlements) newErrors.settlements = "Settlements is required"
+      if (!formData.uanNumber)
+        newErrors.uanNumber = "UAN/PF Number is required";
+      if (!formData.salaryMode)
+        newErrors.salaryMode = "Salary Mode is required";
+      if (!formData.recentEnquiries && formData.recentEnquiries !== 0)
+        newErrors.recentEnquiries = "Recent Enquiries is Required";
+      if (!formData.emiBounces)
+        newErrors.emiBounces = "EMI Bounces is required";
+      if (
+        !formData.creditCardUtilization &&
+        formData.creditCardUtilization !== 0
+      )
+        newErrors.creditCardUtilization = "Credit Card Utilization is required";
+      if (
+        !formData.residentialStability &
+        (formData.residentialStability !== 0)
+      )
+        newErrors.residentialStability = "Residential Stability is required";
+      if (!formData.existingEmi && formData.existingEmi !== 0)
+        newErrors.existingEmi = "Existing EMI is required";
+      if (!formData.settlements && formData.settlements !== 0)
+        newErrors.settlements = "Settlements is required";
     }
 
     if (currentStep === 2) {
       if (!formData.loanType) newErrors.loanType = "Loan Type is Required";
-      if (!formData.loanAmount) newErrors.loanAmount = "Loan Amount is Required";
+      if (!formData.loanAmount)
+        newErrors.loanAmount = "Loan Amount is Required";
       if (!formData.loanTenure) newErrors.loanTenure = "Loan Tenure Required";
     }
 
@@ -263,9 +283,8 @@ const LoanApplication = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [consentError, setConsentError] = useState(false);
 
-
   const handleNext = async () => {
-if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
+    if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
       setConsentError(true);
       toast.error("Please accept Terms & Privacy Policy");
       return;
@@ -452,7 +471,7 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
       <span
         className={cn(
           "text-sm font-medium text-right max-w-[60%] break-words whitespace-normal leading-relaxed",
-          highlighted ? "text-primary font-semibold" : "text-foreground"
+          highlighted ? "text-primary font-semibold" : "text-foreground",
         )}
       >
         {value || "—"}
@@ -520,14 +539,16 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
         mapApiResponseToFormData(resp.data.data, mobile),
       );
 
-      sessionStorage.setItem("username", `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`)
+      sessionStorage.setItem(
+        "username",
+        `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`,
+      );
 
       setFormData(mapApiResponseToFormData(resp.data.data, mobile));
     } catch (error) {
       console.log("error in auto filling user details", error);
     } finally {
       setPageLoading(false);
-
     }
   };
 
@@ -613,7 +634,6 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
-
           {/* Sub Message */}
           <p className="text-2xl font-bold text-primary">
             Loading your credit profile...
@@ -627,8 +647,6 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
       </div>
     );
   }
-
-
 
   return (
     <>
@@ -703,7 +721,7 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                       value={formData.dateOfBirth}
                       onChange={(v) => updateFormData("dateOfBirth", v)}
                       type="date"
-                      max={getTodayISODate()}   // ✅ prevents future selection
+                      max={getTodayISODate()} // ✅ prevents future selection
                       required
                       error={errors.dateOfBirth}
                     />
@@ -774,12 +792,12 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                           required
                           error={errors.addressLine1}
                           rows={3}
-                            className={cn(
-                              "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
-                              errors.addressLine1
-                                ? "border border-destructive focus:ring-destructive"
-                                : "border border-input focus:ring-primary"
-                            )}
+                          className={cn(
+                            "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                            errors.addressLine1
+                              ? "border border-destructive focus:ring-destructive"
+                              : "border border-input focus:ring-primary",
+                          )}
                         />
                         {errors.addressLine1 && (
                           <p className="text-sm text-destructive mt-1">
@@ -856,22 +874,22 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                       error={errors.employmentCategory}
                     />
                     <FormInput
-                        label="Employment Experience (Years)"
-                        placeholder="e.g. 1.5"
-                        value={formData.employmentExperience || ""}
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        inputMode="decimal"
-                        onChange={(v) => {
-                          // allow only numbers + decimal
-                          if (/^\d*\.?\d*$/.test(v)) {
-                            updateFormData("employmentExperience", v);
-                          }
-                        }}
-                        required
-                        error={errors.employmentExperience}
-                      />
+                      label="Employment Experience (Years)"
+                      placeholder="e.g. 1.5"
+                      value={formData.employmentExperience || ""}
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      inputMode="decimal"
+                      onChange={(v) => {
+                        // allow only numbers + decimal
+                        if (/^\d*\.?\d*$/.test(v)) {
+                          updateFormData("employmentExperience", v);
+                        }
+                      }}
+                      required
+                      error={errors.employmentExperience}
+                    />
                     <FormInput
                       label="UAN / PF Number"
                       value={formData.uanNumber || ""}
@@ -1302,21 +1320,23 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                     Terms & Consent
                   </h3>
                   <div className="space-y-4">
-                    <div className={cn(
+                    <div
+                      className={cn(
                         "flex items-start space-x-3 p-3 rounded-md border",
                         consentError && !termsAccepted
                           ? "border-destructive bg-destructive/5"
-                          : "border-border"
-                      )}>
+                          : "border-border",
+                      )}
+                    >
                       <Checkbox
                         id="terms"
                         className="mt-0.5 border-primary data-[state=checked]:bg-primary"
                         checked={termsAccepted}
                         onCheckedChange={(checked) => {
-                        setTermsAccepted(checked);
-                        if (checked && privacyAccepted) setConsentError(false);
-                      }}
-
+                          setTermsAccepted(checked);
+                          if (checked && privacyAccepted)
+                            setConsentError(false);
+                        }}
                       />
                       <label
                         htmlFor="terms"
@@ -1328,12 +1348,14 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                         enquiries as necessary.
                       </label>
                     </div>
-                    <div className={cn(
+                    <div
+                      className={cn(
                         "flex items-start space-x-3 p-3 rounded-md border",
                         consentError && !privacyAccepted
                           ? "border-destructive bg-destructive/5"
-                          : "border-border"
-                      )}>
+                          : "border-border",
+                      )}
+                    >
                       <Checkbox
                         id="privacy"
                         className="mt-0.5 border-primary data-[state=checked]:bg-primary"
@@ -1361,10 +1383,10 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                   </div>
                 </div>
                 {consentError && (
-                <p className="text-sm text-destructive mt-2">
-                  Please accept Terms & Privacy Policy to continue
-                </p>
-              )}
+                  <p className="text-sm text-destructive mt-2">
+                    Please accept Terms & Privacy Policy to continue
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -1389,7 +1411,7 @@ if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
                   "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25",
                   isLoading
                     ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
+                    : "cursor-pointer",
                 )}
               >
                 {isLoading ? (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Landmark, Play, TrendingUp, Wallet, ArrowRight } from "lucide-react";
+import { Landmark, Play, TrendingUp, Wallet, ArrowRight, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
@@ -63,7 +63,7 @@ export default function Hero() {
   useEffect(() => {
     setIsVisible(true);
   }, []);
-    useEffect(() => {
+  useEffect(() => {
     setIsVisible(true);
     const storedName = sessionStorage.getItem("mobile_number");
     setUserName(storedName);
@@ -71,9 +71,9 @@ export default function Hero() {
   const handleApplyNow = () => {
     sessionStorage.setItem("redirectAfterLogin", "/loan-application");
     if (userName) {
-       navigate("/loan-application")
+      navigate("/loan-application");
     } else {
-       navigate("/sign-in")
+      navigate("/sign-in");
     }
   };
 
@@ -133,6 +133,18 @@ export default function Hero() {
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
+                onClick={() => navigate("/credit-health-report")}
+                variant="outline"
+                size="lg"
+                className="border-2 font-semibold px-4 py-6 rounded-full hover:border-[#7c3bed] transition-all duration-300 group"
+              >
+                <div className="w-8 h-8 rounded-full gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  {/* <Play className="w-3 h-3 text-white fill-[#7c3bed] ml-0.5" /> */}
+                  <CreditCard className="w-15 h-15 text-white fill-[#7c3bed]" />
+                </div>
+                My Credit Portfolio
+              </Button>
+              {/* <Button
                 onClick={() => setOpen(true)}
                 variant="outline"
                 size="lg"
@@ -142,7 +154,7 @@ export default function Hero() {
                   <Play className="w-3 h-3 text-white fill-[#7c3bed] ml-0.5" />
                 </div>
                 How its works
-              </Button>
+              </Button> */}
             </div>
 
             {/* Trust Indicators */}
