@@ -15,10 +15,9 @@ import { useNavigate } from "react-router-dom";
 interface NavbarProps {
   scrollY: number;
 }
-
 const navLinks = [
   { name: "Solutions", href: "/#solutions" },
-  { name: "Smart Compare", href: "" },
+  { name: "Smart Compare", href: "/compare-loans" },
   // { name: "EMI Calculator", href: "#emi-calculator" },
   { name: "Credit Health", href: "/credit-health-report" },
   { name: "Get In Touch", href: "/#contact" },
@@ -27,7 +26,9 @@ const navLinks = [
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ mobile: string; username: string | null } | null>(null);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const isScrolled = scrollY > 50;
@@ -39,14 +40,31 @@ export default function Navbar({ scrollY }: NavbarProps) {
     navigate("/sign-in"); // Or redirect to home "/"
   };
 
+  // useEffect(() => {
+  //   const mobile = sessionStorage.getItem("mobile_number");
+  //   const name = sessionStorage.getItem("username");
+
+  //   if (mobile) {
+  //     setUser({ mobile, username: name });
+  //   }
+  // }, [sessionStorage.getItem("username")]);
   useEffect(() => {
+  const loadUser = () => {
     const mobile = sessionStorage.getItem("mobile_number");
     const name = sessionStorage.getItem("username");
 
     if (mobile) {
       setUser({ mobile, username: name });
+    } else {
+      setUser(null);
     }
-  }, [sessionStorage.getItem("username")]);
+  };
+
+  loadUser();
+
+  window.addEventListener("storage", loadUser);
+  return () => window.removeEventListener("storage", loadUser);
+}, []);
 
   return (
     <nav

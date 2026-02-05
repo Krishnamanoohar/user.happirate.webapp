@@ -171,12 +171,15 @@ export function HappirateSplitAuth() {
       const resp = await verifyOtp(payload);
       toast.success("OTP verified successfully");
       sessionStorage.setItem("mobile_number", mobileNumber);
+      window.dispatchEvent(new Event("storage")); 
       
       const redirect =
       sessionStorage.getItem("redirectAfterLogin") || "/";
 
-      navigate(redirect);
-      sessionStorage.removeItem("redirectAfterLogin");
+      setTimeout(() => {
+        navigate(redirect);
+        sessionStorage.removeItem("redirectAfterLogin");
+      }, 2000);
 
       setIsMobileVerified(true);
       setErrors({});
