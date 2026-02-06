@@ -242,7 +242,7 @@ const LoanApplication = () => {
         newErrors.salaryMode = "Salary Mode is required";
       if (!formData.recentEnquiries && formData.recentEnquiries !== 0)
         newErrors.recentEnquiries = "Recent Enquiries is Required";
-      if (!formData.emiBounces)
+      if (isEmpty(formData.emiBounces))
         newErrors.emiBounces = "EMI Bounces is required";
       if (
         !formData.creditCardUtilization &&

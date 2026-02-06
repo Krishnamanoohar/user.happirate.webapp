@@ -259,8 +259,8 @@ const KimiFeaturesSection = () => {
 
         /* Link Arrow */
         .link-arrow {
-          opacity: 0;
-          transform: translateX(-10px);
+          opacity: 1;
+          transform: translateX(0);
           transition: all 0.3s ease;
         }
 
@@ -323,7 +323,7 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Access offers from verified banks and financial institutions you can trust, ensuring safe and reliable loan options.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] text-sm font-semibold link-arrow">
+            <div className="mt-6 flex items-center  text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Learn more</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -344,7 +344,7 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Compare interest rates, fees, and repayment terms side-by-side with no hidden charges or surprises.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] text-sm font-semibold link-arrow">
+            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Compare now</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -365,7 +365,7 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Use our smart calculators to estimate monthly payments and plan your budget effortlessly.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] text-sm font-semibold link-arrow">
+            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Calculate EMI</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -386,7 +386,7 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Your personal information is protected with top-level encryption protocols to keep your data safe and confidential.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] text-sm font-semibold link-arrow">
+            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>View security</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>

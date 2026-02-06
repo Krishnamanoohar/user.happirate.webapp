@@ -430,8 +430,8 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                 Download PDF
               </Button>
               <Button 
-                variant="secondary" 
-                className="flex-1 h-12 text-gray-200"
+                // variant="" 
+                className="flex-1 h-12 text-gray-200 bg-gray-500"
                 onClick={() => setShowReassessDialog(true)}
               >
                 <Clock className="w-5 h-5 mr-2" />
@@ -472,7 +472,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             </DialogDescription>
           </DialogHeader>
           
-          <div className="bg-secondary/50 rounded-xl p-4 mt-4">
+          <div className="bg-gray-100 rounded-xl p-4 mt-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Loan Amount</span>
               <span className="font-bold">₹{(estimatedAmount / 100000).toFixed(2)} Lakhs</span>
@@ -488,7 +488,18 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           </div>
           
           <Button 
-            className="w-full mt-4 h-11 bg-gradient-to-r from-navy to-navy-light hover:opacity-90"
+            className="h-12 
+                  px-8
+                  !rounded-md
+                  text-base 
+                  font-semibold 
+                  text-white
+                  bg-gradient-to-r from-[#1b1630] to-[#2a2146]
+                  shadow-lg shadow-black/20
+                  hover:opacity-90 
+                  active:scale-[0.98]
+                  transition-all
+                  flex items-center justify-center gap-2"
             onClick={handleRedirectToDashboard}
           >
             Go to Loan Tracking Dashboard
@@ -512,7 +523,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
             </DialogDescription>
           </DialogHeader>
           
-          <div className="bg-secondary/50 rounded-xl p-4 mt-4 space-y-3">
+          <div className="bg-gray-50 rounded-xl p-4 mt-4 space-y-3">
             <div className="flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
@@ -535,14 +546,13 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
           
           <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
             <Button 
-              variant="outline"
-              className="flex-1"
+              className="flex-1 bg-gray-500"
               onClick={() => setShowReassessDialog(false)}
             >
               Continue Application
             </Button>
             <Button 
-              className="flex-1 bg-gradient-to-r from-trust to-navy hover:opacity-90"
+              className="flex-1 bg-gray-500"
               onClick={() => {
                 setShowReassessDialog(false);
                 onBack();
