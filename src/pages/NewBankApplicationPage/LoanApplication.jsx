@@ -195,6 +195,7 @@ const LoanApplication = () => {
     loanTenure: "",
     employmentCategory: "",
   });
+  const isEmpty = (v) => v === "" || v === null || v === undefined;
   const validateStep = () => {
     const newErrors = {};
 
@@ -232,12 +233,12 @@ const LoanApplication = () => {
       }
       if (!formData.uanNumber) newErrors.uanNumber = "UAN/PF Number is required";
       if (!formData.salaryMode) newErrors.salaryMode = "Salary Mode is required";
-      if (!formData.recentEnquiries) newErrors.recentEnquiries = "Recent Enquiries is Required";
-      if (!formData.emiBounces) newErrors.emiBounces = "EMI Bounces is required"
-      if (!formData.creditCardUtilization) newErrors.creditCardUtilization = "Credit Card Utilization is required"
+      if (isEmpty(formData.recentEnquiries)) newErrors.recentEnquiries = "Recent Enquiries is Required";
+      if (isEmpty(formData.emiBounces)) newErrors.emiBounces = "EMI Bounces is required"
+      if (isEmpty(formData.creditCardUtilization)) newErrors.creditCardUtilization = "Credit Card Utilization is required"
       if (!formData.residentialStability) newErrors.residentialStability = "Residential Stability is required"
       if (!formData.existingEmi) newErrors.existingEmi = "Existing EMI is required"
-      if (!formData.settlements) newErrors.settlements = "Settlements is required"
+      if (isEmpty(formData.settlements)) newErrors.settlements = "Settlements is required"
     }
 
     if (currentStep === 2) {
