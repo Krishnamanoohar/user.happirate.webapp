@@ -146,7 +146,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                 {/* Avatar Button */}
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-10 h-10 rounded-full gradient-bg text-white bg-indigo-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-indigo-500"
+                  className="w-10 h-10 rounded-full gradient-bg text-white bg-violet-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-violet-500"
                 >
                   {/* {user?.username?.charAt(0).toUpperCase()} */}
                   <User />
