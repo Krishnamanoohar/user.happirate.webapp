@@ -482,7 +482,7 @@ const AccountsList = ({ accounts }) => {
         No accounts found matching your filters.
       </div>
     );
-
+    console.log("accounts", accounts)
   return (
     <div className="space-y-4">
       {accounts.map((item, index) => {
@@ -495,7 +495,11 @@ const AccountsList = ({ accounts }) => {
 
         let emiAmount = acc.GrantedTrade?.EMIAmount;
         let displayEmi = "N/A";
-
+        let rawRate = acc.GrantedTrade?.interestRate;
+let interestRate =
+  rawRate && rawRate !== "-1" && rawRate !== "-1.00"
+    ? `${parseFloat(rawRate)}%`
+    : "N/A";
         if (emiAmount && emiAmount !== "-1" && emiAmount !== "") {
           displayEmi = `₹${parseInt(emiAmount).toLocaleString()}`;
         }
@@ -568,6 +572,14 @@ const AccountsList = ({ accounts }) => {
                   </div>
                   <div className="text-xs text-slate-400">
                     Outstanding Amount
+                  </div>
+                </div>
+                <div>
+                  <div className="font-bold text-slate-00">
+                      {interestRate}
+                  </div>
+                  <div className="text-xs text-slate-400">
+                    Interest Rate
                   </div>
                 </div>
               </div>
@@ -1725,7 +1737,6 @@ export default function GeminiCreditHealthReport() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
   }, []);
