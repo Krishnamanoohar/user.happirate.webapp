@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
@@ -33,6 +33,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
   } | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isScrolled = scrollY > 50;
 
@@ -42,6 +43,11 @@ export default function Navbar({ scrollY }: NavbarProps) {
     setIsDropdownOpen(false);
     navigate("/sign-in"); // Or redirect to home "/"
   };
+  const handleProfile = () => {
+  setIsDropdownOpen(false);
+  navigate("/my-profile");
+};
+
 
   // useEffect(() => {
   //   const mobile = sessionStorage.getItem("mobile_number");
@@ -68,7 +74,21 @@ export default function Navbar({ scrollY }: NavbarProps) {
     window.addEventListener("storage", loadUser);
     return () => window.removeEventListener("storage", loadUser);
   }, []);
+    useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
 
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -142,7 +162,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
           <div className="hidden lg:block relative">
             {user ? (
               // --- LOGGED IN STATE ---
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 {/* Avatar Button */}
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -163,6 +183,12 @@ export default function Navbar({ scrollY }: NavbarProps) {
                         {user.mobile}
                       </p>
                     </div>
+                    <button
+                      onClick={handleProfile}
+                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-violet-400 hover:border-violet-600 rounded-md"
+                    >
+                      My Profile
+                    </button>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 flex items-center gap-2"
@@ -230,5 +256,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
         </div>
       )}
     </nav>
+
   );
 }

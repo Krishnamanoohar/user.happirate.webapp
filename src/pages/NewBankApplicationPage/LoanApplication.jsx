@@ -907,18 +907,18 @@ const LoanApplication = () => {
                       required
                       error={errors.monthlyIncome}
                     />
-                    <FormInput
+                    <FormSelect
                       label="Salary Mode"
                       value={formData.salaryMode}
-                      type="text"
-                      placeholder="Salary Mode"
-                      onChange={(v) => {
-                        // allow only letters + spaces
-                        if (/^[a-zA-Z\s]*$/.test(v)) {
-                          updateFormData("salaryMode", v);
-                        }
-                      }}
+                      onChange={(v) =>
+                        updateFormData("salaryMode", v)
+                      }
+                      placeholder="Select Salary Mode"
                       required
+                      options={[
+                          { value: "bank_transfer", label: "Bank Transfer" },
+                          { value: "cash", label: "Cash" },
+                      ]}
                       error={errors.salaryMode}
                     />
                   </div>

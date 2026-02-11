@@ -37,6 +37,7 @@ import LandingApp from "./IntegratedComps/src/App";
 import Navbar from "./IntegratedComps/src/components/Navbar";
 import KimiCreditHealthReport from "./components/CreditHealthReport/KimiCreditHealthReport";
 import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCreditHealthReport";
+import UserProfile from "./IntegratedComps/src/components/UserProfile";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -79,6 +80,7 @@ const App = () => {
             <Route path="/" element={<LandingApp />} />
             {/* <Route path="sign-in" element={<LoginPage />} /> */}
             <Route path="sign-in" element={<HappirateSplitAuth />} />
+            <Route path='my-profile' element={<UserProfile />} />
             {/* <Route path="sign-inn" element={<HappirateSplitAuth2 />} /> */}
             {/* <Route path="our-story" element={<AboutUsPage />} /> */}
             {/* <Route path="compare-loans" element={<LoanComparisonPage />} /> */}

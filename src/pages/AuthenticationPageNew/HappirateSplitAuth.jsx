@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 // import { toast } from "sonner";
-import { sendOtpToMobile, verifyOtp } from "../../../src/api/api";
+import { sendOtpToMobile, verifyOtp, fetchCreditReport } from "../../../src/api/api";
 import { Navigate, useNavigate } from "react-router-dom";
 // import { ToastContainer } from "react-toastify";
 import { toast, Toaster } from "sonner";
@@ -62,16 +62,16 @@ export function HappirateSplitAuth() {
     }
   };
   const handleOtpKeyDown = (e, index) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const enteredOtp = otp.join("");
-    if (enteredOtp.length === 4) {
-      handleVerifyOtp(enteredOtp);
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const enteredOtp = otp.join("");
+      if (enteredOtp.length === 4) {
+        handleVerifyOtp(enteredOtp);
+      }
+    } else if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      otpRefs[index - 1].current?.focus();
     }
-  } else if (e.key === 'Backspace' && !otp[index] && index > 0) {
-    otpRefs[index - 1].current?.focus();
-  }
-};
+  };
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -169,20 +169,47 @@ export function HappirateSplitAuth() {
 
     try {
       const resp = await verifyOtp(payload);
-      toast.success("OTP verified successfully");
-      sessionStorage.setItem("mobile_number", mobileNumber);
-      window.dispatchEvent(new Event("storage")); 
-      
-      const redirect =
-      sessionStorage.getItem("redirectAfterLogin") || "/";
+      console.log("Verify OTP Response:", resp);
+      // console.log("Verify OTP Response Data:", resp?.data);
 
-      setTimeout(() => {
-        navigate(redirect);
-        sessionStorage.removeItem("redirectAfterLogin");
-      }, 2000);
+      if (resp.status === 200) {
+        toast.success("OTP verified successfully");
+        sessionStorage.setItem("mobile_number", mobileNumber);
+        window.dispatchEvent(new Event("storage"));
 
-      setIsMobileVerified(true);
-      setErrors({});
+        setIsMobileVerified(true);
+        setErrors({});
+
+        // Fetch credit report only if OTP verification returned 200
+        try {
+          const creditReportResp = await fetchCreditReport({ mobileNumber: mobileNumber });
+          console.log("credit report response", creditReportResp);
+          const apiData = creditReportResp?.data?.data;
+
+          if (apiData) {
+            sessionStorage.setItem("userId", apiData._id);
+            sessionStorage.setItem(
+              "username",
+              `${apiData.firstName} ${apiData.middleName} ${apiData.lastName}`,
+            );
+
+            // console.log("Credit report fetched successfully");
+          } else {
+            console.error("Credit report API returned empty response", creditReportResp);
+          }
+        } catch (creditError) {
+          console.error("Error fetching credit report", creditError);
+        }
+
+        // Redirect after fetching credit report
+        const redirect = sessionStorage.getItem("redirectAfterLogin") || "/";
+
+        setTimeout(() => {
+          navigate(redirect);
+          sessionStorage.removeItem("redirectAfterLogin");
+        }, 0);
+      }
+
     } catch (error) {
       toast.error("OTP verification failed");
       console.error(
@@ -197,7 +224,6 @@ export function HappirateSplitAuth() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
       size: "invisible",
@@ -338,8 +364,8 @@ export function HappirateSplitAuth() {
                               id={`otp-${index}`}
                               value={digit}
                               onChange={(e) =>
-                                          handleOtpChange(e.target.value, index)
-                                        }
+                                handleOtpChange(e.target.value, index)
+                              }
                               onKeyDown={(e) => handleOtpKeyDown(e, index)}
                               maxLength={1}
                               className="h-12 w-12 rounded-md border border-border text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
