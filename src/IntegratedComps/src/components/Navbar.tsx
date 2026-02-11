@@ -185,7 +185,9 @@ export default function Navbar({ scrollY }: NavbarProps) {
                     </div>
                     <button
                       onClick={handleProfile}
-                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-violet-400 hover:border-violet-600 rounded-md"
+                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900 
+                                hover:bg-indigo-50 transition-colors duration-150 
+                                flex items-center gap-2 border-b border-gray-200"
                     >
                       My Profile
                     </button>

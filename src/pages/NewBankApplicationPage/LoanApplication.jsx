@@ -520,10 +520,12 @@ const LoanApplication = () => {
       }
 
       const apiEmails = Array.isArray(apiData.emails)
-        ? apiData.emails.map((e) => e.email)
-        : [];
-      const unqEmails = new Set(apiEmails);
-      setEmailOptions(unqEmails);
+            ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
+            : [];
+          
+          // Create Set to remove duplicates and convert back to array
+          const uniqueEmails = [...new Set(apiEmails)];
+          setEmailOptions(uniqueEmails);
 
       setFormData((prev) => ({
         ...prev,
@@ -648,7 +650,7 @@ const LoanApplication = () => {
       </div>
     );
   }
-
+  console.log(formData, "form data");
   return (
     <>
       <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20 ">
@@ -738,7 +740,7 @@ const LoanApplication = () => {
                         label="E-Mail ID"
                         value={formData.email}
                         onChange={(v) => updateFormData("email", v)}
-                        options={emailOptions.map((e) => ({
+                        options={Array.from(emailOptions).map((e) => ({
                           value: e,
                           label: e,
                         }))}

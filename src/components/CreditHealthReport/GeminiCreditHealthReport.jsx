@@ -406,7 +406,7 @@ const EmailDraftModal = ({ account, type, onClose }) => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(emailContent);
   };
-
+  
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[80vh]">
@@ -459,6 +459,38 @@ const EmailDraftModal = ({ account, type, onClose }) => {
     </div>
   );
 };
+const estimateInterestRate = (principal, emi, months) => {
+  if (!principal || !emi || !months || principal <= 0 || emi <= 0) return null;
+
+  let low = 0.0001;
+  let high = 0.05; // up to 60% annual
+  let rate = 0;
+
+  for (let i = 0; i < 50; i++) {
+    rate = (low + high) / 2;
+    const calcEmi =
+      (principal * rate * Math.pow(1 + rate, months)) /
+      (Math.pow(1 + rate, months) - 1);
+
+    if (calcEmi > emi) high = rate;
+    else low = rate;
+  }
+
+  return (rate * 12 * 100).toFixed(2); // annual %
+};
+const estimateMonthsSinceOpened = (dateOpened) => {
+  if (!dateOpened) return null;
+  const d = new Date(dateOpened);
+  if (isNaN(d)) return null;
+
+  const now = new Date();
+  return Math.max(
+    1,
+    (now.getFullYear() - d.getFullYear()) * 12 +
+      (now.getMonth() - d.getMonth())
+  );
+};
+
 
 const AccountsList = ({ accounts }) => {
   const [expandedIndices, setExpandedIndices] = useState([]);
@@ -495,11 +527,32 @@ const AccountsList = ({ accounts }) => {
 
         let emiAmount = acc.GrantedTrade?.EMIAmount;
         let displayEmi = "N/A";
+//         let rawRate = acc.GrantedTrade?.interestRate;
+// let interestRate =
+//   rawRate && rawRate !== "-1" && rawRate !== "-1.00"
+//     ? `${parseFloat(rawRate)}%`
+//     : "N/A";
         let rawRate = acc.GrantedTrade?.interestRate;
-let interestRate =
-  rawRate && rawRate !== "-1" && rawRate !== "-1.00"
-    ? `${parseFloat(rawRate)}%`
-    : "N/A";
+
+let interestRate = "N/A";
+
+if (rawRate && rawRate !== "-1" && rawRate !== "-1.00") {
+  interestRate = `${parseFloat(rawRate)}%`;
+} else {
+  const principal =
+    parseInt(acc.highBalance || acc.GrantedTrade?.CreditLimit || 0);
+
+  const emi = parseInt(acc.GrantedTrade?.EMIAmount || 0);
+
+  const months =
+    parseInt(acc.GrantedTrade?.termMonths) ||
+    estimateMonthsSinceOpened(acc.dateOpened);
+
+  const est = estimateInterestRate(principal, emi, months);
+
+  if (est) interestRate = `~${est}%`;
+}
+
         if (emiAmount && emiAmount !== "-1" && emiAmount !== "") {
           displayEmi = `₹${parseInt(emiAmount).toLocaleString()}`;
         }
@@ -1743,7 +1796,7 @@ export default function GeminiCreditHealthReport() {
 
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   if (loading) return <DashboardLoader />;
-
+  console.log("Extracted Report Data:", reportData);
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-12">
       {/* Header */}
@@ -1807,7 +1860,6 @@ export default function GeminiCreditHealthReport() {
             </div>
           </div>
         </Card>
-
         {/* Tabs - Only show navigation tabs if NOT in Dashboard view, OR show dashboard tab as first item */}
         <div className="flex border-b border-slate-200 overflow-x-auto">
           {["dashboard", "profile", "accounts", "enquiries", "insights"].map(
