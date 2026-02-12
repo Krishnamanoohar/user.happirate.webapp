@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-
+import { useNavigate } from 'react-router-dom';
 const KimiFeaturesSection = () => {
   const containerRef = useRef(null);
   const cardsRef = useRef([]);
@@ -129,7 +129,7 @@ const KimiFeaturesSection = () => {
 
     return () => ctx.revert(); // Cleanup on unmount
   }, []);
-
+  const navigate = useNavigate();
   return (
     <div ref={containerRef} className="relative min-h-screen flex items-center justify-center p-4 md:p-8 overflow-hidden font-sans bg-gradient-to-br from-white via-[#f8f7ff] to-white">
       {/* Styles Injected Locally to preserve specific effects */}
@@ -298,9 +298,9 @@ const KimiFeaturesSection = () => {
       <div className="max-w-7xl mx-auto w-full relative z-10">
         {/* Section Header */}
         <div className="section-header text-center mb-16 opacity-0">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#ede9fe]/50 text-[#7c3bed] text-sm font-semibold mb-4 border border-[#7c3bed]/20">
+          {/* <span className="inline-block px-4 py-1.5 rounded-full bg-[#ede9fe]/50 text-[#7c3bed] text-sm font-semibold mb-4 border border-[#7c3bed]/20">
             Our Features
-          </span>
+          </span> */}
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
             Why Choose <span className="text-[#7c3bed]">Us</span>
           </h2>
@@ -323,12 +323,12 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Access offers from verified banks and financial institutions you can trust, ensuring safe and reliable loan options.
             </p>
-            <div className="mt-6 flex items-center  text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
+            <button onClick={() => window.location.href = '/#banks'} className="mt-6 flex items-center  text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Learn more</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
-            </div>
+            </button>
           </div>
 
           {/* Card 2 */}
@@ -344,12 +344,12 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Compare interest rates, fees, and repayment terms side-by-side with no hidden charges or surprises.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
+            <button onClick={() => navigate('/compare-loans')} className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Compare now</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
-            </div>
+            </button>
           </div>
 
           {/* Card 3 */}
@@ -365,12 +365,12 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Use our smart calculators to estimate monthly payments and plan your budget effortlessly.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
+            <button onClick={() => navigate('/emi-calculator')} className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>Calculate EMI</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
-            </div>
+            </button>
           </div>
 
           {/* Card 4 */}
@@ -386,12 +386,12 @@ const KimiFeaturesSection = () => {
             <p className="text-gray-600 leading-relaxed text-sm">
               Your personal information is protected with top-level encryption protocols to keep your data safe and confidential.
             </p>
-            <div className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
+            <button onClick={() => window.location.href = '/'} className="mt-6 flex items-center text-[#7c3bed] hover:text-[#7c3bed]/80 text-sm font-semibold link-arrow">
               <span>View security</span>
               <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
-            </div>
+            </button>
           </div>
 
         </div>

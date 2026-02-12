@@ -18,7 +18,7 @@ interface NavbarProps {
 const navLinks = [
   { name: "Solutions", href: "/#solutions" },
   { name: "Smart Compare", href: "/compare-loans" },
-  // { name: "EMI Calculator", href: "#emi-calculator" },
+  { name: "EMI Calculator", href: "/emi-calculator" },
   { name: "Credit Health", href: "/credit-health-report" },
   { name: "Get In Touch", href: "/#contact" },
 ];
@@ -89,6 +89,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
+  console.log("User State in Navbar:", user);
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${

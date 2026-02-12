@@ -25,7 +25,7 @@ import { NewCompareLoanApplication } from "./pages/NewLoanComparisonPage/NewComp
 import { LoanEligibilityForm } from "./components/OtherComponents/SmartCompare/LoanEligibilityForm";
 import SmartComparePage from "./components/OtherComponents/SmartCompare/SmartComparePage";
 import HappirateSplitAuth2 from "./pages/Authentication Page/HappirateSplitAuth";
-
+import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 import CompareLoanPage from "./pages/CompareLonePage/CompareLonePage";
@@ -38,6 +38,7 @@ import Navbar from "./IntegratedComps/src/components/Navbar";
 import KimiCreditHealthReport from "./components/CreditHealthReport/KimiCreditHealthReport";
 import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCreditHealthReport";
 import UserProfile from "./IntegratedComps/src/components/UserProfile";
+import ComingSoonPage from "./components/ComingSoon/ComingSoon";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -95,7 +96,7 @@ const App = () => {
               element={<LoanTrackingDashboard />}
             />
             {/* <Route path="emi-calculator" element={<EMICalculatorPage />} /> */}
-            <Route path="emi-calculator" element={<Emicalculatornew />} />
+            <Route path="/emi-calculator" element={<EMICalculator />} />
             <Route
               path="financial-summary"
               element={<FinancialSummaryPage />}
@@ -111,6 +112,7 @@ const App = () => {
             /> */}
             {/* <Route path="/oneboarddashboard" element={<OneScoreDashboard />} /> */}
             <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
+            <Route path="/coming-soon" element={<ComingSoonPage />} />
             {/* <Route path="/credit-health-reportt" element={<CreditPortfolio />} /> */}
             {/* <Route path="/credit-health-report-2" element={<OneScoreDashboard />} /> */}
           </Routes>

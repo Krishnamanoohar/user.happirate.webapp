@@ -79,12 +79,18 @@ export default function EMICalculator() {
       ref={sectionRef}
       id="emi-calculator"
       className="py-20 lg:py-28 relative overflow-hidden"
-    >
+    >   
       {/* Background */}
-      <div className="absolute inset-0 bg-white" />
+      <div className="absolute inset-0 bg-white" />     
       <div className="absolute top-0 right-0 w-1/2 h-full gradient-bg-light opacity-50" />
-
+    
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
+          EMI <span className="text-[#7c3bed]">Calculator</span>
+        </h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-6"></div>
+      </div> 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Content */}
           <div
@@ -92,10 +98,10 @@ export default function EMICalculator() {
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full gradient-bg-light border border-indigo-100 mb-4">
+            {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full gradient-bg-light border border-indigo-100 mb-4">
               <Calculator className="w-4 h-4 text-indigo-600" />
               <span className="text-sm font-medium text-indigo-700">EMI Calculator</span>
-            </div>
+            </div> */}
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
               Calculate Your <span className="gradient-text">Monthly EMI</span>
             </h2>

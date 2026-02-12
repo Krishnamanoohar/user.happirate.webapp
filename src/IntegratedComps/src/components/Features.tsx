@@ -19,6 +19,7 @@ interface FeatureCardProps {
   gradient: string;
   delay: number;
   isVisible: boolean;
+  link: string;
 }
 
 function FeatureCard({
@@ -28,9 +29,9 @@ function FeatureCard({
   gradient,
   delay,
   isVisible,
+  link
 }: FeatureCardProps) {
   const navigate = useNavigate();
-
   return (
     <div
       className={`group relative bg-gradient-to-br from-purple-100 via-violet-100 to-indigo-100 rounded-3xl p-6 lg:p-8 shadow-lg shadow-purple-200/40 hover:shadow-xl hover:shadow-purple-300/40 transition-all duration-500 hover:-translate-y-2 border border-gray-300 ${
@@ -58,8 +59,8 @@ function FeatureCard({
 
       {/* Apply Now */}
       <div
-        className="mt-5 flex items-center gap-2 text-indigo-600 font-medium cursor-pointer"
-        onClick={() => navigate("/sign-in")}
+        onClick={() => navigate(link)}
+        className="mt-5 flex items-center gap-2 text-indigo-600 font-medium cursor-pointer hover:text-indigo-800"
       >
         <span className="text-sm">Apply Now</span>
         <ArrowRight className="w-4 h-4" />
@@ -75,6 +76,7 @@ const features = [
     description:
       "Bridge the gap between your dreams and reality. Whether you’re planning a destination wedding, a long-overdue renovation, or an unexpected adventure, we provide the capital without the wait.",
     gradient: "from-indigo-500 to-blue-600",
+    link: "/loan-application"
   },
   {
     icon: <Zap className="w-7 h-7 text-white" />,
@@ -82,6 +84,7 @@ const features = [
     description:
       "Don't let cash flow hold back your ambition. Our collateral-free financing is built for the modern entrepreneur, giving you the agility to seize opportunities the moment they arise.",
     gradient: "from-violet-500 to-purple-600",
+    link: "/coming-soon"
   },
   {
     icon: <Clock className="w-7 h-7 text-white" />,
@@ -89,6 +92,7 @@ const features = [
     description:
       "Turn someday into moving day. We offer more than just a mortgage; we offer a seamless path to homeownership with competitive rates that keep your monthly budget comfortable.",
     gradient: "from-purple-500 to-pink-600",
+    link: '/coming-soon'
   },
   {
     icon: <Users className="w-7 h-7 text-white" />,
@@ -96,6 +100,7 @@ const features = [
     description:
       "Your intellect is your greatest asset—don't let tuition costs stand in its way. We cover the full spectrum of your academic journey, from global travel to living expenses, so you can focus on your grades, not the bills.",
     gradient: "from-pink-500 to-rose-600",
+    link: '/coming-soon'
   },
   // {
   //   icon: <FileCheck className="w-7 h-7 text-white" />,
@@ -151,15 +156,16 @@ export default function Features() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-100 mb-4">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-100 mb-4">
             <Sparkles className="w-4 h-4 text-indigo-600" />
             <span className="text-sm font-medium text-indigo-700">
               Why Choose Us
             </span>
-          </div>
+          </div> */}
           <h2 className="lg:text-4xl font-bold text-slate-900 mb-4 text-4xl">
             Solutions
           </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-4"></div>
           <p className="text-slate-600 text-lg leading-relaxed">
             We combine cutting-edge technology with customer-centric service to
             provide you with the best loan comparison experience in India.
@@ -184,33 +190,40 @@ export default function Features() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="glass-card rounded-3xl p-8 lg:p-12 max-w-4xl mx-auto">
-            <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-4">
-              Ready to Find Your Perfect Loan?
-            </h3>
-            <p className="text-slate-600 mb-8 max-w-xl mx-auto">
-              Join over 50,000 satisfied customers who found their ideal loan
-              through Happirate. Start comparing now and save on your EMIs.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button
-                size="lg"
-                className="gradient-bg text-white font-semibold px-8 py-6 rounded-full hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 group"
-              >
-                Compare Loans Now
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-slate-200 text-slate-700 font-semibold px-8 py-6 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-300"
-              >
-                Talk to an Expert
-              </Button>
+          <div className="relative max-w-5xl mx-auto rounded-[32px] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-2 shadow-2xl shadow-indigo-200/40 border border-indigo-100">
+            <div className="glass-card rounded-[28px] p-8 lg:p-12">
+              <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-4">
+                Ready to Find Your Perfect Loan?
+              </h3>
+              <p className="text-slate-600 mb-8 max-w-xl mx-auto">
+                Join over 50,000 satisfied customers who found their ideal loan
+                through Happirate. Start comparing now and save on your EMIs.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button
+                  onClick={() => window.location.href = '/compare-loans'}
+                  size="lg"
+                  className="gradient-bg text-white font-semibold px-8 py-6 rounded-full hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 group"
+                >
+                  Compare Loans Now
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                <Button
+                  onClick={() => window.location.href = '/#contact'}
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-slate-200 text-slate-700 font-semibold px-8 py-6 rounded-full hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-300"
+                >
+                  Talk to an Expert
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {/* Coming Soon Modal */}
+
+
     </section>
   );
 }

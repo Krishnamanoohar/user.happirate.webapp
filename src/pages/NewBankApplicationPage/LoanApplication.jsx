@@ -449,7 +449,7 @@ const LoanApplication = () => {
       employmentCategory: apiData.employmentCategory ?? "",
     };
   };
-
+  console.log(formData, "form data");
   // Enhanced Summary Section Component
   const SummarySection = ({ title, icon: Icon, children }) => (
     <div className="bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm">
@@ -896,7 +896,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="UAN / PF Number"
                       value={formData.uanNumber || ""}
-                      onChange={(v) => updateFormData("uanNumber", v)}
+                      onChange={(v) =>
+                        updateFormData("uanNumber", v.replace(/\D/g, ""))
+                      }
                       required
                       error={errors.uanNumber}
                     />

@@ -3,6 +3,7 @@ import { Building2, Search, Filter, ChevronLeft, ChevronRight, Star, Percent, Cl
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 import {
   Select,
   SelectContent,
@@ -152,7 +153,9 @@ const banks: Bank[] = [
   },
 ]
 
+
 export default function BanksSection() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('interest')
   const [filterFeatured, setFilterFeatured] = useState(false)
@@ -161,6 +164,11 @@ export default function BanksSection() {
   const [canScrollRight, setCanScrollRight] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+    const handleApplyNow = () => {
+    sessionStorage.setItem("redirectAfterLogin", "/loan-application");
+    navigate('sign-in')
+
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -230,6 +238,12 @@ export default function BanksSection() {
       <div className="absolute inset-0 gradient-bg-light" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="text-center mb-8">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
+          Partner <span className="text-[#7c3bed]">Banks</span>
+        </h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-6"></div>
+      </div>
         {/* Header */}
         <div
           className={`flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 transition-all duration-700 ${
@@ -237,10 +251,10 @@ export default function BanksSection() {
           }`}
         >
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-100 mb-4">
+            {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-100 mb-4">
               <Building2 className="w-4 h-4 text-indigo-600" />
               <span className="text-sm font-medium text-indigo-700">Partner Banks</span>
-            </div>
+            </div> */}
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
               Compare <span className="gradient-text">20+ Banks</span>
             </h2>
@@ -381,7 +395,7 @@ export default function BanksSection() {
                   </div>
 
                   {/* CTA */}
-                  <Button className="w-full gradient-bg text-white font-semibold py-5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 group">
+                  <Button onClick={handleApplyNow} className="w-full gradient-bg text-white font-semibold py-5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 group">
                     Apply Now
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -392,7 +406,7 @@ export default function BanksSection() {
         </div>
 
         {/* View All Button */}
-        <div className="text-center mt-10">
+        {/* <div className="text-center mt-10">
           <Button
             variant="outline"
             size="lg"
@@ -401,7 +415,7 @@ export default function BanksSection() {
             View All Banks
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   )

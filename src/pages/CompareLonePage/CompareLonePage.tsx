@@ -142,7 +142,7 @@ const CompareLonePage = () => {
   const selectedLenderObjects = lenders.filter((l) =>
     selectedLenders.includes(l.id),
   );
-
+  console.log("Lenders", lenders);
   return (   
     <div className="min-h-screen justify-center bg-background">
       {/* Hero Section */}

@@ -11,24 +11,27 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
+// import happirateLogo from '../assets/happirate-logo.png'
+// import TextLogo from '../assets/happirate-text-logo.png'
+import happirateLogo from '../../../assets/images/happirateLogo.png'
+import TextLogo from '../../../assets/images/image.png'
 const footerLinks = {
   loans: [
-    { name: 'Personal Loan', href: '#' },
-    { name: 'Home Loan', href: '#' },
-    { name: 'Car Loan', href: '#' },
-    { name: 'Education Loan', href: '#' },
-    { name: 'Business Loan', href: '#' },
+    { name: 'Personal Loan', href: '/loan-application' },
+    { name: 'Home Loan', href: '/coming-soon' },
+    // { name: 'Car Loan', href: '#' },
+    { name: 'Education Loan', href: '/coming-soon' },
+    { name: 'Business Loan', href: '/coming-soon' },
   ],
-  company: [
-    { name: 'About Us', href: '#' },
-    { name: 'Careers', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Contact', href: '#' },
-  ],
+  // company: [
+  //   { name: 'About Us', href: '#' },
+  //   { name: 'Careers', href: '#' },
+  //   { name: 'Press', href: '#' },
+  //   { name: 'Blog', href: '#' },
+  //   { name: 'Contact', href: '#' },
+  // ],
   resources: [
-    { name: 'EMI Calculator', href: '#emi-calculator' },
+    { name: 'EMI Calculator', href: '/emi-calculator' },
     { name: 'Loan Guide', href: '#' },
     { name: 'FAQs', href: '#' },
     { name: 'Terms of Service', href: '#' },
@@ -42,15 +45,15 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: <Facebook className="w-5 h-5" />, href: '#', label: 'Facebook' },
-  { icon: <Twitter className="w-5 h-5" />, href: '#', label: 'Twitter' },
-  { icon: <Instagram className="w-5 h-5" />, href: '#', label: 'Instagram' },
-  { icon: <Linkedin className="w-5 h-5" />, href: '#', label: 'LinkedIn' },
+  // { icon: <Facebook className="w-5 h-5" />, href: '#', label: 'Facebook' },
+  // { icon: <Twitter className="w-5 h-5" />, href: '#', label: 'Twitter' },
+  { icon: <Instagram className="w-5 h-5" />, href: 'https://www.instagram.com/happirate_/', target: "_blank", label: 'Instagram' },
+  // { icon: <Linkedin className="w-5 h-5" />, href: '#', label: 'LinkedIn' },
 ]
 
 export default function Footer() {
   return (
-    <footer id="contact" className="bg-slate-900 text-white relative overflow-hidden">
+    <footer className="bg-slate-900 text-white relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute top-0 left-0 w-full h-1 gradient-bg" />
       <div className="absolute top-20 right-20 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl" />
@@ -58,7 +61,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 relative">
         {/* Top Section - Newsletter */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-12 border-b border-slate-800">
+        {/* <div className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-12 border-b border-slate-800">
           <div className="text-center lg:text-left">
             <h3 className="text-2xl font-bold mb-2">Stay Updated</h3>
             <p className="text-slate-400">
@@ -76,18 +79,25 @@ export default function Footer() {
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
-        </div>
+        </div> */}
+        {/* Contact Section - Right Aligned  */}
 
         {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 py-12">
-          {/* Brand Column */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-x-24 py-12">        
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">H</span>
-              </div>
-              <span className="font-bold text-xl tracking-tight">HAPPIRATE</span>
-            </a>
+                      <div className="flex items-center relative left-[-30px]">
+                        <a href="/" className="flex items-center ">
+                          <img
+                            src={happirateLogo}
+                            alt="Happirate logo"
+                            className="h-19 w-19"
+                          />
+            
+                          <div className="font-bold text-2xl tracking-tight text-white ml-[-10px]">
+                            Happirate
+                          </div>
+                        </a>
+                      </div>
             <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
               India's most trusted loan comparison platform. We help you find the best 
               loan offers from top banks with complete transparency.
@@ -128,7 +138,7 @@ export default function Footer() {
           </div>
 
           {/* Company Column */}
-          <div>
+          {/* <div>
             <h4 className="font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
@@ -142,7 +152,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Resources Column */}
           <div>
@@ -191,6 +201,8 @@ export default function Footer() {
               <a
                 key={social.label}
                 href={social.href}
+                target={social.target}
+                rel="noopener noreferrer"
                 aria-label={social.label}
                 className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all duration-300"
               >
