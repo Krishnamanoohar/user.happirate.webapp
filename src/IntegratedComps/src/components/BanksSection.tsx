@@ -164,10 +164,21 @@ export default function BanksSection() {
   const [canScrollRight, setCanScrollRight] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
-    const handleApplyNow = () => {
-    sessionStorage.setItem("redirectAfterLogin", "/loan-application");
-    navigate('sign-in')
+  const [userName, setUserName] = useState("");
 
+  useEffect(() => {
+    setIsVisible(true);
+    const storedName = sessionStorage.getItem("mobile_number");
+    setUserName(storedName);
+  }, []);
+
+  const handleApplyNow = () => {
+    sessionStorage.setItem("redirectAfterLogin", "/loan-application");
+    if (userName) {
+      navigate("/loan-application");
+    } else {
+      navigate("/sign-in");
+    }
   };
 
   useEffect(() => {
@@ -319,10 +330,11 @@ export default function BanksSection() {
           {/* Cards Container */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-5 overflow-x-auto pb-4 px-2 scrollbar-hide snap-x snap-mandatory"
+            className="flex gap-5 overflow-x-auto pb-4 px-2 scrollbar-hide snap-x snap-mandatory min-h-[400px]"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {filteredBanks.map((bank, index) => (
+            {filteredBanks.length > 0 ? (
+              filteredBanks.map((bank, index) => (
               <div
                 key={bank.id}
                 className={`flex-shrink-0 w-80 snap-start transition-all duration-500 ${
@@ -401,7 +413,29 @@ export default function BanksSection() {
                   </Button>
                 </div>
               </div>
-            ))}
+              ))
+            ) : (
+              /* --- NO RESULTS MESSAGE --- */
+              <div className="w-full flex flex-col items-center justify-center py-12 text-center animate-in fade-in zoom-in duration-300">
+                <div className="bg-indigo-50 p-6 rounded-full mb-4">
+                  <Search className="w-12 h-12 text-indigo-400 opacity-50" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                  No banks found for "{searchQuery}"
+                </h3>
+                <p className="text-slate-500 max-w-md mx-auto">
+                  We couldn't find any partner banks matching your search. 
+                  Try adjusting your filters or search for another bank.
+                </p>
+                <Button 
+                  variant="link" 
+                  onClick={() => {setSearchQuery(''); setFilterFeatured(false);}}
+                  className="text-[#7c3bed] mt-4 font-semibold"
+                >
+                  Clear all search and filters
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 

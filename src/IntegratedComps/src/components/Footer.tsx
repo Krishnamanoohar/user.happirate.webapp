@@ -2,34 +2,25 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  Facebook, 
-  Twitter, 
   Instagram, 
-  Linkedin,
   ArrowRight,
-  Heart
+  Heart,
+  ShieldCheck,
+  Facebook,
+  Twitter
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-// import happirateLogo from '../assets/happirate-logo.png'
-// import TextLogo from '../assets/happirate-text-logo.png'
 import happirateLogo from '../../../assets/images/happirateLogo.png'
-import TextLogo from '../../../assets/images/image.png'
+
 const footerLinks = {
   loans: [
     { name: 'Personal Loan', href: '/loan-application' },
     { name: 'Home Loan', href: '/coming-soon' },
-    // { name: 'Car Loan', href: '#' },
+    // { name: 'Car Loan', href: '/coming-soon' },
     { name: 'Education Loan', href: '/coming-soon' },
     { name: 'Business Loan', href: '/coming-soon' },
   ],
-  // company: [
-  //   { name: 'About Us', href: '#' },
-  //   { name: 'Careers', href: '#' },
-  //   { name: 'Press', href: '#' },
-  //   { name: 'Blog', href: '#' },
-  //   { name: 'Contact', href: '#' },
-  // ],
   resources: [
     { name: 'EMI Calculator', href: '/emi-calculator' },
     { name: 'Loan Guide', href: '#' },
@@ -45,175 +36,122 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  // { icon: <Facebook className="w-5 h-5" />, href: '#', label: 'Facebook' },
-  // { icon: <Twitter className="w-5 h-5" />, href: '#', label: 'Twitter' },
-  { icon: <Instagram className="w-5 h-5" />, href: 'https://www.instagram.com/happirate_/', target: "_blank", label: 'Instagram' },
-  // { icon: <Linkedin className="w-5 h-5" />, href: '#', label: 'LinkedIn' },
+  { icon: <Instagram className="w-9 h-9" />, href: 'https://www.instagram.com/happirate_/', target: "_blank", label: 'Instagram' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-white relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute top-0 left-0 w-full h-1 gradient-bg" />
-      <div className="absolute top-20 right-20 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl" />
+    <footer className="relative overflow-hidden bg-[#5b21b6] text-white">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#7c3aed] via-[#5b21b6] to-[#2e1065] opacity-95" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 relative">
-        {/* Top Section - Newsletter */}
-        {/* <div className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-12 border-b border-slate-800">
-          <div className="text-center lg:text-left">
-            <h3 className="text-2xl font-bold mb-2">Stay Updated</h3>
-            <p className="text-slate-400">
-              Get the latest loan offers and financial tips delivered to your inbox
-            </p>
-          </div>
-          <div className="flex gap-3 w-full lg:w-auto">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 w-full lg:w-72"
-            />
-            <Button className="gradient-bg text-white font-semibold px-6 rounded-lg hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 group flex-shrink-0">
-              Subscribe
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div> */}
-        {/* Contact Section - Right Aligned  */}
+      <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-white/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-80 h-80 bg-indigo-400/20 rounded-full blur-[100px]" />
 
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-x-24 py-12">        
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 relative z-10">
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 lg:gap-x-16 pb-12">         
+          
+          {/* Brand Column */}
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
-                      <div className="flex items-center relative left-[-30px]">
-                        <a href="/" className="flex items-center ">
-                          <img
-                            src={happirateLogo}
-                            alt="Happirate logo"
-                            className="h-19 w-19"
-                          />
-            
-                          <div className="font-bold text-2xl tracking-tight text-white ml-[-10px]">
-                            Happirate
-                          </div>
-                        </a>
-                      </div>
-            <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
-              India's most trusted loan comparison platform. We help you find the best 
-              loan offers from top banks with complete transparency.
+            <div className="flex items-center mb-8">
+              <a href="/" className="flex items-center group">
+
+                <div className="bg-white p-1.5 w-16 h-16 rounded-2xl shadow-2xl transition-transform duration-300 group-hover:scale-110 flex items-center justify-center">
+                  <img 
+                    src={happirateLogo} 
+                    alt="Happirate" 
+                    /* 3. INCREASED IMAGE SIZE: Changed from h-10 w-10 to h-16 w-16
+                      4. Added object-contain to ensure it doesn't stretch
+                    */
+                    className="h-16 w-16 object-contain" 
+                  />
+                </div>
+                <span className="font-extrabold text-4xl tracking-tight text-white ml-5">
+                  Happirate
+                </span>
+              </a>
+            </div>
+            <p className="text-violet-100/90 mb-10 max-w-sm leading-relaxed text-lg">
+              India's most trusted loan comparison platform. We simplify finance 
+              with transparency and speed.
             </p>
             
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <a href="mailto:support@happirate.com" className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">support@happirate.com</span>
+            {/* 3. BIG CONTACT ICONS */}
+            <div className="space-y-6">
+              <a href="mailto:support@happirate.com" className="flex items-center gap-5 text-violet-100/90 hover:text-white transition-all group">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-110 transition-all">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <span className="text-lg font-semibold tracking-wide">support@happirate.com</span>
               </a>
-              <a href="tel:+911800123456" className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">1800-123-4567</span>
-              </a>
-              <div className="flex items-center gap-3 text-slate-400">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">Mumbai, Maharashtra, India</span>
+              <div className="flex items-center gap-5 text-violet-100/80 group">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
+                  <MapPin className="w-6 h-6" />
+                </div>
+                <span className="text-lg font-semibold tracking-wide">Mumbai, Maharashtra, India</span>
               </div>
             </div>
           </div>
 
-          {/* Loans Column */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">Loans</h4>
-            <ul className="space-y-3">
-              {footerLinks.loans.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Column */}
-          {/* <div>
-            <h4 className="font-semibold text-white mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div> */}
-
-          {/* Resources Column */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">Resources</h4>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Partners Column */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">Partners</h4>
-            <ul className="space-y-3">
-              {footerLinks.partners.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Links Columns */}
+          {[
+            { title: "Loans", links: footerLinks.loans },
+            { title: "Resources", links: footerLinks.resources },
+            { title: "Partners", links: footerLinks.partners },
+          ].map((section) => (
+            <div key={section.title}>
+              <h4 className="font-black text-white mb-8 uppercase tracking-[0.2em] text-sm opacity-80">
+                {section.title}
+              </h4>
+              <ul className="space-y-5">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="text-violet-100/80 hover:translate-x-3 hover:text-white transition-all text-lg font-medium inline-flex items-center group"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-800">
-          <p className="text-slate-500 text-sm flex items-center gap-1">
-            Made with <Heart className="w-4 h-4 text-rose-500 fill-rose-500" /> in India
-          </p>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10 pt-10 border-t border-white/10">
           
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target={social.target}
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all duration-300"
-              >
-                {social.icon}
-              </a>
-            ))}
+          <div className="flex-1 flex justify-center md:justify-start w-full">
+             <p className="text-violet-100/90 text-lg font-medium">
+               © 2026 Happirate. All rights reserved.
+             </p>
           </div>
-
-          <p className="text-slate-500 text-sm">
-            © 2026 Happirate. All rights reserved.
-          </p>
+          
+          {/* CENTERED - Made with Love (Big Heart) */}
+          <div className="flex-1 flex justify-center w-full">
+            <p className="text-violet-100/90 text-lg flex items-center gap-2 font-bold whitespace-nowrap">
+              Made with <Heart className="w-7 h-7 text-rose-400 fill-rose-400 animate-pulse" /> in India
+            </p>
+          </div>
+          
+          {/* 4. BIG SOCIAL ICONS CONTAINER */}
+          <div className="flex-1 flex justify-center md:justify-end w-full">
+            <div className="flex items-center gap-6">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target={social.target}
+                  rel="noopener noreferrer"
+                  /* Wrapper increased to w-16 h-16 */
+                  className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-[#7c3aed] transition-all duration-500 shadow-2xl hover:-translate-y-2"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </footer>

@@ -1745,7 +1745,7 @@ export default function GeminiCreditHealthReport() {
     });
     return Array.from(types).sort();
   }, [reportData]);
-
+  console.log("reportData",reportData);
   const filteredAccounts = useMemo(() => {
     if (!reportData || !reportData.accounts) return [];
 

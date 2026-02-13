@@ -634,21 +634,26 @@ const LoanApplication = () => {
     autoFillUserDetails();
   }, []);
   if (pageLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
-          {/* Sub Message */}
-          <p className="text-2xl font-bold text-primary">
-            Loading your credit profile...
-          </p>
+  return (
+  <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+    <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
+      
+      {/* Sub Message with Brand Color */}
+      <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
+        Loading your <span className="text-[#7c3aed]">credit profile...</span>
+      </p>
 
-          {/* Horizontal Loader */}
-          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full bg-blue-600 animate-loader-bar" />
-          </div>
-        </div>
+      {/* Modern Bordered Loader Bar */}
+      <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
+        {/* Inner Progress Bar */}
+        <div 
+          className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]" 
+          style={{ width: '40%' }} /* Note: Use state/props for dynamic width */
+        />
       </div>
-    );
+    </div>
+  </div>
+);
   }
   console.log(formData, "form data");
   return (
@@ -667,9 +672,10 @@ const LoanApplication = () => {
         <div className="px-4 py-8 md:py-12 max-w-7xl w-full mt-10">
           {/* Header */}
           <div className="justify-center text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Loan Application
+            <h1 className="text-4xl md:text-3xl font-bold text-foreground mb-4 mt-4">
+              Loan <span className="text-[#7c3bed]">Application</span>
             </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-4"></div>
             <p className="mt-2 text-muted-foreground">
               Complete all steps to submit your application
             </p>

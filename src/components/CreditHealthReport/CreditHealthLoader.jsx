@@ -24,18 +24,20 @@ export default function DashboardLoader() {
 
 
       {/* Main Text */}
-      <h1 className="text-xl font-semibold text-slate-800 mb-2">
-        Loading Your Credit Dashboard
-      </h1>
+      <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse mb-6">
+        Loading your <span className="text-[#7c3aed]">Credit Dashboard...</span>
+      </p>
 
       {/* Dynamic Text */}
-      <p className="text-sm text-slate-500 animate-pulse">
+      <p className="text-sm text-slate-600 animate-pulse mb-4">
         {loadingMessages[index]}
       </p>
 
       {/* Progress Bar */}
-      <div className="w-64 h-2 bg-slate-200 rounded-full mt-6 overflow-hidden">
-        <div className="h-full bg-blue-600 animate-loader-bar" />
+      <div className="w-100 h-5 bg-white border-2 border-slate-200 rounded-full mt-6 p-1 shadow-sm">
+        <div 
+          className="h-full bg-gradient-to-r from-violet-500 to-purple-600 rounded-full animate-loader-bar shadow-[0_0_10px_rgba(139,92,246,0.3)]" 
+        />
       </div>
     </div>
   );

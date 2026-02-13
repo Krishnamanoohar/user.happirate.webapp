@@ -208,9 +208,9 @@ export default function Hero() {
             <div className="glass-card rounded-3xl p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-slate-900">Featured Banks</h3>
-                <span className="text-sm text-indigo-600 font-medium cursor-pointer hover:underline">
+                <button onClick={() => window.location.href = '/#banks'} className="text-sm text-indigo-600 font-medium cursor-pointer hover:underline">
                   View All
-                </span>
+                </button>
               </div>
 
               <div className="space-y-3">
@@ -258,7 +258,7 @@ export default function Hero() {
                       <div className="font-bold text-slate-900">
                         {bank.amount}
                       </div>
-                      <button className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                      <button onClick={handleApplyNow} className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
                         APPLY
                       </button>
                     </div>
