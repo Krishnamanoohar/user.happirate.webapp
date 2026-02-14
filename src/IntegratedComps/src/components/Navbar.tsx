@@ -186,9 +186,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                     </div>
                     <button
                       onClick={handleProfile}
-                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900 
-                                hover:bg-indigo-50 transition-colors duration-150 
-                                flex items-center gap-2 border-b border-gray-200"
+                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
                     >
                       My Profile
                     </button>
@@ -227,17 +225,9 @@ export default function Navbar({ scrollY }: NavbarProps) {
       </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
+      {/* {mobileMenuOpen && (
         <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-100 animate-slide-up">
           <div className="px-4 py-4 space-y-3">
-            <a
-              href="#banks"
-              className="flex items-center gap-2 text-slate-700 hover:text-indigo-600 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Building2 className="w-4 h-4" />
-              Banks
-            </a>
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -257,7 +247,86 @@ export default function Navbar({ scrollY }: NavbarProps) {
             </Button>
           </div>
         </div>
-      )}
+      )} */}
+      {/* Mobile Menu */}
+{mobileMenuOpen && (
+  <div className="lg:hidden bg-white border-t border-slate-100 animate-in slide-in-from-top duration-300">
+    <div className="px-4 py-6 space-y-4">
+      {/* Navigation Links */}
+      <div className="space-y-1">
+        {navLinks.map((link) => (
+          <a
+            key={link.name}
+            href={link.href}
+            className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            {link.name}
+          </a>
+        ))}
+      </div>
+
+      {/* Profile / Auth Section */}
+      <div className="pt-4">
+        {user ? (
+          /* --- MOBILE LOGGED IN STATE --- */
+          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+            <div className="flex items-center gap-4 mb-4">
+              {/* <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white shadow-md">
+                <User className="w-6 h-6" />
+              </div> */}
+              <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-10 h-10 rounded-full gradient-bg text-white bg-violet-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-violet-500"
+                >
+                  {/* {user?.username?.charAt(0).toUpperCase()} */}
+                  <User />
+                </button>
+              <div className="overflow-hidden">
+                <p className="font-bold text-slate-900 truncate">{user.username || 'User'}</p>
+                <p className="text-xs text-slate-500 truncate">{user.mobile}</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3">
+              <Button 
+                variant="outline" 
+                className="text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                onClick={() => {
+                  handleProfile();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                My Profile
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          </div>
+        ) : (
+          /* --- MOBILE LOGGED OUT STATE --- */
+          <Button
+            className="w-full gradient-bg text-white font-bold py-6 rounded-2xl shadow-lg shadow-indigo-200"
+            onClick={() => {
+              navigate("/sign-in");
+              setMobileMenuOpen(false);
+            }}
+          >
+            Sign In to Account
+          </Button>
+        )}
+      </div>
+    </div>
+  </div>
+)}
     </nav>
 
   );

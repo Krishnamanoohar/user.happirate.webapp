@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-export default function EMICalculator() {
+function EMICalculator() {
   const [loanAmount, setLoanAmount] = useState(500000)
   const [interestRate, setInterestRate] = useState(10.5)
   const [tenure, setTenure] = useState(5)
@@ -264,3 +264,4 @@ export default function EMICalculator() {
     </section>
   )
 }
+export default EMICalculator;

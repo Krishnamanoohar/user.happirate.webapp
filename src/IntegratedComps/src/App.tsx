@@ -3,7 +3,6 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import BanksSection from "./components/BanksSection";
-import EMICalculator from "./components/EMICalculator";
 import Features from "./components/Features";
 import Footer from "./components/Footer";
 import CallToActionSection2 from "@/components/CallToActionSection2/CallToActionSection2";
@@ -29,7 +28,6 @@ function LandingApp() {
         {/* <FeaturesCardsSection /> */}
         <KimiFeaturesSection /> 
         {/* <CallToActionSection2 /> */}
-        {/* <EMICalculator /> */}
         <BanksSection />
         <GetInTouchSection/>
       </main>

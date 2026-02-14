@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 const GetInTouchSection = () => {
   return (
     <section id="contact" className="min-h-screen bg-[#F8FAFC] py-16 px-4 sm:px-6 lg:px-8 flex items-center">
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="max-w-6xl mx-auto w-full">
         {/* Header Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
@@ -31,7 +31,7 @@ const GetInTouchSection = () => {
                   </div>
                   <div>
                     <h4 className="text-slate-900 font-bold text-lg">Office Address</h4>
-                    <p className="text-slate-500">12 Finance Street, San Francisco, CA 94107</p>
+                    <p className="text-slate-500">Hyderabad, Telangana, India</p>
                   </div>
                 </div>
 
@@ -41,7 +41,7 @@ const GetInTouchSection = () => {
                   </div>
                   <div>
                     <h4 className="text-slate-900 font-bold text-lg">Call Us</h4>
-                    <p className="text-slate-500">+1 (800) 123-4567</p>
+                    <p className="text-slate-500">+91 9346521702</p>
                   </div>
                 </div>
 
@@ -124,7 +124,7 @@ const GetInTouchSection = () => {
                 {/* Primary Button */}
                 <button
                   type="submit"
-                  className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white py-4 rounded-xl font-bold text-lg transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 mt-4 active:scale-[0.98]"
+                  className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white py-3 rounded-xl font-bold text-lg transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 mt-4 active:scale-[0.98]"
                 >
                   Send Message
                   <Send className="w-5 h-5" />

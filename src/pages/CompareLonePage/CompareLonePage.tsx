@@ -146,7 +146,7 @@ const CompareLonePage = () => {
   return (   
     <div className="min-h-screen justify-center bg-background">
       {/* Hero Section */}
-      <header className="relative bg-gradient-to-br from-[#1a132f] via-[#2a1f4a] to-[#3b2a63] text-white py-24">
+      <header className="relative bg-gradient-to-br from-[#1a132f] via-[#2a1f4a] to-[#3b2a63] text-white py-24 mt-19">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center animate-fade-in">
             {/* Top Badge */}

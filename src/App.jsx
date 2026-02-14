@@ -13,7 +13,6 @@ import Chatbot from "./components/ChatbotComponent/Chatbot";
 import BankApplicationPage from "./pages/BankApplicationPage/BankApplicationPage";
 import AboutSection from "./components/AboutSection/AboutSection";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
-import EMICalculatorPage from "./pages/EMICalculatorPage/EMICalculatorPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import axios from "axios";
 import SignInPopup from "./pages/SignInPage/SignInPopup";
@@ -25,7 +24,6 @@ import { NewCompareLoanApplication } from "./pages/NewLoanComparisonPage/NewComp
 import { LoanEligibilityForm } from "./components/OtherComponents/SmartCompare/LoanEligibilityForm";
 import SmartComparePage from "./components/OtherComponents/SmartCompare/SmartComparePage";
 import HappirateSplitAuth2 from "./pages/Authentication Page/HappirateSplitAuth";
-import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 // import CompareLoanPage from "./pages/CompareLoanPage/CompareLoanPage";
 import CompareLoanPage from "./pages/CompareLonePage/CompareLonePage";
@@ -39,6 +37,7 @@ import KimiCreditHealthReport from "./components/CreditHealthReport/KimiCreditHe
 import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCreditHealthReport";
 import UserProfile from "./IntegratedComps/src/components/UserProfile";
 import ComingSoonPage from "./components/ComingSoon/ComingSoon";
+import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -95,7 +94,6 @@ const App = () => {
               path="loan-tracking-dashboard"
               element={<LoanTrackingDashboard />}
             />
-            {/* <Route path="emi-calculator" element={<EMICalculatorPage />} /> */}
             <Route path="/emi-calculator" element={<EMICalculator />} />
             <Route
               path="financial-summary"
