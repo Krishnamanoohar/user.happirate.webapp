@@ -249,11 +249,11 @@ const LoanApplication = () => {
         formData.creditCardUtilization !== 0
       )
         newErrors.creditCardUtilization = "Credit Card Utilization is required";
-      if (
-        !formData.residentialStability &
-        (formData.residentialStability !== 0)
-      )
-        newErrors.residentialStability = "Residential Stability is required";
+      // if (
+      //   !formData.residentialStability &
+      //   (formData.residentialStability !== 0)
+      // )
+      //   newErrors.residentialStability = "Residential Stability is required";
       if (!formData.existingEmi && formData.existingEmi !== 0)
         newErrors.existingEmi = "Existing EMI is required";
       if (!formData.settlements && formData.settlements !== 0)
@@ -375,7 +375,6 @@ const LoanApplication = () => {
       navigate("/eligible-loans");
     }
   };
-
   const handleBack = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
@@ -983,7 +982,7 @@ const LoanApplication = () => {
                       required
                       error={errors.creditCardUtilization}
                     />
-                    <FormSelect
+                    {/* <FormSelect
                       label="Residential Stability"
                       value={formData.residentialStability}
                       onChange={(v) =>
@@ -998,7 +997,7 @@ const LoanApplication = () => {
                         { value: "10", label: "More than 5 years" },
                       ]}
                       error={errors.residentialStability}
-                    />
+                    /> */}
                     <FormInput
                       label="Existing EMI (₹)"
                       value={formData.existingEmi}
@@ -1047,7 +1046,7 @@ const LoanApplication = () => {
                       label="Desired Loan Tenure (months)"
                       value={formData.loanTenure}
                       onChange={(v) => updateFormData("loanTenure", v)}
-                      placeholder="Enter amount"
+                      placeholder="Enter Tenure in months (e.g., 24)"
                       type="number"
                       required
                       error={errors.loanTenure}
