@@ -925,7 +925,7 @@ const LoanApplication = () => {
                       placeholder="Select Salary Mode"
                       required
                       options={[
-                          { value: "bank_transfer", label: "Bank Transfer" },
+                          { value: "bank-transfer", label: "Bank Transfer" },
                           { value: "cash", label: "Cash" },
                       ]}
                       error={errors.salaryMode}
