@@ -38,7 +38,6 @@ const CompareLonePage = () => {
   const [lenders, setLenders] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   const handleSelectLender = (id: string) => {
     if (selectedLenders.includes(id)) {
       setSelectedLenders(selectedLenders.filter((l) => l !== id));
@@ -95,8 +94,9 @@ const CompareLonePage = () => {
           interestRate,
           maximumEligibleLoanAmount,
           processingFee,
-          disbursal,
+          disbursalTime,
           tenureOptions,
+          prePaymentCharges,
         } = bank;
         return {
           id: bankId,
@@ -112,7 +112,8 @@ const CompareLonePage = () => {
           processingFeeMax: 1.5,
           approvalProbability: approvalProbability,
           prepaymentCharges: "2% after 12 EMIs",
-          disbursalTime: disbursal,
+          disbursalTime: disbursalTime,
+          prePaymentCharges: prePaymentCharges,
           pros: [
             "Fastest approval",
             "Lowest APR for existing customers",
@@ -134,7 +135,7 @@ const CompareLonePage = () => {
     } catch (error) {
       console.log("Error in fetching products", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -145,7 +146,7 @@ const CompareLonePage = () => {
     selectedLenders.includes(l.id),
   );
   console.log("Lenders", lenders);
-  return (   
+  return (
     <div className="min-h-screen justify-center bg-background">
       {/* Hero Section */}
       {/* <header className="relative bg-gradient-to-br from-[#1a132f] via-[#2a1f4a] to-[#3b2a63] text-white py-24 mt-19">
@@ -301,27 +302,27 @@ const CompareLonePage = () => {
                 </div>
               )}
               {/* Lenders Display */}
-                {loading ? (
-                  <div className="flex justify-center py-16">
-                    <FunnyLoader />
-                  </div>
-                ) : viewMode === "grid" ? (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {lenders.map((lender) => (
-                      <LenderCard
-                        key={lender.id}
-                        lender={lender}
-                        isSelected={selectedLenders.includes(lender.id)}
-                        onSelect={handleSelectLender}
-                        disabled={
-                          selectedLenders.length >= 2 &&
-                          !selectedLenders.includes(lender.id)
-                        }
-                        onApplyNow={handleApplyNow}
-                      />
-                    ))}
-                  </div>
-                ) : (
+              {loading ? (
+                <div className="flex justify-center py-16">
+                  <FunnyLoader />
+                </div>
+              ) : viewMode === "grid" ? (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+                  {lenders.map((lender) => (
+                    <LenderCard
+                      key={lender.id}
+                      lender={lender}
+                      isSelected={selectedLenders.includes(lender.id)}
+                      onSelect={handleSelectLender}
+                      disabled={
+                        selectedLenders.length >= 2 &&
+                        !selectedLenders.includes(lender.id)
+                      }
+                      onApplyNow={handleApplyNow}
+                    />
+                  ))}
+                </div>
+              ) : (
                 <div className="card-elevated overflow-hidden">
                   <ComparisonTable
                     lenders={lenders}
@@ -354,7 +355,7 @@ const CompareLonePage = () => {
               transition-all
               hover:bg-purple-600
               hover:text-white
-              hover:shadow-md"
+              hover:shadow-md mt-10"
               >
                 ← Back to all lenders
               </Button>

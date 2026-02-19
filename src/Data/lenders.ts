@@ -17,6 +17,7 @@ export interface Lender {
   cons: string[];
   uniqueAdvantages: string[];
   restrictions: string[];
+  prePaymentCharges: number;
 }
 
 export const lenders: Lender[] = [

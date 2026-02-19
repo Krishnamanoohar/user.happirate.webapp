@@ -33,6 +33,7 @@ import {
   personalDetailsVerification,
   submitFinancialProfileDetails,
   updateCreditReport,
+  fetchTaxDocuments
 } from "../../../src/api/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -165,6 +166,8 @@ const LoanApplication = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [pageLoading, setPageLoading] = useState(true);
+  const [taxNumber, setTaxNumber] = useState("");
+  const [isFetchingDocs, setIsFetchingDocs] = useState(false);
 
   const navigate = useNavigate();
 
@@ -206,6 +209,44 @@ const LoanApplication = () => {
     currentCompanyJoiningDate: "",
   });
   const isEmpty = (v) => v === "" || v === null || v === undefined;
+  const handleFetchTaxDocuments = async () => {
+  if (!taxNumber.trim()) {
+    toast.error("Please enter Tax Number");
+    return;
+  }
+
+  try {
+    setIsFetchingDocs(true);
+
+    const resp = await fetchTaxDocuments({
+      taxNumber,
+      mobileNumber: sessionStorage.getItem("mobile_number"),
+    });
+
+    const itrFileUrl = resp?.data?.itrUrl;
+
+    if (!itrFileUrl) {
+      toast.error("No ITR documents found");
+      return;
+    }
+
+    // Store in documents state
+    setDocuments((prev) => ({
+      ...prev,
+      itr: {
+        name: "ITR_Fetched.pdf",
+        url: itrFileUrl,
+        fetched: true,
+      },
+    }));
+
+    toast.success("ITR documents fetched successfully");
+  } catch (error) {
+    toast.error("Failed to fetch tax documents");
+  } finally {
+    setIsFetchingDocs(false);
+  }
+};
   const validateStep = () => {
     const newErrors = {};
 
@@ -1175,6 +1216,23 @@ const LoanApplication = () => {
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Required Documents
                   </h3>
+                   <div className="flex gap-8 w-full md:w-auto">
+                      <input
+                        type="text"
+                        placeholder="Enter Your Income Tax Efiling Password"
+                        value={taxNumber}
+                        onChange={(e) => setTaxNumber(e.target.value)}
+                        className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+
+                      <Button
+                        onClick={handleFetchTaxDocuments}
+                        disabled={isFetchingDocs}
+                        className="h-10"
+                      >
+                        {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
+                      </Button>
+                    </div> 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FileUploadZone
                       label="Last 3 Years ITR/Form 16"

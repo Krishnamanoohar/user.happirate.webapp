@@ -82,6 +82,11 @@ const fetchChatResponse = async ({ contextData, message }) => {
     console.log("Error in handling chat", error)
   }
 }
+const fetchTaxDocuments = async (payload) => {
+  const resp = await apiClient.post("/fetch-tax-documents", payload);
+  console.log("Tax document response", resp);
+  return resp;
+};
 
 
 export {
@@ -93,5 +98,6 @@ export {
   updateCreditReport,
   fetchEligibleLoanProducts,
   fetchRawResponseOfUser,
-  fetchChatResponse
+  fetchChatResponse,
+  fetchTaxDocuments
 };

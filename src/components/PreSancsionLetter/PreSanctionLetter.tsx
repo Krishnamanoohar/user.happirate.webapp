@@ -81,7 +81,7 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
   const tenure = 36; // months
   const monthlyRate = lender.trueAPR / 12 / 100;
   // const emi = Math.round((estimatedAmount * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1));
-  const emi = "nan"
+  const emi = "N/A";
 
   const handleAccept = () => {
     setShowSuccessDialog(true);
@@ -250,8 +250,8 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                   <Receipt className="w-4 h-4 text-primary" />
                   <p className="text-xs text-muted-foreground">Processing Fee</p>
                 </div>
-                {/* <p className="font-bold text-lg">{lender.processingFeeMin}% – {lender.processingFeeMax}%</p> */}
-                <p className="font-bold text-lg">{lender.processingFee}</p>
+                <p className="font-bold text-lg">{lender.processingFeeMin}% – {lender.processingFeeMax}%</p>
+                {/* <p className="font-bold text-lg">{lender.processingFee}</p> */}
               </div>
               
               <div className="bg-secondary/50 rounded-xl p-4 border border-border">
@@ -259,7 +259,11 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                   <Timer className="w-4 h-4 text-primary" />
                   <p className="text-xs text-muted-foreground">Expected Disbursal</p>
                 </div>
-                <p className="font-bold text-lg">{lender.disbursalTime}</p>
+                {/* <p className="font-bold text-lg">{lender.disbursalTime}</p> */}
+                <p className='font-bold text-lg'>
+                {lender.disbursalTime.from}–{lender.disbursalTime.to}{" "}
+            {lender.disbursalTime.unit.charAt(0).toUpperCase() + lender.disbursalTime.unit.slice(1)}
+            </p>
               </div>
               
               <div className="bg-secondary/50 rounded-xl p-4 border border-border">
@@ -276,8 +280,15 @@ export const PreSanctionLetter = ({ lender, loanType, onBack }: PreSanctionLette
                   <p className="text-xs text-muted-foreground text-yellow-600">Estimated EMI</p>
                 </div>
                 <p className="font-display text-xl font-bold text-yellow-500">
-                  ₹{emi.toLocaleString('en-IN')}/mo
+                  ₹ {emi.toLocaleString('en-IN')}/mo
                 </p>
+              </div>
+              <div className="bg-secondary/50 rounded-xl p-4 border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Percent className="w-4 h-4 text-primary" />
+                  <p className="text-xs text-muted-foreground">Pre Payment Charges</p>
+                </div>
+                <p className="font-bold text-lg text-green-600">{lender.prePaymentCharges}%</p>
               </div>
             </div>
           </div>
