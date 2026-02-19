@@ -138,6 +138,11 @@ const buildEmploymentDetailsPayload = (data) => ({
   companyName: data.companyName,
   uanNumber: data.uanNumber,
   employmentExperience: data.employmentExperience,
+  previousCompanyName: data.previousCompanyName,
+  previousCompanyFrom: data.previousCompanyFrom,
+  previousCompanyTo: data.previousCompanyTo,
+  currentCompanyName: data.currentCompanyName,
+  currentCompanyJoiningDate: data.currentCompanyJoiningDate,
   monthlyIncome: Number(data.monthlyIncome),
   cibilScore: Number(data.cibilScore),
   recentEnquiries: Number(data.recentEnquiries),
@@ -194,6 +199,11 @@ const LoanApplication = () => {
     existingEmi: "",
     loanTenure: "",
     employmentCategory: "",
+    previousCompanyName: "",
+    previousCompanyFrom: "",
+    previousCompanyTo: "",
+    currentCompanyName: "",
+    currentCompanyJoiningDate: "",
   });
   const isEmpty = (v) => v === "" || v === null || v === undefined;
   const validateStep = () => {
@@ -236,6 +246,19 @@ const LoanApplication = () => {
       } else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
         newErrors.employmentExperience = "Only numbers allowed (e.g. 1 or 1.5)";
       }
+      if (!formData.previousCompanyName)
+        newErrors.previousCompanyName = "Previous Company Name is required";
+      if (!formData.previousCompanyFrom)
+        newErrors.previousCompanyFrom = "Previous Company Joined Date is required";
+      if (!formData.previousCompanyTo) {
+        newErrors.previousCompanyTo = "Previous Company Relieving Date is required";
+      } else if (formData.previousCompanyFrom && formData.previousCompanyTo <= formData.previousCompanyFrom) {
+        newErrors.previousCompanyTo = "Relieving date must be after joined date";
+      }
+      if (!formData.currentCompanyName)
+        newErrors.currentCompanyName = "Current Company Name is required";
+      if (!formData.currentCompanyJoiningDate)
+        newErrors.currentCompanyJoiningDate = "Current Company Joining Date is required";
       if (!formData.uanNumber)
         newErrors.uanNumber = "UAN/PF Number is required";
       if (!formData.salaryMode)
@@ -422,6 +445,11 @@ const LoanApplication = () => {
       employmentStatus: apiData.employmentStatus?.toLowerCase() ?? "",
       employmentExperience: apiData.employmentExperience,
       companyName: apiData.companyName,
+      previousCompanyName: apiData.previousCompanyName ?? "",
+      previousCompanyFrom: apiData.previousCompanyFrom?.split("T")[0] ?? "",
+      previousCompanyTo: apiData.previousCompanyTo?.split("T")[0] ?? "",
+      currentCompanyName: apiData.companyName,
+      currentCompanyJoiningDate: apiData.currentCompanyJoiningDate?.split("T")[0] ?? "",
       monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
@@ -867,12 +895,19 @@ const LoanApplication = () => {
                       required
                       error={errors.employmentStatus}
                     />
-                    <FormInput
-                      label="Company Name"
-                      value={formData.companyName}
-                      onChange={(v) => updateFormData("companyName", v)}
+                    <FormSelect
+                      label="Salary Mode"
+                      value={formData.salaryMode}
+                      onChange={(v) =>
+                        updateFormData("salaryMode", v)
+                      }
+                      placeholder="Select Salary Mode"
                       required
-                      error={errors.companyName}
+                      options={[
+                          { value: "bank-transfer", label: "Bank Transfer" },
+                          { value: "cash", label: "Cash" },
+                      ]}
+                      error={errors.salaryMode}
                     />
                     <FormInput
                       label="Employment Category"
@@ -916,20 +951,100 @@ const LoanApplication = () => {
                       required
                       error={errors.monthlyIncome}
                     />
-                    <FormSelect
-                      label="Salary Mode"
-                      value={formData.salaryMode}
-                      onChange={(v) =>
-                        updateFormData("salaryMode", v)
-                      }
-                      placeholder="Select Salary Mode"
+                      <FormInput
+                      label="Previous Company Name"
+                      value={formData.previousCompanyName || ""}
+                      onChange={(v) => updateFormData("previousCompanyName", v)}
+                      placeholder="Enter previous company name"
                       required
-                      options={[
-                          { value: "bank-transfer", label: "Bank Transfer" },
-                          { value: "cash", label: "Cash" },
-                      ]}
-                      error={errors.salaryMode}
+                      error={errors.previousCompanyName}
                     />
+
+                    {/* Previous Company From Date - custom with Calendar icon */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                        Previous Company Joined Date <span className="text-destructive">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={formData.previousCompanyFrom || ""}
+                          onChange={(e) => updateFormData("previousCompanyFrom", e.target.value)}
+                          max={getTodayISODate()}
+                          className={cn(
+                            "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
+                            errors.previousCompanyFrom
+                              ? "border-destructive focus:ring-destructive"
+                              : "border-input"
+                          )}
+                        />
+                        {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
+                      </div>
+                      {errors.previousCompanyFrom && (
+                        <p className="text-xs text-destructive mt-1">{errors.previousCompanyFrom}</p>
+                      )}
+                    </div>
+
+                    {/* Previous Company To Date - custom with Calendar icon */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                        Previous Company Relieving Date <span className="text-destructive">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={formData.previousCompanyTo || ""}
+                          onChange={(e) => updateFormData("previousCompanyTo", e.target.value)}
+                          min={formData.previousCompanyFrom || undefined}
+                          max={getTodayISODate()}
+                          className={cn(
+                            "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
+                            errors.previousCompanyTo
+                              ? "border-destructive focus:ring-destructive"
+                              : "border-input"
+                          )}
+                        />
+                        {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
+                      </div>
+                      {errors.previousCompanyTo && (
+                        <p className="text-xs text-destructive mt-1">{errors.previousCompanyTo}</p>
+                      )}
+                    </div>
+
+                    <FormInput
+                      label="Current Company Name"
+                      value={formData.currentCompanyName || ""}
+                      onChange={(v) => updateFormData("currentCompanyName", v)}
+                      placeholder="Enter current company name"
+                      required
+                      error={errors.currentCompanyName}
+                    />
+
+                    {/* Current Company Joining Date - custom with Calendar icon */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                        Current Company Joining Date <span className="text-destructive">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={formData.currentCompanyJoiningDate || ""}
+                          onChange={(e) => updateFormData("currentCompanyJoiningDate", e.target.value)}
+                          min={formData.previousCompanyTo || undefined}
+                          max={getTodayISODate()}
+                          className={cn(
+                            "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
+                            errors.currentCompanyJoiningDate
+                              ? "border-destructive focus:ring-destructive"
+                              : "border-input"
+                          )}
+                        />
+                        {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
+                      </div>
+                      {errors.currentCompanyJoiningDate && (
+                        <p className="text-xs text-destructive mt-1">{errors.currentCompanyJoiningDate}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
