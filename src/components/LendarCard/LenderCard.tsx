@@ -155,9 +155,9 @@ export const LenderCard = ({
             Disbursal
           </span>
           <span className="font-medium text-gray-900">
-            {lender.disbursalTime.from} – {lender.disbursalTime.to}{" "}
-            {lender.disbursalTime.unit.charAt(0).toUpperCase() +
-              lender.disbursalTime.unit.slice(1)}
+            {lender?.disbursalTime?.from || "N/A"} – {lender?.disbursalTime?.to || "N/A"}{" "}
+            {lender?.disbursalTime?.unit.charAt(0).toUpperCase() +
+              lender.disbursalTime?.unit.slice(1) || "N/A"}
           </span>
         </div>
       </div>

@@ -179,7 +179,9 @@ const isDisabled = (id) => {
           </td>
 
           <td className="px-4 py-4">
-            {lender.disbursalTime}
+            {lender?.disbursalTime?.from || "N/A"} – {lender?.disbursalTime?.to || "N/A"}{" "}
+            {lender?.disbursalTime?.unit.charAt(0).toUpperCase() +
+              lender.disbursalTime?.unit.slice(1) || "N/A"}
           </td>
 
           {/* Action */}
