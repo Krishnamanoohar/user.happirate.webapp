@@ -25,6 +25,7 @@ import FormInput from "../../components/FormInput";
 import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
+import { useLocation } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 import {
   fetchCreditReport,
@@ -35,7 +36,7 @@ import {
   updateCreditReport,
   fetchTaxDocuments
 } from "../../../src/api/api";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/IntegratedComps/src/components/Navbar";
 import axios from "axios";
@@ -161,7 +162,10 @@ const buildFileUpload = (data) => ({
 });
 
 const LoanApplication = () => {
-  const [currentStep, setCurrentStep] = useState(0); // Start from 0
+  const location = useLocation();
+  const [currentStep, setCurrentStep] = useState(
+  location.state?.goToStep ?? 0
+);
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -486,11 +490,20 @@ const LoanApplication = () => {
       employmentStatus: apiData.employmentStatus?.toLowerCase() ?? "",
       employmentExperience: apiData.employmentExperience,
       companyName: apiData.companyName,
-      previousCompanyName: apiData.previousCompanyName ?? "",
-      previousCompanyFrom: apiData.previousCompanyFrom?.split("T")[0] ?? "",
-      previousCompanyTo: apiData.previousCompanyTo?.split("T")[0] ?? "",
-      currentCompanyName: apiData.companyName,
-      currentCompanyJoiningDate: apiData.currentCompanyJoiningDate?.split("T")[0] ?? "",
+previousCompanyName:
+  apiData.previousCompanyName ?? "ABC Technologies Pvt Ltd",
+
+previousCompanyFrom:
+  apiData.previousCompanyFrom?.split("T")[0] ?? "2020-01-01",
+
+previousCompanyTo:
+  apiData.previousCompanyTo?.split("T")[0] ?? "2022-06-30",
+
+currentCompanyName:
+  apiData.currentCompanyName ?? apiData.companyName ?? "XYZ Solutions Pvt Ltd",
+
+currentCompanyJoiningDate:
+  apiData.currentCompanyJoiningDate?.split("T")[0] ?? "2022-07-01",
       monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
@@ -615,7 +628,16 @@ const LoanApplication = () => {
         `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`,
       );
 
-      setFormData(mapApiResponseToFormData(resp.data.data, mobile));
+      // setFormData(mapApiResponseToFormData(resp.data.data, mobile));
+      setFormData((prev) => ({
+        ...mapApiResponseToFormData(resp.data.data, mobile),
+
+        // 🔥 Preserve Loan Fields If Already Filled
+        loanType: prev.loanType,
+        loanAmount: prev.loanAmount,
+        loanTenure: prev.loanTenure,
+      }));
+
     } catch (error) {
       console.log("error in auto filling user details", error);
     } finally {
@@ -1099,7 +1121,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="CIBIL Score"
                       value={formData.cibilScore}
-                      onChange={(v) => updateFormData("cibilScore", v)}
+                      onChange={(v) =>
+                        updateFormData("cibilScore", v.replace(/\D/g, ""))
+                      }                      
                       placeholder="Enter your CIBIL score"
                       required
                       error={errors.cibilScore}
@@ -1107,7 +1131,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="Recent Enquiries"
                       value={formData.recentEnquiries}
-                      onChange={(v) => updateFormData("recentEnquiries", v)}
+                      onChange={(v) =>
+                        updateFormData("recentEnquiries", v.replace(/\D/g, ""))
+                      }
                       placeholder="Number of recent credit enquiries"
                       required
                       error={errors.recentEnquiries}
@@ -1115,7 +1141,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="Settlements"
                       value={formData.settlements}
-                      onChange={(v) => updateFormData("settlements", v)}
+                      onChange={(v) =>
+                        updateFormData("settlements", v.replace(/\D/g, ""))
+                      }
                       placeholder="Any loan settlements"
                       required
                       error={errors.settlements}
@@ -1123,7 +1151,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="EMI Bounces"
                       value={formData.emiBounces}
-                      onChange={(v) => updateFormData("emiBounces", v)}
+                      onChange={(v) =>
+                        updateFormData("emiBounces", v.replace(/\D/g, ""))
+                      }                      
                       placeholder="Number of EMI bounces"
                       required
                       error={errors.emiBounces}
@@ -1132,7 +1162,7 @@ const LoanApplication = () => {
                       label="Credit Card Utilization (%)"
                       value={formData.creditCardUtilization}
                       onChange={(v) =>
-                        updateFormData("creditCardUtilization", v)
+                        updateFormData("creditCardUtilization", v.replace(/\D/g, ""))
                       }
                       placeholder="e.g., 40%"
                       required
@@ -1157,7 +1187,9 @@ const LoanApplication = () => {
                     <FormInput
                       label="Existing EMI (₹)"
                       value={formData.existingEmi}
-                      onChange={(v) => updateFormData("existingEmi", v)}
+                      onChange={(v) =>
+                        updateFormData("existingEmi", v.replace(/\D/g, ""))
+                      }
                       placeholder="Total existing EMI amount"
                       type="number"
                       required

@@ -161,9 +161,10 @@ export const DetailedComparison = ({
                 <div className="text-xs text-muted-foreground mb-1">
                   Disbursal
                 </div>
-                <div className="font-bold text-sm">            {lender.disbursalTime.from} – {lender.disbursalTime.to}{" "}
-            {lender.disbursalTime.unit.charAt(0).toUpperCase() +
-              lender.disbursalTime.unit.slice(1)}</div>
+                <div className="font-bold text-sm">            
+                  {lender?.disbursalTime?.from || "N/A"} – {lender?.disbursalTime?.to || "N/A"}{" "}
+            {lender?.disbursalTime?.unit.charAt(0).toUpperCase() +
+              lender.disbursalTime?.unit.slice(1) || "N/A"}</div>
               </div>
             </div>
 

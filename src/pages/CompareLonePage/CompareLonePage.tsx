@@ -8,6 +8,7 @@ import { ProvisionalOfferLetter } from "@/components/ProvisionalOfferLetter/Prov
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import FunnyLoader from "./CompareLoanPageLoader";
+import { useNavigate } from "react-router-dom";
 import {
   LayoutGrid,
   Table,
@@ -27,6 +28,7 @@ type Stage = "compare" | "detailed" | "letter" | "psl";
 type MainTab = "compare" | "psl";
 
 const CompareLonePage = () => {
+  const navigate = useNavigate();
   const [selectedLoanType, setSelectedLoanType] = useState("personal");
   const [selectedLenders, setSelectedLenders] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -223,7 +225,29 @@ const CompareLonePage = () => {
           {stage === "compare" && (
             <div className="animate-fade-in">
               {/* View Toggle & Selection Info */}
-              <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 mt-15">
+              <div className="mb-4 mt-10">
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  navigate("/loan-application", {
+                    state: { goToStep: 2 },
+                  })
+                }
+                className="
+                  flex items-center gap-2
+                  text-gray-500
+                  bg-gray-200
+                  hover:bg-purple-600
+                  hover:text-white
+                  hover:shadow-md
+                  !rounded-xl
+                  transition-all mt-18
+                "
+              >
+                ← Back to Loan Application
+              </Button>
+            </div>
+              <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 mt-10">
                 <div className="flex items-center gap-3">
                   <h2 className="!text-2xl !font-bold text-gray-900">
                     Compare {lenders.length} Lenders

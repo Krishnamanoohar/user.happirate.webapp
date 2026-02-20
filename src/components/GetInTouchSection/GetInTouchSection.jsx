@@ -2,9 +2,49 @@ import React from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 const GetInTouchSection = () => {
+  <style>{`
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    z-index: 0;
+    animation: floatOrb 20s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #7c3bed, #a78bfa);
+    top: -100px;
+    right: -100px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #c4b5fd, #7c3bed);
+    bottom: -50px;
+    left: -50px;
+    animation-delay: -5s;
+  }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+`}</style>
+
   return (
-    <section id="contact" className="min-h-screen bg-[#F8FAFC] py-16 px-4 sm:px-6 lg:px-8 flex items-center">
-      <div className="max-w-6xl mx-auto w-full">
+    <section
+    id="contact"
+    className="relative min-h-screen py-16 px-4 sm:px-6 lg:px-8 flex items-center overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
+  >
+    <div className="gradient-orb orb-1"></div>
+<div className="gradient-orb orb-2"></div>
+        <div className="max-w-6xl mx-auto w-full relative z-10">
         {/* Header Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
