@@ -226,14 +226,45 @@ const CompareLonePage = () => {
             <div className="animate-fade-in">
               {/* View Toggle & Selection Info */}
               <div className="mb-4 mt-10">
-              <Button
+              {/* <Button
                 variant="ghost"
                 onClick={() =>
                   navigate("/loan-application", {
-                    state: { goToStep: 2 },
+                    sessionStorage.setItem("loanType", selectedLoanType);
+                    state: { goToStep: 3 },
                   })
                 }
                 className="
+                  flex items-center gap-2
+                  text-gray-500
+                  bg-gray-200
+                  hover:bg-purple-600
+                  hover:text-white
+                  hover:shadow-md
+                  !rounded-xl
+                  transition-all mt-18
+                "
+              >
+                ← Back to Loan Application
+              </Button> */}
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  localStorage.setItem("loanType", selectedLoanType);
+                  const savedLoanData = JSON.parse(localStorage.getItem("loanData") || "{}");
+                  localStorage.setItem(
+                    "loanData",
+                    JSON.stringify({
+                      ...savedLoanData,
+                      loanType: selectedLoanType, // update only type
+                    })
+                  );
+
+                  navigate("/loan-application", {
+                    state: { goToStep: 3 },
+                  });
+                }}
+                  className="
                   flex items-center gap-2
                   text-gray-500
                   bg-gray-200

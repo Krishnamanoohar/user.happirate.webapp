@@ -166,6 +166,26 @@ const LoanApplication = () => {
   const [currentStep, setCurrentStep] = useState(
   location.state?.goToStep ?? 0
 );
+// const location = useLocation();
+
+useEffect(() => {
+  const savedLoanData = localStorage.getItem("loanData");
+
+  if (savedLoanData) {
+    const parsed = JSON.parse(savedLoanData);
+
+    setFormData((prev) => ({
+      ...prev,
+      loanType: parsed.loanType ?? prev.loanType,
+      loanAmount: parsed.loanAmount ?? prev.loanAmount,
+      loanTenure: parsed.loanTenure ?? prev.loanTenure,
+    }));
+  }
+
+  if (location.state?.goToStep !== undefined) {
+    setCurrentStep(location.state.goToStep);
+  }
+}, []);
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -213,6 +233,17 @@ const LoanApplication = () => {
     currentCompanyJoiningDate: "",
   });
   const isEmpty = (v) => v === "" || v === null || v === undefined;
+  useEffect(() => {
+  if (location.state) {
+    setCurrentStep(location.state.goToStep ?? 0);
+
+    setFormData((prev) => ({
+      ...prev,
+      loanType: location.state.loanType ?? prev.loanType,
+      loanAmount: location.state.loanAmount ?? prev.loanAmount,
+    }));
+  }
+}, [location.state]);
   const handleFetchTaxDocuments = async () => {
   if (!taxNumber.trim()) {
     toast.error("Please enter Tax Number");
@@ -278,14 +309,12 @@ const LoanApplication = () => {
     if (currentStep === 1) {
       if (!formData.employmentStatus || formData.employmentStatus.trim() === "")
         newErrors.employmentStatus = "Employment Status is Required";
-      if (!formData.companyName)
-        newErrors.companyName = "Company Name is Required";
+      // if (!formData.companyName)
+      //   newErrors.companyName = "Company Name is Required";
       if (!formData.monthlyIncome)
         newErrors.monthlyIncome = "Monthly Income is Required";
       if (!formData.employmentCategory)
         newErrors.employmentCategory = "Employment Category is required";
-      if (!formData.cibilScore)
-        newErrors.cibilScore = "CIBIL Score is Required";
       if (!formData.employmentExperience) {
         newErrors.employmentExperience = "Employment Experience is Required";
       } else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
@@ -293,12 +322,27 @@ const LoanApplication = () => {
       }
       if (!formData.previousCompanyName)
         newErrors.previousCompanyName = "Previous Company Name is required";
-      if (!formData.previousCompanyFrom)
-        newErrors.previousCompanyFrom = "Previous Company Joined Date is required";
-      if (!formData.previousCompanyTo) {
-        newErrors.previousCompanyTo = "Previous Company Relieving Date is required";
-      } else if (formData.previousCompanyFrom && formData.previousCompanyTo <= formData.previousCompanyFrom) {
-        newErrors.previousCompanyTo = "Relieving date must be after joined date";
+      // if (!formData.previousCompanyFrom)
+      //   newErrors.previousCompanyFrom = "Previous Company Joined Date is required";
+      // if (!formData.previousCompanyTo) {
+      //   newErrors.previousCompanyTo = "Previous Company Relieving Date is required";
+      // } else if (formData.previousCompanyFrom && formData.previousCompanyTo <= formData.previousCompanyFrom) {
+      //   newErrors.previousCompanyTo = "Relieving date must be after joined date";
+      // }
+      if (formData.previousCompanyName) {
+        if (!formData.previousCompanyFrom) {
+          newErrors.previousCompanyFrom = "Previous Company Joined Date is required";
+        }
+
+        if (!formData.previousCompanyTo) {
+          newErrors.previousCompanyTo = "Previous Company Relieving Date is required";
+        } else if (
+          formData.previousCompanyFrom &&
+          formData.previousCompanyTo <= formData.previousCompanyFrom
+        ) {
+          newErrors.previousCompanyTo =
+            "Relieving date must be after joined date";
+        }
       }
       if (!formData.currentCompanyName)
         newErrors.currentCompanyName = "Current Company Name is required";
@@ -308,24 +352,11 @@ const LoanApplication = () => {
         newErrors.uanNumber = "UAN/PF Number is required";
       if (!formData.salaryMode)
         newErrors.salaryMode = "Salary Mode is required";
-      if (!formData.recentEnquiries && formData.recentEnquiries !== 0)
-        newErrors.recentEnquiries = "Recent Enquiries is Required";
-      if (isEmpty(formData.emiBounces))
-        newErrors.emiBounces = "EMI Bounces is required";
-      if (
-        !formData.creditCardUtilization &&
-        formData.creditCardUtilization !== 0
-      )
-        newErrors.creditCardUtilization = "Credit Card Utilization is required";
       // if (
       //   !formData.residentialStability &
       //   (formData.residentialStability !== 0)
       // )
       //   newErrors.residentialStability = "Residential Stability is required";
-      if (!formData.existingEmi && formData.existingEmi !== 0)
-        newErrors.existingEmi = "Existing EMI is required";
-      if (!formData.settlements && formData.settlements !== 0)
-        newErrors.settlements = "Settlements is required";
     }
 
     if (currentStep === 2) {
@@ -450,11 +481,30 @@ const LoanApplication = () => {
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
     // alert("Application submitted successfully!");
-    navigate("/compare-loan");
-  };
+      localStorage.setItem("loanData", JSON.stringify({
+    loanType: formData.loanType,
+    loanAmount: formData.loanAmount,
+    loanTenure: formData.loanTenure,
+  }));
+
+  navigate("/eligible-loans");
+    };
+//   const handleSubmit = () => {
+//   navigate("/smart-selection", {
+//     state: {
+//       desiredAmount: Number(formData.loanAmount),
+//       tenure: Number(formData.loanTenure),
+//     },
+//   });
+// };
 
   const updateFormData = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // Clear error if exists
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -476,6 +526,34 @@ const LoanApplication = () => {
     const residenceAddress =
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
     console.log(apiData.dateOfBirth.split("T")[0]);
+    const employmentRecords =
+      apiData?.employmentHistory?.employment_data || [];
+
+    let previousCompany = null;
+    let currentCompany = null;
+
+    employmentRecords.forEach((job) => {
+      const hasExit =
+        job.date_of_exit &&
+        job.date_of_exit.trim() !== "";
+
+      if (hasExit) {
+        previousCompany = job;
+      } else {
+        currentCompany = job;
+      }
+    });
+
+    // Helper to convert DD/MM/YYYY → YYYY-MM-DD
+    const convertToISO = (dateString) => {
+      if (!dateString) return "";
+      const [day, month, year] = dateString.split("/");
+      return `${year}-${month}-${day}`;
+    };
+
+    const hasUAN =
+      employmentRecords.length > 0 &&
+      employmentRecords[0]?.uan?.trim() !== "";
     return {
       firstName: apiData.firstName ?? "",
       lastName: apiData.lastName ?? "",
@@ -485,25 +563,30 @@ const LoanApplication = () => {
       email: primaryEmail ?? [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
-      uanNumber: apiData.uanNumber,
+  employmentStatus: hasUAN ? "salaried" : "",
 
-      employmentStatus: apiData.employmentStatus?.toLowerCase() ?? "",
-      employmentExperience: apiData.employmentExperience,
-      companyName: apiData.companyName,
-previousCompanyName:
-  apiData.previousCompanyName ?? "ABC Technologies Pvt Ltd",
+  uanNumber: employmentRecords[0]?.uan ?? "",
 
-previousCompanyFrom:
-  apiData.previousCompanyFrom?.split("T")[0] ?? "2020-01-01",
+  employmentExperience: apiData.employmentExperience ?? "",
+  employmentCategory: apiData.employmentCategory ?? "",
+  salaryMode: apiData.salaryMode ?? "",
 
-previousCompanyTo:
-  apiData.previousCompanyTo?.split("T")[0] ?? "2022-06-30",
-
-currentCompanyName:
-  apiData.currentCompanyName ?? apiData.companyName ?? "XYZ Solutions Pvt Ltd",
-
-currentCompanyJoiningDate:
-  apiData.currentCompanyJoiningDate?.split("T")[0] ?? "2022-07-01",
+  previousCompanyName:
+    previousCompany?.establishment_name ?? "",
+  previousCompanyFrom:
+    previousCompany?.date_of_joining
+      ? convertToISO(previousCompany.date_of_joining)
+      : "",
+  previousCompanyTo:
+    previousCompany?.date_of_exit
+      ? convertToISO(previousCompany.date_of_exit)
+      : "",
+  currentCompanyName:
+    currentCompany?.establishment_name ?? "",
+  currentCompanyJoiningDate:
+    currentCompany?.date_of_joining
+      ? convertToISO(currentCompany.date_of_joining)
+      : "",
       monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
@@ -1121,9 +1204,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="CIBIL Score"
                       value={formData.cibilScore}
-                      onChange={(v) =>
-                        updateFormData("cibilScore", v.replace(/\D/g, ""))
-                      }                      
+                      disabled
                       placeholder="Enter your CIBIL score"
                       required
                       error={errors.cibilScore}
@@ -1131,9 +1212,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="Recent Enquiries"
                       value={formData.recentEnquiries}
-                      onChange={(v) =>
-                        updateFormData("recentEnquiries", v.replace(/\D/g, ""))
-                      }
+                      disabled
                       placeholder="Number of recent credit enquiries"
                       required
                       error={errors.recentEnquiries}
@@ -1141,9 +1220,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="Settlements"
                       value={formData.settlements}
-                      onChange={(v) =>
-                        updateFormData("settlements", v.replace(/\D/g, ""))
-                      }
+                      disabled
                       placeholder="Any loan settlements"
                       required
                       error={errors.settlements}
@@ -1151,9 +1228,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="EMI Bounces"
                       value={formData.emiBounces}
-                      onChange={(v) =>
-                        updateFormData("emiBounces", v.replace(/\D/g, ""))
-                      }                      
+                      disabled                     
                       placeholder="Number of EMI bounces"
                       required
                       error={errors.emiBounces}
@@ -1161,9 +1236,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="Credit Card Utilization (%)"
                       value={formData.creditCardUtilization}
-                      onChange={(v) =>
-                        updateFormData("creditCardUtilization", v.replace(/\D/g, ""))
-                      }
+                      disabled
                       placeholder="e.g., 40%"
                       required
                       error={errors.creditCardUtilization}
@@ -1187,9 +1260,7 @@ currentCompanyJoiningDate:
                     <FormInput
                       label="Existing EMI (₹)"
                       value={formData.existingEmi}
-                      onChange={(v) =>
-                        updateFormData("existingEmi", v.replace(/\D/g, ""))
-                      }
+                      disabled
                       placeholder="Total existing EMI amount"
                       type="number"
                       required
@@ -1618,7 +1689,7 @@ currentCompanyJoiningDate:
               Back
             </Button>
 
-            {currentStep < 4 && (
+            {currentStep < 3 && (
               <Button
                 onClick={handleNext}
                 disabled={isLoading}
@@ -1640,7 +1711,7 @@ currentCompanyJoiningDate:
               </Button>
             )}
 
-            {currentStep === 4 && (
+            {currentStep === 3 && (
               <Button
                 onClick={handleSubmit}
                 disabled={!termsAccepted || !privacyAccepted}
