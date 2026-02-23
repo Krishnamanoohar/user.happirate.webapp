@@ -33,21 +33,21 @@ export default function Navbar({ scrollY }: NavbarProps) {
   } | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isScrolled = scrollY > 50;
 
   const handleLogout = () => {
     sessionStorage.clear();
+    localStorage.clear();
     setUser(null);
     setIsDropdownOpen(false);
     navigate("/sign-in"); // Or redirect to home "/"
   };
   const handleProfile = () => {
-  setIsDropdownOpen(false);
-  navigate("/my-profile");
-};
-
+    setIsDropdownOpen(false);
+    navigate("/my-profile");
+  };
 
   // useEffect(() => {
   //   const mobile = sessionStorage.getItem("mobile_number");
@@ -74,9 +74,12 @@ export default function Navbar({ scrollY }: NavbarProps) {
     window.addEventListener("storage", loadUser);
     return () => window.removeEventListener("storage", loadUser);
   }, []);
-    useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -249,85 +252,88 @@ export default function Navbar({ scrollY }: NavbarProps) {
         </div>
       )} */}
       {/* Mobile Menu */}
-{mobileMenuOpen && (
-  <div className="lg:hidden bg-white border-t border-slate-100 animate-in slide-in-from-top duration-300">
-    <div className="px-4 py-6 space-y-4">
-      {/* Navigation Links */}
-      <div className="space-y-1">
-        {navLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.href}
-            className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {link.name}
-          </a>
-        ))}
-      </div>
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-t border-slate-100 animate-in slide-in-from-top duration-300">
+          <div className="px-4 py-6 space-y-4">
+            {/* Navigation Links */}
+            <div className="space-y-1">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
 
-      {/* Profile / Auth Section */}
-      <div className="pt-4">
-        {user ? (
-          /* --- MOBILE LOGGED IN STATE --- */
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-            <div className="flex items-center gap-4 mb-4">
-              {/* <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white shadow-md">
+            {/* Profile / Auth Section */}
+            <div className="pt-4">
+              {user ? (
+                /* --- MOBILE LOGGED IN STATE --- */
+                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                  <div className="flex items-center gap-4 mb-4">
+                    {/* <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white shadow-md">
                 <User className="w-6 h-6" />
               </div> */}
-              <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-10 h-10 rounded-full gradient-bg text-white bg-violet-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-violet-500"
+                    <button
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="w-10 h-10 rounded-full gradient-bg text-white bg-violet-500 font-bold text-lg flex items-center justify-center hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:scale-105 focus:outline-none ring-2 ring-offset-2 ring-violet-500"
+                    >
+                      {/* {user?.username?.charAt(0).toUpperCase()} */}
+                      <User />
+                    </button>
+                    <div className="overflow-hidden">
+                      <p className="font-bold text-slate-900 truncate">
+                        {user.username || "User"}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate">
+                        {user.mobile}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant="outline"
+                      className="text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                      onClick={() => {
+                        handleProfile();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      My Profile
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                /* --- MOBILE LOGGED OUT STATE --- */
+                <Button
+                  className="w-full gradient-bg text-white font-bold py-6 rounded-2xl shadow-lg shadow-indigo-200"
+                  onClick={() => {
+                    navigate("/sign-in");
+                    setMobileMenuOpen(false);
+                  }}
                 >
-                  {/* {user?.username?.charAt(0).toUpperCase()} */}
-                  <User />
-                </button>
-              <div className="overflow-hidden">
-                <p className="font-bold text-slate-900 truncate">{user.username || 'User'}</p>
-                <p className="text-xs text-slate-500 truncate">{user.mobile}</p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Button 
-                variant="outline" 
-                className="text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-gray-200"
-                onClick={() => {
-                  handleProfile();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                My Profile
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold transition-colors duration-150 flex items-center gap-2 border border-gray-200"
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                Logout
-              </Button>
+                  Sign In to Account
+                </Button>
+              )}
             </div>
           </div>
-        ) : (
-          /* --- MOBILE LOGGED OUT STATE --- */
-          <Button
-            className="w-full gradient-bg text-white font-bold py-6 rounded-2xl shadow-lg shadow-indigo-200"
-            onClick={() => {
-              navigate("/sign-in");
-              setMobileMenuOpen(false);
-            }}
-          >
-            Sign In to Account
-          </Button>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
     </nav>
-
   );
 }

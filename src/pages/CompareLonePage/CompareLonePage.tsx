@@ -250,7 +250,6 @@ const CompareLonePage = () => {
               <Button
                 variant="ghost"
                 onClick={() => {
-                  localStorage.setItem("loanType", selectedLoanType);
                   const savedLoanData = JSON.parse(localStorage.getItem("loanData") || "{}");
                   localStorage.setItem(
                     "loanData",
