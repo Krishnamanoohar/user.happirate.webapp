@@ -788,6 +788,13 @@ const LoanApplication = () => {
       console.log("Error in uploading", error);
     }
   }
+  const loanTenureOptions = Array.from({ length: 115 }, (_, i) => {
+  const months = i + 6; // start from 6
+  return {
+    value: String(months),
+    label: `${months} Months`,
+  };
+});
 
   const handleDocumentUpload = async () => {
     try {
@@ -1332,12 +1339,12 @@ const LoanApplication = () => {
                       required
                       error={errors.loanAmount}
                     />
-                    <FormInput
-                      label="Desired Loan Tenure (months)"
+                    <FormSelect
+                      label="Desired Loan Tenure"
                       value={formData.loanTenure}
                       onChange={(v) => updateFormData("loanTenure", v)}
-                      placeholder="Enter Tenure in months (e.g., 24)"
-                      type="number"
+                      options={loanTenureOptions}
+                      placeholder="Select tenure"
                       required
                       error={errors.loanTenure}
                     />
