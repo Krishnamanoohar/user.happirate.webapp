@@ -650,7 +650,7 @@ const LoanApplication = () => {
           highlighted ? "text-primary font-semibold" : "text-foreground",
         )}
       >
-        {value || "—"}
+        {value ?? "—"}
       </span>
     </div>
   );
@@ -1507,7 +1507,7 @@ const LoanApplication = () => {
                     />
                     <SummaryRow
                       label="City"
-                      value={formData.city}
+                      value={formData.city || "—"}
                       icon={Building}
                     />
                     <SummaryRow
@@ -1564,19 +1564,19 @@ const LoanApplication = () => {
                     />
                     <SummaryRow
                       label="Recent Enquiries"
-                      value={formData.recentEnquiries}
+                      value={Number(formData.recentEnquiries) || 0}
                     />
                     <SummaryRow
                       label="EMI Bounces"
-                      value={formData.emiBounces}
+                      value={Number(formData.emiBounces) || 0}
                     />
                     <SummaryRow
                       label="Credit Utilization"
-                      value={`${formData.creditCardUtilization}%`}
+                      value={`${Number(formData.creditCardUtilization) || 0}%`}
                     />
                     <SummaryRow
                       label="Settlements"
-                      value={formData.settlements}
+                      value={Number(formData.settlements) || 0}
                     />
                   </SummarySection>
                 </div>
