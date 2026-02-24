@@ -18,6 +18,8 @@ interface LenderCardProps {
   onSelect: (id: string) => void;
   disabled: boolean;
   onApplyNow?: (lender: Lender) => void;
+  customAmount?: number; // ✅ add this
+
 }
 
 export const LenderCard = ({
@@ -26,6 +28,7 @@ export const LenderCard = ({
   onSelect,
   disabled,
   onApplyNow,
+  customAmount,
 }) => {
   const getApprovalColor = (probability) => {
     if (probability >= 90) return "text-green-600";
@@ -89,16 +92,17 @@ export const LenderCard = ({
 
       {/* Key Metrics */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-gray-50 rounded-xl p-3">
-          <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-1 whitespace-nowrap">
-            <CreditCard className="w-3.5 h-3.5" />
-            Est. Sanction
-          </div>
-          <div className="font-semibold text-gray-900">
-            {/* Up to ₹{lender.maxSanctionAmount}L */}
-            Up to ₹{(lender.maxSanctionAmount / 100000).toFixed(2)}L
-          </div>
+      <div className="bg-gray-50 rounded-xl p-3">
+        <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-1 whitespace-nowrap">
+          <CreditCard className="w-3.5 h-3.5" />
+          {customAmount ? "Req. Amount" : "Est. Sanction"} {/* ✅ label changes */}
         </div>
+        <div className="font-semibold text-gray-900">
+          {customAmount
+            ?  `₹${new Intl.NumberFormat("en-IN").format(customAmount)}`
+            : `Up to ₹${(lender.maxSanctionAmount / 100000).toFixed(2)}L`}
+        </div>
+      </div>
 
         <div className="bg-gray-50 rounded-xl p-3">
           <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-1 whitespace-nowrap">

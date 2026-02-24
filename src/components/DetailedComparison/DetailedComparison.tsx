@@ -25,14 +25,14 @@ export const DetailedComparison = ({
   const Section = ({
     title,
     icon: Icon,
-    items1,
-    items2,
+    items1 = [],
+    items2 = [],
     type,
   }: {
     title: string;
     icon: React.ElementType;
-    items1: string[];
-    items2: string[];
+    items1?: string[];
+    items2?: string[];
     type: "pros" | "cons" | "unique" | "restrictions";
   }) => {
     const getIconColor = () => {
@@ -61,7 +61,7 @@ export const DetailedComparison = ({
         </h4>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            {items1.map((item, i) => (
+            {(items1 ?? []).map((item, i) => (
               <div key={i} className="flex items-start gap-2 text-sm">
                 <div
                   className={cn(
@@ -129,7 +129,7 @@ export const DetailedComparison = ({
                   Est. Sanction
                 </div>
                 <div className="font-bold text-lg">
-            Up to ₹{(lender.maxSanctionAmount / 100000).toFixed(2)}L
+                  Up to ₹{(lender.maxSanctionAmount / 100000).toFixed(2)}L
                 </div>
               </div>
               <div className="bg-secondary/50 rounded-lg p-3 text-center">
@@ -161,10 +161,12 @@ export const DetailedComparison = ({
                 <div className="text-xs text-muted-foreground mb-1">
                   Disbursal
                 </div>
-                <div className="font-bold text-sm">            
-                  {lender?.disbursalTime?.from || "N/A"} – {lender?.disbursalTime?.to || "N/A"}{" "}
-            {lender?.disbursalTime?.unit.charAt(0).toUpperCase() +
-              lender.disbursalTime?.unit.slice(1) || "N/A"}</div>
+                <div className="font-bold text-sm">
+                  {lender?.disbursalTime?.from || "N/A"} –{" "}
+                  {lender?.disbursalTime?.to || "N/A"}{" "}
+                  {lender?.disbursalTime?.unit.charAt(0).toUpperCase() +
+                    lender.disbursalTime?.unit.slice(1) || "N/A"}
+                </div>
               </div>
             </div>
 

@@ -40,13 +40,28 @@ const updateCreditReport = async (payload) => {
   return resp;
 };
 
-const fetchEligibleLoanProducts = async () => {
-  const mobile = sessionStorage.getItem("mobile_number")
+// const fetchEligibleLoanProducts = async () => {
+//   const mobile = sessionStorage.getItem("mobile_number")
+//   const resp = await apiClient.post("/provisional-credit-assesment", {
+//     mobileNumber: mobile
+//   })
+//   return resp
+// }
+const fetchEligibleLoanProducts = async (
+  requestedLoanAmount,
+  requestedLoanTenure
+) => {
+  const mobile = sessionStorage.getItem("mobile_number");
+
   const resp = await apiClient.post("/provisional-credit-assesment", {
-    mobileNumber: mobile
-  })
-  return resp
-}
+    mobileNumber: mobile,
+    requestedLoanAmount,
+    requestedLoanTenure,
+  });
+
+  return resp;
+};
+
 
 const personalDetailsVerification = async (payload) => {
   const resp = await apiClient.post("/submit-personal-details", payload);

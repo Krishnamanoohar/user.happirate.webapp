@@ -190,3 +190,12 @@
     box-shadow: 0 2px 8px hsl(262 80% 55% / 0.1), 0 8px 24px hsl(262 80% 55% / 0.06);
   }
 }
+@keyframes loaderBar {
+  0% { width: 20%; }
+  50% { width: 70%; }
+  100% { width: 40%; }
+}
+
+.animate-loader-bar {
+  animation: loaderBar 1.5s ease-in-out infinite;
+}

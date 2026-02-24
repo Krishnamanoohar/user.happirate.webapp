@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   User,
   MapPin,
@@ -11,7 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
-
+import { fetchCreditReport } from "@/api/api";
 import ProfileSection from "@/components/ProfileSection/ProfileSection";
 import DetailRow from "@/components/DetailRow/DetailRow";
 import { Menu, X } from "lucide-react";
@@ -127,7 +127,10 @@ const formatExperience = (value: string) => {
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<TabId>("personal");
-  const [data] = useState<ProfileData>(defaultData);
+  // const [data] = useState<ProfileData>(defaultData);
+  // const [data, setData] = useState<ProfileData>(defaultData);
+  const [data, setData] = useState<ProfileData | null>(null);
+const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [taxNumber, setTaxNumber] = useState("");
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
@@ -138,7 +141,124 @@ const ProfilePage = () => {
     payslip2: null,
     payslip3: null,
   });
-  const fullName = `${data.firstName} ${data.middleName} ${data.lastName}`;
+  const fullName = data
+  ? `${data.firstName} ${data.middleName} ${data.lastName}`
+  : "";  
+  useEffect(() => {
+  const loadProfile = async () => {
+    try {
+      setIsLoading(true);
+
+      const mobileNumber = sessionStorage.getItem("mobile_number");
+
+      const resp = await fetchCreditReport({ mobileNumber });
+      console.log("response", resp);
+      const backend = resp?.data?.data;
+
+      const employment =
+        backend?.employmentHistory?.employment_data?.[0];
+
+      const formatted: ProfileData = {
+        firstName: backend?.firstName || "First Name",
+        middleName: backend?.middleName || "",
+        lastName: backend?.lastName || "Last Name",
+
+        dateOfBirth: backend?.dateOfBirth
+          ? new Date(backend.dateOfBirth).toLocaleDateString("en-GB")
+          : "DOB",
+
+        panCard: backend?.panCard || "PAN Not Available",
+        aadhaarCard: backend?.ckycId || "XXXX XXXX XXXX",
+
+        email: backend?.emails?.[0]?.email || "Email Not Available",
+        mobile:
+          backend?.phoneNumbers?.[0]?.Number?.slice(-10) ||
+          "Mobile Not Available",
+
+        gender: backend?.gender || "Gender",
+
+        fatherName:
+          employment?.guardian_name || "Father Name",
+
+        maritalStatus: backend?.maritalStatus || "Marital Status",
+        nationality: "Indian",
+
+        addressLine1:
+          backend?.addresses?.[0]?.streetAddress ||
+          "Address Not Available",
+
+        addressLine2: "",
+        city: backend?.city || "Hyderabad",
+        state:
+          backend?.addresses?.[0]?.state || "State",
+        pincode:
+          backend?.addresses?.[0]?.pincode || "Pincode",
+
+        residentialStatus:
+          backend?.residentialStatus || "Residential Status",
+
+        employmentStatus:
+          backend?.employmentStatus || "Employment Status",
+
+        salaryMode:
+          backend?.salaryMode?.replace("-", " ") ||
+          "Salary Mode",
+
+        experience:
+          backend?.employmentExperience !== undefined
+            ? `${backend.employmentExperience} months`
+            : "0 months",
+
+        uanPfNumber:
+          backend?.uanNumber?.toString() || "UAN Not Available",
+
+        monthlyIncome:
+          backend?.monthlyIncome
+            ? `₹${backend.monthlyIncome.toLocaleString()}`
+            : "₹0",
+
+        previousCompany: "",
+        currentCompany:
+          employment?.establishment_name || "Company Name",
+
+        currentJoinDate:
+          employment?.date_of_joining || "Joining Date",
+
+        previousCompanyJoinDate: "",
+        previousCompanyRelieveDate:
+          employment?.date_of_exit || "",
+
+        cibilScore:
+          backend?.cibilScore?.toString() || "0",
+
+        recentEnquiries:
+          backend?.last6MonthsEnquiryCount?.toString() || "0",
+
+        settlements:
+          backend?.settlements?.toString() || "0",
+
+        emiBounces:
+          backend?.emiBounces?.toString() || "0",
+
+        creditUtilization: `${
+          backend?.creaditCardUtilization || 0
+        }%`,
+
+        emergencyName: "Emergency Name",
+        emergencyContact: "Emergency Contact",
+        emergencyRelation: "Relation",
+      };
+
+      setData(formatted);
+    } catch (err) {
+      toast.error("Failed to load profile");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadProfile();
+}, []);
 
   const getCibilBadge = (score: string) => {
     const s = parseInt(score);
@@ -161,8 +281,8 @@ const ProfilePage = () => {
     };
   };
 
-  const cibil = getCibilBadge(data.cibilScore);
-    const handleFetchTaxDocuments = async () => {
+  const cibil = getCibilBadge(data?.cibilScore || "0");    
+  const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
       return;
@@ -200,10 +320,28 @@ const ProfilePage = () => {
       setIsFetchingDocs(false);
     }
   };
+  if (isLoading || !data) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+      <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
+        <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
+          Loading your <span className="text-[#7c3aed]">profile...</span>
+        </p>
+
+        <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
+          <div
+            className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
+            style={{ width: "60%" }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
   return (
-    <div className="min-h-screen bg-background flex mt-20">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-background mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">      {/* Sidebar */}
       <>
         {/* Mobile Overlay */}
         {isSidebarOpen && (
@@ -237,8 +375,8 @@ const ProfilePage = () => {
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-violet-200 from-primary/20 to-accent flex items-center justify-center shrink-0">
                 <span className="text-sm font-bold text-primary">
-                  {data.firstName[0]}
-                  {data.lastName[0]}
+                  {data?.firstName?.[0] || ""}
+                  {data?.lastName?.[0] || ""}   
                 </span>
               </div>
               <div className="min-w-0">
@@ -307,7 +445,7 @@ const ProfilePage = () => {
             </div>
 
             {/* CIBIL Section */}
-            <div className="text-right shrink-0 md:mr-55">
+            <div className="text-right shrink-0">
               <p className="text-[10px] md:text-xs text-muted-foreground">
                 CIBIL Score
               </p>
@@ -329,7 +467,7 @@ const ProfilePage = () => {
 
         {/* Content */}
         <div
-          className="w-full max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-8"
+          className="w-full px-6 py-6"
           key={activeTab}
         >
           {" "}
@@ -531,6 +669,7 @@ const ProfilePage = () => {
           )} */}
         </div>
       </main>
+      </div>
     </div>
   );
 };

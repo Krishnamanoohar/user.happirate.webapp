@@ -1793,7 +1793,7 @@ export default function GeminiCreditHealthReport() {
   useEffect(() => {
     sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
   }, []);
-
+  console.log("Report Data:", jsonData);
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   if (loading) return <DashboardLoader />;
   console.log("Extracted Report Data:", reportData);
