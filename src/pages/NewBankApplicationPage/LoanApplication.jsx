@@ -162,11 +162,8 @@ const buildFileUpload = (data) => ({
 
 const LoanApplication = () => {
   const location = useLocation();
-  // const [currentStep, setCurrentStep] = useState(
-  //   location.state?.goToStep ?? 0
-  // );
-    const [currentStep, setCurrentStep] = useState(
-    1
+  const [currentStep, setCurrentStep] = useState(
+    location.state?.goToStep ?? 0
   );
   // const location = useLocation();
 
