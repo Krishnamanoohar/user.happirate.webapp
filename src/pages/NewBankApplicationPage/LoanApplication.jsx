@@ -36,7 +36,7 @@ import {
   updateCreditReport,
   fetchTaxDocuments
 } from "../../../src/api/api";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/IntegratedComps/src/components/Navbar";
 import axios from "axios";
@@ -164,28 +164,28 @@ const buildFileUpload = (data) => ({
 const LoanApplication = () => {
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(
-  location.state?.goToStep ?? 0
-);
-// const location = useLocation();
+    location.state?.goToStep ?? 0
+  );
+  // const location = useLocation();
 
-useEffect(() => {
-  const savedLoanData = localStorage.getItem("loanData");
+  useEffect(() => {
+    const savedLoanData = localStorage.getItem("loanData");
 
-  if (savedLoanData) {
-    const parsed = JSON.parse(savedLoanData);
+    if (savedLoanData) {
+      const parsed = JSON.parse(savedLoanData);
 
-    setFormData((prev) => ({
-      ...prev,
-      loanType: parsed.loanType ?? prev.loanType,
-      loanAmount: parsed.loanAmount ?? prev.loanAmount,
-      loanTenure: parsed.loanTenure ?? prev.loanTenure,
-    }));
-  }
+      setFormData((prev) => ({
+        ...prev,
+        loanType: parsed.loanType ?? prev.loanType,
+        loanAmount: parsed.loanAmount ?? prev.loanAmount,
+        loanTenure: parsed.loanTenure ?? prev.loanTenure,
+      }));
+    }
 
-  if (location.state?.goToStep !== undefined) {
-    setCurrentStep(location.state.goToStep);
-  }
-}, []);
+    if (location.state?.goToStep !== undefined) {
+      setCurrentStep(location.state.goToStep);
+    }
+  }, []);
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -234,54 +234,54 @@ useEffect(() => {
   });
   const isEmpty = (v) => v === "" || v === null || v === undefined;
   useEffect(() => {
-  if (location.state) {
-    setCurrentStep(location.state.goToStep ?? 0);
+    if (location.state) {
+      setCurrentStep(location.state.goToStep ?? 0);
 
-    setFormData((prev) => ({
-      ...prev,
-      loanType: location.state.loanType ?? prev.loanType,
-      loanAmount: location.state.loanAmount ?? prev.loanAmount,
-    }));
-  }
-}, [location.state]);
+      setFormData((prev) => ({
+        ...prev,
+        loanType: location.state.loanType ?? prev.loanType,
+        loanAmount: location.state.loanAmount ?? prev.loanAmount,
+      }));
+    }
+  }, [location.state]);
   const handleFetchTaxDocuments = async () => {
-  if (!taxNumber.trim()) {
-    toast.error("Please enter Tax Number");
-    return;
-  }
-
-  try {
-    setIsFetchingDocs(true);
-
-    const resp = await fetchTaxDocuments({
-      taxNumber,
-      mobileNumber: sessionStorage.getItem("mobile_number"),
-    });
-
-    const itrFileUrl = resp?.data?.itrUrl;
-
-    if (!itrFileUrl) {
-      toast.error("No ITR documents found");
+    if (!taxNumber.trim()) {
+      toast.error("Please enter Tax Number");
       return;
     }
 
-    // Store in documents state
-    setDocuments((prev) => ({
-      ...prev,
-      itr: {
-        name: "ITR_Fetched.pdf",
-        url: itrFileUrl,
-        fetched: true,
-      },
-    }));
+    try {
+      setIsFetchingDocs(true);
 
-    toast.success("ITR documents fetched successfully");
-  } catch (error) {
-    toast.error("Failed to fetch tax documents");
-  } finally {
-    setIsFetchingDocs(false);
-  }
-};
+      const resp = await fetchTaxDocuments({
+        taxNumber,
+        mobileNumber: sessionStorage.getItem("mobile_number"),
+      });
+
+      const itrFileUrl = resp?.data?.itrUrl;
+
+      if (!itrFileUrl) {
+        toast.error("No ITR documents found");
+        return;
+      }
+
+      // Store in documents state
+      setDocuments((prev) => ({
+        ...prev,
+        itr: {
+          name: "ITR_Fetched.pdf",
+          url: itrFileUrl,
+          fetched: true,
+        },
+      }));
+
+      toast.success("ITR documents fetched successfully");
+    } catch (error) {
+      toast.error("Failed to fetch tax documents");
+    } finally {
+      setIsFetchingDocs(false);
+    }
+  };
   const validateStep = () => {
     const newErrors = {};
 
@@ -302,6 +302,9 @@ useEffect(() => {
         newErrors.addressLine1 = "Address is required";
       if (!formData.state) newErrors.state = "State is required";
       if (!formData.pincode) newErrors.pincode = "Pincode is required";
+      if (!formData.aadhaarCard) newErrors.aadhaarCard = "Aadhaar is required";
+      if (!formData.aadhaarCard || !/^\d{12}$/.test(formData.aadhaarCard))
+        newErrors.aadhaarCard = "Aadhaar must be 12 digits";
       if (!formData.mobileNumber)
         newErrors.mobileNumber = "Mobile number is required";
     }
@@ -481,22 +484,22 @@ useEffect(() => {
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
     // alert("Application submitted successfully!");
-      localStorage.setItem("loanData", JSON.stringify({
-    loanType: formData.loanType,
-    loanAmount: formData.loanAmount,
-    loanTenure: formData.loanTenure,
-  }));
+    localStorage.setItem("loanData", JSON.stringify({
+      loanType: formData.loanType,
+      loanAmount: formData.loanAmount,
+      loanTenure: formData.loanTenure,
+    }));
 
-  navigate("/eligible-loans");
-    };
-//   const handleSubmit = () => {
-//   navigate("/smart-selection", {
-//     state: {
-//       desiredAmount: Number(formData.loanAmount),
-//       tenure: Number(formData.loanTenure),
-//     },
-//   });
-// };
+    navigate("/eligible-loans");
+  };
+  //   const handleSubmit = () => {
+  //   navigate("/smart-selection", {
+  //     state: {
+  //       desiredAmount: Number(formData.loanAmount),
+  //       tenure: Number(formData.loanTenure),
+  //     },
+  //   });
+  // };
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -563,30 +566,30 @@ useEffect(() => {
       email: primaryEmail ?? [],
       aadhaarCard: "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
-  employmentStatus: hasUAN ? "salaried" : "",
+      employmentStatus: hasUAN ? "salaried" : "",
 
-  uanNumber: employmentRecords[0]?.uan ?? "",
+      uanNumber: employmentRecords[0]?.uan ?? "",
 
-  employmentExperience: apiData.employmentExperience ?? "",
-  employmentCategory: apiData.employmentCategory ?? "",
-  salaryMode: apiData.salaryMode ?? "",
+      employmentExperience: apiData.employmentExperience ?? "",
+      employmentCategory: apiData.employmentCategory ?? "",
+      salaryMode: apiData.salaryMode ?? "",
 
-  previousCompanyName:
-    previousCompany?.establishment_name ?? "",
-  previousCompanyFrom:
-    previousCompany?.date_of_joining
-      ? convertToISO(previousCompany.date_of_joining)
-      : "",
-  previousCompanyTo:
-    previousCompany?.date_of_exit
-      ? convertToISO(previousCompany.date_of_exit)
-      : "",
-  currentCompanyName:
-    currentCompany?.establishment_name ?? "",
-  currentCompanyJoiningDate:
-    currentCompany?.date_of_joining
-      ? convertToISO(currentCompany.date_of_joining)
-      : "",
+      previousCompanyName:
+        previousCompany?.establishment_name ?? "",
+      previousCompanyFrom:
+        previousCompany?.date_of_joining
+          ? convertToISO(previousCompany.date_of_joining)
+          : "",
+      previousCompanyTo:
+        previousCompany?.date_of_exit
+          ? convertToISO(previousCompany.date_of_exit)
+          : "",
+      currentCompanyName:
+        currentCompany?.establishment_name ?? "",
+      currentCompanyJoiningDate:
+        currentCompany?.date_of_joining
+          ? convertToISO(currentCompany.date_of_joining)
+          : "",
       monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
@@ -684,12 +687,12 @@ useEffect(() => {
       }
 
       const apiEmails = Array.isArray(apiData.emails)
-            ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
-            : [];
-          
-          // Create Set to remove duplicates and convert back to array
-          const uniqueEmails = [...new Set(apiEmails)];
-          setEmailOptions(uniqueEmails);
+        ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
+        : [];
+
+      // Create Set to remove duplicates and convert back to array
+      const uniqueEmails = [...new Set(apiEmails)];
+      setEmailOptions(uniqueEmails);
 
       setFormData((prev) => ({
         ...prev,
@@ -807,26 +810,26 @@ useEffect(() => {
     autoFillUserDetails();
   }, []);
   if (pageLoading) {
-  return (
-  <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-    <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
-      
-      {/* Sub Message with Brand Color */}
-      <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
-        Loading your <span className="text-[#7c3aed]">credit profile...</span>
-      </p>
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
 
-      {/* Modern Bordered Loader Bar */}
-      <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
-        {/* Inner Progress Bar */}
-        <div 
-          className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]" 
-          style={{ width: '40%' }} /* Note: Use state/props for dynamic width */
-        />
+          {/* Sub Message with Brand Color */}
+          <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
+            Loading your <span className="text-[#7c3aed]">credit profile...</span>
+          </p>
+
+          {/* Modern Bordered Loader Bar */}
+          <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
+            {/* Inner Progress Bar */}
+            <div
+              className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
+              style={{ width: '40%' }} /* Note: Use state/props for dynamic width */
+            />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-);
+    );
   }
   console.log(formData, "form data");
   return (
@@ -888,8 +891,8 @@ useEffect(() => {
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
-                      // required
-                      // error={errors.middleName}
+                    // required
+                    // error={errors.middleName}
                     />
                     <FormInput
                       label="Last Name"
@@ -939,9 +942,10 @@ useEffect(() => {
 
                     <FormInput
                       label="Aadhaar Card"
+                      type="number"
                       value={formData.aadhaarCard}
-                      disabled
-                      hint="Aadhaar cannot be edited as it's verified from source"
+                      onChange={(v) => updateFormData("aadhaarCard", v)}
+                      // hint="Aadhaar cannot be edited as it's verified from source"
                       error={errors.aadhaarCard}
                     />
                     <FormInput
@@ -1050,8 +1054,8 @@ useEffect(() => {
                       placeholder="Select Salary Mode"
                       required
                       options={[
-                          { value: "bank-transfer", label: "Bank Transfer" },
-                          { value: "cash", label: "Cash" },
+                        { value: "bank-transfer", label: "Bank Transfer" },
+                        { value: "cash", label: "Cash" },
                       ]}
                       error={errors.salaryMode}
                     />
@@ -1097,7 +1101,7 @@ useEffect(() => {
                       required
                       error={errors.monthlyIncome}
                     />
-                      <FormInput
+                    <FormInput
                       label="Previous Company Name"
                       value={formData.previousCompanyName || ""}
                       onChange={(v) => updateFormData("previousCompanyName", v)}
@@ -1228,7 +1232,7 @@ useEffect(() => {
                     <FormInput
                       label="EMI Bounces"
                       value={formData.emiBounces}
-                      disabled                     
+                      disabled
                       placeholder="Number of EMI bounces"
                       required
                       error={errors.emiBounces}
@@ -1319,23 +1323,23 @@ useEffect(() => {
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Required Documents
                   </h3>
-                   <div className="flex gap-8 w-full md:w-auto">
-                      <input
-                        type="text"
-                        placeholder="Enter Your Income Tax Efiling Password"
-                        value={taxNumber}
-                        onChange={(e) => setTaxNumber(e.target.value)}
-                        className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
+                  <div className="flex gap-8 w-full md:w-auto">
+                    <input
+                      type="text"
+                      placeholder="Enter Your Income Tax Efiling Password"
+                      value={taxNumber}
+                      onChange={(e) => setTaxNumber(e.target.value)}
+                      className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
 
-                      <Button
-                        onClick={handleFetchTaxDocuments}
-                        disabled={isFetchingDocs}
-                        className="h-10"
-                      >
-                        {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
-                      </Button>
-                    </div> 
+                    <Button
+                      onClick={handleFetchTaxDocuments}
+                      disabled={isFetchingDocs}
+                      className="h-10"
+                    >
+                      {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FileUploadZone
                       label="Last 3 Years ITR/Form 16"
