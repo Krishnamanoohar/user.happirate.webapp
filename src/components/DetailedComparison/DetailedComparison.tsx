@@ -129,16 +129,18 @@ export const DetailedComparison = ({
                   Est. Sanction
                 </div>
                 <div className="font-bold text-lg">
-                  Up to ₹{(lender.maxSanctionAmount / 100000).toFixed(2)}L
+                  {lender.requestedAmount
+                    ? `₹${new Intl.NumberFormat("en-IN").format(
+                        lender.requestedAmount,
+                      )}`
+                    : `Up to ₹${(lender.maxSanctionAmount / 100000).toFixed(2)}L`}
                 </div>
               </div>
               <div className="bg-secondary/50 rounded-lg p-3 text-center">
                 <div className="text-xs text-muted-foreground mb-1">
                   True APR
                 </div>
-                <div className="font-bold text-lg">
-                  {lender.trueAPR}% – {lender.trueAPRMax}%
-                </div>
+                <div className="font-bold text-lg">{lender.trueAPR}%</div>
               </div>
               <div className="bg-secondary/50 rounded-lg p-3 text-center">
                 <div className="text-xs text-muted-foreground mb-1">

@@ -60,13 +60,29 @@ const CompareLoanPage = () => {
     }
   };
 
+  // const handleSelectForLetter = (lender: Lender) => {
+  //   setSelectedForLetter(lender);
+  //   setStage("letter");
+  // };
   const handleSelectForLetter = (lender: Lender) => {
-    setSelectedForLetter(lender);
+    setSelectedForLetter({
+      ...lender,
+      requestedAmount:
+        comparisonTab === "customize" ? submittedAmount : undefined,
+    });
     setStage("letter");
   };
 
+  // const handleApplyNow = (lender: Lender) => {
+  //   setSelectedForLetter(lender);
+  //   setStage("letter");
+  // };
   const handleApplyNow = (lender: Lender) => {
-    setSelectedForLetter(lender);
+    setSelectedForLetter({
+      ...lender,
+      requestedAmount:
+        comparisonTab === "customize" ? submittedAmount : undefined,
+    });
     setStage("letter");
   };
 
@@ -129,6 +145,7 @@ const CompareLoanPage = () => {
         processingFeeMax: bank.processingFee.max,
         approvalProbability: bank.approvalProbability,
         disbursalTime: bank.disbursalTime,
+        prepaymentCharges: bank.prePaymentCharges,
         pros: [
           "Fastest approval",
           "Lowest APR for existing customers",
@@ -184,14 +201,18 @@ const CompareLoanPage = () => {
     }
   }, []);
 
-const filteredLenders =
-  comparisonTab === "customize" && submittedAmount
-    ? lenders.filter((l) => l.maxSanctionAmount >= submittedAmount)
-    : lenders;
+  const filteredLenders =
+    comparisonTab === "customize" && submittedAmount
+      ? lenders.filter((l) => l.maxSanctionAmount >= submittedAmount)
+      : lenders;
 
-  const selectedLenderObjects = lenders.filter((l) =>
-    selectedLenders.includes(l.id),
-  );
+  const selectedLenderObjects = lenders
+    .filter((l) => selectedLenders.includes(l.id))
+    .map((l) => ({
+      ...l,
+      requestedAmount:
+        comparisonTab === "customize" ? submittedAmount : undefined,
+    }));
   const formatINR = (value: number) =>
     new Intl.NumberFormat("en-IN").format(value);
 
@@ -331,22 +352,22 @@ const filteredLenders =
                           className="pl-10 rounded-xl border-gray-200 focus:ring-purple-500"
                         />
                       </div>
-<Button
-  onClick={() => {
-    if (!customAmount || !loanTenure) return;
+                      <Button
+                        onClick={() => {
+                          if (!customAmount || !loanTenure) return;
 
-    const amount = Number(customAmount);
+                          const amount = Number(customAmount);
 
-    setSubmittedAmount(amount); // 👈 important
-    setLoanAmount(amount);
+                          setSubmittedAmount(amount); // 👈 important
+                          setLoanAmount(amount);
 
-    handleFetchEligibleLoans(amount, loanTenure);
-  }}
-  disabled={!customAmount}
-  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white"
->
-  Submit
-</Button>
+                          handleFetchEligibleLoans(amount, loanTenure);
+                        }}
+                        disabled={!customAmount}
+                        className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        Submit
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -398,10 +419,10 @@ const filteredLenders =
                           }
                           onApplyNow={handleApplyNow}
                           customAmount={
-  comparisonTab === "customize"
-    ? submittedAmount ?? undefined
-    : undefined
-}
+                            comparisonTab === "customize"
+                              ? (submittedAmount ?? undefined)
+                              : undefined
+                          }
                         />
                       ))}
                     </div>
