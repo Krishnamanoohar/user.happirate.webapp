@@ -31,6 +31,41 @@ function FeatureCard({
   isVisible,
   link
 }: FeatureCardProps) {
+  <style>{`
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    z-index: 0;
+    animation: floatOrb 20s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #7c3bed, #a78bfa);
+    top: -100px;
+    right: -100px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #c4b5fd, #7c3bed);
+    bottom: -50px;
+    left: -50px;
+    animation-delay: -5s;
+  }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+`}</style>
+
   const navigate = useNavigate();
   return (
     <div
@@ -141,12 +176,14 @@ export default function Features() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      id="solutions"
-      className="py-20 lg:py-28 relative overflow-hidden"
-    >
+  <section
+    ref={sectionRef}
+    id="banks"
+    className="relative py-20 lg:py-28 overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
+  >
       {/* Background */}
+      <div className="gradient-orb orb-1"></div>
+      <div className="gradient-orb orb-2"></div>  
       <div className="absolute inset-0 gradient-bg-light" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">

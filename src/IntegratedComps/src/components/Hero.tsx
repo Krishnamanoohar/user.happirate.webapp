@@ -38,10 +38,13 @@ function StatCard({ icon, label, value, delay }: StatCardProps) {
   return (
     <div
       ref={cardRef}
-      className={`h-full flex flex-col items-center justify-between p-4 rounded-2xl bg-slate-50/80 hover:bg-white hover:shadow-lg transition-all duration-300 cursor-pointer group glass-card rounded-2xl p-5 hover-lift transition-all duration-500 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      }`}
-    >
+    className={`h-full flex flex-col items-center justify-between p-4 rounded-2xl bg-slate-50/80 
+          hover:bg-white transition-all duration-300 cursor-pointer group glass-card 
+          p-5 hover-lift transition-all duration-500 border border-slate-300 
+          shadow-md hover:shadow-xl ${ // Increased shadow and added silver border
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}
+      >
       <div className="w-full flex items-center justify-between mb-3">
         <span className="text-slate-500 text-sm font-medium">{label}</span>
         <div className="w-8 h-8 rounded-lg gradient-bg-light flex items-center justify-center">
@@ -76,18 +79,65 @@ export default function Hero() {
       navigate("/sign-in");
     }
   };
+  <style>{`
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+    z-index: 0;
+    animation: floatOrb 22s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 450px;
+    height: 450px;
+    background: linear-gradient(135deg, #7c3bed, #a78bfa);
+    top: -120px;
+    right: -120px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, #c4b5fd, #7c3bed);
+    bottom: -80px;
+    left: -80px;
+    animation-delay: -6s;
+  }
+
+  .orb-3 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #e9d5ff, #8b5cf6);
+    top: 40%;
+    left: 30%;
+    animation-delay: -10s;
+  }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-30px, 30px) scale(0.9); }
+  }
+`}</style>
+
 
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen pt-20 lg:pt-24 overflow-hidden"
+      className="relative min-h-screen pt-20 lg:pt-24 overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
     >
       {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-200/30 rounded-full blur-3xl" />
         <div className="absolute top-40 right-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-violet-200/20 rounded-full blur-3xl" />
-      </div>
+      </div> */}
+      <div className="gradient-orb orb-1"></div>
+      <div className="gradient-orb orb-2"></div>
+      <div className="gradient-orb orb-3"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -158,22 +208,6 @@ export default function Hero() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex items-center gap-6 pt-4">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full gradient-bg border-2 border-white flex items-center justify-center text-white text-xs font-bold"
-                  >
-                    {String.fromCharCode(64 + i)}
-                  </div>
-                ))}
-              </div>
-              {/* <div>
-                <div className="font-semibold text-slate-900">50,000+</div>
-                <div className="text-sm text-slate-500">Happy Customers</div>
-              </div> */}
-            </div>
           </div>
 
           {/* Right Content - Stats & Preview */}
@@ -236,9 +270,11 @@ export default function Hero() {
                 ].map((bank, index) => (
                   <div
                     key={bank.name}
-                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/80 hover:bg-white hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
+                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/80 
+                          hover:bg-white border border-slate-200 shadow-sm hover:shadow-lg 
+                          transition-all duration-300 cursor-pointer group" // Added silver border and bigger hover shadow
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-xl bg-gradient-to-br ${bank.color} flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform`}
