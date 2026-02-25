@@ -47,8 +47,8 @@ export const LenderCard = ({
       className={cn(
         "bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-sm cursor-pointer transition-all duration-300",
         "hover:border-violet-400 hover:shadow-[0_0_12px_rgba(139,92,246,0.25)]",
-        isSelected &&
-          "border-violet-500 shadow-[0_0_0_2px_rgba(139,92,246,0.3)]",
+          isSelected &&
+    "border-violet-500 shadow-[0_12px_35px_rgba(139,92,246,0.45)] scale-[1.02]",
         disabled && !isSelected && "opacity-50 cursor-not-allowed",
       )}
       onClick={() => !disabled && onSelect(lender.id)}
