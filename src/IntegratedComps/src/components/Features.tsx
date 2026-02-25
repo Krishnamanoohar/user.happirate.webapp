@@ -178,7 +178,7 @@ export default function Features() {
   return (
   <section
     ref={sectionRef}
-    id="banks"
+    id="solutions"
     className="relative py-20 lg:py-28 overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
   >
       {/* Background */}
