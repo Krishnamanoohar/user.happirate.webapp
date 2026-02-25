@@ -338,7 +338,7 @@ export function HappirateSplitAuth() {
                         pattern="[0-9]{10}"
                         required
                         disabled={otpResult}
-                        placeholder="Enter your mobile number"
+                        placeholder="Enter Mobile Number linked with PAN Card"
                       />
                     </div>
 
