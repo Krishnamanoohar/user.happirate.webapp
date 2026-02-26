@@ -1,8 +1,10 @@
 import axios from "axios";
+
+const API_URL = "https://node-happirate-server.vercel.app/api/customer"
 const localUrl = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
 
 const apiClient = axios.create({
-  baseURL: localUrl,
+  baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -80,7 +82,7 @@ const submitFinancialProfileDetails = async (payload) => {
 const fetchRawResponseOfUser = async () => {
   try {
     const mobile = sessionStorage.getItem("mobile_number")
-    const resp = await axios.post(`${localUrl}/fetch-credit-health`, { mobileNumber: mobile })
+    const resp = await apiClient.post("/fetch-credit-health", { mobileNumber: mobile })
     return resp
   } catch (error) {
     console.log("Error in fetching user raw response", error)
