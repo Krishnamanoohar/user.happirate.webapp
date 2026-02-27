@@ -231,8 +231,7 @@ const LoanApplication = () => {
     currentCompanyName: "",
     currentCompanyJoiningDate: "",
   });
-
-  const [employmentData, setEmploymentData] = useState({});
+  const [employmentData, setEmploymentData] = useState([]);
 
   const isSelfEmployed = formData.employmentStatus === "self-employed";
   const isEmpty = (v) => v === "" || v === null || v === undefined;
@@ -688,7 +687,7 @@ const LoanApplication = () => {
       const resp = await fetchCreditReport({ mobileNumber: mobile });
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
-      setEmploymentData(apiData?.employmentHistory["employment_data"]);
+      setEmploymentData(apiData?.employmentHistory?.employment_data || []);
       sessionStorage.setItem("userId", apiData._id);
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);

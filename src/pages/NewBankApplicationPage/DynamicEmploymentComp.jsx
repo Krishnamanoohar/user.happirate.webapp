@@ -72,7 +72,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
           )} */}
         </div>
 
-        {totalRecords > 1 && (
+        {/* {totalRecords > 1 && ( */}
           <button
             type="button"
             onClick={() => onRemove(index)}
@@ -81,7 +81,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
             <Trash2 size={16} />
             <span className="hidden sm:inline">Remove</span>
           </button>
-        )}
+        {/* )} */}
       </div>
 
       <div className="p-6">
@@ -241,21 +241,21 @@ export const EmploymentHistorySection = ({
             <IconInput
               label="Employee Name"
               icon={User}
-              value={employmentData[0].name}
+              value={employmentData[0]?.name}
               onChange={(e) => handleChange("name", e.target.value)}
               placeholder="e.g. John Doe"
             />
             <IconInput
               label="Guardian Name"
               icon={Users}
-              value={employmentData[0].guardian_name}
+              value={employmentData[0]?.guardian_name}
               onChange={(e) => handleChange("guardian_name", e.target.value)}
               placeholder="e.g. Richard Doe"
             />
           </div>
         </div>
 
-        {employmentData.map((record, index) => (
+        {employmentData?.map((record, index) => (
           <EmploymentCard
             key={index} // Note: In production, better to use a unique ID if available instead of index
             index={index}
