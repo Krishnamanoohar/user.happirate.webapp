@@ -34,13 +34,14 @@ import {
   personalDetailsVerification,
   submitFinancialProfileDetails,
   updateCreditReport,
-  fetchTaxDocuments
+  fetchTaxDocuments,
 } from "../../../src/api/api";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/IntegratedComps/src/components/Navbar";
 import axios from "axios";
 import Loader from "@/ReactBitsComps/Loader/Loader";
+import { EmploymentHistorySection } from "./DynamicEmploymentComp";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -162,9 +163,7 @@ const buildFileUpload = (data) => ({
 
 const LoanApplication = () => {
   const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(
-    location.state?.goToStep ?? 0
-  );
+  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
   // const location = useLocation();
 
   useEffect(() => {
@@ -232,6 +231,9 @@ const LoanApplication = () => {
     currentCompanyName: "",
     currentCompanyJoiningDate: "",
   });
+
+  const [employmentData, setEmploymentData] = useState({});
+
   const isSelfEmployed = formData.employmentStatus === "self-employed";
   const isEmpty = (v) => v === "" || v === null || v === undefined;
   useEffect(() => {
@@ -335,17 +337,20 @@ const LoanApplication = () => {
         if (!formData.employmentExperience) {
           newErrors.employmentExperience = "Employment Experience is Required";
         } else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
-          newErrors.employmentExperience = "Only numbers allowed (e.g. 1 or 1.5)";
+          newErrors.employmentExperience =
+            "Only numbers allowed (e.g. 1 or 1.5)";
         }
         if (!formData.previousCompanyName)
           newErrors.previousCompanyName = "Previous Company Name is required";
         if (formData.previousCompanyName) {
           if (!formData.previousCompanyFrom) {
-            newErrors.previousCompanyFrom = "Previous Company Joined Date is required";
+            newErrors.previousCompanyFrom =
+              "Previous Company Joined Date is required";
           }
 
           if (!formData.previousCompanyTo) {
-            newErrors.previousCompanyTo = "Previous Company Relieving Date is required";
+            newErrors.previousCompanyTo =
+              "Previous Company Relieving Date is required";
           } else if (
             formData.previousCompanyFrom &&
             formData.previousCompanyTo <= formData.previousCompanyFrom
@@ -357,7 +362,8 @@ const LoanApplication = () => {
         if (!formData.currentCompanyName)
           newErrors.currentCompanyName = "Current Company Name is required";
         if (!formData.currentCompanyJoiningDate)
-          newErrors.currentCompanyJoiningDate = "Current Company Joining Date is required";
+          newErrors.currentCompanyJoiningDate =
+            "Current Company Joining Date is required";
         if (!formData.uanNumber)
           newErrors.uanNumber = "UAN/PF Number is required";
         if (!formData.salaryMode)
@@ -492,11 +498,14 @@ const LoanApplication = () => {
   const handleSubmit = () => {
     console.log("Final Review Data:", { formData, documents });
     // alert("Application submitted successfully!");
-    localStorage.setItem("loanData", JSON.stringify({
-      loanType: formData.loanType,
-      loanAmount: formData.loanAmount,
-      loanTenure: formData.loanTenure,
-    }));
+    localStorage.setItem(
+      "loanData",
+      JSON.stringify({
+        loanType: formData.loanType,
+        loanAmount: formData.loanAmount,
+        loanTenure: formData.loanTenure,
+      }),
+    );
 
     navigate("/eligible-loans");
   };
@@ -537,16 +546,13 @@ const LoanApplication = () => {
     const residenceAddress =
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
     console.log(apiData.dateOfBirth.split("T")[0]);
-    const employmentRecords =
-      apiData?.employmentHistory?.employment_data || [];
+    const employmentRecords = apiData?.employmentHistory?.employment_data || [];
 
     let previousCompany = null;
     let currentCompany = null;
 
     employmentRecords.forEach((job) => {
-      const hasExit =
-        job.date_of_exit &&
-        job.date_of_exit.trim() !== "";
+      const hasExit = job.date_of_exit && job.date_of_exit.trim() !== "";
 
       if (hasExit) {
         previousCompany = job;
@@ -563,8 +569,7 @@ const LoanApplication = () => {
     };
 
     const hasUAN =
-      employmentRecords.length > 0 &&
-      employmentRecords[0]?.uan?.trim() !== "";
+      employmentRecords.length > 0 && employmentRecords[0]?.uan?.trim() !== "";
     return {
       firstName: apiData.firstName ?? "",
       lastName: apiData.lastName ?? "",
@@ -582,22 +587,17 @@ const LoanApplication = () => {
       employmentCategory: apiData.employmentCategory ?? "",
       salaryMode: apiData.salaryMode ?? "",
 
-      previousCompanyName:
-        previousCompany?.establishment_name ?? "",
-      previousCompanyFrom:
-        previousCompany?.date_of_joining
-          ? convertToISO(previousCompany.date_of_joining)
-          : "",
-      previousCompanyTo:
-        previousCompany?.date_of_exit
-          ? convertToISO(previousCompany.date_of_exit)
-          : "",
-      currentCompanyName:
-        currentCompany?.establishment_name ?? "",
-      currentCompanyJoiningDate:
-        currentCompany?.date_of_joining
-          ? convertToISO(currentCompany.date_of_joining)
-          : "",
+      previousCompanyName: previousCompany?.establishment_name ?? "",
+      previousCompanyFrom: previousCompany?.date_of_joining
+        ? convertToISO(previousCompany.date_of_joining)
+        : "",
+      previousCompanyTo: previousCompany?.date_of_exit
+        ? convertToISO(previousCompany.date_of_exit)
+        : "",
+      currentCompanyName: currentCompany?.establishment_name ?? "",
+      currentCompanyJoiningDate: currentCompany?.date_of_joining
+        ? convertToISO(currentCompany.date_of_joining)
+        : "",
       monthlyIncome: apiData.monthlyIncome,
 
       residentialStatus: residenceAddress.type
@@ -688,6 +688,7 @@ const LoanApplication = () => {
       const resp = await fetchCreditReport({ mobileNumber: mobile });
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
+      setEmploymentData(apiData?.employmentHistory["employment_data"]);
       sessionStorage.setItem("userId", apiData._id);
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);
@@ -731,7 +732,6 @@ const LoanApplication = () => {
         loanAmount: prev.loanAmount,
         loanTenure: prev.loanTenure,
       }));
-
     } catch (error) {
       console.log("error in auto filling user details", error);
     } finally {
@@ -789,12 +789,12 @@ const LoanApplication = () => {
     }
   }
   const loanTenureOptions = Array.from({ length: 115 }, (_, i) => {
-  const months = i + 6; // start from 6
-  return {
-    value: String(months),
-    label: `${months} Months`,
-  };
-});
+    const months = i + 6; // start from 6
+    return {
+      value: String(months),
+      label: `${months} Months`,
+    };
+  });
 
   const handleDocumentUpload = async () => {
     try {
@@ -828,10 +828,10 @@ const LoanApplication = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
-
           {/* Sub Message with Brand Color */}
           <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
-            Loading your <span className="text-[#7c3aed]">credit profile...</span>
+            Loading your{" "}
+            <span className="text-[#7c3aed]">credit profile...</span>
           </p>
 
           {/* Modern Bordered Loader Bar */}
@@ -839,7 +839,9 @@ const LoanApplication = () => {
             {/* Inner Progress Bar */}
             <div
               className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
-              style={{ width: '40%' }} /* Note: Use state/props for dynamic width */
+              style={{
+                width: "40%",
+              }} /* Note: Use state/props for dynamic width */
             />
           </div>
         </div>
@@ -906,8 +908,8 @@ const LoanApplication = () => {
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
-                    // required
-                    // error={errors.middleName}
+                      // required
+                      // error={errors.middleName}
                     />
                     <FormInput
                       label="Last Name"
@@ -1045,8 +1047,12 @@ const LoanApplication = () => {
                 title="Review & Edit Employment and Credit Details"
                 subtitle="Please review and update your employment and credit information"
               >
+                <EmploymentHistorySection
+                  employmentData={employmentData}
+                  setEmploymentData={setEmploymentData}
+                />
                 {/* Employment Section */}
-                <div className="space-y-6">
+                <div className="space-y-6 mt-5">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
                     <Briefcase className="w-4 h-4 text-primary" />
                     Employment Details
@@ -1077,9 +1083,7 @@ const LoanApplication = () => {
                         <FormSelect
                           label="Salary Mode"
                           value={formData.salaryMode}
-                          onChange={(v) =>
-                            updateFormData("salaryMode", v)
-                          }
+                          onChange={(v) => updateFormData("salaryMode", v)}
                           placeholder="Select Salary Mode"
                           required
                           options={[
@@ -1091,7 +1095,9 @@ const LoanApplication = () => {
                         <FormInput
                           label="Employment Category"
                           value={formData.employmentCategory}
-                          onChange={(v) => updateFormData("employmentCategory", v)}
+                          onChange={(v) =>
+                            updateFormData("employmentCategory", v)
+                          }
                           required
                           error={errors.employmentCategory}
                         />
@@ -1136,7 +1142,9 @@ const LoanApplication = () => {
                         <FormInput
                           label="Previous Company Name"
                           value={formData.previousCompanyName || ""}
-                          onChange={(v) => updateFormData("previousCompanyName", v)}
+                          onChange={(v) =>
+                            updateFormData("previousCompanyName", v)
+                          }
                           placeholder="Enter previous company name"
                           required
                           error={errors.previousCompanyName}
@@ -1145,58 +1153,76 @@ const LoanApplication = () => {
                         {/* Previous Company From Date - custom with Calendar icon */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Previous Company Joined Date <span className="text-destructive">*</span>
+                            Previous Company Joined Date{" "}
+                            <span className="text-destructive">*</span>
                           </label>
                           <div className="relative">
                             <input
                               type="date"
                               value={formData.previousCompanyFrom || ""}
-                              onChange={(e) => updateFormData("previousCompanyFrom", e.target.value)}
+                              onChange={(e) =>
+                                updateFormData(
+                                  "previousCompanyFrom",
+                                  e.target.value,
+                                )
+                              }
                               max={getTodayISODate()}
                               className={cn(
                                 "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
                                 errors.previousCompanyFrom
                                   ? "border-destructive focus:ring-destructive"
-                                  : "border-input"
+                                  : "border-input",
                               )}
                             />
                             {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
                           </div>
                           {errors.previousCompanyFrom && (
-                            <p className="text-xs text-destructive mt-1">{errors.previousCompanyFrom}</p>
+                            <p className="text-xs text-destructive mt-1">
+                              {errors.previousCompanyFrom}
+                            </p>
                           )}
                         </div>
 
                         {/* Previous Company To Date - custom with Calendar icon */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Previous Company Relieving Date <span className="text-destructive">*</span>
+                            Previous Company Relieving Date{" "}
+                            <span className="text-destructive">*</span>
                           </label>
                           <div className="relative">
                             <input
                               type="date"
                               value={formData.previousCompanyTo || ""}
-                              onChange={(e) => updateFormData("previousCompanyTo", e.target.value)}
+                              onChange={(e) =>
+                                updateFormData(
+                                  "previousCompanyTo",
+                                  e.target.value,
+                                )
+                              }
                               min={formData.previousCompanyFrom || undefined}
                               max={getTodayISODate()}
                               className={cn(
                                 "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
                                 errors.previousCompanyTo
                                   ? "border-destructive focus:ring-destructive"
-                                  : "border-input"
+                                  : "border-input",
                               )}
                             />
                             {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
                           </div>
                           {errors.previousCompanyTo && (
-                            <p className="text-xs text-destructive mt-1">{errors.previousCompanyTo}</p>
+                            <p className="text-xs text-destructive mt-1">
+                              {errors.previousCompanyTo}
+                            </p>
                           )}
                         </div>
 
                         <FormInput
                           label="Current Company Name"
                           value={formData.currentCompanyName || ""}
-                          onChange={(v) => updateFormData("currentCompanyName", v)}
+                          onChange={(v) =>
+                            updateFormData("currentCompanyName", v)
+                          }
                           placeholder="Enter current company name"
                           required
                           error={errors.currentCompanyName}
@@ -1205,26 +1231,34 @@ const LoanApplication = () => {
                         {/* Current Company Joining Date - custom with Calendar icon */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Current Company Joining Date <span className="text-destructive">*</span>
+                            Current Company Joining Date{" "}
+                            <span className="text-destructive">*</span>
                           </label>
                           <div className="relative">
                             <input
                               type="date"
                               value={formData.currentCompanyJoiningDate || ""}
-                              onChange={(e) => updateFormData("currentCompanyJoiningDate", e.target.value)}
+                              onChange={(e) =>
+                                updateFormData(
+                                  "currentCompanyJoiningDate",
+                                  e.target.value,
+                                )
+                              }
                               min={formData.previousCompanyTo || undefined}
                               max={getTodayISODate()}
                               className={cn(
                                 "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
                                 errors.currentCompanyJoiningDate
                                   ? "border-destructive focus:ring-destructive"
-                                  : "border-input"
+                                  : "border-input",
                               )}
                             />
                             {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
                           </div>
                           {errors.currentCompanyJoiningDate && (
-                            <p className="text-xs text-destructive mt-1">{errors.currentCompanyJoiningDate}</p>
+                            <p className="text-xs text-destructive mt-1">
+                              {errors.currentCompanyJoiningDate}
+                            </p>
                           )}
                         </div>
                       </>
