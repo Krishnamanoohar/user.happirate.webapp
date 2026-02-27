@@ -1392,7 +1392,7 @@ const LoanApplication = () => {
                       }
                     />
                   </div>
-
+                  {!isSelfEmployed && (
                   <div className="mt-6">
                     <h4 className="text-sm font-medium text-foreground mb-4">
                       Last 3 Months Payslips
@@ -1428,6 +1428,7 @@ const LoanApplication = () => {
                       />
                     </div>
                   </div>
+                  )}
                 </div>
               </FormCard>
             )}
