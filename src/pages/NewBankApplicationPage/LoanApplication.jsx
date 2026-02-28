@@ -682,7 +682,7 @@ const LoanApplication = () => {
     try {
       setPageLoading(true);
       const mobile = sessionStorage.getItem("mobile_number");
-      const userInfo = sessionStorage.getItem("userId");
+      const userId = sessionStorage.getItem("userId");
       console.log(mobile, "mobile");
 
       if (!mobile) {
@@ -691,7 +691,7 @@ const LoanApplication = () => {
       }
       const resp = await fetchCreditReport({
         mobileNumber: mobile,
-        // userId: userInfo,
+        userId: userId,
       });
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
