@@ -48,6 +48,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
     setIsDropdownOpen(false);
     navigate("/my-profile");
   };
+  const handleMyapplication = () => {
+    setIsDropdownOpen(false);
+    navigate("/my-applicaton");
+  };
 
   // useEffect(() => {
   //   const mobile = sessionStorage.getItem("mobile_number");
@@ -187,6 +191,12 @@ export default function Navbar({ scrollY }: NavbarProps) {
                         {user.mobile}
                       </p>
                     </div>
+                      <button
+                      onClick={handleMyapplication}
+                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
+                    >
+                    My Application
+                    </button>
                     <button
                       onClick={handleProfile}
                       className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"

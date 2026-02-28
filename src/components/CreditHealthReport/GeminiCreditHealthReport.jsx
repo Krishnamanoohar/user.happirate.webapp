@@ -406,7 +406,7 @@ const EmailDraftModal = ({ account, type, onClose }) => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(emailContent);
   };
-  
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[80vh]">
@@ -487,10 +487,9 @@ const estimateMonthsSinceOpened = (dateOpened) => {
   return Math.max(
     1,
     (now.getFullYear() - d.getFullYear()) * 12 +
-      (now.getMonth() - d.getMonth())
+      (now.getMonth() - d.getMonth()),
   );
 };
-
 
 const AccountsList = ({ accounts }) => {
   const [expandedIndices, setExpandedIndices] = useState([]);
@@ -514,7 +513,7 @@ const AccountsList = ({ accounts }) => {
         No accounts found matching your filters.
       </div>
     );
-    console.log("accounts", accounts)
+  console.log("accounts", accounts);
   return (
     <div className="space-y-4">
       {accounts.map((item, index) => {
@@ -527,31 +526,32 @@ const AccountsList = ({ accounts }) => {
 
         let emiAmount = acc.GrantedTrade?.EMIAmount;
         let displayEmi = "N/A";
-//         let rawRate = acc.GrantedTrade?.interestRate;
-// let interestRate =
-//   rawRate && rawRate !== "-1" && rawRate !== "-1.00"
-//     ? `${parseFloat(rawRate)}%`
-//     : "N/A";
+        //         let rawRate = acc.GrantedTrade?.interestRate;
+        // let interestRate =
+        //   rawRate && rawRate !== "-1" && rawRate !== "-1.00"
+        //     ? `${parseFloat(rawRate)}%`
+        //     : "N/A";
         let rawRate = acc.GrantedTrade?.interestRate;
 
-let interestRate = "N/A";
+        let interestRate = "N/A";
 
-if (rawRate && rawRate !== "-1" && rawRate !== "-1.00") {
-  interestRate = `${parseFloat(rawRate)}%`;
-} else {
-  const principal =
-    parseInt(acc.highBalance || acc.GrantedTrade?.CreditLimit || 0);
+        if (rawRate && rawRate !== "-1" && rawRate !== "-1.00") {
+          interestRate = `${parseFloat(rawRate)}%`;
+        } else {
+          const principal = parseInt(
+            acc.highBalance || acc.GrantedTrade?.CreditLimit || 0,
+          );
 
-  const emi = parseInt(acc.GrantedTrade?.EMIAmount || 0);
+          const emi = parseInt(acc.GrantedTrade?.EMIAmount || 0);
 
-  const months =
-    parseInt(acc.GrantedTrade?.termMonths) ||
-    estimateMonthsSinceOpened(acc.dateOpened);
+          const months =
+            parseInt(acc.GrantedTrade?.termMonths) ||
+            estimateMonthsSinceOpened(acc.dateOpened);
 
-  const est = estimateInterestRate(principal, emi, months);
+          const est = estimateInterestRate(principal, emi, months);
 
-  if (est) interestRate = `~${est}%`;
-}
+          if (est) interestRate = `~${est}%`;
+        }
 
         if (emiAmount && emiAmount !== "-1" && emiAmount !== "") {
           displayEmi = `₹${parseInt(emiAmount).toLocaleString()}`;
@@ -628,12 +628,8 @@ if (rawRate && rawRate !== "-1" && rawRate !== "-1.00") {
                   </div>
                 </div>
                 <div>
-                  <div className="font-bold text-slate-00">
-                      {interestRate}
-                  </div>
-                  <div className="text-xs text-slate-400">
-                    Interest Rate
-                  </div>
+                  <div className="font-bold text-slate-00">{interestRate}</div>
+                  <div className="text-xs text-slate-400">Interest Rate</div>
                 </div>
               </div>
 
@@ -1651,7 +1647,7 @@ export default function GeminiCreditHealthReport() {
       if (getLoanCategory(typeCode) === "Secured") securedCount++;
       else unsecuredCount++;
 
-      const openDate = parseDate(acc.dateOpened);
+            const openDate = parseDate(acc.dateOpened || acc.openedDate || acc.dtOpened);
       if (openDate && openDate < oldestDate) oldestDate = openDate;
     });
 
@@ -1745,7 +1741,7 @@ export default function GeminiCreditHealthReport() {
     });
     return Array.from(types).sort();
   }, [reportData]);
-  console.log("reportData",reportData);
+  console.log("reportData", reportData);
   const filteredAccounts = useMemo(() => {
     if (!reportData || !reportData.accounts) return [];
 
@@ -1906,7 +1902,7 @@ export default function GeminiCreditHealthReport() {
                     <label className="text-xs text-slate-400 uppercase font-bold tracking-wider">
                       Emails
                     </label>
-                    <ul className="mt-1 space-y-1">
+                    {/* <ul className="mt-1 space-y-1">
                       {reportData.emails.length ? (
                         reportData.emails.map((e, i) => (
                           <li
@@ -1922,13 +1918,38 @@ export default function GeminiCreditHealthReport() {
                           No emails found
                         </li>
                       )}
+                    </ul> */}
+                    <ul className="mt-1 space-y-1">
+                      {reportData.emails.length ? (
+                        Array.from(
+                          new Set(
+                            reportData.emails.map((e) =>
+                              (e.Email || e.emailID)?.toLowerCase().trim(),
+                            ),
+                          ),
+                        )
+                          .filter(Boolean)
+                          .map((email, i) => (
+                            <li
+                              key={i}
+                              className="flex items-center gap-2 text-sm text-slate-700"
+                            >
+                              <Mail size={14} className="text-slate-400" />{" "}
+                              {email}
+                            </li>
+                          ))
+                      ) : (
+                        <li className="text-sm text-slate-400">
+                          No emails found
+                        </li>
+                      )}
                     </ul>
                   </div>
                   <div>
                     <label className="text-xs text-slate-400 uppercase font-bold tracking-wider">
                       Phones
                     </label>
-                    <ul className="mt-1 space-y-1">
+                    {/* <ul className="mt-1 space-y-1">
                       {reportData.phones.length ? (
                         reportData.phones.map((p, i) => (
                           <li
@@ -1944,7 +1965,20 @@ export default function GeminiCreditHealthReport() {
                           No phones found
                         </li>
                       )}
-                    </ul>
+                    </ul> */}
+                    <ul className="mt-1 space-y-1">
+  {reportData.phones.length ? (
+    Array.from(new Set(reportData.phones.map(p => (p.PhoneNumber?.Number || p.telephoneNumber)?.trim())))
+      .filter(Boolean)
+      .map((phone, i) => (
+        <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+          <Phone size={14} className="text-slate-400" /> {phone}
+        </li>
+      ))
+  ) : (
+    <li className="text-sm text-slate-400">No phones found</li>
+  )}
+</ul>
                   </div>
                 </div>
               </Card>

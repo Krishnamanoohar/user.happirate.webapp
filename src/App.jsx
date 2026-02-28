@@ -38,6 +38,7 @@ import GeminiCreditHealthReport from "./components/CreditHealthReport/GeminiCred
 import UserProfile from "./IntegratedComps/src/components/UserProfile";
 import ComingSoonPage from "./components/ComingSoon/ComingSoon";
 import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
+import MyApplication from "./pages/MyApplication/MyApplication";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -111,6 +112,7 @@ const App = () => {
             {/* <Route path="/oneboarddashboard" element={<OneScoreDashboard />} /> */}
             <Route path="/credit-health-report" element={<GeminiCreditHealthReport />} />
             <Route path="/coming-soon" element={<ComingSoonPage />} />
+             <Route path="/my-applicaton" element={<MyApplication />} />
             {/* <Route path="/credit-health-reportt" element={<CreditPortfolio />} /> */}
             {/* <Route path="/credit-health-report-2" element={<OneScoreDashboard />} /> */}
           </Routes>

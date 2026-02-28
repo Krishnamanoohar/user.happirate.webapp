@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Download, FileText, File,Files, } from "lucide-react";
 import {
   User,
   MapPin,
@@ -23,7 +24,7 @@ const tabs = [
   // { id: "address", label: "Address", icon: MapPin },
   { id: "employment", label: "Employment", icon: Briefcase },
   { id: "credit", label: "Credit Info", icon: CreditCard },
-  // { id: "emergency", label: "Emergency", icon: AlertCircle },
+  { id: "documents", label: "Documents", icon: Files, },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -130,7 +131,7 @@ const ProfilePage = () => {
   // const [data] = useState<ProfileData>(defaultData);
   // const [data, setData] = useState<ProfileData>(defaultData);
   const [data, setData] = useState<ProfileData | null>(null);
-const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [taxNumber, setTaxNumber] = useState("");
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
@@ -141,124 +142,215 @@ const [isLoading, setIsLoading] = useState(true);
     payslip2: null,
     payslip3: null,
   });
+
+  const document = [
+    {
+      category: "Identity & KYC",
+      icon: Shield,
+      docs: [
+        {
+          name: "PAN Card",
+          type: "PDF",
+          size: "245 KB",
+          date: "01 Dec 2025",
+          file: "#",
+        },
+        {
+          name: "Aadhaar Card",
+          type: "PDF",
+          size: "310 KB",
+          date: "01 Dec 2025",
+          file: "#",
+        },
+        {
+          name: "Passport",
+          type: "PDF",
+          size: "420 KB",
+          date: "01 Dec 2025",
+          file: "#",
+        },
+      ],
+    },
+    {
+      category: "Financial Documents",
+      icon: CreditCard,
+      docs: [
+        {
+          name: "Bank Statement (6 months)",
+          type: "PDF",
+          size: "1.2 MB",
+          date: "01 Dec 2025",
+          file: "#",
+        },
+        {
+          name: "ITR – FY 2024-25",
+          type: "PDF",
+          size: "560 KB",
+          date: "15 Nov 2025",
+          file: "#",
+        },
+        {
+          name: "Form 16",
+          type: "PDF",
+          size: "340 KB",
+          date: "15 Nov 2025",
+          file: "#",
+        },
+      ],
+    },
+    {
+      category: "Employment",
+      icon: Briefcase,
+      docs: [
+        {
+          name: "Salary Slip – Nov 2025",
+          type: "PDF",
+          size: "180 KB",
+          date: "30 Nov 2025",
+          file: "#",
+        },
+        {
+          name: "Salary Slip – Oct 2025",
+          type: "PDF",
+          size: "180 KB",
+          date: "31 Oct 2025",
+          file: "#",
+        },
+        {
+          name: "Employment Letter",
+          type: "PDF",
+          size: "220 KB",
+          date: "01 Dec 2025",
+          file: "#",
+        },
+      ],
+    },
+    {
+      category: "Loan Documents",
+      icon: FileText,
+      docs: [
+        {
+          name: "Loan Agreement – LN-20251201",
+          type: "PDF",
+          size: "890 KB",
+          date: "08 Dec 2025",
+          file: "#",
+        },
+        {
+          name: "Sanction Letter – LN-20250915",
+          type: "PDF",
+          size: "450 KB",
+          date: "25 Sep 2025",
+          file: "#",
+        },
+        {
+          name: "NOC – LN-20250801",
+          type: "PDF",
+          size: "210 KB",
+          date: "15 Sep 2025",
+          file: "#",
+        },
+      ],
+    },
+  ];
   const fullName = data
-  ? `${data.firstName} ${data.middleName} ${data.lastName}`
-  : "";  
+    ? `${data.firstName} ${data.middleName} ${data.lastName}`
+    : "";
   useEffect(() => {
-  const loadProfile = async () => {
-    try {
-      setIsLoading(true);
+    const loadProfile = async () => {
+      try {
+        setIsLoading(true);
 
-      const mobileNumber = sessionStorage.getItem("mobile_number");
+        const mobileNumber = sessionStorage.getItem("mobile_number");
 
-      const resp = await fetchCreditReport({ mobileNumber });
-      console.log("response", resp);
-      const backend = resp?.data?.data;
+        const resp = await fetchCreditReport({ mobileNumber });
+        console.log("response", resp);
+        const backend = resp?.data?.data;
 
-      const employment =
-        backend?.employmentHistory?.employment_data?.[0];
+        const employment = backend?.employmentHistory?.employment_data?.[0];
 
-      const formatted: ProfileData = {
-        firstName: backend?.firstName || "First Name",
-        middleName: backend?.middleName || "",
-        lastName: backend?.lastName || "Last Name",
+        const formatted: ProfileData = {
+          firstName: backend?.firstName || "First Name",
+          middleName: backend?.middleName || "",
+          lastName: backend?.lastName || "Last Name",
 
-        dateOfBirth: backend?.dateOfBirth
-          ? new Date(backend.dateOfBirth).toLocaleDateString("en-GB")
-          : "DOB",
+          dateOfBirth: backend?.dateOfBirth
+            ? new Date(backend.dateOfBirth).toLocaleDateString("en-GB")
+            : "DOB",
 
-        panCard: backend?.panCard || "PAN Not Available",
-        aadhaarCard: backend?.ckycId || "XXXX XXXX XXXX",
+          panCard: backend?.panCard || "PAN Not Available",
+          aadhaarCard: backend?.ckycId || "XXXX XXXX XXXX",
 
-        email: backend?.emails?.[0]?.email || "Email Not Available",
-        mobile:
-          backend?.phoneNumbers?.[0]?.Number?.slice(-10) ||
-          "Mobile Not Available",
+          email: backend?.emails?.[0]?.email || "Email Not Available",
+          mobile:
+            backend?.phoneNumbers?.[0]?.Number?.slice(-10) ||
+            "Mobile Not Available",
 
-        gender: backend?.gender || "Gender",
+          gender: backend?.gender || "Gender",
 
-        fatherName:
-          employment?.guardian_name || "Father Name",
+          fatherName: employment?.guardian_name || "Father Name",
 
-        maritalStatus: backend?.maritalStatus || "Marital Status",
-        nationality: "Indian",
+          maritalStatus: backend?.maritalStatus || "Marital Status",
+          nationality: "Indian",
 
-        addressLine1:
-          backend?.addresses?.[0]?.streetAddress ||
-          "Address Not Available",
+          addressLine1:
+            backend?.addresses?.[0]?.streetAddress || "Address Not Available",
 
-        addressLine2: "",
-        city: backend?.city || "Hyderabad",
-        state:
-          backend?.addresses?.[0]?.state || "State",
-        pincode:
-          backend?.addresses?.[0]?.pincode || "Pincode",
+          addressLine2: "",
+          city: backend?.city || "Hyderabad",
+          state: backend?.addresses?.[0]?.state || "State",
+          pincode: backend?.addresses?.[0]?.pincode || "Pincode",
 
-        residentialStatus:
-          backend?.residentialStatus || "Residential Status",
+          residentialStatus: backend?.residentialStatus || "Residential Status",
 
-        employmentStatus:
-          backend?.employmentStatus || "Employment Status",
+          employmentStatus: backend?.employmentStatus || "Employment Status",
 
-        salaryMode:
-          backend?.salaryMode?.replace("-", " ") ||
-          "Salary Mode",
+          salaryMode: backend?.salaryMode?.replace("-", " ") || "Salary Mode",
 
-        experience:
-          backend?.employmentExperience !== undefined
-            ? `${backend.employmentExperience} months`
-            : "0 months",
+          experience:
+            backend?.employmentExperience !== undefined
+              ? `${backend.employmentExperience} months`
+              : "0 months",
 
-        uanPfNumber:
-          backend?.uanNumber?.toString() || "UAN Not Available",
+          uanPfNumber: backend?.uanNumber?.toString() || "UAN Not Available",
 
-        monthlyIncome:
-          backend?.monthlyIncome
+          monthlyIncome: backend?.monthlyIncome
             ? `₹${backend.monthlyIncome.toLocaleString()}`
             : "₹0",
 
-        previousCompany: "",
-        currentCompany:
-          employment?.establishment_name || "Company Name",
+          previousCompany: "",
+          currentCompany: employment?.establishment_name || "Company Name",
 
-        currentJoinDate:
-          employment?.date_of_joining || "Joining Date",
+          currentJoinDate: employment?.date_of_joining || "Joining Date",
 
-        previousCompanyJoinDate: "",
-        previousCompanyRelieveDate:
-          employment?.date_of_exit || "",
+          previousCompanyJoinDate: "",
+          previousCompanyRelieveDate: employment?.date_of_exit || "",
 
-        cibilScore:
-          backend?.cibilScore?.toString() || "0",
+          cibilScore: backend?.cibilScore?.toString() || "0",
 
-        recentEnquiries:
-          backend?.last6MonthsEnquiryCount?.toString() || "0",
+          recentEnquiries: backend?.last6MonthsEnquiryCount?.toString() || "0",
 
-        settlements:
-          backend?.settlements?.toString() || "0",
+          settlements: backend?.settlements?.toString() || "0",
 
-        emiBounces:
-          backend?.emiBounces?.toString() || "0",
+          emiBounces: backend?.emiBounces?.toString() || "0",
 
-        creditUtilization: `${
-          backend?.creaditCardUtilization || 0
-        }%`,
+          creditUtilization: `${backend?.creaditCardUtilization || 0}%`,
 
-        emergencyName: "Emergency Name",
-        emergencyContact: "Emergency Contact",
-        emergencyRelation: "Relation",
-      };
+          emergencyName: "Emergency Name",
+          emergencyContact: "Emergency Contact",
+          emergencyRelation: "Relation",
+        };
 
-      setData(formatted);
-    } catch (err) {
-      toast.error("Failed to load profile");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setData(formatted);
+      } catch (err) {
+        toast.error("Failed to load profile");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  loadProfile();
-}, []);
+    loadProfile();
+  }, []);
 
   const getCibilBadge = (score: string) => {
     const s = parseInt(score);
@@ -281,28 +373,28 @@ const [isLoading, setIsLoading] = useState(true);
     };
   };
 
-  const cibil = getCibilBadge(data?.cibilScore || "0");    
+  const cibil = getCibilBadge(data?.cibilScore || "0");
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
       return;
     }
-  
+
     try {
       setIsFetchingDocs(true);
-  
+
       const resp = await fetchTaxDocuments({
         taxNumber,
         mobileNumber: sessionStorage.getItem("mobile_number"),
       });
-  
+
       const itrFileUrl = resp?.data?.itrUrl;
-  
+
       if (!itrFileUrl) {
         toast.error("No ITR documents found");
         return;
       }
-  
+
       // Store in documents state
       setDocuments((prev) => ({
         ...prev,
@@ -312,7 +404,7 @@ const [isLoading, setIsLoading] = useState(true);
           fetched: true,
         },
       }));
-  
+
       toast.success("ITR documents fetched successfully");
     } catch (error) {
       toast.error("Failed to fetch tax documents");
@@ -321,38 +413,40 @@ const [isLoading, setIsLoading] = useState(true);
     }
   };
   if (isLoading || !data) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-      <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
-        <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
-          Loading your <span className="text-[#7c3aed]">profile...</span>
-        </p>
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
+          <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
+            Loading your <span className="text-[#7c3aed]">profile...</span>
+          </p>
 
-        <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
-          <div
-            className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
-            style={{ width: "60%" }}
-          />
+          <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
+            <div
+              className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
+              style={{ width: "60%" }}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">      {/* Sidebar */}
-      <>
-        {/* Mobile Overlay */}
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/40 z-40 md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+        {" "}
+        {/* Sidebar */}
+        <>
+          {/* Mobile Overlay */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+          )}
 
-        <aside
-          className={`
+          <aside
+            className={`
       fixed md:static
       top-0 left-0
       z-50 md:z-auto
@@ -363,147 +457,149 @@ const [isLoading, setIsLoading] = useState(true);
       md:translate-x-0
       flex flex-col
     `}
-        >
-          {/* Close button - Mobile only */}
-          <div className="md:hidden flex justify-end p-4">
-            <button onClick={() => setIsSidebarOpen(false)}>
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          {/* Profile mini card */}
-          <div className="p-4 mx-3 mt-4 rounded-xl bg-secondary/60 border border-border/50">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-violet-200 from-primary/20 to-accent flex items-center justify-center shrink-0">
-                <span className="text-sm font-bold text-primary">
-                  {data?.firstName?.[0] || ""}
-                  {data?.lastName?.[0] || ""}   
-                </span>
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">
-                  {data.firstName} {data.lastName}
-                </p>
-                <p className="text-[11px] text-muted-foreground truncate">
-                  {data.email}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Nav items */}
-          <nav className="flex-1 px-3 mt-6 space-y-1 overflow-y-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setIsSidebarOpen(false); // auto close on mobile
-                  }}
-                  className={`w-full mt-2 flex items-center gap-3 px-4 py-4 rounded-xl text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
-      </>
-
-      {/* Main content */}
-      <main className="flex-1 min-h-screen">
-        {/* Top bar */}
-
-        <header className="sticky top-0 z-40 bg-background/60 md:bg-background/80 backdrop-blur-md border-b border-border/60">
-          <div className="px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
-            {/* Left section */}
-            <div className="flex items-center gap-3 min-w-0">
-              {/* Burger */}
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="md:hidden p-2 rounded-lg hover:bg-secondary shrink-0"
-              >
-                <Menu className="h-5 w-5" />
+          >
+            {/* Close button - Mobile only */}
+            <div className="md:hidden flex justify-end p-4">
+              <button onClick={() => setIsSidebarOpen(false)}>
+                <X className="h-5 w-5" />
               </button>
-
-              <div className="min-w-0">
-                <h2 className="text-sm md:text-lg font-bold text-foreground truncate">
-                  {tabs.find((t) => t.id === activeTab)?.label}
-                </h2>
-                <p className="text-[10px] md:text-xs text-muted-foreground truncate">
-                  View and manage your details
-                </p>
+            </div>
+            {/* Profile mini card */}
+            <div className="p-4 mx-3 mt-4 rounded-xl bg-secondary/60 border border-border/50">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-violet-200 from-primary/20 to-accent flex items-center justify-center shrink-0">
+                  <span className="text-sm font-bold text-primary">
+                    {data?.firstName?.[0] || ""}
+                    {data?.lastName?.[0] || ""}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">
+                    {data.firstName} {data.lastName}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    {data.email}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* CIBIL Section */}
-            <div className="text-right shrink-0">
-              <p className="text-[10px] md:text-xs text-muted-foreground">
-                CIBIL Score
-              </p>
+            {/* Nav items */}
+            <nav className="flex-1 px-3 mt-6 space-y-1 overflow-y-auto">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
 
-              <div className="flex items-center gap-2 mt-0.5 justify-end">
-                <span className="text-lg md:text-xl font-bold text-primary font-mono">
-                  {data.cibilScore}
-                </span>
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setIsSidebarOpen(false); // auto close on mobile
+                    }}
+                    className={`w-full mt-2 flex items-center gap-3 px-4 py-4 rounded-xl text-sm font-medium transition-all ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
+        </>
+        {/* Main content */}
+        <main className="flex-1 min-h-screen">
+          {/* Top bar */}
 
-                <span
-                  className={`text-[9px] md:text-[10px] font-medium px-2 py-0.5 rounded-full border ${cibil.color}`}
+          <header className="sticky top-0 z-40 bg-background/60 md:bg-background/80 backdrop-blur-md border-b border-border/60">
+            <div className="px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
+              {/* Left section */}
+              <div className="flex items-center gap-3 min-w-0">
+                {/* Burger */}
+                <button
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="md:hidden p-2 rounded-lg hover:bg-secondary shrink-0"
                 >
-                  {cibil.label}
-                </span>
+                  <Menu className="h-5 w-5" />
+                </button>
+
+                <div className="min-w-0">
+                  <h2 className="text-sm md:text-lg font-bold text-foreground truncate">
+                    {tabs.find((t) => t.id === activeTab)?.label}
+                  </h2>
+                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">
+                    View and manage your details
+                  </p>
+                </div>
+              </div>
+
+              {/* CIBIL Section */}
+              <div className="text-right shrink-0">
+                <p className="text-[10px] md:text-xs text-muted-foreground">
+                  CIBIL Score
+                </p>
+
+                <div className="flex items-center gap-2 mt-0.5 justify-end">
+                  <span className="text-lg md:text-xl font-bold text-primary font-mono">
+                    {data.cibilScore}
+                  </span>
+
+                  <span
+                    className={`text-[9px] md:text-[10px] font-medium px-2 py-0.5 rounded-full border ${cibil.color}`}
+                  >
+                    {cibil.label}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Content */}
-        <div
-          className="w-full px-6 py-6"
-          key={activeTab}
-        >
-          {" "}
-          {activeTab === "personal" && (
-            <div className="space-y-6">
-              <ProfileSection icon={User} title="Basic Information">
-                <DetailRow label="Full Name" value={fullName} />
-                <DetailRow label="Date of Birth" value={data.dateOfBirth} />
-                <DetailRow label="Gender" value={data.gender} />
-                <DetailRow label="Father's Name" value={data.fatherName} />
-                <DetailRow label="Marital Status" value={data.maritalStatus} />
-                <DetailRow label="Nationality" value={data.nationality} />
-              </ProfileSection>
-              <ProfileSection icon={Shield} title="Identity & Contact">
-                <DetailRow label="PAN Card" value={data.panCard} highlight />
-                <DetailRow label="Aadhaar" value={data.aadhaarCard} masked />
-                <DetailRow label="Email" value={data.email} />
-                <DetailRow label="Mobile" value={data.mobile} />
-              </ProfileSection>
-              <ProfileSection icon={MapPin} title="Address Details">
-                <DetailRow label="Current Address" value={data.addressLine1} />
-                <DetailRow
-                  label="Permanent Address"
-                  value={data.addressLine2}
-                />
-                <DetailRow label="City" value={data.city} />
-                <DetailRow label="State" value={data.state} />
-                <DetailRow label="Pincode" value={data.pincode} />
-                <DetailRow
-                  label="Residential Status"
-                  value={data.residentialStatus}
-                />
-              </ProfileSection>
-            </div>
-          )}
-          {/* {activeTab === "address" && (
+          {/* Content */}
+          <div className="w-full px-6 py-6" key={activeTab}>
+            {" "}
+            {activeTab === "personal" && (
+              <div className="space-y-6">
+                <ProfileSection icon={User} title="Basic Information">
+                  <DetailRow label="Full Name" value={fullName} />
+                  <DetailRow label="Date of Birth" value={data.dateOfBirth} />
+                  <DetailRow label="Gender" value={data.gender} />
+                  <DetailRow label="Father's Name" value={data.fatherName} />
+                  <DetailRow
+                    label="Marital Status"
+                    value={data.maritalStatus}
+                  />
+                  <DetailRow label="Nationality" value={data.nationality} />
+                </ProfileSection>
+                <ProfileSection icon={Shield} title="Identity & Contact">
+                  <DetailRow label="PAN Card" value={data.panCard} highlight />
+                  <DetailRow label="Aadhaar" value={data.aadhaarCard} masked />
+                  <DetailRow label="Email" value={data.email} />
+                  <DetailRow label="Mobile" value={data.mobile} />
+                </ProfileSection>
+                <ProfileSection icon={MapPin} title="Address Details">
+                  <DetailRow
+                    label="Current Address"
+                    value={data.addressLine1}
+                  />
+                  <DetailRow
+                    label="Permanent Address"
+                    value={data.addressLine2}
+                  />
+                  <DetailRow label="City" value={data.city} />
+                  <DetailRow label="State" value={data.state} />
+                  <DetailRow label="Pincode" value={data.pincode} />
+                  <DetailRow
+                    label="Residential Status"
+                    value={data.residentialStatus}
+                  />
+                </ProfileSection>
+              </div>
+            )}
+            {/* {activeTab === "address" && (
             <ProfileSection icon={MapPin} title="Address Details">
               <DetailRow label="Address Line 1" value={data.addressLine1} />
               <DetailRow label="Address Line 2" value={data.addressLine2} />
@@ -516,159 +612,207 @@ const [isLoading, setIsLoading] = useState(true);
               />
             </ProfileSection>
           )} */}
-          {activeTab === "employment" && (
-            <div className="space-y-6">
-              <ProfileSection icon={Briefcase} title="Current Employment">
-                <DetailRow label="Status" value={data.employmentStatus} />
-                <DetailRow label="Salary Mode" value={data.salaryMode} />
-                <DetailRow
-                  label="Experience"
-                  value={formatExperience(data.experience)}
-                />
-                <DetailRow label="UAN / PF Number" value={data.uanPfNumber} />
-                <DetailRow
-                  label="Monthly Income"
-                  value={data.monthlyIncome}
-                  highlight
-                />
-              </ProfileSection>
-              <ProfileSection icon={Briefcase} title="Company Details">
-                <DetailRow
-                  label="Current Company"
-                  value={data.currentCompany}
-                />
-                <DetailRow
-                  label="Current Joining Date"
-                  value={data.currentJoinDate}
-                />
+            {activeTab === "employment" && (
+              <div className="space-y-6">
+                <ProfileSection icon={Briefcase} title="Current Employment">
+                  <DetailRow label="Status" value={data.employmentStatus} />
+                  <DetailRow label="Salary Mode" value={data.salaryMode} />
+                  <DetailRow
+                    label="Experience"
+                    value={formatExperience(data.experience)}
+                  />
+                  <DetailRow label="UAN / PF Number" value={data.uanPfNumber} />
+                  <DetailRow
+                    label="Monthly Income"
+                    value={data.monthlyIncome}
+                    highlight
+                  />
+                </ProfileSection>
+                <ProfileSection icon={Briefcase} title="Company Details">
+                  <DetailRow
+                    label="Current Company"
+                    value={data.currentCompany}
+                  />
+                  <DetailRow
+                    label="Current Joining Date"
+                    value={data.currentJoinDate}
+                  />
 
-                {data.previousCompanyJoinDate &&
-                  data.previousCompanyRelieveDate && (
-                    <>
-                      <DetailRow
-                        label="Previous Company"
-                        value={data.previousCompany}
+                  {data.previousCompanyJoinDate &&
+                    data.previousCompanyRelieveDate && (
+                      <>
+                        <DetailRow
+                          label="Previous Company"
+                          value={data.previousCompany}
+                        />
+                        <DetailRow
+                          label="Previous Joining Date"
+                          value={data.previousCompanyJoinDate}
+                        />
+                        <DetailRow
+                          label="Previous Relieving Date"
+                          value={data.previousCompanyRelieveDate}
+                        />
+                      </>
+                    )}
+                </ProfileSection>
+              </div>
+            )}
+            {activeTab === "credit" && (
+              <div className="space-y-6">
+                <ProfileSection icon={CreditCard} title="Credit Score">
+                  <DetailRow
+                    label="CIBIL Score"
+                    value={data.cibilScore}
+                    highlight
+                  />
+                  <DetailRow
+                    label="Recent Enquiries"
+                    value={data.recentEnquiries}
+                  />
+                  <DetailRow label="Settlements" value={data.settlements} />
+                  <DetailRow label="EMI Bounces" value={data.emiBounces} />
+                  <DetailRow
+                    label="Credit Utilization"
+                    value={data.creditUtilization}
+                  />
+                </ProfileSection>
+                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-1.5 h-5 bg-primary rounded-full" />
+                    Required Documents
+                  </h3>
+                  <div className="flex gap-8 w-full md:w-auto">
+                    <input
+                      type="text"
+                      placeholder="Enter Your Income Tax Efiling Password"
+                      value={taxNumber}
+                      onChange={(e) => setTaxNumber(e.target.value)}
+                      className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+
+                    <Button
+                      onClick={handleFetchTaxDocuments}
+                      disabled={isFetchingDocs}
+                      className="h-10"
+                    >
+                      {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FileUploadZone
+                      label="Last 3 Years ITR/Form 16"
+                      required
+                      accept=".pdf,.jpg,.png"
+                      onFileSelect={(file) =>
+                        setDocuments((prev) => ({ ...prev, itr: file }))
+                      }
+                    />
+                    <FileUploadZone
+                      label="Applicant Photo"
+                      required
+                      accept=".jpg,.png,.jpeg"
+                      onFileSelect={(file) =>
+                        setDocuments((prev) => ({ ...prev, photo: file }))
+                      }
+                    />
+                  </div>
+
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium text-foreground mb-4">
+                      Last 3 Months Payslips
+                      <span className="text-destructive ml-1">*</span>
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <FileUploadZone
+                        label="Month 1"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip1: file }))
+                        }
                       />
-                      <DetailRow
-                        label="Previous Joining Date"
-                        value={data.previousCompanyJoinDate}
+                      <FileUploadZone
+                        label="Month 2"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip2: file }))
+                        }
                       />
-                      <DetailRow
-                        label="Previous Relieving Date"
-                        value={data.previousCompanyRelieveDate}
+                      <FileUploadZone
+                        label="Month 3"
+                        required
+                        accept=".pdf,.jpg,.png"
+                        compact
+                        onFileSelect={(file) =>
+                          setDocuments((prev) => ({ ...prev, payslip3: file }))
+                        }
                       />
-                    </>
-                  )}
-              </ProfileSection>
-            </div>
-          )}
-          {activeTab === "credit" && (
-            <div className="space-y-6">
-              <ProfileSection icon={CreditCard} title="Credit Score">
-                <DetailRow
-                  label="CIBIL Score"
-                  value={data.cibilScore}
-                  highlight
-                />
-                <DetailRow
-                  label="Recent Enquiries"
-                  value={data.recentEnquiries}
-                />
-                <DetailRow label="Settlements" value={data.settlements} />
-                <DetailRow label="EMI Bounces" value={data.emiBounces} />
-                <DetailRow
-                  label="Credit Utilization"
-                  value={data.creditUtilization}
-                />
-              </ProfileSection>
-                              <div className="space-y-6 mt-8 pt-6 border-t border-border">
-                                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                                  <span className="w-1.5 h-5 bg-primary rounded-full" />
-                                  Required Documents
-                                </h3>
-                                 <div className="flex gap-8 w-full md:w-auto">
-                                    <input
-                                      type="text"
-                                      placeholder="Enter Your Income Tax Efiling Password"
-                                      value={taxNumber}
-                                      onChange={(e) => setTaxNumber(e.target.value)}
-                                      className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                                    />
-              
-                                    <Button
-                                      onClick={handleFetchTaxDocuments}
-                                      disabled={isFetchingDocs}
-                                      className="h-10"
-                                    >
-                                      {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
-                                    </Button>
-                                  </div> 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                  <FileUploadZone
-                                    label="Last 3 Years ITR/Form 16"
-                                    required
-                                    accept=".pdf,.jpg,.png"
-                                    onFileSelect={(file) =>
-                                      setDocuments((prev) => ({ ...prev, itr: file }))
-                                    }
-                                  />
-                                  <FileUploadZone
-                                    label="Applicant Photo"
-                                    required
-                                    accept=".jpg,.png,.jpeg"
-                                    onFileSelect={(file) =>
-                                      setDocuments((prev) => ({ ...prev, photo: file }))
-                                    }
-                                  />
-                                </div>
-              
-                                <div className="mt-6">
-                                  <h4 className="text-sm font-medium text-foreground mb-4">
-                                    Last 3 Months Payslips
-                                    <span className="text-destructive ml-1">*</span>
-                                  </h4>
-                                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <FileUploadZone
-                                      label="Month 1"
-                                      required
-                                      accept=".pdf,.jpg,.png"
-                                      compact
-                                      onFileSelect={(file) =>
-                                        setDocuments((prev) => ({ ...prev, payslip1: file }))
-                                      }
-                                    />
-                                    <FileUploadZone
-                                      label="Month 2"
-                                      required
-                                      accept=".pdf,.jpg,.png"
-                                      compact
-                                      onFileSelect={(file) =>
-                                        setDocuments((prev) => ({ ...prev, payslip2: file }))
-                                      }
-                                    />
-                                    <FileUploadZone
-                                      label="Month 3"
-                                      required
-                                      accept=".pdf,.jpg,.png"
-                                      compact
-                                      onFileSelect={(file) =>
-                                        setDocuments((prev) => ({ ...prev, payslip3: file }))
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-            </div>
-          )}
-          {/* {activeTab === "emergency" && (
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* {activeTab === "emergency" && (
             <ProfileSection icon={AlertCircle} title="Emergency Contact">
               <DetailRow label="Contact Name" value={data.emergencyName} />
               <DetailRow label="Relationship" value={data.emergencyRelation} />
               <DetailRow label="Phone Number" value={data.emergencyContact} />
             </ProfileSection>
           )} */}
-        </div>
-      </main>
+            {activeTab === "documents" && (
+              <div className="max-w-3xl">
+                <div className="flex flex-col gap-6">
+                  {document.map((section) => (
+                    <div key={section.category}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <section.icon className="h-4 w-4 text-primary" />
+                        <h2 className="text-sm font-semibold text-foreground">
+                          {section.category}
+                        </h2>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {section.docs.map((doc) => (
+                          <div
+                            key={doc.name}
+                            className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 hover:border-primary/40 hover:shadow-sm transition-all group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                                <File className="h-4 w-4 text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-foreground">
+                                  {doc.name}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground">
+                                  {doc.type} · {doc.size} · Uploaded {doc.date}
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                alert(`Downloading: ${doc.name}`);
+                              }}
+                              className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors px-3 py-1.5 rounded-lg hover:bg-accent group-hover:opacity-100 opacity-70"
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                              Download
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
