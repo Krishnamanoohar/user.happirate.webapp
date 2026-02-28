@@ -35,6 +35,7 @@ import {
   submitFinancialProfileDetails,
   updateCreditReport,
   fetchTaxDocuments,
+  uploadFinancialDocuments,
 } from "../../../src/api/api";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -294,6 +295,7 @@ const LoanApplication = () => {
       ? null
       : "Invalid GST format (e.g. 22ABCDE1234F1Z5)";
   };
+
   const validateStep = () => {
     const newErrors = {};
 
@@ -623,7 +625,7 @@ const LoanApplication = () => {
       employmentCategory: apiData.employmentCategory ?? "",
     };
   };
-  console.log(formData, "form data");
+
   // Enhanced Summary Section Component
   const SummarySection = ({ title, icon: Icon, children }) => (
     <div className="bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm">
@@ -688,7 +690,7 @@ const LoanApplication = () => {
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
       setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-      sessionStorage.setItem("userId", apiData._id);
+      
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);
         return;
@@ -738,55 +740,6 @@ const LoanApplication = () => {
     }
   };
 
-  /**
-   * Upload loan documents + loan details
-   */
-  // async function uploadFinancialDocsFrontend({
-  //   requestedLoanAmount,
-  //   requestedLoanTenure,
-  //   loanType,
-  //   itrFiles, // File[] (max 3)
-  //   payslips, // File[] (exact 3)
-  //   photo, // File (single)
-  // }) {
-  //   const formDocs = new FormData();
-  //   // ---- Text fields (req.body) ----
-  //   formDocs.append("requestedLoanAmount", requestedLoanAmount);
-  //   formDocs.append("requestedLoanTenure", requestedLoanTenure);
-  //   formDocs.append("loanType", loanType);
-
-  //   // ---- Files (req.files) ----
-  //   itrFiles.forEach((file) => {
-  //     formDocs.append("itr", file); // matches req.files.itr
-  //   });
-  //   payslips.forEach((file) => {
-  //     formDocs.append("payslips", file); // matches req.files.payslips
-  //   });
-  //   formDocs.append("photo", photo); // matches req.files.photo[0]
-  //   const response = await axios.post(
-  //     "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
-  //     formDocs,
-  //   );
-  //   return response.data;
-  // }
-
-  async function uploadFinancialDocsFrontend({
-    userId,
-    requestedLoanAmount,
-    requestedLoanTenure,
-    loanType,
-  }) {
-    try {
-      const resp = await axios.post(
-        "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer/upload-docs",
-        { userId, requestedLoanAmount, requestedLoanTenure, loanType },
-      );
-      console.log("Uploading resp", resp);
-      return true;
-    } catch (error) {
-      console.log("Error in uploading", error);
-    }
-  }
   const loanTenureOptions = Array.from({ length: 115 }, (_, i) => {
     const months = i + 6; // start from 6
     return {
@@ -796,27 +749,40 @@ const LoanApplication = () => {
   });
 
   const handleDocumentUpload = async () => {
-    try {
-      const userId = sessionStorage.getItem("userId");
-      const isUploaded = await uploadFinancialDocsFrontend({
-        userId,
-        requestedLoanAmount: formData.loanAmount,
-        requestedLoanTenure: formData.loanTenure,
-        loanType: formData.loanType,
+    const userId = sessionStorage.getItem("userId");
 
-        // itrFiles: [documents.itr],
-        // payslips: [documents.payslip1, documents.payslip2, documents.payslip3],
-        // photo: documents.photo,
-      });
-      if (isUploaded) {
+    if (!userId) {
+      toast.error("User ID is missing. Please log in again.");
+      return;
+    }
+
+    // 1. Create and pack the FormData
+    const formData = new FormData();
+    formData.append("userId", userId);
+
+    // Loop and append all payslips under the 'payslips' key
+    // Ensure 'documents' state actually contains File objects from the input!
+    if (documents.payslip1) formData.append("payslips", documents.payslip1);
+    if (documents.payslip2) formData.append("payslips", documents.payslip2);
+    if (documents.payslip3) formData.append("payslips", documents.payslip3);
+    if (documents.itr) formData.append("itrs", documents.itr);
+    if (documents.photo) formData.append("others", documents.photo);
+
+    try {
+      const response = await uploadFinancialDocuments(formData);
+
+      if (response.status === 201 || response.status === 200) {
+        // setCurrentStep(3); // Move to the next step in your UI
         setCurrentStep(3);
-        toast.success("Documents uploaded successfully");
-        // console.log("Upload success:", response);
+        toast.success("Documents uploaded successfully!");
       }
     } catch (error) {
-      console.error("Upload failed", error);
-      toast.error(error.response?.data?.message || "Document upload failed");
-    } finally {
+      console.error("Upload failed:", error);
+      toast.error(
+        error.response?.data?.error ||
+          error.response?.data?.message ||
+          "Document upload failed. Is your backend running?",
+      );
     }
   };
 
@@ -847,7 +813,7 @@ const LoanApplication = () => {
       </div>
     );
   }
-  console.log(formData, "form data");
+
   return (
     <>
       <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20 ">

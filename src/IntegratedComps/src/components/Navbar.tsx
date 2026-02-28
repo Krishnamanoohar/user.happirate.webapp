@@ -53,21 +53,13 @@ export default function Navbar({ scrollY }: NavbarProps) {
     navigate("/my-applicaton");
   };
 
-  // useEffect(() => {
-  //   const mobile = sessionStorage.getItem("mobile_number");
-  //   const name = sessionStorage.getItem("username");
-
-  //   if (mobile) {
-  //     setUser({ mobile, username: name });
-  //   }
-  // }, [sessionStorage.getItem("username")]);
   useEffect(() => {
     const loadUser = () => {
       const mobile = sessionStorage.getItem("mobile_number");
       const name = sessionStorage.getItem("username");
 
       if (mobile) {
-        setUser({ mobile, username: name });
+        setUser({ mobile, username: name || null });
       } else {
         setUser(null);
       }
@@ -77,7 +69,8 @@ export default function Navbar({ scrollY }: NavbarProps) {
 
     window.addEventListener("storage", loadUser);
     return () => window.removeEventListener("storage", loadUser);
-  }, []);
+  }, [sessionStorage.getItem("mobile_number")]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -96,7 +89,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
-  console.log("User State in Navbar:", user);
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${

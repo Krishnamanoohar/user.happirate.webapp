@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://node-happirate-server.vercel.app/api/customer"
-//  const API_URL = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
+// const API_URL = "https://node-happirate-server.vercel.app/api/customer"
+const API_URL = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -42,6 +42,16 @@ const updateCreditReport = async (payload) => {
   return resp;
 };
 
+const uploadFinancialDocuments = async (formData) => {
+  const resp = await apiClient.post("/upload-batch", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  console.log("Response for document upload", resp);
+  return resp;
+};
+
 // const fetchEligibleLoanProducts = async () => {
 //   const mobile = sessionStorage.getItem("mobile_number")
 //   const resp = await apiClient.post("/provisional-credit-assesment", {
@@ -49,6 +59,7 @@ const updateCreditReport = async (payload) => {
 //   })
 //   return resp
 // }
+
 const fetchEligibleLoanProducts = async (
   requestedLoanAmount,
   requestedLoanTenure
@@ -116,5 +127,6 @@ export {
   fetchEligibleLoanProducts,
   fetchRawResponseOfUser,
   fetchChatResponse,
-  fetchTaxDocuments
+  fetchTaxDocuments,
+  uploadFinancialDocuments
 };
