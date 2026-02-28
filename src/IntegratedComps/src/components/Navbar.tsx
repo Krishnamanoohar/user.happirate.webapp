@@ -65,7 +65,8 @@ export default function Navbar({ scrollY }: NavbarProps) {
 
     window.addEventListener("storage", loadUser);
     return () => window.removeEventListener("storage", loadUser);
-  }, []);
+  }, [sessionStorage.getItem("mobile_number")]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
