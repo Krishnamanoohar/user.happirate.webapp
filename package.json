@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "custom-host":"vite --host 127.0.0.1"
   },
   "dependencies": {
     "@barba/core": "^2.10.3",

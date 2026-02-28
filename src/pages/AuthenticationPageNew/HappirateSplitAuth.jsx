@@ -14,7 +14,11 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 // import { toast } from "sonner";
-import { sendOtpToMobile, verifyOtp, fetchCreditReport } from "../../../src/api/api";
+import {
+  sendOtpToMobile,
+  verifyOtp,
+  fetchCreditReport,
+} from "../../../src/api/api";
 import { Navigate, useNavigate } from "react-router-dom";
 // import { ToastContainer } from "react-toastify";
 import { toast, Toaster } from "sonner";
@@ -39,7 +43,7 @@ export function HappirateSplitAuth() {
 
   const [mobileNumber, setMobileNumber] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [resendCountDown, setResendCountDown] = useState(0);
   const [recaptchaVerifier, setRecaptchaVerifier] = useState(null);
   const [otpResult, setOtpResult] = useState(null);
@@ -48,7 +52,14 @@ export function HappirateSplitAuth() {
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
 
-  const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const otpRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
 
   const handleOtpChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
@@ -57,21 +68,54 @@ export function HappirateSplitAuth() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value && index < 3) {
+    if (value && index < 5) {
       otpRefs[index + 1].current?.focus();
     }
   };
+
   const handleOtpKeyDown = (e, index) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       const enteredOtp = otp.join("");
-      if (enteredOtp.length === 4) {
+      if (enteredOtp.length === 6) {
         handleVerifyOtp(enteredOtp);
       }
-    } else if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    } else if (e.key === "Backspace" && !otp[index] && index > 0) {
       otpRefs[index - 1].current?.focus();
     }
   };
+  // const handleSendOtp = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   if (mobileNumber.length !== 10) {
+  //     setErrors({
+  //       mobileNumber: "Please enter a valid 10-digit mobile number",
+  //     });
+  //     toast.error("Please enter a valid mobile number");
+  //     return;
+  //   }
+
+  //   try {
+  //     const resp = await sendOtpToMobile(mobileNumber);
+  //     console.log("resp", resp);
+  //     toast.success(
+  //       `${resp?.data?.otp} OTP sent successfully to ${mobileNumber}`,
+  //     );
+  //     // setShowOtp(true);
+  //     setOtpResult(true);
+  //     setErrors({});
+  //   } catch (error) {
+  //     console.error("OTP send failed", error);
+  //     toast.error("Failed to send OTP");
+  //     setErrors({
+  //       mobileNumber: "Failed to send OTP. Please try again.",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -80,150 +124,196 @@ export function HappirateSplitAuth() {
       setErrors({
         mobileNumber: "Please enter a valid 10-digit mobile number",
       });
-      toast.error("Please enter a valid mobile number");
       return;
     }
 
+    setResendCountDown(60);
+
+    startTransition(async () => {
+      if (!recaptchaVerifier) {
+        return toast.error("RecaptchaVerifier is not initialized");
+      }
+    });
+
+    // if (!consentChecked) {
+    //   setErrors({ consent: "You must agree to the consent statement." });
+    //   return;
+    // }
+
     try {
-      const resp = await sendOtpToMobile(mobileNumber);
-      console.log("resp", resp);
-      toast.success(
-        `${resp?.data?.otp} OTP sent successfully to ${mobileNumber}`,
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        `+91${mobileNumber}`,
+        recaptchaVerifier,
       );
-      // setShowOtp(true);
-      setOtpResult(true);
-      setErrors({});
+
+      setOtpResult(confirmationResult);
+      toast.success("OTP sent successfully");
     } catch (error) {
       console.error("OTP send failed", error);
-      toast.error("Failed to send OTP");
-      setErrors({
-        mobileNumber: "Failed to send OTP. Please try again.",
-      });
+      setResendCountDown(0);
+      if (error.code === "auth/invalid-phone-number") {
+        toast.error("Invalid phone number. Please check the number.");
+      } else if (error.code === "auth/too-many-requests") {
+        toast.error("Too many requests, Please try again later.");
+      } else {
+        toast.error("Failed to send OTP, Please try again.");
+      }
+
+      // setErrors({
+      //   mobileNumber: "Failed to send OTP. Please try again.",
+      // });
     } finally {
       setLoading(false);
     }
   };
 
-  // const handleSendOtp = async (e) => {
-  //   e.preventDefault();
-
-  //   if (mobileNumber.length !== 10) {
-  //     setErrors({
-  //       mobileNumber: "Please enter a valid 10-digit mobile number",
-  //     });
+  // const handleVerifyOtp = async (enteredOtp) => {
+  //   if (enteredOtp.length !== 4) {
+  //     setErrors({ otp: "Enter valid 4-digit OTP" });
   //     return;
   //   }
+  //   setLoading(true);
 
-  //   setResendCountDown(60);
+  //   const payload = {
+  //     otp: enteredOtp,
+  //     mobileNumber: mobileNumber,
+  //   };
 
-  //   startTransition(async () => {
-  //     if (!recaptchaVerifier) {
-  //       return toast.error("RecaptchaVerifier is not initialized");
-  //     }
-  //   });
-
-  //   // if (!consentChecked) {
-  //   //   setErrors({ consent: "You must agree to the consent statement." });
-  //   //   return;
-  //   // }
+  //   console.log("VERIFY OTP PAYLOAD:", payload);
 
   //   try {
-  //     const confirmationResult = await signInWithPhoneNumber(
-  //       auth,
-  //       `+91${mobileNumber}`,
-  //       recaptchaVerifier,
+  //     const resp = await verifyOtp(payload);
+  //     console.log("Verify OTP Response:", resp);
+  //     // console.log("Verify OTP Response Data:", resp?.data);
+
+  //     if (resp.status === 200) {
+  //       toast.success("OTP verified successfully");
+  //       sessionStorage.setItem("mobile_number", mobileNumber);
+  //       window.dispatchEvent(new Event("storage"));
+
+  //       setIsMobileVerified(true);
+  //       setErrors({});
+
+  //       // Fetch credit report only if OTP verification returned 200
+  //       try {
+  //         const creditReportResp = await fetchCreditReport({
+  //           mobileNumber: mobileNumber,
+  //         });
+
+  //         console.log("credit report response", creditReportResp);
+  //         const apiData = creditReportResp?.data?.data;
+
+  //         if (apiData) {
+  //           sessionStorage.setItem("userId", apiData._id);
+  //           sessionStorage.setItem(
+  //             "username",
+  //             `${apiData.firstName} ${apiData.middleName} ${apiData.lastName}`,
+  //           );
+
+  //           // console.log("Credit report fetched successfully");
+  //         } else {
+  //           console.error(
+  //             "Credit report API returned empty response",
+  //             creditReportResp,
+  //           );
+  //         }
+  //       } catch (creditError) {
+  //         console.error("Error fetching credit report", creditError);
+  //       }
+
+  //       // Redirect after fetching credit report
+  //       const redirect = sessionStorage.getItem("redirectAfterLogin") || "/";
+
+  //       setTimeout(() => {
+  //         navigate(redirect);
+  //         sessionStorage.removeItem("redirectAfterLogin");
+  //       }, 0);
+  //     }
+  //   } catch (error) {
+  //     toast.error("OTP verification failed");
+  //     console.error(
+  //       "OTP verification failed:",
+  //       error.response?.data || error.message,
   //     );
 
-  //     setOtpResult(confirmationResult);
-  //     toast.success("OTP sent successfully");
-  //   } catch (error) {
-  //     console.error("OTP send failed", error);
-  //     setResendCountDown(0);
-  //     if (error.code === "auth/invalid-phone-number") {
-  //       toast.error("Invalid phone number. Please check the number.");
-  //     } else if (error.code === "auth/too-many-requests") {
-  //       toast.error("Too many requests, Please try again later.");
-  //     } else {
-  //       toast.error("Failed to send OTP, Please try again.");
-  //     }
-
-  //     // setErrors({
-  //     //   mobileNumber: "Failed to send OTP. Please try again.",
-  //     // });
+  //     setErrors({ otp: "Invalid OTP" });
+  //     setOtp(["", "", "", ""]);
+  //     otpRefs[0]?.current?.focus();
+  //   } finally {
+  //     setLoading(false);
   //   }
   // };
 
   const handleVerifyOtp = async (enteredOtp) => {
-    if (enteredOtp.length !== 4) {
-      setErrors({ otp: "Enter valid 4-digit OTP" });
+    if (enteredOtp.length !== 6) {
+      // Firebase OTPs are 6 digits
+      setErrors({ otp: "Enter valid 6-digit OTP" });
       return;
     }
     setLoading(true);
 
-    const payload = {
-      otp: enteredOtp,
-      mobileNumber: mobileNumber,
-    };
-
-    console.log("VERIFY OTP PAYLOAD:", payload);
-
     try {
-      const resp = await verifyOtp(payload);
-      console.log("Verify OTP Response:", resp);
-      // console.log("Verify OTP Response Data:", resp?.data);
+      // 1. Verify OTP with Firebase locally
+      const result = await otpResult.confirm(enteredOtp);
+      const user = result.user;
+
+      // 2. Get the secure ID Token (JWT) from Firebase
+      const idToken = await user.getIdToken();
+
+      // 3. Send the Token to your backend instead of the raw OTP
+      const payload = {
+        idToken: idToken, // This is your secure proof of identity
+        mobileNumber: mobileNumber,
+      };
+
+      const resp = await verifyOtp(payload); // Calling your backend API
 
       if (resp.status === 200) {
-        toast.success("OTP verified successfully");
         sessionStorage.setItem("mobile_number", mobileNumber);
-        window.dispatchEvent(new Event("storage"));
-
-        setIsMobileVerified(true);
-        setErrors({});
-
-        // Fetch credit report only if OTP verification returned 200
-        try {
-          const creditReportResp = await fetchCreditReport({ mobileNumber: mobileNumber });
-          console.log("credit report response", creditReportResp);
-          const apiData = creditReportResp?.data?.data;
-
-          if (apiData) {
-            sessionStorage.setItem("userId", apiData._id);
-            sessionStorage.setItem(
-              "username",
-              `${apiData.firstName} ${apiData.middleName} ${apiData.lastName}`,
-            );
-
-            // console.log("Credit report fetched successfully");
-          } else {
-            console.error("Credit report API returned empty response", creditReportResp);
-          }
-        } catch (creditError) {
-          console.error("Error fetching credit report", creditError);
-        }
-
-        // Redirect after fetching credit report
-        const redirect = sessionStorage.getItem("redirectAfterLogin") || "/";
-
-        setTimeout(() => {
-          navigate(redirect);
-          sessionStorage.removeItem("redirectAfterLogin");
-        }, 0);
+        sessionStorage.setItem("userId", resp?.data?.data?._id);
+        toast.success("Login verified successfully");
+        navigate(sessionStorage.getItem("redirectAfterLogin") || "/");
       }
-
     } catch (error) {
-      toast.error("OTP verification failed");
-      console.error(
-        "OTP verification failed:",
-        error.response?.data || error.message,
-      );
+      console.log("Verification error details:", {
+        message: error.message,
+        code: error.code,
+        responseData: error.response?.data,
+      });
+      switch (error.code) {
+        case "auth/invalid-verification-code":
+          toast.error("Incorrect OTP. Please check and try again.");
+          setOtp(["", "", "", "", "", ""]); // Action: Clear boxes for retry
+          break;
 
-      setErrors({ otp: "Invalid OTP" });
-      setOtp(["", "", "", ""]);
-      otpRefs[0]?.current?.focus();
+        case "auth/code-expired":
+          toast.error("OTP has expired. Please request a new one.");
+          setOtp(["", "", "", "", "", ""]);
+          setOtpResult(null); // Action: Clear boxes so they can request new
+          break;
+
+        case "auth/too-many-requests":
+          toast.error("Too many failed attempts. Please try again later.");
+          setOtpResult(null);
+          // Action: Do NOT clear OTP. The user needs to wait. Firebase blocks the IP temporarily.
+          break;
+
+        case "auth/network-request-failed":
+          toast.error("Network error. Please check your internet connection.");
+          // Action: Let them click verify again once WiFi is back.
+          break;
+
+        default:
+          toast.error("Verification failed. Please try again.");
+          setOtp(["", "", "", "", "", ""]);
+          break;
+      }
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
       size: "invisible",
@@ -385,11 +475,7 @@ export function HappirateSplitAuth() {
                           className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
                           onClick={() => handleVerifyOtp(otp.join(""))}
                         >
-                          {loading ? (
-                            <div className="loader" />
-                          ) : (
-                            "Verify OTP"
-                          )}
+                          {loading ? <div className="loader" /> : "Verify OTP"}
                         </Button>
                       </>
                     )}
