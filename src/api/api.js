@@ -43,12 +43,18 @@ const updateCreditReport = async (payload) => {
 };
 
 const uploadFinancialDocuments = async (formData) => {
-  const resp = await apiClient.post("/upload-batch", formData, {
+  const resp = await apiClient.post("/docs/upload-batch", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
   console.log("Response for document upload", resp);
+  return resp;
+};
+
+const fetchUserFinDocuments = async (userId) => {
+  const resp = await apiClient.get(`/docs/${userId}`);
+  console.log("fetchUserFinDocuments response", resp);
   return resp;
 };
 
@@ -62,7 +68,7 @@ const uploadFinancialDocuments = async (formData) => {
 
 const fetchEligibleLoanProducts = async (
   requestedLoanAmount,
-  requestedLoanTenure
+  requestedLoanTenure,
 ) => {
   const mobile = sessionStorage.getItem("mobile_number");
 
@@ -74,7 +80,6 @@ const fetchEligibleLoanProducts = async (
 
   return resp;
 };
-
 
 const personalDetailsVerification = async (payload) => {
   const resp = await apiClient.post("/submit-personal-details", payload);
@@ -92,33 +97,39 @@ const submitFinancialProfileDetails = async (payload) => {
 
 const fetchRawResponseOfUser = async () => {
   try {
-    const mobile = sessionStorage.getItem("mobile_number")
-    const resp = await apiClient.post("/fetch-credit-health", { mobileNumber: mobile })
-    return resp
+    const mobile = sessionStorage.getItem("mobile_number");
+    const resp = await apiClient.post("/fetch-credit-health", {
+      mobileNumber: mobile,
+    });
+    return resp;
   } catch (error) {
-    console.log("Error in fetching user raw response", error)
+    console.log("Error in fetching user raw response", error);
   }
-}
+};
 
 const fetchChatResponse = async ({ contextData, message }) => {
   try {
-    const userId = sessionStorage.getItem("userId")
-    const resp = await apiClient.post("/chat-handler", { userId, message, contextData })
-    console.log("Response of chat", resp)
-    return resp?.data?.reply
+    const userId = sessionStorage.getItem("userId");
+    const resp = await apiClient.post("/chat-handler", {
+      userId,
+      message,
+      contextData,
+    });
+    console.log("Response of chat", resp);
+    return resp?.data?.reply;
   } catch (error) {
-    console.log("Error in handling chat", error)
+    console.log("Error in handling chat", error);
   }
-}
+};
 const fetchTaxDocuments = async (payload) => {
   const resp = await apiClient.post("/fetch-tax-documents", payload);
   console.log("Tax document response", resp);
   return resp;
 };
 
-
 export {
-  checkLoanEligibility, personalDetailsVerification,
+  checkLoanEligibility,
+  personalDetailsVerification,
   submitFinancialProfileDetails,
   sendOtpToMobile,
   verifyOtp,
@@ -128,5 +139,6 @@ export {
   fetchRawResponseOfUser,
   fetchChatResponse,
   fetchTaxDocuments,
-  uploadFinancialDocuments
+  uploadFinancialDocuments,
+  fetchUserFinDocuments
 };

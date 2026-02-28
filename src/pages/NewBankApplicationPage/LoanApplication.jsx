@@ -118,46 +118,6 @@ const validateEmploymentNumbers = (data) => {
   return errors;
 };
 
-const buildPersonalDetailsPayload = (data) => ({
-  mobileNumber: sessionStorage.getItem("mobile_number"),
-  firstName: data.firstName,
-  lastName: data.lastName,
-  middleName: data.middleName,
-  dateOfBirth: data.dateOfBirth,
-  email: data.email,
-  panCard: data.panCard,
-  // aadharCard: normalizeAadhaarForApi(data.aadhaarCard),
-  // residentialType: data.residentialStatus,
-  addressLine1: data.addressLine1,
-  // city: data.city,
-  state: data.state,
-  pincode: data.pincode,
-});
-
-const buildEmploymentDetailsPayload = (data) => ({
-  mobileNumber: sessionStorage.getItem("mobile_number"),
-  employmentStatus: data.employmentStatus,
-  gstNumber: data.gstNumber || null,
-  companyName: data.companyName,
-  uanNumber: data.uanNumber,
-  employmentExperience: data.employmentExperience,
-  previousCompanyName: data.previousCompanyName,
-  previousCompanyFrom: data.previousCompanyFrom,
-  previousCompanyTo: data.previousCompanyTo,
-  currentCompanyName: data.currentCompanyName,
-  currentCompanyJoiningDate: data.currentCompanyJoiningDate,
-  monthlyIncome: Number(data.monthlyIncome),
-  cibilScore: Number(data.cibilScore),
-  recentEnquiries: Number(data.recentEnquiries),
-  settlements: Number(data.settlements),
-  emiBounces: Number(data.emiBounces),
-  creditCardUtilization: Number(data.creditCardUtilization),
-  // residentialStability: Number(data.residentialStability),
-  existingEmi: Number(data.existingEmi),
-  employmentCategory: data.employmentCategory,
-  salaryMode: data.salaryMode,
-});
-
 const buildFileUpload = (data) => ({
   mobileNumber: sessionStorage.getItem("mobile_number"),
 });
@@ -341,34 +301,34 @@ const LoanApplication = () => {
           newErrors.employmentExperience =
             "Only numbers allowed (e.g. 1 or 1.5)";
         }
-        if (!formData.previousCompanyName)
-          newErrors.previousCompanyName = "Previous Company Name is required";
-        if (formData.previousCompanyName) {
-          if (!formData.previousCompanyFrom) {
-            newErrors.previousCompanyFrom =
-              "Previous Company Joined Date is required";
-          }
+        // if (!formData.previousCompanyName)
+        //   newErrors.previousCompanyName = "Previous Company Name is required";
+        // if (formData.previousCompanyName) {
+        //   if (!formData.previousCompanyFrom) {
+        //     newErrors.previousCompanyFrom =
+        //       "Previous Company Joined Date is required";
+        //   }
 
-          if (!formData.previousCompanyTo) {
-            newErrors.previousCompanyTo =
-              "Previous Company Relieving Date is required";
-          } else if (
-            formData.previousCompanyFrom &&
-            formData.previousCompanyTo <= formData.previousCompanyFrom
-          ) {
-            newErrors.previousCompanyTo =
-              "Relieving date must be after joined date";
-          }
-        }
-        if (!formData.currentCompanyName)
-          newErrors.currentCompanyName = "Current Company Name is required";
-        if (!formData.currentCompanyJoiningDate)
-          newErrors.currentCompanyJoiningDate =
-            "Current Company Joining Date is required";
-        if (!formData.uanNumber)
-          newErrors.uanNumber = "UAN/PF Number is required";
-        if (!formData.salaryMode)
-          newErrors.salaryMode = "Salary Mode is required";
+        //   if (!formData.previousCompanyTo) {
+        //     newErrors.previousCompanyTo =
+        //       "Previous Company Relieving Date is required";
+        //   } else if (
+        //     formData.previousCompanyFrom &&
+        //     formData.previousCompanyTo <= formData.previousCompanyFrom
+        //   ) {
+        //     newErrors.previousCompanyTo =
+        //       "Relieving date must be after joined date";
+        //   }
+        // }
+        // if (!formData.currentCompanyName)
+        //   newErrors.currentCompanyName = "Current Company Name is required";
+        // if (!formData.currentCompanyJoiningDate)
+        //   newErrors.currentCompanyJoiningDate =
+        //     "Current Company Joining Date is required";
+        // if (!formData.uanNumber)
+        //   newErrors.uanNumber = "UAN/PF Number is required";
+        // if (!formData.salaryMode)
+        //   newErrors.salaryMode = "Salary Mode is required";
       }
       // if (
       //   !formData.residentialStability &
@@ -385,6 +345,7 @@ const LoanApplication = () => {
     }
 
     setErrors(newErrors);
+    console.log(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -400,6 +361,47 @@ const LoanApplication = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [consentError, setConsentError] = useState(false);
+
+  const buildPersonalDetailsPayload = (data) => ({
+    mobileNumber: sessionStorage.getItem("mobile_number"),
+    firstName: data.firstName,
+    lastName: data.lastName,
+    middleName: data.middleName,
+    dateOfBirth: data.dateOfBirth,
+    email: data.email,
+    panCard: data.panCard,
+    aadharCard: data.aadhaarCard,
+    // residentialType: data.residentialStatus,
+    addressLine1: data.addressLine1,
+    // city: data.city,
+    state: data.state,
+    pincode: data.pincode,
+  });
+
+  const buildEmploymentDetailsPayload = (data) => ({
+    mobileNumber: sessionStorage.getItem("mobile_number"),
+    employmentStatus: data.employmentStatus,
+    gstNumber: data.gstNumber || null,
+    companyName: data.companyName,
+    uanNumber: data.uanNumber,
+    employmentHistory: { employment_data: employmentData },
+    employmentExperience: data.employmentExperience,
+    previousCompanyName: data.previousCompanyName,
+    previousCompanyFrom: data.previousCompanyFrom,
+    previousCompanyTo: data.previousCompanyTo,
+    currentCompanyName: data.currentCompanyName,
+    currentCompanyJoiningDate: data.currentCompanyJoiningDate,
+    monthlyIncome: Number(data.monthlyIncome),
+    cibilScore: Number(data.cibilScore),
+    recentEnquiries: Number(data.recentEnquiries),
+    settlements: Number(data.settlements),
+    emiBounces: Number(data.emiBounces),
+    creditCardUtilization: Number(data.creditCardUtilization),
+    // residentialStability: Number(data.residentialStability),
+    existingEmi: Number(data.existingEmi),
+    employmentCategory: data.employmentCategory,
+    salaryMode: data.salaryMode,
+  });
 
   const handleNext = async () => {
     if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
@@ -578,7 +580,7 @@ const LoanApplication = () => {
       dateOfBirth: apiData.dateOfBirth.split("T")[0] ?? "",
       panCard: apiData.panCard ?? "",
       email: primaryEmail ?? [],
-      aadhaarCard: "", // ❌ NOT PROVIDED BY API
+      aadhaarCard: apiData?.aadharCard ?? "", // ❌ NOT PROVIDED BY API
       mobileNumber: mobile,
       employmentStatus: hasUAN ? "salaried" : "",
 
@@ -680,17 +682,21 @@ const LoanApplication = () => {
     try {
       setPageLoading(true);
       const mobile = sessionStorage.getItem("mobile_number");
+      const userInfo = sessionStorage.getItem("userId");
       console.log(mobile, "mobile");
 
       if (!mobile) {
         navigate("/sign-in", { replace: true });
         return;
       }
-      const resp = await fetchCreditReport({ mobileNumber: mobile });
+      const resp = await fetchCreditReport({
+        mobileNumber: mobile,
+        // userId: userInfo,
+      });
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
       setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-      
+
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);
         return;
@@ -756,12 +762,49 @@ const LoanApplication = () => {
       return;
     }
 
+    // --- NEW: Client-side file size validation ---
+    const MAX_FILE_SIZE_MB = 5; // Max size for a SINGLE file (e.g., 5MB)
+    const MAX_TOTAL_SIZE_MB = 15; // Max size for the ENTIRE batch (e.g., 15MB)
+
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
+
+    // Gather all currently selected files into an array, ignoring empty ones
+    const selectedFiles = [
+      documents.payslip1,
+      documents.payslip2,
+      documents.payslip3,
+      documents.itr,
+      documents.photo,
+    ].filter(Boolean);
+
+    let totalSize = 0;
+
+    for (const file of selectedFiles) {
+      // Check individual file size
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        toast.error(
+          `File "${file.name}" is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
+        );
+        return; // Stop the upload process instantly
+      }
+      totalSize += file.size;
+    }
+
+    // Check total batch size
+    if (totalSize > MAX_TOTAL_SIZE_BYTES) {
+      toast.error(
+        `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB}MB. Please compress your files.`,
+      );
+      return; // Stop the upload process instantly
+    }
+    // ----------------------------------------------
+
     // 1. Create and pack the FormData
     const formData = new FormData();
     formData.append("userId", userId);
 
     // Loop and append all payslips under the 'payslips' key
-    // Ensure 'documents' state actually contains File objects from the input!
     if (documents.payslip1) formData.append("payslips", documents.payslip1);
     if (documents.payslip2) formData.append("payslips", documents.payslip2);
     if (documents.payslip3) formData.append("payslips", documents.payslip3);
@@ -772,23 +815,67 @@ const LoanApplication = () => {
       const response = await uploadFinancialDocuments(formData);
 
       if (response.status === 201 || response.status === 200) {
-        // setCurrentStep(3); // Move to the next step in your UI
         setCurrentStep(3);
         toast.success("Documents uploaded successfully!");
       }
     } catch (error) {
       console.error("Upload failed:", error);
-      toast.error(
-        error.response?.data?.error ||
-          error.response?.data?.message ||
-          "Document upload failed. Is your backend running?",
-      );
+
+      // Fallback error handling if a 413 somehow slips through to the client
+      if (error.response?.status === 413) {
+        toast.error("Files are too large for the server to process.");
+      } else {
+        toast.error(
+          error.response?.data?.error ||
+            error.response?.data?.message ||
+            "Document upload failed. Is your backend running?",
+        );
+      }
     }
   };
+
+  // const handleDocumentUpload = async () => {
+  //   const userId = sessionStorage.getItem("userId");
+
+  //   if (!userId) {
+  //     toast.error("User ID is missing. Please log in again.");
+  //     return;
+  //   }
+
+  //   // 1. Create and pack the FormData
+  //   const formData = new FormData();
+  //   formData.append("userId", userId);
+
+  //   // Loop and append all payslips under the 'payslips' key
+  //   // Ensure 'documents' state actually contains File objects from the input!
+  //   if (documents.payslip1) formData.append("payslips", documents.payslip1);
+  //   if (documents.payslip2) formData.append("payslips", documents.payslip2);
+  //   if (documents.payslip3) formData.append("payslips", documents.payslip3);
+  //   if (documents.itr) formData.append("itrs", documents.itr);
+  //   if (documents.photo) formData.append("others", documents.photo);
+
+  //   try {
+  //     const response = await uploadFinancialDocuments(formData);
+
+  //     if (response.status === 201 || response.status === 200) {
+  //       // setCurrentStep(3); // Move to the next step in your UI
+  //       setCurrentStep(3);
+  //       toast.success("Documents uploaded successfully!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload failed:", error);
+  //     toast.error(
+  //       error.response?.data?.error ||
+  //         error.response?.data?.message ||
+  //         "Document upload failed. Is your backend running?",
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
     autoFillUserDetails();
   }, []);
+
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -1018,11 +1105,7 @@ const LoanApplication = () => {
                 />
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
-                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-primary" />
-                    Employment Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FormSelect
                       label="Employment Status"
                       value={formData.employmentStatus}
@@ -1057,7 +1140,7 @@ const LoanApplication = () => {
                           ]}
                           error={errors.salaryMode}
                         />
-                        <FormInput
+                        {/* <FormInput
                           label="Employment Category"
                           value={formData.employmentCategory}
                           onChange={(v) =>
@@ -1065,7 +1148,7 @@ const LoanApplication = () => {
                           }
                           required
                           error={errors.employmentCategory}
-                        />
+                        /> */}
                         <FormInput
                           label="Employment Experience (Years)"
                           placeholder="e.g. 1.5"
@@ -1083,7 +1166,7 @@ const LoanApplication = () => {
                           required
                           error={errors.employmentExperience}
                         />
-                        <FormInput
+                        {/* <FormInput
                           label="UAN / PF Number"
                           value={formData.uanNumber || ""}
                           onChange={(v) =>
@@ -1091,7 +1174,7 @@ const LoanApplication = () => {
                           }
                           required
                           error={errors.uanNumber}
-                        />
+                        /> */}
                       </>
                     )}
                     <FormInput
@@ -1104,7 +1187,7 @@ const LoanApplication = () => {
                     />
                     {!isSelfEmployed && (
                       <>
-                        <FormInput
+                        {/* <FormInput
                           label="Previous Company Name"
                           value={formData.previousCompanyName || ""}
                           onChange={(v) =>
@@ -1113,10 +1196,10 @@ const LoanApplication = () => {
                           placeholder="Enter previous company name"
                           required
                           error={errors.previousCompanyName}
-                        />
+                        /> */}
 
                         {/* Previous Company From Date - custom with Calendar icon */}
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
                             Previous Company Joined Date{" "}
                             <span className="text-destructive">*</span>
@@ -1139,17 +1222,17 @@ const LoanApplication = () => {
                                   : "border-input",
                               )}
                             />
-                            {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
+                            
                           </div>
                           {errors.previousCompanyFrom && (
                             <p className="text-xs text-destructive mt-1">
                               {errors.previousCompanyFrom}
                             </p>
                           )}
-                        </div>
+                        </div> */}
 
                         {/* Previous Company To Date - custom with Calendar icon */}
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
                             Previous Company Relieving Date{" "}
                             <span className="text-destructive">*</span>
@@ -1173,16 +1256,16 @@ const LoanApplication = () => {
                                   : "border-input",
                               )}
                             />
-                            {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
+                           
                           </div>
                           {errors.previousCompanyTo && (
                             <p className="text-xs text-destructive mt-1">
                               {errors.previousCompanyTo}
                             </p>
                           )}
-                        </div>
+                        </div> */}
 
-                        <FormInput
+                        {/* <FormInput
                           label="Current Company Name"
                           value={formData.currentCompanyName || ""}
                           onChange={(v) =>
@@ -1191,10 +1274,10 @@ const LoanApplication = () => {
                           placeholder="Enter current company name"
                           required
                           error={errors.currentCompanyName}
-                        />
+                        /> */}
 
                         {/* Current Company Joining Date - custom with Calendar icon */}
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground flex items-center gap-1">
                             Current Company Joining Date{" "}
                             <span className="text-destructive">*</span>
@@ -1218,14 +1301,13 @@ const LoanApplication = () => {
                                   : "border-input",
                               )}
                             />
-                            {/* <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" /> */}
                           </div>
                           {errors.currentCompanyJoiningDate && (
                             <p className="text-xs text-destructive mt-1">
                               {errors.currentCompanyJoiningDate}
                             </p>
                           )}
-                        </div>
+                        </div> */}
                       </>
                     )}
                   </div>

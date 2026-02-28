@@ -151,7 +151,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
             <IconInput
               label="Date of Joining"
               icon={Calendar}
-              value={data.date_of_joining}
+              value={data.date_of_joining }
               onChange={(e) => handleChange("date_of_joining", e.target.value)}
               placeholder="DD/MM/YYYY"
             />
@@ -188,7 +188,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
 };
 
 // --- MAIN EXPORTABLE COMPONENT TO DROP INTO YOUR FORM ---
-export const EmploymentHistorySection = ({
+export const  EmploymentHistorySection = ({
   employmentData,
   setEmploymentData,
 }) => {

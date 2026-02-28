@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Download, FileText, File,Files, } from "lucide-react";
+
+import { Download, FileText, File, Files } from "lucide-react";
 import {
   User,
   MapPin,
@@ -12,19 +13,20 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import { fetchCreditReport } from "@/api/api";
+import { fetchCreditReport, fetchUserFinDocuments } from "@/api/api";
 import ProfileSection from "@/components/ProfileSection/ProfileSection";
 import DetailRow from "@/components/DetailRow/DetailRow";
 import { Menu, X } from "lucide-react";
 import FileUploadZone from "@/components/FileUploadZone";
 import { fetchTaxDocuments } from "@/api/api";
 import { Button } from "@/components/ui/button";
+import { error } from "three";
 const tabs = [
   { id: "personal", label: "Personal Info", icon: User },
   // { id: "address", label: "Address", icon: MapPin },
   { id: "employment", label: "Employment", icon: Briefcase },
   { id: "credit", label: "Credit Info", icon: CreditCard },
-  { id: "documents", label: "Documents", icon: Files, },
+  { id: "documents", label: "Documents", icon: Files },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -126,6 +128,20 @@ const formatExperience = (value: string) => {
   return `${months} month${months > 1 ? "s" : ""}`;
 };
 
+interface UploadedDoc {
+  name: string;
+  type: string;
+  size: string;
+  date: string;
+  url: string;
+}
+
+interface DocumentSection {
+  category: string;
+  icon: any;
+  docs: UploadedDoc[];
+}
+
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<TabId>("personal");
   // const [data] = useState<ProfileData>(defaultData);
@@ -135,6 +151,7 @@ const ProfilePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [taxNumber, setTaxNumber] = useState("");
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
+  const [document, setDocument] = useState<DocumentSection[]>([]);
   const [documents, setDocuments] = useState({
     itr: null,
     photo: null,
@@ -143,116 +160,129 @@ const ProfilePage = () => {
     payslip3: null,
   });
 
-  const document = [
-    {
-      category: "Identity & KYC",
-      icon: Shield,
-      docs: [
+  const userInfo = sessionStorage.getItem("userId");
+
+  const fetchUploadedDocuments = async () => {
+    try {
+      if (!userInfo) return;
+
+      const response = await fetchUserFinDocuments(userInfo);
+      const files = response?.data?.documents || [];
+
+      const formatDisplayName = (fileName: string) => {
+        // Remove timestamp prefix
+        const parts = fileName.split("_");
+        if (!isNaN(Number(parts[0]))) {
+          parts.shift();
+        }
+
+        const withoutTimestamp = parts.join("_");
+
+        // Extract extension
+        const ext = withoutTimestamp.split(".").pop();
+
+        // Remove extension for formatting
+        const base = withoutTimestamp.replace(`.${ext}`, "");
+
+        // Clean unwanted patterns
+        const cleaned = base
+          .replace(/payslip/gi, "")
+          .replace(/itr/gi, "")
+          .replace(/form16/gi, "")
+          .replace(/[-_]+/g, " ")
+          .trim();
+
+        // Decide prefix dynamically
+        let prefix = "Document";
+        const lower = fileName.toLowerCase();
+
+        if (lower.includes("payslip")) prefix = "Payslip";
+        else if (lower.includes("itr") || lower.includes("form16"))
+          prefix = "ITR";
+
+        // Final format → Payslip-FileName-Type.pdf
+        return `${prefix}-${cleaned.replace(/\s+/g, "_")}.${ext}`;
+      };
+
+      const extractDateFromName = (fileName: string) => {
+        const timestamp = fileName.split("_")[0];
+        const date = new Date(Number(timestamp));
+
+        if (isNaN(date.getTime())) return "Unknown";
+
+        return date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      };
+
+      const getFileType = (fileName: string) =>
+        fileName.split("_").pop()?.toUpperCase() || "FILE";
+
+      const grouped = {
+        Payslips: [] as UploadedDoc[],
+        ITR: [] as UploadedDoc[],
+        Others: [] as UploadedDoc[],
+      };
+
+      files.forEach((file: any) => {
+        const cleanFileName = (fileName: string) => {
+          const parts = fileName.split("_");
+
+          if (!isNaN(Number(parts[0]))) {
+            parts.shift();
+          }
+
+          return parts.join("_").replace(/_-_/g, " ").replace(/_+/g, "_");
+        };
+
+        const doc: UploadedDoc = {
+          name: formatDisplayName(file.fileName),
+          type: getFileType(file.fileName),
+          size: null,
+          date: extractDateFromName(file.fileName),
+          url: file.viewUrl,
+        };
+
+        const lower = file.fileName.toLowerCase();
+
+        if (lower.includes("payslip")) {
+          grouped.Payslips.push(doc);
+        } else if (
+          lower.includes("itr") ||
+          lower.includes("form16") ||
+          lower.includes("tax")
+        ) {
+          grouped.ITR.push(doc);
+        } else {
+          grouped.Others.push(doc);
+        }
+      });
+
+      const formatted: DocumentSection[] = [
         {
-          name: "PAN Card",
-          type: "PDF",
-          size: "245 KB",
-          date: "01 Dec 2025",
-          file: "#",
+          category: "Payslips",
+          icon: FileText,
+          docs: grouped.Payslips,
         },
         {
-          name: "Aadhaar Card",
-          type: "PDF",
-          size: "310 KB",
-          date: "01 Dec 2025",
-          file: "#",
+          category: "ITR Documents",
+          icon: FileText,
+          docs: grouped.ITR,
         },
         {
-          name: "Passport",
-          type: "PDF",
-          size: "420 KB",
-          date: "01 Dec 2025",
-          file: "#",
+          category: "Other Documents",
+          icon: FileText,
+          docs: grouped.Others,
         },
-      ],
-    },
-    {
-      category: "Financial Documents",
-      icon: CreditCard,
-      docs: [
-        {
-          name: "Bank Statement (6 months)",
-          type: "PDF",
-          size: "1.2 MB",
-          date: "01 Dec 2025",
-          file: "#",
-        },
-        {
-          name: "ITR – FY 2024-25",
-          type: "PDF",
-          size: "560 KB",
-          date: "15 Nov 2025",
-          file: "#",
-        },
-        {
-          name: "Form 16",
-          type: "PDF",
-          size: "340 KB",
-          date: "15 Nov 2025",
-          file: "#",
-        },
-      ],
-    },
-    {
-      category: "Employment",
-      icon: Briefcase,
-      docs: [
-        {
-          name: "Salary Slip – Nov 2025",
-          type: "PDF",
-          size: "180 KB",
-          date: "30 Nov 2025",
-          file: "#",
-        },
-        {
-          name: "Salary Slip – Oct 2025",
-          type: "PDF",
-          size: "180 KB",
-          date: "31 Oct 2025",
-          file: "#",
-        },
-        {
-          name: "Employment Letter",
-          type: "PDF",
-          size: "220 KB",
-          date: "01 Dec 2025",
-          file: "#",
-        },
-      ],
-    },
-    {
-      category: "Loan Documents",
-      icon: FileText,
-      docs: [
-        {
-          name: "Loan Agreement – LN-20251201",
-          type: "PDF",
-          size: "890 KB",
-          date: "08 Dec 2025",
-          file: "#",
-        },
-        {
-          name: "Sanction Letter – LN-20250915",
-          type: "PDF",
-          size: "450 KB",
-          date: "25 Sep 2025",
-          file: "#",
-        },
-        {
-          name: "NOC – LN-20250801",
-          type: "PDF",
-          size: "210 KB",
-          date: "15 Sep 2025",
-          file: "#",
-        },
-      ],
-    },
-  ];
+      ].filter((section) => section.docs.length > 0);
+
+      setDocument(formatted);
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
   const fullName = data
     ? `${data.firstName} ${data.middleName} ${data.lastName}`
     : "";
@@ -350,6 +380,7 @@ const ProfilePage = () => {
     };
 
     loadProfile();
+    fetchUploadedDocuments();
   }, []);
 
   const getCibilBadge = (score: string) => {
@@ -777,7 +808,7 @@ const ProfilePage = () => {
                       <div className="flex flex-col gap-2">
                         {section.docs.map((doc) => (
                           <div
-                            key={doc.name}
+                            key={doc.url}
                             className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 hover:border-primary/40 hover:shadow-sm transition-all group"
                           >
                             <div className="flex items-center gap-3">
@@ -789,14 +820,14 @@ const ProfilePage = () => {
                                   {doc.name}
                                 </p>
                                 <p className="text-[11px] text-muted-foreground">
-                                  {doc.type} · {doc.size} · Uploaded {doc.date}
+                                  Uploaded {doc.date}
                                 </p>
                               </div>
                             </div>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                alert(`Downloading: ${doc.name}`);
+                                window.open(doc.url, "_blank");
                               }}
                               className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors px-3 py-1.5 rounded-lg hover:bg-accent group-hover:opacity-100 opacity-70"
                             >
