@@ -81,7 +81,7 @@ function EMICalculator() {
   const calculateEMI = () => {
     const principal = loanAmount;
     const ratePerMonth = interestRate / (12 * 100);
-    const numberOfMonths = tenure * 12;
+    const numberOfMonths = tenure;
 
     const emiValue =
       (principal * ratePerMonth * Math.pow(1 + ratePerMonth, numberOfMonths)) /
