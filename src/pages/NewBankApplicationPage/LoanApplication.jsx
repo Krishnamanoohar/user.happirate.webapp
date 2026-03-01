@@ -1014,6 +1014,7 @@ const LoanApplication = () => {
                       type="number"
                       value={formData.aadhaarCard}
                       onChange={(v) => updateFormData("aadhaarCard", v)}
+                      required
                       // hint="Aadhaar cannot be edited as it's verified from source"
                       error={errors.aadhaarCard}
                     />
