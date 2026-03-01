@@ -38,7 +38,10 @@ const SmartComparePage = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState<LoanInputs>(defaultInputs);
 
-  const result = useMemo(() => calculateEligibility(inputs), [inputs]);
+  const result = useMemo(() => {
+  const r = calculateEligibility(inputs);
+  return r;
+}, [inputs]);
   const lenders = useMemo(
     () => getSampleLenders(result, inputs.loanType),
     [result, inputs.loanType],
