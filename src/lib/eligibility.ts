@@ -23,6 +23,7 @@ export interface EligibilityResult {
 
 export interface LenderMatch {
   name: string;
+  logo: string; 
   interestRate: number;
   maxAmount: number;
   processingFee: string;
@@ -121,6 +122,7 @@ export function getSampleLenders(
   const lenders: LenderMatch[] = [
     {
       name: "HDFC Bank",
+      logo: "HDFC", 
       interestRate: result.interestRateRange[0],
       maxAmount: result.maxEligibleAmount * 1.2,
       processingFee: "0.5%",
@@ -129,6 +131,7 @@ export function getSampleLenders(
     },
     {
       name: "SBI",
+      logo: "SBI",
       interestRate: result.interestRateRange[0] - 0.5,
       maxAmount: result.maxEligibleAmount * 1.1,
       processingFee: "0.35%",
@@ -137,6 +140,7 @@ export function getSampleLenders(
     },
     {
       name: "ICICI Bank",
+      logo: "ICICI",
       interestRate: result.interestRateRange[0] + 0.5,
       maxAmount: result.maxEligibleAmount,
       processingFee: "0.75%",
@@ -145,6 +149,7 @@ export function getSampleLenders(
     },
     {
       name: "Bajaj Finserv",
+      logo: "Bajaj",
       interestRate: result.interestRateRange[0] + 1,
       maxAmount: result.maxEligibleAmount * 0.9,
       processingFee: "1%",
