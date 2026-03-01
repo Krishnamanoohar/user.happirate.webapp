@@ -164,6 +164,7 @@ const LoanApplication = () => {
     email: "",
     aadhaarCard: "",
     mobileNumber: "",
+    alternateMobileNumber: "", 
     uanNumber: "",
     employmentExperience: "",
     employmentStatus: "",
@@ -246,7 +247,7 @@ const LoanApplication = () => {
     }
   };
   const validateGST = (value) => {
-    if (!value) return "GST Number is required";
+    if (!value) return null;
 
     const gstRegex =
       /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
@@ -281,6 +282,13 @@ const LoanApplication = () => {
         newErrors.aadhaarCard = "Aadhaar must be 12 digits";
       if (!formData.mobileNumber)
         newErrors.mobileNumber = "Mobile number is required";
+      if (
+        formData.alternateMobileNumber &&
+        formData.alternateMobileNumber === formData.mobileNumber
+      ) {
+        newErrors.alternateMobileNumber =
+          "Alternate mobile cannot be same as primary number";
+      }
     }
 
     if (currentStep === 1) {
@@ -376,6 +384,7 @@ const LoanApplication = () => {
     // city: data.city,
     state: data.state,
     pincode: data.pincode,
+    alternateMobileNumber: data.alternateMobileNumber || null,
   });
 
   const buildEmploymentDetailsPayload = (data) => ({
@@ -1026,6 +1035,16 @@ const LoanApplication = () => {
                       required
                       error={errors.mobileNumber}
                     />
+                    <FormInput
+                      label="Alternate Mobile Number (Optional)"
+                      value={formData.alternateMobileNumber}
+                      onChange={(v) =>
+                        updateFormData("alternateMobileNumber", v.replace(/\D/g, ""))
+                      }
+                      type="tel"
+                      maxLength={10}
+                      error={errors.alternateMobileNumber}
+                    />
                   </div>
 
                   {/* Address Section */}
@@ -1117,13 +1136,12 @@ const LoanApplication = () => {
                     />
                     {isSelfEmployed && (
                       <FormInput
-                        label="GST Number"
+                        label="GST Number (Optional)"
                         value={formData.gstNumber}
                         onChange={(v) =>
                           updateFormData("gstNumber", v.toUpperCase())
                         }
                         placeholder="Enter GST Number"
-                        required
                         error={errors.gstNumber}
                       />
                     )}
@@ -1566,6 +1584,11 @@ const LoanApplication = () => {
                     <SummaryRow
                       label="Mobile"
                       value={formData.mobileNumber}
+                      icon={Phone}
+                    />
+                    <SummaryRow
+                      label="Alternate Mobile"
+                      value={formData.alternateMobileNumber || "—"}
                       icon={Phone}
                     />
                     <SummaryRow
