@@ -106,7 +106,7 @@ const SmartComparePage = () => {
                 <Button
                   variant="ghost"
                   onClick={handleReset}
-                  className="gap-2 text-gray-400 bg-gray-100 hover:text-purple-600 hover:bg-purple-50 rounded-xl font-bold"
+                  className="gap-2 text-purple-600 bg-purple-50 border border-purple-200 hover:bg-purple-100 rounded-xl font-semibold transition-all"
                 >
                   <RotateCcw className="w-4 h-4" />
                   Reset Inputs
