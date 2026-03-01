@@ -1,101 +1,139 @@
-import { useState, useEffect, useRef } from 'react'
-import { Calculator, IndianRupee, Calendar, Percent, TrendingDown, Info, CheckCircle2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Calculator,
+  IndianRupee,
+  Calendar,
+  Percent,
+  TrendingDown,
+  Info,
+  CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-
+} from "@/components/ui/tooltip";
+import { fetchEligibleLoanProducts } from "@/api/api";
 function EMICalculator() {
-  const [loanAmount, setLoanAmount] = useState(500000)
-  const [interestRate, setInterestRate] = useState(10.5)
-  const [tenure, setTenure] = useState(5)
-  const [emi, setEmi] = useState(0)
-  const [totalInterest, setTotalInterest] = useState(0)
-  const [totalPayment, setTotalPayment] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
+  const [loanAmount, setLoanAmount] = useState(500000);
+  const [interestRate, setInterestRate] = useState(10.5);
+  const [tenure, setTenure] = useState(60);
+  const [emi, setEmi] = useState(0);
+  const [totalInterest, setTotalInterest] = useState(0);
+  const [totalPayment, setTotalPayment] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const handleGetOffers = async () => {
+    const mobile = sessionStorage.getItem("mobile_number");
+
+    if (!mobile) {
+      navigate("/sign-in");
+      return;
+    }
+    try {
+      setLoading(true);
+
+      const response = await fetchEligibleLoanProducts(loanAmount, tenure);
+
+      // Optional: store response in session if needed
+      sessionStorage.setItem(
+        "eligibleProducts",
+        JSON.stringify(response?.data),
+      );
+
+      navigate("/eligible-loans");
+    } catch (error) {
+      console.error("Error fetching eligible products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+          setIsVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 }
-    )
+      { threshold: 0.1 },
+    );
 
     if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+      observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    calculateEMI()
-  }, [loanAmount, interestRate, tenure])
+    calculateEMI();
+  }, [loanAmount, interestRate, tenure]);
 
   const calculateEMI = () => {
-    const principal = loanAmount
-    const ratePerMonth = interestRate / (12 * 100)
-    const numberOfMonths = tenure * 12
+    const principal = loanAmount;
+    const ratePerMonth = interestRate / (12 * 100);
+    const numberOfMonths = tenure * 12;
 
     const emiValue =
       (principal * ratePerMonth * Math.pow(1 + ratePerMonth, numberOfMonths)) /
-      (Math.pow(1 + ratePerMonth, numberOfMonths) - 1)
+      (Math.pow(1 + ratePerMonth, numberOfMonths) - 1);
 
-    const totalPaymentValue = emiValue * numberOfMonths
-    const totalInterestValue = totalPaymentValue - principal
+    const totalPaymentValue = emiValue * numberOfMonths;
+    const totalInterestValue = totalPaymentValue - principal;
 
-    setEmi(Math.round(emiValue))
-    setTotalInterest(Math.round(totalInterestValue))
-    setTotalPayment(Math.round(totalPaymentValue))
-  }
+    setEmi(Math.round(emiValue));
+    setTotalInterest(Math.round(totalInterestValue));
+    setTotalPayment(Math.round(totalPaymentValue));
+  };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
       maximumFractionDigits: 0,
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   const formatLakhs = (amount: number) => {
     if (amount >= 100000) {
-      return `₹${(amount / 100000).toFixed(2)} Lakhs`
+      return `₹${(amount / 100000).toFixed(2)} Lakhs`;
     }
-    return formatCurrency(amount)
-  }
+    return formatCurrency(amount);
+  };
 
   return (
     <section
       ref={sectionRef}
       id="emi-calculator"
       className="py-20 lg:py-28 relative overflow-hidden"
-    >   
+    >
       {/* Background */}
-      <div className="absolute inset-0 bg-white" />     
+      <div className="absolute inset-0 bg-white" />
       <div className="absolute top-0 right-0 w-1/2 h-full gradient-bg-light opacity-50" />
-    
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-      <div className="text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
-          EMI <span className="text-[#7c3bed]">Calculator</span>
-        </h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-6"></div>
-      </div> 
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
+            EMI <span className="text-[#7c3bed]">Calculator</span>
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-6"></div>
+        </div>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Content */}
           <div
             className={`transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-8"
             }`}
           >
             {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full gradient-bg-light border border-indigo-100 mb-4">
@@ -106,18 +144,18 @@ function EMICalculator() {
               Calculate Your <span className="gradient-text">Monthly EMI</span>
             </h2>
             <p className="text-slate-600 mb-8 leading-relaxed">
-              Plan your finances better with our easy-to-use EMI calculator. 
-              Adjust the loan amount, interest rate, and tenure to find the 
+              Plan your finances better with our easy-to-use EMI calculator.
+              Adjust the loan amount, interest rate, and tenure to find the
               perfect repayment plan that suits your budget.
             </p>
 
             {/* Benefits */}
             <div className="space-y-4">
               {[
-                'Instant EMI calculation with accurate results',
-                'Compare different loan scenarios',
-                'Plan your monthly budget effectively',
-                'Make informed borrowing decisions',
+                "Instant EMI calculation with accurate results",
+                "Compare different loan scenarios",
+                "Plan your monthly budget effectively",
+                "Make informed borrowing decisions",
               ].map((benefit, index) => (
                 <div
                   key={index}
@@ -134,7 +172,9 @@ function EMICalculator() {
           {/* Calculator Card */}
           <div
             className={`transition-all duration-700 delay-200 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-8"
             }`}
           >
             <Card className="rounded-3xl shadow-xl shadow-indigo-200/50 border-0 overflow-hidden">
@@ -176,7 +216,9 @@ function EMICalculator() {
                             <Info className="w-4 h-4 text-slate-400" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="text-xs">Annual interest rate in percentage</p>
+                            <p className="text-xs">
+                              Annual interest rate in percentage
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -207,27 +249,29 @@ function EMICalculator() {
                       Loan Tenure
                     </label>
                     <span className="text-lg font-bold text-purple-600">
-                      {tenure} Years
+                      {tenure} Months
                     </span>
                   </div>
                   <Slider
                     value={[tenure]}
                     onValueChange={(value) => setTenure(value[0])}
-                    min={1}
-                    max={30}
+                    min={6}
+                    max={120}
                     step={1}
                     className="mb-2"
                   />
                   <div className="flex justify-between text-xs text-slate-400">
-                    <span>1 Year</span>
-                    <span>30 Years</span>
+                    <span>6 Months</span>
+                    <span>120 Months</span>
                   </div>
                 </div>
 
                 {/* Results */}
                 <div className="gradient-bg-light rounded-2xl p-6 space-y-4">
                   <div className="text-center pb-4 border-b border-indigo-200">
-                    <div className="text-sm text-slate-600 mb-1">Monthly EMI</div>
+                    <div className="text-sm text-slate-600 mb-1">
+                      Monthly EMI
+                    </div>
                     <div className="text-3xl lg:text-4xl font-bold gradient-text">
                       {formatCurrency(emi)}
                     </div>
@@ -244,7 +288,9 @@ function EMICalculator() {
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-slate-600 mb-1">Total Payment</div>
+                      <div className="text-sm text-slate-600 mb-1">
+                        Total Payment
+                      </div>
                       <div className="font-bold text-slate-900">
                         {formatCurrency(totalPayment)}
                       </div>
@@ -253,8 +299,12 @@ function EMICalculator() {
                 </div>
 
                 {/* CTA */}
-                <Button className="w-full gradient-bg text-white font-semibold py-5 rounded-xl mt-6 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300">
-                  Get Personalized Offers
+                <Button
+                  onClick={handleGetOffers}
+                  disabled={loading}
+                  className="w-full gradient-bg text-white font-semibold py-5 rounded-xl mt-6 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
+                >
+                  {loading ? "Fetching Offers..." : "Get Personalized Offers"}
                 </Button>
               </CardContent>
             </Card>
@@ -262,6 +312,6 @@ function EMICalculator() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 export default EMICalculator;
