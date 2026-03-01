@@ -71,6 +71,12 @@ export function HappirateSplitAuth() {
     if (value && index < 5) {
       otpRefs[index + 1].current?.focus();
     }
+    if (index === 5 && value) {
+      const finalOtp = [...newOtp].join("");
+      if (finalOtp.length === 6) {
+        handleVerifyOtp(finalOtp);
+      }
+    }
   };
 
   const handleOtpKeyDown = (e, index) => {
@@ -246,6 +252,7 @@ export function HappirateSplitAuth() {
   // };
 
   const handleVerifyOtp = async (enteredOtp) => {
+    if (loading) return;
     if (enteredOtp.length !== 6) {
       // Firebase OTPs are 6 digits
       setErrors({ otp: "Enter valid 6-digit OTP" });
@@ -333,6 +340,11 @@ export function HappirateSplitAuth() {
     }
     return clearTimeout(timer);
   }, [resendCountDown]);
+  useEffect(() => {
+  if (otpResult) {
+    otpRefs[0].current?.focus();
+  }
+}, [otpResult]);
 
   return (
     <>
@@ -457,9 +469,13 @@ export function HappirateSplitAuth() {
                               ref={otpRefs[index]}
                               key={index}
                               id={`otp-${index}`}
+                              type="tel"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              autoComplete="one-time-code"
                               value={digit}
                               onChange={(e) =>
-                                handleOtpChange(e.target.value, index)
+                                handleOtpChange(e.target.value.replace(/\D/g, ""), index)
                               }
                               onKeyDown={(e) => handleOtpKeyDown(e, index)}
                               maxLength={1}
