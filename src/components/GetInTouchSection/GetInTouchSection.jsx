@@ -38,6 +38,15 @@ const GetInTouchSection = () => {
   ) {
     newErrors.email = "Enter a valid email address";
   }
+  if (!formData.message.trim()) {
+  newErrors.message = "Message is required";
+  } 
+  else if (formData.message.trim().length < 10) {
+    newErrors.message = "Message must be at least 10 characters";
+  } 
+  else if (!/[a-zA-Z0-9]/.test(formData.message)) {
+    newErrors.message = "Message cannot contain only special characters";
+  }
 
   return newErrors;
 };
@@ -246,6 +255,9 @@ const GetInTouchSection = () => {
                     placeholder="Write your message here..."
                     className={`${inputClass} resize-none`}
                   />
+                  {errors.message && (
+                    <p className="text-red-500 text-sm">{errors.message}</p>
+                  )}
                 </div>
 
                 {/* Primary Button */}
