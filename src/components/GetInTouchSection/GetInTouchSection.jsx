@@ -1,7 +1,76 @@
 import React from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
-
+import { useState } from "react";
 const GetInTouchSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    subject: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
+
+  const validate = () => {
+  const newErrors = {};
+
+  // Name Required
+  if (!formData.name.trim()) {
+    newErrors.name = "Name is required";
+  } else if (!/^[A-Za-z\s]+$/.test(formData.name)) {
+    newErrors.name = "Name should contain only letters";
+  }
+
+  // Mobile Required
+  if (!formData.mobile.trim()) {
+    newErrors.mobile = "Mobile number is required";
+  } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+    newErrors.mobile = "Mobile number must be 10 digits";
+  }
+
+  // Email Required
+  if (!formData.email.trim()) {
+    newErrors.email = "Email is required";
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+  ) {
+    newErrors.email = "Enter a valid email address";
+  }
+
+  return newErrors;
+};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setSuccess(false);
+    } else {
+      setErrors({});
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+      setFormData({
+        name: "",
+        email: "",
+        mobile: "",
+        subject: "",
+        message: "",
+      });
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
   <style>{`
   .gradient-orb {
     position: absolute;
@@ -36,7 +105,8 @@ const GetInTouchSection = () => {
     66% { transform: translate(-20px, 20px) scale(0.9); }
   }
 `}</style>
-
+  const inputClass =
+    "w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/30 focus:border-[#7c3aed] outline-none transition-all";
   return (
     <section
       id="contact"
@@ -112,43 +182,55 @@ const GetInTouchSection = () => {
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Send Us a Message</h3>
               <p className="text-slate-500 mb-8">Have a specific question about your loan? We're here to help.</p>
 
-              <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-5" onSubmit={handleSubmit}>
                 {/* Row 1: Name and Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
                     <input
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       placeholder="Enter your name"
-                      className="w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3.5 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/20 focus:border-[#7c3aed] outline-none transition-all"
+                      className={inputClass}
                     />
+                    {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                     <input
                       type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       placeholder="example@mail.com"
-                      className="w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3.5 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/20 focus:border-[#7c3aed] outline-none transition-all"
+                      className={inputClass}
                     />
+                    {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                   </div>
                 </div>
 
                 {/* Row 2: Mobile Number and Subject */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Mobile Number</label>
                     <input
                       type="tel"
-                      placeholder="+91 00000 00000"
-                      className="w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3.5 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/20 focus:border-[#7c3aed] outline-none transition-all"
+                      name="mobile"
+                      maxLength={10}
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      placeholder="Enter 10 digit number"
+                      className={inputClass}
                     />
+                    {errors.mobile && <p className="text-red-500 text-sm">{errors.mobile}</p>}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Subject</label>
                     <input
                       type="text"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
                       placeholder="How can we help?"
-                      className="w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3.5 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/20 focus:border-[#7c3aed] outline-none transition-all"
+                      className={inputClass}
                     />
                   </div>
                 </div>
@@ -158,8 +240,11 @@ const GetInTouchSection = () => {
                   <label className="text-sm font-semibold text-slate-700 ml-1">Message</label>
                   <textarea
                     rows={4}
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
                     placeholder="Write your message here..."
-                    className="w-full rounded-xl bg-slate-50 border border-slate-200 px-4 py-3.5 text-slate-900 focus:ring-2 focus:ring-[#7c3aed]/20 focus:border-[#7c3aed] outline-none resize-none transition-all"
+                    className={`${inputClass} resize-none`}
                   />
                 </div>
 
@@ -171,6 +256,11 @@ const GetInTouchSection = () => {
                   Send Message
                   <Send className="w-5 h-5" />
                 </button>
+                {success && (
+                  <p className="text-green-600 font-semibold text-center mt-3">
+                    Message sent successfully!
+                  </p>
+                )}
               </form>
             </div>
           </div>
