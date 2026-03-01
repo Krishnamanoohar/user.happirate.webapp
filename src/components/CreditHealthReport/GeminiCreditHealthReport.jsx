@@ -1162,8 +1162,8 @@ const ChatWidget = ({ reportData, analysis }) => {
               >
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.role === "user"
-                      ? "bg-blue-600 text-white rounded-tr-none"
-                      : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
+                    ? "bg-blue-600 text-white rounded-tr-none"
+                    : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
                     }`}
                 >
                   {msg.text}
@@ -1199,8 +1199,8 @@ const ChatWidget = ({ reportData, analysis }) => {
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
                 className={`p-1.5 rounded-full transition-colors ${input.trim() && !loading
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-slate-300 text-slate-500 cursor-not-allowed"
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-slate-300 text-slate-500 cursor-not-allowed"
                   }`}
               >
                 <Send size={16} />
@@ -1214,8 +1214,8 @@ const ChatWidget = ({ reportData, analysis }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`p-4 rounded-full shadow-xl transition-all duration-300 flex items-center justify-center ${isOpen
-            ? "bg-slate-700 rotate-90 scale-0 opacity-0 hidden"
-            : "bg-blue-600 hover:bg-blue-700 text-white scale-100 opacity-100"
+          ? "bg-slate-700 rotate-90 scale-0 opacity-0 hidden"
+          : "bg-blue-600 hover:bg-blue-700 text-white scale-100 opacity-100"
           }`}
       >
         <MessageSquare size={24} />
@@ -1861,8 +1861,8 @@ export default function GeminiCreditHealthReport() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-3 text-sm font-medium capitalize border-b-2 transition-colors whitespace-nowrap ${activeTab === tab
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-slate-500 hover:text-slate-700"
+                  ? "border-blue-600 text-blue-600"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
                   }`}
               >
                 {tab === "dashboard" ? (
@@ -2049,8 +2049,8 @@ export default function GeminiCreditHealthReport() {
                         key={filter}
                         onClick={() => setAccountFilter(filter)}
                         className={`px-3 py-1 text-xs font-medium rounded-md capitalize transition-all ${accountFilter === filter
-                            ? "bg-white text-blue-600 shadow-sm"
-                            : "text-slate-500 hover:text-slate-700"
+                          ? "bg-white text-blue-600 shadow-sm"
+                          : "text-slate-500 hover:text-slate-700"
                           }`}
                       >
                         {filter}
