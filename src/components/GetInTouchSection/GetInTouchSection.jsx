@@ -39,12 +39,12 @@ const GetInTouchSection = () => {
 
   return (
     <section
-    id="contact"
-    className="relative min-h-screen py-16 px-4 sm:px-6 lg:px-8 flex items-center overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
-  >
-    <div className="gradient-orb orb-1"></div>
-<div className="gradient-orb orb-2"></div>
-        <div className="max-w-6xl mx-auto w-full relative z-10">
+      id="contact"
+      className="relative min-h-screen py-16 px-4 sm:px-6 lg:px-8 flex items-center overflow-hidden bg-gradient-to-br from-white via-[#f8f7ff] to-white"
+    >
+      <div className="gradient-orb orb-1"></div>
+      <div className="gradient-orb orb-2"></div>
+      <div className="max-w-6xl mx-auto w-full relative z-10">
         {/* Header Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight">
@@ -52,18 +52,18 @@ const GetInTouchSection = () => {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3aed] to-transparent mx-auto rounded-full opacity-50 mb-6"></div>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">
-            Reach out to us for personalized loan comparisons or partnership inquiries. 
+            Reach out to us for personalized loan comparisons or partnership inquiries.
             Your financial clarity starts here.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          
+
           {/* Left Side: Contact Information */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
               <h3 className="text-2xl font-bold text-slate-900 mb-8">Contact Information</h3>
-              
+
               <div className="space-y-8">
                 <div className="flex items-start gap-5">
                   <div className="p-3 bg-indigo-50 rounded-2xl">
@@ -91,7 +91,9 @@ const GetInTouchSection = () => {
                   </div>
                   <div>
                     <h4 className="text-slate-900 font-bold text-lg">Email Us</h4>
-                    <p className="text-slate-500">support@happirate.com</p>
+                    <a href="mailto:support@happirate.com" className="flex items-center gap-3 text-slate-500">
+                      <span className="text-sm">support@happirate.com</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -172,7 +174,7 @@ const GetInTouchSection = () => {
               </form>
             </div>
           </div>
-          
+
         </div>
       </div>
     </section>
