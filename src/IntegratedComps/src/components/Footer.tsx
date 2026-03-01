@@ -17,15 +17,15 @@ const footerLinks = {
   ],
   resources: [
     { name: 'EMI Calculator', href: '/emi-calculator' },
-    { name: 'Loan Guide', href: '#' },
-    { name: 'FAQs', href: '#' },
-    { name: 'Terms of Service', href: '#' },
-    { name: 'Privacy Policy', href: '#' },
+    { name: 'Loan Guide', href: '/' },
+    { name: 'FAQs', href: '/' },
+    { name: 'Terms of Service', href: '/' },
+    { name: 'Privacy Policy', href: '/' },
   ],
   partners: [
     { name: 'Bank Partners', href: '/#banks' },
-    { name: 'Become a Partner', href: '#' },
-    { name: 'Partner Login', href: '#' },
+    { name: 'Become a Partner', href: '/' },
+    { name: 'Partner Login', href: '/' },
   ],
 }
 
