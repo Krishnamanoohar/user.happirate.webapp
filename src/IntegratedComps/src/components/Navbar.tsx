@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import {
   DropdownMenu,
@@ -148,14 +149,14 @@ export default function Navbar({ scrollY }: NavbarProps) {
             </DropdownMenu> */}
 
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-slate-600 hover:text-indigo-600 font-medium transition-colors relative group"
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 gradient-bg group-hover:w-full transition-all duration-300" />
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -261,14 +262,14 @@ export default function Navbar({ scrollY }: NavbarProps) {
             {/* Navigation Links */}
             <div className="space-y-1">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </div>
 

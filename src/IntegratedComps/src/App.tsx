@@ -9,6 +9,7 @@ import CallToActionSection2 from "@/components/CallToActionSection2/CallToAction
 import FeaturesCardsSection from "@/components/FeaturesCardsSection/FeaturesCardsSection";
 import GetInTouchSection from "@/components/GetInTouchSection/GetInTouchSection";
 import KimiFeaturesSection from "@/components/FeaturesSection/KimiFeaturesSection";
+import { useLocation } from "react-router-dom";
 
 function LandingApp() {
   // const [scrollY, setScrollY] = useState(0);
@@ -18,6 +19,16 @@ function LandingApp() {
   //   window.addEventListener("scroll", handleScroll, { passive: true });
   //   return () => window.removeEventListener("scroll", handleScroll);
   // }, []);
+    const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
