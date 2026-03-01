@@ -422,7 +422,12 @@ export function HappirateSplitAuth() {
                       </label>
                       <Input
                         value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value)}
+                        onChange={(e) => {
+                          const onlyNumbers = e.target.value.replace(/\D/g, "");
+                          if (onlyNumbers.length <= 10) {
+                            setMobileNumber(onlyNumbers);
+                          }
+                        }}
                         type="tel"
                         inputMode="numeric"
                         pattern="[0-9]{10}"
