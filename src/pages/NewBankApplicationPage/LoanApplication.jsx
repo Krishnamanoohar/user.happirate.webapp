@@ -70,6 +70,45 @@ const residentialStatuses = [
   { value: "rented", label: "Rented" },
   { value: "family", label: "Living with Family" },
 ];
+const indianStates = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  //union territories
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
+];
 
 // const formatDateToDDMMYYYY = (isoDate) => {
 //   if (!isoDate) return "";
@@ -151,7 +190,8 @@ const LoanApplication = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [taxNumber, setTaxNumber] = useState("");
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
-
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
   const navigate = useNavigate();
 
   // Form data state (pre-filled)
@@ -361,6 +401,26 @@ const LoanApplication = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [consentError, setConsentError] = useState(false);
+  const handleStateChange = (value) => {
+    updateFormData("state", value);
+
+    if (!value) {
+      setFilteredStates([]);
+      setShowStateDropdown(false);
+      return;
+    }
+
+    const filtered = indianStates.filter((state) =>
+      state.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredStates(filtered);
+    setShowStateDropdown(true);
+  };
+  const handleStateSelect = (state) => {
+    updateFormData("state", state);
+    setShowStateDropdown(false);
+  };
 
   const buildPersonalDetailsPayload = (data) => ({
     mobileNumber: sessionStorage.getItem("mobile_number"),
@@ -827,8 +887,8 @@ const LoanApplication = () => {
       } else {
         toast.error(
           error.response?.data?.error ||
-            error.response?.data?.message ||
-            "Document upload failed. Is your backend running?",
+          error.response?.data?.message ||
+          "Document upload failed. Is your backend running?",
         );
       }
     }
@@ -960,8 +1020,8 @@ const LoanApplication = () => {
                       label="Middle Name"
                       value={formData.middleName}
                       onChange={(v) => updateFormData("middleName", v)}
-                      // required
-                      // error={errors.middleName}
+                    // required
+                    // error={errors.middleName}
                     />
                     <FormInput
                       label="Last Name"
@@ -1068,13 +1128,29 @@ const LoanApplication = () => {
                       onChange={(v) => updateFormData("city", v)}
                       required
                     /> */}
-                      <FormInput
-                        label="State"
-                        value={formData.state}
-                        onChange={(v) => updateFormData("state", v)}
-                        required
-                        error={errors.state}
-                      />
+                      <div className="relative">
+                        <FormInput
+                          label="State"
+                          value={formData.state}
+                          onChange={handleStateChange}
+                          required
+                          error={errors.state}
+                          autoComplete="off"
+                        />
+                        {showStateDropdown && filteredStates.length > 0 && (
+                          <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                            {filteredStates.map((state, index) => (
+                              <div
+                                key={index}
+                                onClick={() => handleStateSelect(state)}
+                                className="px-3 py-2 cursor-pointer hover:bg-purple-50"
+                              >
+                                {state}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <FormInput
                         label="Pincode"
                         value={formData.pincode}
