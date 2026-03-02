@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -36,6 +36,8 @@ import {
   updateCreditReport,
   fetchTaxDocuments,
   uploadFinancialDocuments,
+  updateLoanRequirements,
+  updateConsents,
 } from "../../../src/api/api";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -163,8 +165,7 @@ const buildFileUpload = (data) => ({
 
 const LoanApplication = () => {
   const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
-  // const location = useLocation();
+  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 3);
 
   useEffect(() => {
     const savedLoanData = localStorage.getItem("loanData");
@@ -226,27 +227,11 @@ const LoanApplication = () => {
     existingEmi: "",
     loanTenure: "",
     employmentCategory: "",
-    previousCompanyName: "",
-    previousCompanyFrom: "",
-    previousCompanyTo: "",
-    currentCompanyName: "",
-    currentCompanyJoiningDate: "",
   });
   const [employmentData, setEmploymentData] = useState([]);
 
   const isSelfEmployed = formData.employmentStatus === "self-employed";
-  const isEmpty = (v) => v === "" || v === null || v === undefined;
-  useEffect(() => {
-    if (location.state) {
-      setCurrentStep(location.state.goToStep ?? 0);
 
-      setFormData((prev) => ({
-        ...prev,
-        loanType: location.state.loanType ?? prev.loanType,
-        loanAmount: location.state.loanAmount ?? prev.loanAmount,
-      }));
-    }
-  }, [location.state]);
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -285,6 +270,7 @@ const LoanApplication = () => {
       setIsFetchingDocs(false);
     }
   };
+
   const validateGST = (value) => {
     if (!value) return null;
 
@@ -424,6 +410,7 @@ const LoanApplication = () => {
 
   const buildPersonalDetailsPayload = (data) => ({
     mobileNumber: sessionStorage.getItem("mobile_number"),
+
     firstName: data.firstName,
     lastName: data.lastName,
     middleName: data.middleName,
@@ -508,12 +495,6 @@ const LoanApplication = () => {
 
     // STEP 2 → Employment & Credit API
     if (currentStep === 1) {
-      // const errors = validateEmploymentNumbers(formData);
-      // if (Object.keys(errors).length) {
-      //   alert("Please fix employment details");
-      //   return;
-      // }
-
       const payload = buildEmploymentDetailsPayload(formData);
 
       try {
@@ -538,48 +519,62 @@ const LoanApplication = () => {
       try {
         console.log(documents);
         const response = await handleDocumentUpload();
+        const resp = await handleUpdateLoanRequirements();
+        console.log(resp, "update loan requirements response");
         console.log(response, "response");
       } catch (error) {
         console.log(error, "error");
       } finally {
         setIsLoading(false);
       }
-
       return;
     }
 
     // Proceed to fetch eligible loans
     if (currentStep === 3) {
-      setIsLoading(false);
-      navigate("/eligible-loans");
     }
   };
+
   const handleBack = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = () => {
-    console.log("Final Review Data:", { formData, documents });
-    // alert("Application submitted successfully!");
-    localStorage.setItem(
-      "loanData",
-      JSON.stringify({
-        loanType: formData.loanType,
-        loanAmount: formData.loanAmount,
-        loanTenure: formData.loanTenure,
-      }),
-    );
+  const handleSubmit = async () => {
+    if (!termsAccepted || !privacyAccepted) {
+      setConsentError(true);
+      toast.error("Please accept Terms & Privacy Policy");
+      setIsLoading(false);
+      return;
+    }
 
-    navigate("/eligible-loans");
+    const payload = {
+      applicationId,
+      userId: sessionStorage.getItem("userId"),
+      consents: {
+        infoAccuracyAndCreditEnquiry: termsAccepted,
+        termsAndPrivacyPolicy: privacyAccepted,
+      },
+    };
+
+    try {
+      const resp = await updateConsents(payload);
+      console.log(resp, "update consents response");
+      console.log("Final Review Data:", { formData, documents });
+      sessionStorage.setItem(
+        "loanData",
+        JSON.stringify({
+          loanType: formData.loanType,
+          loanAmount: formData.loanAmount,
+          loanTenure: formData.loanTenure,
+        }),
+      );
+      navigate("/eligible-loans");
+    } catch (error) {
+      console.error("Error updating consents:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  //   const handleSubmit = () => {
-  //   navigate("/smart-selection", {
-  //     state: {
-  //       desiredAmount: Number(formData.loanAmount),
-  //       tenure: Number(formData.loanTenure),
-  //     },
-  //   });
-  // };
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -634,53 +629,37 @@ const LoanApplication = () => {
     const hasUAN =
       employmentRecords.length > 0 && employmentRecords[0]?.uan?.trim() !== "";
     return {
+      // Personal Details
       firstName: apiData.firstName ?? "",
       lastName: apiData.lastName ?? "",
       middleName: apiData.middleName ?? "",
       dateOfBirth: apiData.dateOfBirth.split("T")[0] ?? "",
       panCard: apiData.panCard ?? "",
       email: primaryEmail ?? [],
-      aadhaarCard: apiData?.aadharCard ?? "", // ❌ NOT PROVIDED BY API
+      aadhaarCard: apiData?.aadharCard ?? "",
       mobileNumber: mobile,
+      // Employment Details
       employmentStatus: hasUAN ? "salaried" : "",
-
       uanNumber: employmentRecords[0]?.uan ?? "",
-
       employmentExperience: apiData.employmentExperience ?? "",
       employmentCategory: apiData.employmentCategory ?? "",
       salaryMode: apiData.salaryMode ?? "",
-
-      previousCompanyName: previousCompany?.establishment_name ?? "",
-      previousCompanyFrom: previousCompany?.date_of_joining
-        ? convertToISO(previousCompany.date_of_joining)
-        : "",
-      previousCompanyTo: previousCompany?.date_of_exit
-        ? convertToISO(previousCompany.date_of_exit)
-        : "",
-      currentCompanyName: currentCompany?.establishment_name ?? "",
-      currentCompanyJoiningDate: currentCompany?.date_of_joining
-        ? convertToISO(currentCompany.date_of_joining)
-        : "",
       monthlyIncome: apiData.monthlyIncome,
-
       residentialStatus: residenceAddress.type
         ? residenceAddress.type.toLowerCase()
         : "",
-
       addressLine1: residenceAddress?.streetAddress ?? "",
       city: apiData.city ?? "",
       state: residenceAddress.state ?? "",
       pincode: residenceAddress.pincode ?? "",
-
-      loanType: "", // ❌ USER INPUT
-      loanAmount: "", // ❌ USER INPUT
-
+      loanType: "",
+      loanAmount: "",
       cibilScore: apiData.cibilScore ?? "",
       recentEnquiries: apiData.last6MonthsEnquiryCount ?? "",
       settlements: apiData.settlements ?? "",
       emiBounces: apiData.emiBounces ?? "",
       creditCardUtilization: apiData.creaditCardUtilization ?? "",
-      residentialStability: "", // ❌ NOT PROVIDED
+      residentialStability: "",
       existingEmi: apiData.existingEmi ?? "",
       loanTenure: apiData.loanTenure ?? "",
       salaryMode: apiData.salaryMode ?? "",
@@ -688,7 +667,6 @@ const LoanApplication = () => {
     };
   };
 
-  // Enhanced Summary Section Component
   const SummarySection = ({ title, icon: Icon, children }) => (
     <div className="bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm">
       <div className="bg-gradient-to-r from-primary/10 to-accent/30 px-5 py-3 border-b border-border/50">
@@ -756,6 +734,11 @@ const LoanApplication = () => {
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
       setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+      setApplicationId(resp?.data?.applicationId || null);
+      console.log(
+        "application id from credit report",
+        resp?.data?.applicationId,
+      );
 
       if (!apiData) {
         console.error("Credit report API returned empty response", resp);
@@ -854,7 +837,7 @@ const LoanApplication = () => {
     // Check total batch size
     if (totalSize > MAX_TOTAL_SIZE_BYTES) {
       toast.error(
-        `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB}MB. Please compress your files.`,
+        `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB} MB. Please compress your files.`,
       );
       return; // Stop the upload process instantly
     }
@@ -891,6 +874,21 @@ const LoanApplication = () => {
           "Document upload failed. Is your backend running?",
         );
       }
+    }
+  };
+
+  const handleUpdateLoanRequirements = async () => {
+    try {
+      const resp = await updateLoanRequirements({
+        userId: sessionStorage.getItem("userId"),
+        loanType: formData.loanType,
+        applicationId,
+        requestedAmount: formData.loanAmount,
+        preferredTenure: formData.loanTenure,
+      });
+      console.log(resp, "update loan requirements response");
+    } catch (error) {
+      console.log(error, "error in updating loan requirements");
     }
   };
 
@@ -935,6 +933,18 @@ const LoanApplication = () => {
   useEffect(() => {
     autoFillUserDetails();
   }, []);
+
+  useEffect(() => {
+    if (location.state) {
+      setCurrentStep(location.state.goToStep ?? 0);
+
+      setFormData((prev) => ({
+        ...prev,
+        loanType: location.state.loanType ?? prev.loanType,
+        loanAmount: location.state.loanAmount ?? prev.loanAmount,
+      }));
+    }
+  }, [location.state]);
 
   if (pageLoading) {
     return (

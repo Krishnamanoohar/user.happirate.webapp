@@ -42,6 +42,12 @@ const updateCreditReport = async (payload) => {
   return resp;
 };
 
+const updateLoanRequirements = async (payload) => {
+  const resp = await apiClient.post("/save-loan-requirements", payload);
+  console.log("Response for updating loan requirements", resp);
+  return resp;
+}
+
 const uploadFinancialDocuments = async (formData) => {
   const resp = await apiClient.post("/docs/upload-batch", formData, {
     headers: {
@@ -51,6 +57,12 @@ const uploadFinancialDocuments = async (formData) => {
   console.log("Response for document upload", resp);
   return resp;
 };
+
+const updateConsents = async (payload) => {
+  const resp = await apiClient.post("/submit-consents", payload);
+  console.log("Response for updating consents", resp);
+  return resp;
+}
 
 const fetchUserFinDocuments = async (userId) => {
   const resp = await apiClient.get(`/docs/${userId}`);
@@ -134,7 +146,9 @@ export {
   sendOtpToMobile,
   verifyOtp,
   fetchCreditReport,
+  updateLoanRequirements,
   updateCreditReport,
+  updateConsents,
   fetchEligibleLoanProducts,
   fetchRawResponseOfUser,
   fetchChatResponse,
