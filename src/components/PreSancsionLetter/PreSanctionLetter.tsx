@@ -3,6 +3,7 @@ import { Lender } from "@/Data/lenders";
 import { Button } from "../ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { Card, CardHeader, CardContent } from "../ui/card";
+import { useNavigate } from "react-router-dom";
 import {
   Download,
   FileText,
@@ -52,6 +53,7 @@ export const PreSanctionLetter = ({
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showReassessDialog, setShowReassessDialog] = useState(false);
   const [applicantName, setApplicantName] = useState<string>("");
+  const navigate = useNavigate();
 
   const currentDate = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -97,6 +99,17 @@ export const PreSanctionLetter = ({
 
   const handleRedirectToDashboard = () => {
     setShowSuccessDialog(false);
+      navigate("/loan-tracker", {
+    state: {
+      applicant: applicantName,
+      referenceId: referenceNumber,
+      loanType: getLoanTypeName(loanType),
+      sanctionedAmount: estimatedAmount,
+      apr: lender.trueAPR,
+      tenure: lender.tenureOptions,
+      // lenderName: lender.name,
+    },
+  });
     // In a real app, this would navigate to the loan tracking dashboard
     onBack();
   };

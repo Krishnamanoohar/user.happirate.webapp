@@ -193,6 +193,8 @@ const LoanApplication = () => {
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
   const [filteredStates, setFilteredStates] = useState([]);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [phoneOptions, setPhoneOptions] = useState([]);
+
   const navigate = useNavigate();
   const [applicationId, setApplicationId] = useState(null);
 
@@ -763,6 +765,22 @@ const LoanApplication = () => {
         ...prev,
         email: apiEmails[0] || "",
       }));
+      const apiPhones = Array.isArray(apiData.phoneNumbers)
+        ? apiData.phoneNumbers
+          .map((p) => p.Number)
+          .filter((num) => /^\d{10}$/.test(num)) // keep valid 10-digit numbers
+        : [];
+
+      // Remove duplicates
+      const uniquePhones = [...new Set(apiPhones)];
+
+      setPhoneOptions(uniquePhones);
+
+      // Set default selected number
+      setFormData((prev) => ({
+        ...prev,
+        mobileNumber: uniquePhones[0] || "",
+      }));
 
       console.log(
         "mapApiResponseToFormData",
@@ -1089,14 +1107,28 @@ const LoanApplication = () => {
                       // hint="Aadhaar cannot be edited as it's verified from source"
                       error={errors.aadhaarCard}
                     />
-                    <FormInput
-                      label="Mobile Number"
-                      value={formData.mobileNumber}
-                      onChange={(v) => updateFormData("mobileNumber", v)}
-                      type="tel"
-                      required
-                      error={errors.mobileNumber}
-                    />
+                    {phoneOptions.length > 1 ? (
+                      <FormSelect
+                        label="Mobile Number"
+                        value={formData.mobileNumber}
+                        onChange={(v) => updateFormData("mobileNumber", v)}
+                        options={phoneOptions.map((num) => ({
+                          value: num,
+                          label: num,
+                        }))}
+                        required
+                        error={errors.mobileNumber}
+                      />
+                    ) : (
+                      <FormInput
+                        label="Mobile Number"
+                        value={formData.mobileNumber}
+                        onChange={(v) => updateFormData("mobileNumber", v)}
+                        type="tel"
+                        required
+                        error={errors.mobileNumber}
+                      />
+                    )}
                   </div>
 
                   {/* Address Section */}
@@ -1560,42 +1592,43 @@ const LoanApplication = () => {
                       }
                     />
                   </div>
-
-                  <div className="mt-6">
-                    <h4 className="text-sm font-medium text-foreground mb-4">
-                      Last 3 Months Payslips
-                      <span className="text-destructive ml-1">*</span>
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <FileUploadZone
-                        label="Month 1"
-                        required
-                        accept=".pdf,.jpg,.png"
-                        compact
-                        onFileSelect={(file) =>
-                          setDocuments((prev) => ({ ...prev, payslip1: file }))
-                        }
-                      />
-                      <FileUploadZone
-                        label="Month 2"
-                        required
-                        accept=".pdf,.jpg,.png"
-                        compact
-                        onFileSelect={(file) =>
-                          setDocuments((prev) => ({ ...prev, payslip2: file }))
-                        }
-                      />
-                      <FileUploadZone
-                        label="Month 3"
-                        required
-                        accept=".pdf,.jpg,.png"
-                        compact
-                        onFileSelect={(file) =>
-                          setDocuments((prev) => ({ ...prev, payslip3: file }))
-                        }
-                      />
+                  {!isSelfEmployed && (
+                    <div className="mt-6">
+                      <h4 className="text-sm font-medium text-foreground mb-4">
+                        Last 3 Months Payslips
+                        <span className="text-destructive ml-1">*</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <FileUploadZone
+                          label="Month 1"
+                          required
+                          accept=".pdf,.jpg,.png"
+                          compact
+                          onFileSelect={(file) =>
+                            setDocuments((prev) => ({ ...prev, payslip1: file }))
+                          }
+                        />
+                        <FileUploadZone
+                          label="Month 2"
+                          required
+                          accept=".pdf,.jpg,.png"
+                          compact
+                          onFileSelect={(file) =>
+                            setDocuments((prev) => ({ ...prev, payslip2: file }))
+                          }
+                        />
+                        <FileUploadZone
+                          label="Month 3"
+                          required
+                          accept=".pdf,.jpg,.png"
+                          compact
+                          onFileSelect={(file) =>
+                            setDocuments((prev) => ({ ...prev, payslip3: file }))
+                          }
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </FormCard>
             )}

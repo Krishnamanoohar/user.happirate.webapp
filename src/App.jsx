@@ -39,6 +39,7 @@ import UserProfile from "./IntegratedComps/src/components/UserProfile";
 import ComingSoonPage from "./components/ComingSoon/ComingSoon";
 import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
 import MyApplication from "./pages/MyApplication/MyApplication";
+import LoanTrackerPage from "./pages/LoanTrackerPage/LoanTrackerPage";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -102,6 +103,7 @@ const App = () => {
             />
             <Route path="loan-application" element={<LoanApplication />} />
             <Route path="eligible-loans" element={<CompareLoanPage />} />
+            <Route path="loan-tracker" element={<LoanTrackerPage />} />
             <Route path="signin" element={<HappirateSplitAuth />} />
             <Route path="*" element={<NotFoundPage />} />
 
