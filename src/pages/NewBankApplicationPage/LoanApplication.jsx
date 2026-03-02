@@ -165,7 +165,7 @@ const buildFileUpload = (data) => ({
 
 const LoanApplication = () => {
   const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 3);
+  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
 
   useEffect(() => {
     const savedLoanData = localStorage.getItem("loanData");
@@ -194,6 +194,7 @@ const LoanApplication = () => {
   const [filteredStates, setFilteredStates] = useState([]);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const navigate = useNavigate();
+  const [applicationId, setApplicationId] = useState(null);
 
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({
@@ -734,7 +735,7 @@ const LoanApplication = () => {
       console.log("credit report response", resp);
       const apiData = resp?.data?.data;
       setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-      setApplicationId(resp?.data?.applicationId || null);
+      setApplicationId(resp?.applicationId || null);
       console.log(
         "application id from credit report",
         resp?.data?.applicationId,
