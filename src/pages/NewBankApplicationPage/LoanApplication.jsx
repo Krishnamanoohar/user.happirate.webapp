@@ -164,7 +164,6 @@ const LoanApplication = () => {
     email: "",
     aadhaarCard: "",
     mobileNumber: "",
-    alternateMobileNumber: "", 
     uanNumber: "",
     employmentExperience: "",
     employmentStatus: "",
@@ -282,13 +281,6 @@ const LoanApplication = () => {
         newErrors.aadhaarCard = "Aadhaar must be 12 digits";
       if (!formData.mobileNumber)
         newErrors.mobileNumber = "Mobile number is required";
-      if (
-        formData.alternateMobileNumber &&
-        formData.alternateMobileNumber === formData.mobileNumber
-      ) {
-        newErrors.alternateMobileNumber =
-          "Alternate mobile cannot be same as primary number";
-      }
     }
 
     if (currentStep === 1) {
@@ -384,7 +376,6 @@ const LoanApplication = () => {
     // city: data.city,
     state: data.state,
     pincode: data.pincode,
-    alternateMobileNumber: data.alternateMobileNumber || null,
   });
 
   const buildEmploymentDetailsPayload = (data) => ({
@@ -1035,16 +1026,6 @@ const LoanApplication = () => {
                       required
                       error={errors.mobileNumber}
                     />
-                    <FormInput
-                      label="Alternate Mobile Number (Optional)"
-                      value={formData.alternateMobileNumber}
-                      onChange={(v) =>
-                        updateFormData("alternateMobileNumber", v.replace(/\D/g, ""))
-                      }
-                      type="tel"
-                      maxLength={10}
-                      error={errors.alternateMobileNumber}
-                    />
                   </div>
 
                   {/* Address Section */}
@@ -1584,11 +1565,6 @@ const LoanApplication = () => {
                     <SummaryRow
                       label="Mobile"
                       value={formData.mobileNumber}
-                      icon={Phone}
-                    />
-                    <SummaryRow
-                      label="Alternate Mobile"
-                      value={formData.alternateMobileNumber || "—"}
                       icon={Phone}
                     />
                     <SummaryRow
