@@ -10,6 +10,7 @@ const FileUploadZone = ({
     accept,
     compact = false,
     onFileSelect,
+    error = false
 }) => {
     const [file, setFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -67,8 +68,16 @@ const FileUploadZone = ({
                 className={cn(
                     "relative border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200",
                     compact ? "p-4" : "p-6",
-                    isDragging && "border-primary bg-accent",
-                    file ? "border-success bg-success/5" : "border-border hover:border-primary/50 hover:bg-accent/50"
+                        error && "border-destructive bg-destructive/5",
+
+    // ✅ SUCCESS STATE
+    !error && file && "border-success bg-success/5",
+
+    // ✅ DRAG STATE
+    !error && !file && isDragging && "border-primary bg-accent",
+
+    // ✅ DEFAULT STATE
+    !error && !file && !isDragging && "border-border hover:border-primary/50 hover:bg-accent/50"
                 )}
             >
                 <input

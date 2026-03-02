@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -45,6 +45,8 @@ import Navbar from "@/IntegratedComps/src/components/Navbar";
 import axios from "axios";
 import Loader from "@/ReactBitsComps/Loader/Loader";
 import { EmploymentHistorySection } from "./DynamicEmploymentComp";
+import ExistingDocumentsSelector from "@/components/ExistingDocumentsSelector/ExistingDocumentsSelector";
+import { Input } from "@/components/ui/input";
 
 const steps = [
   { id: 1, title: "Review & Edit Personal Details" },
@@ -110,6 +112,56 @@ const indianStates = [
   "Ladakh",
   "Lakshadweep",
   "Puducherry",
+];
+const existingDocuments = [
+  {
+    id: "1",
+    name: "ITR_2023-24.pdf",
+    type: "pdf",
+    category: "ITR/Form 16",
+    uploadedAt: "15 Jan 2025",
+    size: "2.3 MB",
+  },
+  {
+    id: "2",
+    name: "ITR_2022-23.pdf",
+    type: "pdf",
+    category: "ITR/Form 16",
+    uploadedAt: "10 Mar 2024",
+    size: "1.8 MB",
+  },
+  {
+    id: "3",
+    name: "passport_photo.jpg",
+    type: "image",
+    category: "Applicant Photo",
+    uploadedAt: "20 Dec 2024",
+    size: "450 KB",
+  },
+  {
+    id: "4",
+    name: "payslip_jan_2025.pdf",
+    type: "pdf",
+    category: "Payslip",
+    uploadedAt: "02 Feb 2025",
+    size: "320 KB",
+  },
+  {
+    id: "5",
+    name: "payslip_dec_2024.pdf",
+    type: "pdf",
+    category: "Payslip",
+    uploadedAt: "01 Jan 2025",
+    size: "310 KB",
+  },
+  {
+    id: "6",
+    name: "payslip_nov_2024.pdf",
+    type: "pdf",
+    category: "Payslip",
+    uploadedAt: "01 Dec 2024",
+    size: "305 KB",
+  },
 ];
 
 // const formatDateToDDMMYYYY = (isoDate) => {
@@ -197,6 +249,29 @@ const LoanApplication = () => {
 
   const navigate = useNavigate();
   const [applicationId, setApplicationId] = useState(null);
+  const [selectedDocIds, setSelectedDocIds] = useState([]);
+  const [documentErrors, setDocumentErrors] = useState({});
+
+  // Determine which upload zones are still needed
+  const hasITR = selectedDocIds.some((id) =>
+    existingDocuments.find(
+      (d) => d.id === id && d.category === "ITR/Form 16"
+    )
+  );
+
+  const hasPhoto = selectedDocIds.some((id) =>
+    existingDocuments.find(
+      (d) => d.id === id && d.category === "Applicant Photo"
+    )
+  );
+
+  const selectedPayslips = selectedDocIds.filter((id) =>
+    existingDocuments.find(
+      (d) => d.id === id && d.category === "Payslip"
+    )
+  );
+
+  const payslipsNeeded = Math.max(0, 3 - selectedPayslips.length);
 
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({
@@ -272,6 +347,33 @@ const LoanApplication = () => {
     } finally {
       setIsFetchingDocs(false);
     }
+  };
+  const validateDocuments = () => {
+    const newErrors = {};
+
+    // Check ITR
+    if (!hasITR && !documents.itr) {
+      newErrors.itr = "This field is required";
+    }
+
+    // Check Photo
+    if (!hasPhoto && !documents.photo) {
+      newErrors.photo = "This field is required";
+    }
+
+    // Check Payslips
+    const uploadedPayslips = [
+      documents.payslip1,
+      documents.payslip2,
+      documents.payslip3,
+    ].filter(Boolean).length;
+
+    if (selectedPayslips.length + uploadedPayslips < 3) {
+      newErrors.payslips = "This field is required";
+    }
+
+    setDocumentErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const validateGST = (value) => {
@@ -519,6 +621,11 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
+      if (!validateDocuments()) {
+        toast.error("Please upload all required documents");
+        setIsLoading(false);
+        return;
+      }
       try {
         console.log(documents);
         const response = await handleDocumentUpload();
@@ -1550,9 +1657,15 @@ const LoanApplication = () => {
                     />
                   </div>
                 </div>
+                <div className="mt-10">
+                  <ExistingDocumentsSelector
+                    documents={existingDocuments}
+                    onSelectionChange={setSelectedDocIds}
+                  />
+                </div>
 
                 {/* Documents Section */}
-                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                {/* <div className="space-y-6 mt-8 pt-6 border-t border-border">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Required Documents
@@ -1628,7 +1741,103 @@ const LoanApplication = () => {
                         />
                       </div>
                     </div>
-                  )}
+                  </div>
+                </div> */}
+                <div>
+                  <div className="space-y-4 mt-9">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <span className="w-1 h-4 bg-primary rounded-full" />
+                      Required Documents
+                    </h3>
+
+                    {selectedDocIds.length > 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        Some documents are already covered by your selections above. Upload any remaining required documents below.
+                      </p>
+                    )}
+
+                    {/* ITR Fetch */}
+                    <div className="flex items-end gap-3">
+                      <div className="flex-1 max-w-xs space-y-1.5">
+                        <Input placeholder="Enter Your Income Tax Efiling Password" />
+                      </div>
+                      <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                        Fetch ITR Documents
+                      </Button>
+                    </div>
+
+                    {/* Upload zones */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                      {!hasITR && (
+                        <div>
+                          <FileUploadZone
+                            label="Last 3 Years ITR/Form 16"
+                            required
+                            error={!!documentErrors.itr}
+                            onFileSelect={(file) =>
+                              setDocuments((prev) => ({ ...prev, itr: file }))
+                            }
+                          />
+                          {documentErrors.itr && (
+                            <p className="text-sm text-destructive mt-1">
+                              {documentErrors.itr}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {!hasPhoto && (
+                        <div>
+                          <FileUploadZone
+                            label="Applicant Photo"
+                            error={!!documentErrors.photo}
+                            required
+                            onFileSelect={(file) =>
+                              setDocuments((prev) => ({ ...prev, photo: file }))
+                            }
+                          />
+                          {documentErrors.photo && (
+                            <p className="text-sm text-destructive mt-1">
+                              {documentErrors.photo}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                    </div>
+
+                    {payslipsNeeded > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-foreground">
+                          Last 3 Months Payslips <span className="text-destructive">*</span>
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          {Array.from({ length: payslipsNeeded }).map((_, i) => (
+                            <FileUploadZone
+                              key={i}
+                              label={`Month ${selectedPayslips.length + i + 1}`}
+                              required
+                              error={!!documentErrors.payslips}
+                            />
+                          ))}
+                        </div>
+                        {documentErrors.payslips && (
+                          <p className="text-sm text-destructive mt-1">
+                            {documentErrors.payslips}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {hasITR && hasPhoto && payslipsNeeded === 0 && (
+                      <div className="p-4 rounded-lg bg-violet-100 text-center">
+                        <p className="text-sm font-medium text-violet-500">
+                          ✓ All required documents are covered by your previous uploads!
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </FormCard>
             )}
@@ -1962,7 +2171,7 @@ const LoanApplication = () => {
             )}
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
