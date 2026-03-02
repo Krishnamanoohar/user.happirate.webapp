@@ -71,12 +71,6 @@ export function HappirateSplitAuth() {
     if (value && index < 5) {
       otpRefs[index + 1].current?.focus();
     }
-    if (index === 5 && value) {
-      const finalOtp = [...newOtp].join("");
-      if (finalOtp.length === 6) {
-        handleVerifyOtp(finalOtp);
-      }
-    }
   };
 
   const handleOtpKeyDown = (e, index) => {
@@ -133,7 +127,6 @@ export function HappirateSplitAuth() {
       return;
     }
 
-    setResendCountDown(60);
 
     startTransition(async () => {
       if (!recaptchaVerifier) {
@@ -154,6 +147,7 @@ export function HappirateSplitAuth() {
       );
 
       setOtpResult(confirmationResult);
+      setResendCountDown(60);
       toast.success("OTP sent successfully");
     } catch (error) {
       console.error("OTP send failed", error);
@@ -333,18 +327,20 @@ export function HappirateSplitAuth() {
     };
   }, [auth]);
 
+useEffect(() => {
+  if (resendCountDown <= 0) return;
+
+  const timer = setTimeout(() => {
+    setResendCountDown((prev) => prev - 1);
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, [resendCountDown]);
   useEffect(() => {
-    let timer;
-    if (resendCountDown > 0) {
-      timer = setTimeout(() => setResendCountDown(resendCountDown - 1), 1000);
+    if (otpResult) {
+      otpRefs[0].current?.focus();
     }
-    return clearTimeout(timer);
-  }, [resendCountDown]);
-  useEffect(() => {
-  if (otpResult) {
-    otpRefs[0].current?.focus();
-  }
-}, [otpResult]);
+  }, [otpResult]);
 
   return (
     <>
@@ -483,11 +479,28 @@ export function HappirateSplitAuth() {
                             />
                           ))}
                         </div>
-                        <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
+                        {/* <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
                           <span>OTP sent successfully</span>
                           <button className="text-purple-600 font-medium">
                             Resend OTP
                           </button>
+                        </div> */}
+                        <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
+                          <span>OTP sent successfully</span>
+
+                          {resendCountDown > 0 ? (
+                            <span className="text-gray-400">
+                              Resend in {resendCountDown}s
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={handleSendOtp}
+                              className="text-purple-600 font-medium hover:underline"
+                            >
+                              Resend OTP
+                            </button>
+                          )}
                         </div>
                         <Button
                           type="button"
