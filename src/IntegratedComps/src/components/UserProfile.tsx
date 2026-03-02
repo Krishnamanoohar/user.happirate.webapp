@@ -177,11 +177,7 @@ const ProfilePage = () => {
         }
 
         const withoutTimestamp = parts.join("_");
-
-        // Extract extension
         const ext = withoutTimestamp.split(".").pop();
-
-        // Remove extension for formatting
         const base = withoutTimestamp.replace(`.${ext}`, "");
 
         // Clean unwanted patterns
@@ -201,7 +197,7 @@ const ProfilePage = () => {
           prefix = "ITR";
 
         // Final format → Payslip-FileName-Type.pdf
-        return `${prefix}-${cleaned.replace(/\s+/g, "_")}.${ext}`;
+        return `${prefix} - ${cleaned.replace(/\s+/g, "_")}.${ext}`;
       };
 
       const extractDateFromName = (fileName: string) => {
@@ -292,8 +288,9 @@ const ProfilePage = () => {
         setIsLoading(true);
 
         const mobileNumber = sessionStorage.getItem("mobile_number");
+        const userId = sessionStorage.getItem("userId");
 
-        const resp = await fetchCreditReport({ mobileNumber });
+        const resp = await fetchCreditReport({ mobileNumber, userId });
         console.log("response", resp);
         const backend = resp?.data?.data;
 

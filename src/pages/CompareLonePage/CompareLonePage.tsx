@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { LenderCard, Lender } from "@/components/LendarCard/LenderCard";
 import { ComparisonTable } from "@/components/ComparisonTable/ComparisonTable";
@@ -60,10 +58,6 @@ const CompareLoanPage = () => {
     }
   };
 
-  // const handleSelectForLetter = (lender: Lender) => {
-  //   setSelectedForLetter(lender);
-  //   setStage("letter");
-  // };
   const handleSelectForLetter = (lender: Lender) => {
     setSelectedForLetter({
       ...lender,
@@ -73,10 +67,6 @@ const CompareLoanPage = () => {
     setStage("letter");
   };
 
-  // const handleApplyNow = (lender: Lender) => {
-  //   setSelectedForLetter(lender);
-  //   setStage("letter");
-  // };
   const handleApplyNow = (lender: Lender) => {
     setSelectedForLetter({
       ...lender,
@@ -91,44 +81,13 @@ const CompareLoanPage = () => {
     setSelectedForLetter(null);
   };
 
-  const handleOpenPSL = () => {
-    setStage("psl");
-  };
-
   const handleClosePSL = () => {
     setStage("compare");
   };
 
-  // const handleFetchEligibleLoans = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const resp = await fetchEligibleLoanProducts();
-  //     const banks = resp.data.banks.map((bank: any) => ({
-  //       id: bank.bankId,
-  //       name: bank.bankName,
-  //       logo: bank.bankId,
-  //       type: "Bank",
-  //       maxSanctionAmount: bank.maximumEligibleLoanAmount,
-  //       trueAPR: bank.interestRate,
-  //       tenureOptions: bank.tenureOptions || "12-84 months",
-  //       processingFee: bank.processingFee,
-  //       approvalProbability: bank.approvalProbability,
-  //       disbursalTime: bank.disbursalTime,
-  //       pros: [
-  //         "Fastest approval",
-  //         "Lowest APR for existing customers",
-  //         "Flexible EMI options",
-  //       ],
-  //     }));
-  //     setLenders(banks);
-  //   } catch (error) {
-  //     console.log("Error in fetching products", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleFetchEligibleLoans = async (amount: number, tenure: number) => {
     try {
+      console.log("Fetching eligible loans for amount:", amount, "and tenure:", tenure);
       setLoading(true);
 
       const resp = await fetchEligibleLoanProducts(amount, tenure);
@@ -169,37 +128,13 @@ const CompareLoanPage = () => {
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   handleFetchEligibleLoans();
-  // }, []);
-  // useEffect(() => {
-  //   if (comparisonTab === "customize" && customAmount && loanTenure) {
-  //     const updatedAmount = Number(customAmount);
 
-  //     setLoanAmount(updatedAmount);
-
-  //     handleFetchEligibleLoans(updatedAmount, loanTenure);
-  //   }
-  // }, [customAmount]);
   const formatIndianNumber = (value: string) => {
     const numeric = value.replace(/\D/g, "");
     if (!numeric) return "";
 
     return new Intl.NumberFormat("en-IN").format(Number(numeric));
   };
-  useEffect(() => {
-    const savedLoanData = JSON.parse(localStorage.getItem("loanData") || "{}");
-
-    const amount = Number(savedLoanData.loanAmount) || 0;
-    const tenure = Number(savedLoanData.loanTenure) || 0;
-
-    setLoanAmount(amount);
-    setLoanTenure(tenure);
-
-    if (amount && tenure) {
-      handleFetchEligibleLoans(amount, tenure);
-    }
-  }, []);
 
   const filteredLenders =
     comparisonTab === "customize" && submittedAmount
@@ -213,8 +148,24 @@ const CompareLoanPage = () => {
       requestedAmount:
         comparisonTab === "customize" ? submittedAmount : undefined,
     }));
-  const formatINR = (value: number) =>
-    new Intl.NumberFormat("en-IN").format(value);
+
+  useEffect(() => {
+    const savedLoanData = JSON.parse(
+      sessionStorage.getItem("loanData") || "{}",
+    );
+    setFormattedAmount(formatIndianNumber(savedLoanData.loanAmount || ""));
+    console.log("Loaded loan data from localStorage:", savedLoanData);
+
+    const amount = Number(savedLoanData.loanAmount) || 0;
+    const tenure = Number(savedLoanData.loanTenure) || 0;
+
+    setLoanAmount(amount);
+    setLoanTenure(tenure);
+
+    if (amount && tenure) {
+      handleFetchEligibleLoans(amount, tenure);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -229,7 +180,7 @@ const CompareLoanPage = () => {
                     const savedLoanData = JSON.parse(
                       localStorage.getItem("loanData") || "{}",
                     );
-                    localStorage.setItem(
+                    sessionStorage.setItem(
                       "loanData",
                       JSON.stringify({
                         ...savedLoanData,

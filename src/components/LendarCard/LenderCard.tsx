@@ -41,7 +41,7 @@ export const LenderCard = ({
     if (probability >= 80) return "bg-blue-100 text-blue-700";
     return "bg-orange-100 text-orange-700";
   };
-  console.log("Lender in card", lender);
+
   return (
     <div
       className={cn(
