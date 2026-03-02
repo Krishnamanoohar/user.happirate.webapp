@@ -626,17 +626,25 @@ const LoanApplication = () => {
         setIsLoading(false);
         return;
       }
-      try {
-        console.log(documents);
-        const response = await handleDocumentUpload();
-        const resp = await handleUpdateLoanRequirements();
-        console.log(resp, "update loan requirements response");
-        console.log(response, "response");
-      } catch (error) {
-        console.log(error, "error");
-      } finally {
-        setIsLoading(false);
-      }
+      // try {
+      //   console.log(documents);
+      //   const response = await handleDocumentUpload();
+      //   const resp = await handleUpdateLoanRequirements();
+      //   console.log(resp, "update loan requirements response");
+      //   console.log(response, "response");
+      // } catch (error) {
+      //   console.log(error, "error");
+      // } finally {
+      //   setIsLoading(false);
+      // }
+      // return;
+        // 🚧 Backend not implemented yet
+      console.log("Documents (frontend only):", documents);
+      toast.success("Documents validated successfully (mock mode)");
+
+      // Move to Review step
+      setCurrentStep(3);
+      setIsLoading(false);
       return;
     }
 
@@ -923,100 +931,100 @@ const LoanApplication = () => {
     };
   });
 
-  const handleDocumentUpload = async () => {
-    const userId = sessionStorage.getItem("userId");
+  // const handleDocumentUpload = async () => {
+  //   const userId = sessionStorage.getItem("userId");
 
-    if (!userId) {
-      toast.error("User ID is missing. Please log in again.");
-      return;
-    }
+  //   if (!userId) {
+  //     toast.error("User ID is missing. Please log in again.");
+  //     return;
+  //   }
 
-    // --- NEW: Client-side file size validation ---
-    const MAX_FILE_SIZE_MB = 5; // Max size for a SINGLE file (e.g., 5MB)
-    const MAX_TOTAL_SIZE_MB = 15; // Max size for the ENTIRE batch (e.g., 15MB)
+  //   // --- NEW: Client-side file size validation ---
+  //   const MAX_FILE_SIZE_MB = 5; // Max size for a SINGLE file (e.g., 5MB)
+  //   const MAX_TOTAL_SIZE_MB = 15; // Max size for the ENTIRE batch (e.g., 15MB)
 
-    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-    const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
+  //   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+  //   const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
 
-    // Gather all currently selected files into an array, ignoring empty ones
-    const selectedFiles = [
-      documents.payslip1,
-      documents.payslip2,
-      documents.payslip3,
-      documents.itr,
-      documents.photo,
-    ].filter(Boolean);
+  //   // Gather all currently selected files into an array, ignoring empty ones
+  //   const selectedFiles = [
+  //     documents.payslip1,
+  //     documents.payslip2,
+  //     documents.payslip3,
+  //     documents.itr,
+  //     documents.photo,
+  //   ].filter(Boolean);
 
-    let totalSize = 0;
+  //   let totalSize = 0;
 
-    for (const file of selectedFiles) {
-      // Check individual file size
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        toast.error(
-          `File "${file.name}" is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
-        );
-        return; // Stop the upload process instantly
-      }
-      totalSize += file.size;
-    }
+  //   for (const file of selectedFiles) {
+  //     // Check individual file size
+  //     if (file.size > MAX_FILE_SIZE_BYTES) {
+  //       toast.error(
+  //         `File "${file.name}" is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
+  //       );
+  //       return; // Stop the upload process instantly
+  //     }
+  //     totalSize += file.size;
+  //   }
 
-    // Check total batch size
-    if (totalSize > MAX_TOTAL_SIZE_BYTES) {
-      toast.error(
-        `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB} MB. Please compress your files.`,
-      );
-      return; // Stop the upload process instantly
-    }
-    // ----------------------------------------------
+  //   // Check total batch size
+  //   if (totalSize > MAX_TOTAL_SIZE_BYTES) {
+  //     toast.error(
+  //       `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB} MB. Please compress your files.`,
+  //     );
+  //     return; // Stop the upload process instantly
+  //   }
+  //   // ----------------------------------------------
 
-    // 1. Create and pack the FormData
-    const formData = new FormData();
-    formData.append("userId", userId);
+  //   // 1. Create and pack the FormData
+  //   const formData = new FormData();
+  //   formData.append("userId", userId);
 
-    // Loop and append all payslips under the 'payslips' key
-    if (documents.payslip1) formData.append("payslips", documents.payslip1);
-    if (documents.payslip2) formData.append("payslips", documents.payslip2);
-    if (documents.payslip3) formData.append("payslips", documents.payslip3);
-    if (documents.itr) formData.append("itrs", documents.itr);
-    if (documents.photo) formData.append("others", documents.photo);
+  //   // Loop and append all payslips under the 'payslips' key
+  //   if (documents.payslip1) formData.append("payslips", documents.payslip1);
+  //   if (documents.payslip2) formData.append("payslips", documents.payslip2);
+  //   if (documents.payslip3) formData.append("payslips", documents.payslip3);
+  //   if (documents.itr) formData.append("itrs", documents.itr);
+  //   if (documents.photo) formData.append("others", documents.photo);
 
-    try {
-      const response = await uploadFinancialDocuments(formData);
+  //   try {
+  //     const response = await uploadFinancialDocuments(formData);
 
-      if (response.status === 201 || response.status === 200) {
-        setCurrentStep(3);
-        toast.success("Documents uploaded successfully!");
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
+  //     if (response.status === 201 || response.status === 200) {
+  //       setCurrentStep(3);
+  //       toast.success("Documents uploaded successfully!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload failed:", error);
 
-      // Fallback error handling if a 413 somehow slips through to the client
-      if (error.response?.status === 413) {
-        toast.error("Files are too large for the server to process.");
-      } else {
-        toast.error(
-          error.response?.data?.error ||
-          error.response?.data?.message ||
-          "Document upload failed. Is your backend running?",
-        );
-      }
-    }
-  };
+  //     // Fallback error handling if a 413 somehow slips through to the client
+  //     if (error.response?.status === 413) {
+  //       toast.error("Files are too large for the server to process.");
+  //     } else {
+  //       toast.error(
+  //         error.response?.data?.error ||
+  //         error.response?.data?.message ||
+  //         "Document upload failed. Is your backend running?",
+  //       );
+  //     }
+  //   }
+  // };
 
-  const handleUpdateLoanRequirements = async () => {
-    try {
-      const resp = await updateLoanRequirements({
-        userId: sessionStorage.getItem("userId"),
-        loanType: formData.loanType,
-        applicationId,
-        requestedAmount: formData.loanAmount,
-        preferredTenure: formData.loanTenure,
-      });
-      console.log(resp, "update loan requirements response");
-    } catch (error) {
-      console.log(error, "error in updating loan requirements");
-    }
-  };
+  // const handleUpdateLoanRequirements = async () => {
+  //   try {
+  //     const resp = await updateLoanRequirements({
+  //       userId: sessionStorage.getItem("userId"),
+  //       loanType: formData.loanType,
+  //       applicationId,
+  //       requestedAmount: formData.loanAmount,
+  //       preferredTenure: formData.loanTenure,
+  //     });
+  //     console.log(resp, "update loan requirements response");
+  //   } catch (error) {
+  //     console.log(error, "error in updating loan requirements");
+  //   }
+  // };
 
   // const handleDocumentUpload = async () => {
   //   const userId = sessionStorage.getItem("userId");
@@ -1813,14 +1821,32 @@ const LoanApplication = () => {
                           Last 3 Months Payslips <span className="text-destructive">*</span>
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          {Array.from({ length: payslipsNeeded }).map((_, i) => (
+                          {/* {Array.from({ length: payslipsNeeded }).map((_, i) => (
                             <FileUploadZone
                               key={i}
                               label={`Month ${selectedPayslips.length + i + 1}`}
                               required
                               error={!!documentErrors.payslips}
                             />
-                          ))}
+                          ))} */}
+                          {Array.from({ length: payslipsNeeded }).map((_, i) => {
+                            const index = selectedPayslips.length + i + 1;
+
+                            return (
+                              <FileUploadZone
+                                key={i}
+                                label={`Month ${index}`}
+                                required
+                                error={!!documentErrors.payslips}
+                                onFileSelect={(file) =>
+                                  setDocuments((prev) => ({
+                                    ...prev,
+                                    [`payslip${index}`]: file,
+                                  }))
+                                }
+                              />
+                            );
+                          })}
                         </div>
                         {documentErrors.payslips && (
                           <p className="text-sm text-destructive mt-1">
