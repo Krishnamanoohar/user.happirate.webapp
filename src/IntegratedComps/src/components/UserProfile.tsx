@@ -21,6 +21,7 @@ import FileUploadZone from "@/components/FileUploadZone";
 import { fetchTaxDocuments } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { error } from "three";
+import { useContextData } from "@/context/AuthContext";
 const tabs = [
   { id: "personal", label: "Personal Info", icon: User },
   // { id: "address", label: "Address", icon: MapPin },
@@ -143,11 +144,8 @@ interface DocumentSection {
 }
 
 const ProfilePage = () => {
+  const { creditProfile, isLoading } = useContextData();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
-  // const [data] = useState<ProfileData>(defaultData);
-  // const [data, setData] = useState<ProfileData>(defaultData);
-  const [data, setData] = useState<ProfileData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [taxNumber, setTaxNumber] = useState("");
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
@@ -159,8 +157,8 @@ const ProfilePage = () => {
     payslip2: null,
     payslip3: null,
   });
-
   const userInfo = sessionStorage.getItem("userId");
+  console.log("creditProfile", creditProfile);
 
   const fetchUploadedDocuments = async () => {
     try {
@@ -279,106 +277,6 @@ const ProfilePage = () => {
       console.log(error, "error");
     }
   };
-  const fullName = data
-    ? `${data.firstName} ${data.middleName} ${data.lastName}`
-    : "";
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        setIsLoading(true);
-
-        const mobileNumber = sessionStorage.getItem("mobile_number");
-        const userId = sessionStorage.getItem("userId");
-
-        const resp = await fetchCreditReport({ mobileNumber, userId });
-        console.log("response", resp);
-        const backend = resp?.data?.data;
-
-        const employment = backend?.employmentHistory?.employment_data?.[0];
-
-        const formatted: ProfileData = {
-          firstName: backend?.firstName || "First Name",
-          middleName: backend?.middleName || "",
-          lastName: backend?.lastName || "Last Name",
-
-          dateOfBirth: backend?.dateOfBirth
-            ? new Date(backend.dateOfBirth).toLocaleDateString("en-GB")
-            : "DOB",
-
-          panCard: backend?.panCard || "PAN Not Available",
-          aadhaarCard: backend?.ckycId || "XXXX XXXX XXXX",
-
-          email: backend?.emails?.[0]?.email || "Email Not Available",
-          mobile:
-            backend?.phoneNumbers?.[0]?.Number?.slice(-10) ||
-            "Mobile Not Available",
-
-          gender: backend?.gender || "Gender",
-
-          fatherName: employment?.guardian_name || "Father Name",
-
-          maritalStatus: backend?.maritalStatus || "Marital Status",
-          nationality: "Indian",
-
-          addressLine1:
-            backend?.addresses?.[0]?.streetAddress || "Address Not Available",
-
-          addressLine2: "",
-          city: backend?.city || "Hyderabad",
-          state: backend?.addresses?.[0]?.state || "State",
-          pincode: backend?.addresses?.[0]?.pincode || "Pincode",
-
-          residentialStatus: backend?.residentialStatus || "Residential Status",
-
-          employmentStatus: backend?.employmentStatus || "Employment Status",
-
-          salaryMode: backend?.salaryMode?.replace("-", " ") || "Salary Mode",
-
-          experience:
-            backend?.employmentExperience !== undefined
-              ? `${backend.employmentExperience} months`
-              : "0 months",
-
-          uanPfNumber: backend?.uanNumber?.toString() || "UAN Not Available",
-
-          monthlyIncome: backend?.monthlyIncome
-            ? `₹${backend.monthlyIncome.toLocaleString()}`
-            : "₹0",
-
-          previousCompany: "",
-          currentCompany: employment?.establishment_name || "Company Name",
-
-          currentJoinDate: employment?.date_of_joining || "Joining Date",
-
-          previousCompanyJoinDate: "",
-          previousCompanyRelieveDate: employment?.date_of_exit || "",
-
-          cibilScore: backend?.cibilScore?.toString() || "0",
-
-          recentEnquiries: backend?.last6MonthsEnquiryCount?.toString() || "0",
-
-          settlements: backend?.settlements?.toString() || "0",
-
-          emiBounces: backend?.emiBounces?.toString() || "0",
-
-          creditUtilization: `${backend?.creaditCardUtilization || 0}%`,
-
-          emergencyName: "Emergency Name",
-          emergencyContact: "Emergency Contact",
-          emergencyRelation: "Relation",
-        };
-
-        setData(formatted);
-      } catch (err) {
-        toast.error("Failed to load profile");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProfile();
-    fetchUploadedDocuments();
-  }, []);
 
   const getCibilBadge = (score: string) => {
     const s = parseInt(score);
@@ -401,7 +299,7 @@ const ProfilePage = () => {
     };
   };
 
-  const cibil = getCibilBadge(data?.cibilScore || "0");
+  const cibil = getCibilBadge(creditProfile?.cibilScore || "0");
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -440,7 +338,7 @@ const ProfilePage = () => {
       setIsFetchingDocs(false);
     }
   };
-  if (isLoading || !data) {
+  if (isLoading || !creditProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
@@ -458,7 +356,7 @@ const ProfilePage = () => {
       </div>
     );
   }
-
+  console.log("user profile credit", creditProfile);
   return (
     <div className="min-h-screen bg-background mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
@@ -497,16 +395,16 @@ const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-violet-200 from-primary/20 to-accent flex items-center justify-center shrink-0">
                   <span className="text-sm font-bold text-primary">
-                    {data?.firstName?.[0] || ""}
-                    {data?.lastName?.[0] || ""}
+                    {creditProfile?.firstName?.[0] || ""}
+                    {creditProfile?.lastName?.[0] || ""}
                   </span>
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-foreground truncate">
-                    {data.firstName} {data.lastName}
+                    {creditProfile?.firstName} {creditProfile?.lastName}
                   </p>
                   <p className="text-[11px] text-muted-foreground truncate">
-                    {data.email}
+                    {creditProfile?.email}
                   </p>
                 </div>
               </div>
@@ -573,7 +471,7 @@ const ProfilePage = () => {
 
                 <div className="flex items-center gap-2 mt-0.5 justify-end">
                   <span className="text-lg md:text-xl font-bold text-primary font-mono">
-                    {data.cibilScore}
+                    {creditProfile?.cibilScore}
                   </span>
 
                   <span
@@ -592,94 +490,181 @@ const ProfilePage = () => {
             {activeTab === "personal" && (
               <div className="space-y-6">
                 <ProfileSection icon={User} title="Basic Information">
-                  <DetailRow label="Full Name" value={fullName} />
-                  <DetailRow label="Date of Birth" value={data.dateOfBirth} />
-                  <DetailRow label="Gender" value={data.gender} />
-                  <DetailRow label="Father's Name" value={data.fatherName} />
+                  <DetailRow
+                    label="Full Name"
+                    value={
+                      `${creditProfile?.firstName} ${creditProfile?.middleName} ${creditProfile?.lastName}` ||
+                      "Not provided"
+                    }
+                  />
+                  <DetailRow
+                    label="Date of Birth"
+                    value={
+                      creditProfile?.dateOfBirth
+                        ? new Date(
+                            creditProfile.dateOfBirth,
+                          ).toLocaleDateString()
+                        : "Not provided"
+                    }
+                  />
+                  <DetailRow
+                    label="Gender"
+                    value={creditProfile?.Gender || "Not provided"}
+                  />
+                  {/* <DetailRow
+                    label="Father's Name"
+                    value={creditProfile?.fatherName}
+                  />
                   <DetailRow
                     label="Marital Status"
-                    value={data.maritalStatus}
+                    value={creditProfile?.maritalStatus}
                   />
-                  <DetailRow label="Nationality" value={data.nationality} />
+                  <DetailRow
+                    label="Nationality"
+                    value={creditProfile?.nationality}
+                  /> */}
                 </ProfileSection>
                 <ProfileSection icon={Shield} title="Identity & Contact">
-                  <DetailRow label="PAN Card" value={data.panCard} highlight />
-                  <DetailRow label="Aadhaar" value={data.aadhaarCard} masked />
-                  <DetailRow label="Email" value={data.email} />
-                  <DetailRow label="Mobile" value={data.mobile} />
+                  <DetailRow
+                    label="PAN Card"
+                    value={creditProfile?.panCard}
+                    highlight
+                  />
+                  {/* <DetailRow
+                    label="Aadhaar"
+                    value={creditProfile?.aadhaarCard}
+                    masked
+                  /> */}
+                  {/* <DetailRow label="Email" value={creditProfile?.email} /> */}
+                  <DetailRow
+                    label="Mobile"
+                    value={sessionStorage.getItem("mobile_number")}
+                  />
+                </ProfileSection>
+                <ProfileSection icon={Mail} title="Emails">
+                  {creditProfile?.emails?.map((item, idx) => (
+                    <DetailRow
+                      key={idx}
+                      label="Mail"
+                      value={item?.email || "_"}
+                      highlight={item?.type === "Primary"}
+                    />
+                  ))}
                 </ProfileSection>
                 <ProfileSection icon={MapPin} title="Address Details">
-                  <DetailRow
-                    label="Current Address"
-                    value={data.addressLine1}
-                  />
-                  <DetailRow
-                    label="Permanent Address"
-                    value={data.addressLine2}
-                  />
-                  <DetailRow label="City" value={data.city} />
-                  <DetailRow label="State" value={data.state} />
-                  <DetailRow label="Pincode" value={data.pincode} />
-                  <DetailRow
-                    label="Residential Status"
-                    value={data.residentialStatus}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {creditProfile?.addresses?.map((address, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-xl border border-border bg-card p-4 shadow-sm hover:shadow-md transition-all"
+                      >
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-semibold text-foreground">
+                            Address {idx + 1}
+                          </p>
+
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              address?.type === "Residence"
+                                ? "bg-green-100 text-green-700"
+                                : address?.type === "Office"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {address?.type || "Other"}
+                          </span>
+                        </div>
+
+                        {/* Address */}
+                        <p className="text-sm text-foreground leading-relaxed">
+                          {address?.streetAddress}
+                        </p>
+
+                        {/* Footer */}
+                        <div className="mt-3 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
+                          <span>State: {address?.state}</span>
+                          <span>Pincode: {address?.pincode}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </ProfileSection>
               </div>
             )}
             {/* {activeTab === "address" && (
             <ProfileSection icon={MapPin} title="Address Details">
-              <DetailRow label="Address Line 1" value={data.addressLine1} />
-              <DetailRow label="Address Line 2" value={data.addressLine2} />
-              <DetailRow label="City" value={data.city} />
-              <DetailRow label="State" value={data.state} />
-              <DetailRow label="Pincode" value={data.pincode} />
+              <DetailRow label="Address Line 1" value={creditProfile?.addressLine1} />
+              <DetailRow label="Address Line 2" value={creditProfile?.addressLine2} />
+              <DetailRow label="City" value={creditProfile?.city} />
+              <DetailRow label="State" value={creditProfile?.state} />
+              <DetailRow label="Pincode" value={creditProfile?.pincode} />
               <DetailRow
                 label="Residential Status"
-                value={data.residentialStatus}
+                value={creditProfile?.residentialStatus}
               />
             </ProfileSection>
           )} */}
             {activeTab === "employment" && (
               <div className="space-y-6">
                 <ProfileSection icon={Briefcase} title="Current Employment">
-                  <DetailRow label="Status" value={data.employmentStatus} />
-                  <DetailRow label="Salary Mode" value={data.salaryMode} />
+                  <DetailRow
+                    label="Status"
+                    value={creditProfile?.employmentStatus}
+                  />
+                  <DetailRow
+                    label="Salary Mode"
+                    value={creditProfile?.salaryMode}
+                  />
                   <DetailRow
                     label="Experience"
-                    value={formatExperience(data.experience)}
+                    value={
+                      creditProfile?.employmentExperience != null
+                        ? `${creditProfile.employmentExperience} year${
+                            creditProfile.employmentExperience > 1 ? "s" : ""
+                          }`
+                        : "Not provided"
+                    }
                   />
-                  <DetailRow label="UAN / PF Number" value={data.uanPfNumber} />
+                  <DetailRow
+                    label="UAN / PF Number"
+                    value={
+                      creditProfile?.uanNumber?.trim()
+                        ? creditProfile.uanNumber
+                        : "Not provided"
+                    }
+                  />
                   <DetailRow
                     label="Monthly Income"
-                    value={data.monthlyIncome}
+                    value={creditProfile?.monthlyIncome}
                     highlight
                   />
                 </ProfileSection>
                 <ProfileSection icon={Briefcase} title="Company Details">
                   <DetailRow
                     label="Current Company"
-                    value={data.currentCompany}
+                    value={creditProfile?.companyName}
                   />
                   <DetailRow
                     label="Current Joining Date"
-                    value={data.currentJoinDate}
+                    value={creditProfile?.currentJoinDate}
                   />
 
-                  {data.previousCompanyJoinDate &&
-                    data.previousCompanyRelieveDate && (
+                  {creditProfile?.previousCompanyJoinDate &&
+                    creditProfile?.previousCompanyRelieveDate && (
                       <>
                         <DetailRow
                           label="Previous Company"
-                          value={data.previousCompany}
+                          value={creditProfile?.previousCompany}
                         />
                         <DetailRow
                           label="Previous Joining Date"
-                          value={data.previousCompanyJoinDate}
+                          value={creditProfile?.previousCompanyJoinDate}
                         />
                         <DetailRow
                           label="Previous Relieving Date"
-                          value={data.previousCompanyRelieveDate}
+                          value={creditProfile?.previousCompanyRelieveDate}
                         />
                       </>
                     )}
@@ -691,18 +676,24 @@ const ProfilePage = () => {
                 <ProfileSection icon={CreditCard} title="Credit Score">
                   <DetailRow
                     label="CIBIL Score"
-                    value={data.cibilScore}
+                    value={creditProfile?.cibilScore}
                     highlight
                   />
                   <DetailRow
                     label="Recent Enquiries"
-                    value={data.recentEnquiries}
+                    value={creditProfile?.last6MonthsEnquiryCount || "0"}
                   />
-                  <DetailRow label="Settlements" value={data.settlements} />
-                  <DetailRow label="EMI Bounces" value={data.emiBounces} />
+                  <DetailRow
+                    label="Settlements"
+                    value={creditProfile?.settlements || "0"}
+                  />
+                  <DetailRow
+                    label="EMI Bounces"
+                    value={creditProfile?.emiBounces || '0'}
+                  />
                   <DetailRow
                     label="Credit Utilization"
-                    value={data.creditUtilization}
+                    value={creditProfile?.creaditCardUtilization || "0"}
                   />
                 </ProfileSection>
                 <div className="space-y-6 mt-8 pt-6 border-t border-border">
@@ -786,9 +777,9 @@ const ProfilePage = () => {
             )}
             {/* {activeTab === "emergency" && (
             <ProfileSection icon={AlertCircle} title="Emergency Contact">
-              <DetailRow label="Contact Name" value={data.emergencyName} />
-              <DetailRow label="Relationship" value={data.emergencyRelation} />
-              <DetailRow label="Phone Number" value={data.emergencyContact} />
+              <DetailRow label="Contact Name" value={creditProfile?.emergencyName} />
+              <DetailRow label="Relationship" value={creditProfile?.emergencyRelation} />
+              <DetailRow label="Phone Number" value={creditProfile?.emergencyContact} />
             </ProfileSection>
           )} */}
             {activeTab === "documents" && (

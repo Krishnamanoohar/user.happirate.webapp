@@ -26,6 +26,7 @@ import { sendFirebaseOtpToMobileNumber } from "@/utils/const";
 import { auth } from "@/firebase/firebase";
 import Loader from "../../ReactBitsComps/Loader/Loader";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { useContextData } from "@/context/AuthContext";
 
 function Stat({ value, label }) {
   return (
@@ -51,7 +52,7 @@ export function HappirateSplitAuth() {
   const [isMobileVerified, setIsMobileVerified] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
-
+  const { handleSetCreditData, setIsLoading: setCreditLoading, setError, setIsUserLoggedIn } = useContextData();
   const otpRefs = [
     useRef(null),
     useRef(null),
@@ -274,6 +275,7 @@ export function HappirateSplitAuth() {
         sessionStorage.setItem("mobile_number", mobileNumber);
         sessionStorage.setItem("userId", resp?.data?.data?._id);
         toast.success("Login verified successfully");
+        setIsUserLoggedIn(true)
         navigate(sessionStorage.getItem("redirectAfterLogin") || "/");
       }
     } catch (error) {
@@ -327,15 +329,15 @@ export function HappirateSplitAuth() {
     };
   }, [auth]);
 
-useEffect(() => {
-  if (resendCountDown <= 0) return;
+  useEffect(() => {
+    if (resendCountDown <= 0) return;
 
-  const timer = setTimeout(() => {
-    setResendCountDown((prev) => prev - 1);
-  }, 1000);
+    const timer = setTimeout(() => {
+      setResendCountDown((prev) => prev - 1);
+    }, 1000);
 
-  return () => clearTimeout(timer);
-}, [resendCountDown]);
+    return () => clearTimeout(timer);
+  }, [resendCountDown]);
   useEffect(() => {
     if (otpResult) {
       otpRefs[0].current?.focus();

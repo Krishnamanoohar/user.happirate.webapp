@@ -3,7 +3,6 @@ import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +12,7 @@ import {
 import happirateLogo from "../../../assets/images/happirateLogo.png";
 import TextLogo from "../../../assets/images/image.png";
 import { useNavigate } from "react-router-dom";
+import { useContextData } from "@/context/AuthContext";
 interface NavbarProps {
   scrollY: number;
 }
@@ -27,6 +27,7 @@ const navLinks = [
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { creditProfile } = useContextData();
   // const [user, setUser] = useState(null);
   const [user, setUser] = useState<{
     mobile: string;
@@ -53,6 +54,9 @@ export default function Navbar({ scrollY }: NavbarProps) {
     setIsDropdownOpen(false);
     navigate("/my-applicaton");
   };
+  useEffect(() => {
+    console.log("Credit profile from context:", creditProfile);
+  }, [creditProfile]);
 
   useEffect(() => {
     const loadUser = () => {
@@ -185,11 +189,11 @@ export default function Navbar({ scrollY }: NavbarProps) {
                         {user.mobile}
                       </p>
                     </div>
-                      <button
+                    <button
                       onClick={handleMyapplication}
                       className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
                     >
-                    My Application
+                      My Application
                     </button>
                     <button
                       onClick={handleProfile}

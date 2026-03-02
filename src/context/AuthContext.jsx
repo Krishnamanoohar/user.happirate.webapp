@@ -1,48 +1,89 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from "react";
+import { fetchCreditReport, fetchRawResponseOfUser } from "@/api/api";
 
-const CreditContext = createContext(null);
+const AuthContext = createContext(null);
 
-export const CreditProvider = ({ children }) => {
+export const ContextProvider = ({ children }) => {
   const [creditProfile, setCreditProfile] = useState(null);
   const [rawResponse, setRawResponse] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(sessionStorage.getItem("userId") ? true : false);
+
+  // These are now actively used during data fetching!
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSetCreditData = (raw, formatted) => {
-    setRawResponse(raw);
-    setCreditProfile(formatted);
-  };
 
-  const value = {
+  // 2. We combine the fetching logic and put it directly in the useEffect
+  useEffect(() => {
+    // Only hoist the sails and fetch data if the user is actually logged in!
+    if (!isUserLoggedIn) {
+      // Optional: Clear the decks (reset data) if the user logs out
+      setCreditProfile(null);
+      setRawResponse(null);
+      return;
+    }
+
+    const fetchAllData = async () => {
+      setIsLoading(true);
+      setError(null); // Clear any old errors before setting sail
+
+      try {
+        const mobileNumber = sessionStorage.getItem("mobile_number");
+        const userId = sessionStorage.getItem("userId");
+
+        // Make sure we have the keys to the chest before fetching
+        if (!mobileNumber || !userId) {
+          throw new Error("Missing credentials in the ship's log (sessionStorage)!");
+        }
+
+        // 3. Promise.all fetches both API calls AT THE SAME TIME. Much faster! ⚡
+        const [creditResp, rawResp] = await Promise.all([
+          fetchCreditReport({ mobileNumber, userId }),
+          fetchRawResponseOfUser()
+        ]);
+
+        setCreditProfile(creditResp?.data?.data || null);
+        setRawResponse(rawResp?.data?.data?.rawData || null);
+      } catch (err) {
+        console.error("A storm hit while fetching data:", err);
+        setError(err.message || "Failed to fetch user data.");
+      } finally {
+        // Drop the anchor, loading is done whether it succeeded or failed
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, [isUserLoggedIn]); // This effect ONLY runs when isUserLoggedIn changes
+
+  // 4. useMemo caches the value object so child components don't re-render needlessly
+  const value = useMemo(() => ({
     creditProfile,
     setCreditProfile,
     rawResponse,
     setRawResponse,
+    isUserLoggedIn,
+    setIsUserLoggedIn,
     isLoading,
-    setIsLoading,
     error,
-    setError,
-    handleSetCreditData,
-  };
+  }), [creditProfile, rawResponse, isUserLoggedIn, isLoading, error]);
 
   return (
-    <CreditContext.Provider value={value}>{children}</CreditContext.Provider>
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
+// Renamed the hook to match the AuthContext file name
 export const useContextData = () => {
-  const context = useContext(CreditContext);
+  const context = useContext(AuthContext);
 
-  // A gentle warning if a matey tries to use this outside the provider
   if (!context) {
     throw new Error(
-      "Ahoy! useCreditData must be used within a CreditProvider!",
+      "Ahoy! useAuthData must be used within an AuthProvider! 🏴‍☠️"
     );
   }
 
   return context;
 };
-
-// ----- Example Usage -------
-//   Unpack yer booty using the custom hook!
-//   const { creditProfile, isLoading, handleSetCreditData } = useContextData();

@@ -50,6 +50,7 @@ import {
 import { fetchChatResponse, fetchRawResponseOfUser } from "@/api/api";
 import axios from "axios";
 import DashboardLoader from "./CreditHealthLoader";
+import { useContextData } from "@/context/AuthContext";
 
 // --- Global API Helper ---
 const callGeminiAPI = async (contextData, prompt) => {
@@ -1481,14 +1482,15 @@ const PortfolioGate = () => {
 
 // --- Main App Component ---
 export default function GeminiCreditHealthReport() {
-  const [jsonData, setJsonData] = useState(null);
+  const { rawResponse } = useContextData()
+  const [jsonData, setJsonData] = useState(rawResponse || null);
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard"); // Default to Dashboard
   const [accountFilter, setAccountFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [bankSearch, setBankSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleParse = () => {
     try {
@@ -1771,21 +1773,20 @@ export default function GeminiCreditHealthReport() {
     });
   }, [reportData, accountFilter, typeFilter, bankSearch]);
 
-  const fetchDashboardData = async () => {
-    // const resp = await fetchRawResponseOfUser();
-    // setJsonData(resp?.data?.data?.rawData);
-    // console.log("resp", resp);
-    try {
-      setLoading(true);
-      const resp = await fetchRawResponseOfUser();
-      setJsonData(resp?.data?.data?.rawData);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
-  }, []);
+  // const fetchDashboardData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const resp = await fetchRawResponseOfUser();
+  //     setJsonData(resp?.data?.data?.rawData);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
+  // }, []);
+
   console.log("Report Data:", jsonData);
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   if (loading) return <DashboardLoader />;
