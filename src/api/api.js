@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API_URL = "https://node-happirate-server.vercel.app/api/customer"
-const API_URL = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
+const API_URL = "https://node-happirate-server.vercel.app/api/customer"
+// const API_URL = "https://m3pmjfgx-3000.inc1.devtunnels.ms/api/customer";
 
 const apiClient = axios.create({
   baseURL: API_URL,
