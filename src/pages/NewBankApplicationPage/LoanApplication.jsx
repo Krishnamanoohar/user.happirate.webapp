@@ -245,6 +245,7 @@ const LoanApplication = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [consentError, setConsentError] = useState(false);
+  const [employmentErrors, setEmploymentErrors] = useState([]);
 
   // Determine which upload zones are still needed
   const hasITR = selectedDocIds.some((id) =>
@@ -376,7 +377,44 @@ const LoanApplication = () => {
       ? null
       : "Invalid GST format (e.g. 22ABCDE1234F1Z5)";
   };
+  const validateEmploymentHistory = () => {
+  const employmentErrors = [];
+  let isValid = true;
 
+  employmentData.forEach((record, index) => {
+    const recordErrors = {};
+
+    if (!record.name?.trim()) {
+      recordErrors.name = "Employee name is required";
+      isValid = false;
+    }
+
+    if (!record.guardian_name?.trim()) {
+      recordErrors.guardian_name = "Guardian name is required";
+      isValid = false;
+    }
+
+    if (!record.establishment_name?.trim()) {
+      recordErrors.establishment_name = "Establishment name is required";
+      isValid = false;
+    }
+
+    if (!record.uan || !/^\d{12}$/.test(record.uan)) {
+      recordErrors.uan = "UAN must be 12 digits";
+      isValid = false;
+    }
+
+    if (!record.date_of_joining) {
+      recordErrors.date_of_joining = "Date of joining is required";
+      isValid = false;
+    }
+
+    employmentErrors[index] = recordErrors;
+  });
+
+  setEmploymentErrors(employmentErrors);
+  return isValid;
+};
   const validateStep = () => {
     const newErrors = {};
 
@@ -577,6 +615,13 @@ const LoanApplication = () => {
 
     // STEP 2 → Employment & Credit API
     if (currentStep === 1) {
+        const isEmploymentValid = validateEmploymentHistory();
+
+  if (!isEmploymentValid) {
+    toast.error("Please fill all required employment details");
+    setIsLoading(false);
+    return;
+  }
       const payload = buildEmploymentDetailsPayload(formData);
 
       try {
@@ -1394,6 +1439,7 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                 <EmploymentHistorySection
                   employmentData={employmentData}
                   setEmploymentData={setEmploymentData}
+                  errors={employmentErrors}
                 />
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
