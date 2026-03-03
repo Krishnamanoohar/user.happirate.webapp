@@ -85,12 +85,12 @@ const CompareLoanPage = () => {
     setStage("compare");
   };
 
-  const handleFetchEligibleLoans = async (amount: number, tenure: number) => {
+  const handleFetchEligibleLoans = async (amount: number, tenure: number, type: string, applicationID: string) => {
     try {
-      console.log("Fetching eligible loans for amount:", amount, "and tenure:", tenure);
+      console.log("Fetching eligible loans for amount:", amount, "tenure:", tenure, "and ApplicaionID:", applicationID);
       setLoading(true);
 
-      const resp = await fetchEligibleLoanProducts(amount, tenure);
+      const resp = await fetchEligibleLoanProducts(amount, tenure, type, applicationID);
 
       const banks = resp.data.banks.map((bank: any) => ({
         id: bank.bankId,
@@ -153,17 +153,18 @@ const CompareLoanPage = () => {
     const savedLoanData = JSON.parse(
       sessionStorage.getItem("loanData") || "{}",
     );
+    const applicationID = sessionStorage.getItem("applicationId") || ""
     setFormattedAmount(formatIndianNumber(savedLoanData.loanAmount || ""));
     console.log("Loaded loan data from localStorage:", savedLoanData);
 
     const amount = Number(savedLoanData.loanAmount) || 0;
     const tenure = Number(savedLoanData.loanTenure) || 0;
-
+    const type = String(savedLoanData.loanType) || ""
     setLoanAmount(amount);
     setLoanTenure(tenure);
 
     if (amount && tenure) {
-      handleFetchEligibleLoans(amount, tenure);
+      handleFetchEligibleLoans(amount, tenure, type, applicationID);
     }
   }, []);
 

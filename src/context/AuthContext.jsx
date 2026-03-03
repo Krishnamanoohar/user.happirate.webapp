@@ -42,7 +42,7 @@ export const ContextProvider = ({ children }) => {
           fetchRawResponseOfUser()
         ]);
 
-        setCreditProfile(creditResp?.data?.data || null);
+        setCreditProfile(creditResp?.data || null);
         setRawResponse(rawResp?.data?.data?.rawData || null);
       } catch (err) {
         console.error("A storm hit while fetching data:", err);

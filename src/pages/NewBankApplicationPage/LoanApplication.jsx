@@ -26,9 +26,10 @@ import FormSelect from "../../components/FormSelect";
 import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
 import { useLocation } from "react-router-dom";
+import { useContextData } from "@/context/AuthContext";
 // import { useNavigate } from "react-router-dom";
 import {
-  fetchCreditReport,
+  // fetchCreditReport,
   // sendOtpToMobile,
   //verifyOtpApi,
   personalDetailsVerification,
@@ -216,6 +217,7 @@ const buildFileUpload = (data) => ({
 });
 
 const LoanApplication = () => {
+    const { creditProfile } = useContextData()
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
 
@@ -579,7 +581,6 @@ const LoanApplication = () => {
         return;
       }
       const payload = buildPersonalDetailsPayload(formData);
-      console.log("Personal Details Payload:", payload);
 
       try {
         const response = await updateCreditReport(payload);
@@ -673,7 +674,7 @@ const LoanApplication = () => {
         termsAndPrivacyPolicy: privacyAccepted,
       },
     };
-
+    console.log("payload Data", payload);
     try {
       const resp = await updateConsents(payload);
       console.log(resp, "update consents response");
@@ -834,94 +835,94 @@ const LoanApplication = () => {
     </div>
   );
 
-  const autoFillUserDetails = async () => {
-    try {
-      setPageLoading(true);
-      const mobile = sessionStorage.getItem("mobile_number");
-      const userId = sessionStorage.getItem("userId");
-      console.log(mobile, "mobile");
+  // const autoFillUserDetails = async () => {
+  //   try {
+  //     setPageLoading(true);
+  //     const mobile = sessionStorage.getItem("mobile_number");
+  //     const userId = sessionStorage.getItem("userId");
+  //     console.log(mobile, "mobile");
 
-      if (!mobile) {
-        navigate("/sign-in", { replace: true });
-        return;
-      }
-      const resp = await fetchCreditReport({
-        mobileNumber: mobile,
-        userId: userId,
-      });
-      console.log("credit report response", resp);
-      const apiData = resp?.data?.data;
-      setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-      setApplicationId(resp?.applicationId || null);
-      console.log(
-        "application id from credit report",
-        resp?.data?.applicationId,
-      );
+  //     if (!mobile) {
+  //       navigate("/sign-in", { replace: true });
+  //       return;
+  //     }
+  //     const resp = await fetchCreditReport({
+  //       mobileNumber: mobile,
+  //       userId: userId,
+  //     });
+  //     console.log("credit report response", resp);
+  //     const apiData = resp?.data?.data;
+  //     setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+  //     setApplicationId(resp?.applicationId || null);
+  //     console.log(
+  //       "application id from credit report",
+  //       resp?.data?.applicationId,
+  //     );
 
-      if (!apiData) {
-        console.error("Credit report API returned empty response", resp);
-        return;
-      }
+  //     if (!apiData) {
+  //       console.error("Credit report API returned empty response", resp);
+  //       return;
+  //     }
 
-      const apiEmails = Array.isArray(apiData.emails)
-        ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
-        : [];
+  //     const apiEmails = Array.isArray(apiData.emails)
+  //       ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
+  //       : [];
 
-      // Create Set to remove duplicates and convert back to array
-      const uniqueEmails = [...new Set(apiEmails)];
-      setEmailOptions(uniqueEmails);
+  //     // Create Set to remove duplicates and convert back to array
+  //     const uniqueEmails = [...new Set(apiEmails)];
+  //     setEmailOptions(uniqueEmails);
 
-      setFormData((prev) => ({
-        ...prev,
-        email: apiEmails[0] || "",
-      }));
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       email: apiEmails[0] || "",
+  //     }));
 
-      setFormData((prev) => ({
-        ...prev,
-        email: apiEmails[0] || "",
-      }));
-      const apiPhones = Array.isArray(apiData.phoneNumbers)
-        ? apiData.phoneNumbers
-          .map((p) => p.Number)
-          .filter((num) => /^\d{10}$/.test(num)) // keep valid 10-digit numbers
-        : [];
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       email: apiEmails[0] || "",
+  //     }));
+  //     const apiPhones = Array.isArray(apiData.phoneNumbers)
+  //       ? apiData.phoneNumbers
+  //         .map((p) => p.Number)
+  //         .filter((num) => /^\d{10}$/.test(num)) // keep valid 10-digit numbers
+  //       : [];
 
-      // Remove duplicates
-      const uniquePhones = [...new Set(apiPhones)];
+  //     // Remove duplicates
+  //     const uniquePhones = [...new Set(apiPhones)];
 
-      setPhoneOptions(uniquePhones);
+  //     setPhoneOptions(uniquePhones);
 
-      // Set default selected number
-      setFormData((prev) => ({
-        ...prev,
-        mobileNumber: uniquePhones[0] || "",
-      }));
+  //     // Set default selected number
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       mobileNumber: uniquePhones[0] || "",
+  //     }));
 
-      console.log(
-        "mapApiResponseToFormData",
-        mapApiResponseToFormData(resp.data.data, mobile),
-      );
+  //     console.log(
+  //       "mapApiResponseToFormData",
+  //       mapApiResponseToFormData(resp.data.data, mobile),
+  //     );
 
-      sessionStorage.setItem(
-        "username",
-        `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`,
-      );
+  //     sessionStorage.setItem(
+  //       "username",
+  //       `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`,
+  //     );
 
-      // setFormData(mapApiResponseToFormData(resp.data.data, mobile));
-      setFormData((prev) => ({
-        ...mapApiResponseToFormData(resp.data.data, mobile),
+  //     // setFormData(mapApiResponseToFormData(resp.data.data, mobile));
+  //     setFormData((prev) => ({
+  //       ...mapApiResponseToFormData(resp.data.data, mobile),
 
-        // 🔥 Preserve Loan Fields If Already Filled
-        loanType: prev.loanType,
-        loanAmount: prev.loanAmount,
-        loanTenure: prev.loanTenure,
-      }));
-    } catch (error) {
-      console.log("error in auto filling user details", error);
-    } finally {
-      setPageLoading(false);
-    }
-  };
+  //       // 🔥 Preserve Loan Fields If Already Filled
+  //       loanType: prev.loanType,
+  //       loanAmount: prev.loanAmount,
+  //       loanTenure: prev.loanTenure,
+  //     }));
+  //   } catch (error) {
+  //     console.log("error in auto filling user details", error);
+  //   } finally {
+  //     setPageLoading(false);
+  //   }
+  // };
 
   const loanTenureOptions = Array.from({ length: 115 }, (_, i) => {
     const months = i + 6; // start from 6
@@ -1064,9 +1065,60 @@ const LoanApplication = () => {
   //   }
   // };
 
-  useEffect(() => {
-    autoFillUserDetails();
-  }, []);
+  // useEffect(() => {
+  //   autoFillUserDetails();
+  // }, []);
+useEffect(() => {
+  if (!creditProfile) return;
+
+  const mobile = sessionStorage.getItem("mobile_number");
+
+  const appId = creditProfile?.applicationId || null;
+  setApplicationId(appId);
+
+  if (appId) {
+    sessionStorage.setItem("applicationId", appId);
+  }
+
+  const apiData = creditProfile?.data || creditProfile;
+
+  if (!apiData) return;
+
+  setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+
+  // Application ID
+
+  // Emails
+  const apiEmails = Array.isArray(apiData.emails)
+    ? apiData.emails.map((e) => e.email).filter(Boolean)
+    : [];
+
+  const uniqueEmails = [...new Set(apiEmails)];
+  setEmailOptions(uniqueEmails);
+
+  // Phones
+  const apiPhones = Array.isArray(apiData.phoneNumbers)
+    ? apiData.phoneNumbers
+        .map((p) => p.Number)
+        .filter((num) => /^\d{10}$/.test(num))
+    : [];
+
+  const uniquePhones = [...new Set(apiPhones)];
+  setPhoneOptions(uniquePhones);
+
+  // Set form data
+  setFormData((prev) => ({
+    ...mapApiResponseToFormData(apiData, mobile),
+
+    // Preserve Loan Fields
+    loanType: prev.loanType,
+    loanAmount: prev.loanAmount,
+    loanTenure: prev.loanTenure,
+  }));
+
+  setPageLoading(false);
+
+}, [creditProfile]);
 
   useEffect(() => {
     if (location.state) {
@@ -1079,7 +1131,7 @@ const LoanApplication = () => {
       }));
     }
   }, [location.state]);
-
+  console.log("loan application data", creditProfile)
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">

@@ -81,6 +81,8 @@ const fetchUserFinDocuments = async (userId) => {
 const fetchEligibleLoanProducts = async (
   requestedLoanAmount,
   requestedLoanTenure,
+  loanType,
+  applicationId
 ) => {
   const mobile = sessionStorage.getItem("mobile_number");
 
@@ -88,6 +90,8 @@ const fetchEligibleLoanProducts = async (
     mobileNumber: mobile,
     requestedLoanAmount,
     requestedLoanTenure,
+    loanType,
+    applicationId
   });
 
   return resp;
