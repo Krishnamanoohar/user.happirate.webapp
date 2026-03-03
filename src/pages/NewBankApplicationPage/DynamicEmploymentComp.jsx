@@ -73,14 +73,14 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
         </div>
 
         {/* {totalRecords > 1 && ( */}
-          <button
-            type="button"
-            onClick={() => onRemove(index)}
-            className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors flex items-center gap-1 text-sm"
-          >
-            <Trash2 size={16} />
-            <span className="hidden sm:inline">Remove</span>
-          </button>
+        <button
+          type="button"
+          onClick={() => onRemove(index)}
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors flex items-center gap-1 text-sm"
+        >
+          <Trash2 size={16} />
+          <span className="hidden sm:inline">Remove</span>
+        </button>
         {/* )} */}
       </div>
 
@@ -151,7 +151,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
             <IconInput
               label="Date of Joining"
               icon={Calendar}
-              value={data.date_of_joining }
+              value={data.date_of_joining}
               onChange={(e) => handleChange("date_of_joining", e.target.value)}
               placeholder="DD/MM/YYYY"
             />
@@ -188,7 +188,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
 };
 
 // --- MAIN EXPORTABLE COMPONENT TO DROP INTO YOUR FORM ---
-export const  EmploymentHistorySection = ({
+export const EmploymentHistorySection = ({
   employmentData,
   setEmploymentData,
 }) => {
@@ -241,16 +241,29 @@ export const  EmploymentHistorySection = ({
             <IconInput
               label="Employee Name"
               icon={User}
-              value={employmentData[0]?.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="e.g. John Doe"
+              value={employmentData[0]?.name || ""}
+              onChange={(e) =>
+                setEmploymentData((prev) => {
+                  const updated = [...prev];
+                  if (!updated[0]) updated[0] = {};
+                  updated[0] = { ...updated[0], name: e.target.value };
+                  return updated;
+                })
+              }
+              placeholder={"e.g. John Doe"}
             />
             <IconInput
               label="Guardian Name"
               icon={Users}
-              value={employmentData[0]?.guardian_name}
-              onChange={(e) => handleChange("guardian_name", e.target.value)}
-              placeholder="e.g. Richard Doe"
+              value={employmentData[0]?.guardian_name || ""}
+              onChange={(e) =>
+                setEmploymentData((prev) => {
+                  const updated = [...prev];
+                  updated[0] = { ...updated[0], guardian_name: e.target.value };
+                  return updated;
+                })
+              }
+              placeholder={"e.g. Richard Doe"}
             />
           </div>
         </div>
