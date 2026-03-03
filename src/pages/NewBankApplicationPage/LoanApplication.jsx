@@ -894,13 +894,29 @@ const LoanApplication = () => {
   //   }
   // };
 
-  const loanTenureOptions = Array.from({ length: 115 }, (_, i) => {
-    const months = i + 6; // start from 6
-    return {
-      value: String(months),
-      label: `${months} Months`,
-    };
-  });
+const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
+  const months = 6 + i * 6; // 6-month increments
+
+  let label;
+
+  if (months < 12) {
+    label = `${months} Months`;
+  } else {
+    const years = months / 12;
+
+    // If whole number year (12, 24, 36...)
+    if (Number.isInteger(years)) {
+      label = `${years} Year${years > 1 ? "s" : ""}`;
+    } else {
+      label = `${years} Years`; // 1.5, 2.5 etc
+    }
+  }
+
+  return {
+    value: String(months), // backend still gets months
+    label,
+  };
+});
 
   // const handleDocumentUpload = async () => {
   //   const userId = sessionStorage.getItem("userId");
