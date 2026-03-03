@@ -46,7 +46,7 @@ const updateLoanRequirements = async (payload) => {
   const resp = await apiClient.post("/save-loan-requirements", payload);
   console.log("Response for updating loan requirements", resp);
   return resp;
-}
+};
 
 const uploadFinancialDocuments = async (formData) => {
   const resp = await apiClient.post("/docs/upload-batch", formData, {
@@ -62,7 +62,7 @@ const updateConsents = async (payload) => {
   const resp = await apiClient.post("/submit-consents", payload);
   console.log("Response for updating consents", resp);
   return resp;
-}
+};
 
 const fetchUserFinDocuments = async (userId) => {
   const resp = await apiClient.get(`/docs/${userId}`);
@@ -82,16 +82,18 @@ const fetchEligibleLoanProducts = async (
   requestedLoanAmount,
   requestedLoanTenure,
   loanType,
-  applicationId
+  applicationId,
 ) => {
   const mobile = sessionStorage.getItem("mobile_number");
+  const userId = sessionStorage.getItem("userId");
 
   const resp = await apiClient.post("/provisional-credit-assesment", {
     mobileNumber: mobile,
     requestedLoanAmount,
     requestedLoanTenure,
     loanType,
-    applicationId
+    applicationId,
+    userId,
   });
 
   return resp;
@@ -142,6 +144,18 @@ const fetchTaxDocuments = async (payload) => {
   console.log("Tax document response", resp);
   return resp;
 };
+const fetchMyApplications = async () => {
+  const userId = sessionStorage.getItem("userId");
+
+  if (!userId) {
+    throw new Error("UserId not found in sessionStorage");
+  }
+
+  const resp = await apiClient.get(`/loan-applications/${userId}`);
+
+  console.log("Response for fetching applications", resp);
+  return resp;
+};
 
 export {
   checkLoanEligibility,
@@ -158,5 +172,6 @@ export {
   fetchChatResponse,
   fetchTaxDocuments,
   uploadFinancialDocuments,
-  fetchUserFinDocuments
+  fetchUserFinDocuments,
+  fetchMyApplications,
 };

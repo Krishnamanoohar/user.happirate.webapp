@@ -217,28 +217,10 @@ const buildFileUpload = (data) => ({
 });
 
 const LoanApplication = () => {
-    const { creditProfile } = useContextData()
+  const { creditProfile } = useContextData();
+  const navigate = useNavigate();
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
-
-  useEffect(() => {
-    const savedLoanData = localStorage.getItem("loanData");
-
-    if (savedLoanData) {
-      const parsed = JSON.parse(savedLoanData);
-
-      setFormData((prev) => ({
-        ...prev,
-        loanType: parsed.loanType ?? prev.loanType,
-        loanAmount: parsed.loanAmount ?? prev.loanAmount,
-        loanTenure: parsed.loanTenure ?? prev.loanTenure,
-      }));
-    }
-
-    if (location.state?.goToStep !== undefined) {
-      setCurrentStep(location.state.goToStep);
-    }
-  }, []);
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -248,29 +230,35 @@ const LoanApplication = () => {
   const [filteredStates, setFilteredStates] = useState([]);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [phoneOptions, setPhoneOptions] = useState([]);
-
-  const navigate = useNavigate();
   const [applicationId, setApplicationId] = useState(null);
   const [selectedDocIds, setSelectedDocIds] = useState([]);
   const [documentErrors, setDocumentErrors] = useState({});
+  // Uploaded documents state
+  const [documents, setDocuments] = useState({
+    itr: null,
+    photo: null,
+    payslip1: null,
+    payslip2: null,
+    payslip3: null,
+  });
+
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [consentError, setConsentError] = useState(false);
 
   // Determine which upload zones are still needed
   const hasITR = selectedDocIds.some((id) =>
-    existingDocuments.find(
-      (d) => d.id === id && d.category === "ITR/Form 16"
-    )
+    existingDocuments.find((d) => d.id === id && d.category === "ITR/Form 16"),
   );
 
   const hasPhoto = selectedDocIds.some((id) =>
     existingDocuments.find(
-      (d) => d.id === id && d.category === "Applicant Photo"
-    )
+      (d) => d.id === id && d.category === "Applicant Photo",
+    ),
   );
 
   const selectedPayslips = selectedDocIds.filter((id) =>
-    existingDocuments.find(
-      (d) => d.id === id && d.category === "Payslip"
-    )
+    existingDocuments.find((d) => d.id === id && d.category === "Payslip"),
   );
 
   const payslipsNeeded = Math.max(0, 3 - selectedPayslips.length);
@@ -482,18 +470,6 @@ const LoanApplication = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Uploaded documents state
-  const [documents, setDocuments] = useState({
-    itr: null,
-    photo: null,
-    payslip1: null,
-    payslip2: null,
-    payslip3: null,
-  });
-
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [consentError, setConsentError] = useState(false);
   const handleStateChange = (value) => {
     updateFormData("state", value);
 
@@ -504,7 +480,7 @@ const LoanApplication = () => {
     }
 
     const filtered = indianStates.filter((state) =>
-      state.toLowerCase().includes(value.toLowerCase())
+      state.toLowerCase().includes(value.toLowerCase()),
     );
 
     setFilteredStates(filtered);
@@ -627,19 +603,17 @@ const LoanApplication = () => {
         setIsLoading(false);
         return;
       }
-      // try {
-      //   console.log(documents);
-      //   const response = await handleDocumentUpload();
-      //   const resp = await handleUpdateLoanRequirements();
-      //   console.log(resp, "update loan requirements response");
-      //   console.log(response, "response");
-      // } catch (error) {
-      //   console.log(error, "error");
-      // } finally {
-      //   setIsLoading(false);
-      // }
-      // return;
-        // 🚧 Backend not implemented yet
+      try {
+        console.log(documents);
+        const response = await handleDocumentUpload();
+        const resp = await handleUpdateLoanRequirements();
+        console.log(resp, "update loan requirements response");
+        console.log(response, "response");
+      } catch (error) {
+        console.log(error, "error");
+      } finally {
+        setIsLoading(false);
+      }
       console.log("Documents (frontend only):", documents);
       toast.success("Documents validated successfully (mock mode)");
 
@@ -647,10 +621,6 @@ const LoanApplication = () => {
       setCurrentStep(3);
       setIsLoading(false);
       return;
-    }
-
-    // Proceed to fetch eligible loans
-    if (currentStep === 3) {
     }
   };
 
@@ -1012,113 +982,113 @@ const LoanApplication = () => {
   //   }
   // };
 
-  // const handleUpdateLoanRequirements = async () => {
-  //   try {
-  //     const resp = await updateLoanRequirements({
-  //       userId: sessionStorage.getItem("userId"),
-  //       loanType: formData.loanType,
-  //       applicationId,
-  //       requestedAmount: formData.loanAmount,
-  //       preferredTenure: formData.loanTenure,
-  //     });
-  //     console.log(resp, "update loan requirements response");
-  //   } catch (error) {
-  //     console.log(error, "error in updating loan requirements");
-  //   }
-  // };
+  const handleUpdateLoanRequirements = async () => {
+    try {
+      const resp = await updateLoanRequirements({
+        userId: sessionStorage.getItem("userId"),
+        loanType: formData.loanType,
+        applicationId,
+        requestedAmount: formData.loanAmount,
+        preferredTenure: formData.loanTenure,
+      });
+      console.log(resp, "update loan requirements response");
+    } catch (error) {
+      console.log(error, "error in updating loan requirements");
+    }
+  };
 
-  // const handleDocumentUpload = async () => {
-  //   const userId = sessionStorage.getItem("userId");
+  const handleDocumentUpload = async () => {
+    const userId = sessionStorage.getItem("userId");
 
-  //   if (!userId) {
-  //     toast.error("User ID is missing. Please log in again.");
-  //     return;
-  //   }
+    if (!userId) {
+      toast.error("User ID is missing. Please log in again.");
+      return;
+    }
 
-  //   // 1. Create and pack the FormData
-  //   const formData = new FormData();
-  //   formData.append("userId", userId);
+    // 1. Create and pack the FormData
+    const formData = new FormData();
+    formData.append("userId", userId);
 
-  //   // Loop and append all payslips under the 'payslips' key
-  //   // Ensure 'documents' state actually contains File objects from the input!
-  //   if (documents.payslip1) formData.append("payslips", documents.payslip1);
-  //   if (documents.payslip2) formData.append("payslips", documents.payslip2);
-  //   if (documents.payslip3) formData.append("payslips", documents.payslip3);
-  //   if (documents.itr) formData.append("itrs", documents.itr);
-  //   if (documents.photo) formData.append("others", documents.photo);
+    // Loop and append all payslips under the 'payslips' key
+    // Ensure 'documents' state actually contains File objects from the input!
+    if (documents.payslip1) formData.append("payslips", documents.payslip1);
+    if (documents.payslip2) formData.append("payslips", documents.payslip2);
+    if (documents.payslip3) formData.append("payslips", documents.payslip3);
+    if (documents.itr) formData.append("itrs", documents.itr);
+    if (documents.photo) formData.append("others", documents.photo);
 
-  //   try {
-  //     const response = await uploadFinancialDocuments(formData);
+    try {
+      const response = await uploadFinancialDocuments(formData);
 
-  //     if (response.status === 201 || response.status === 200) {
-  //       // setCurrentStep(3); // Move to the next step in your UI
-  //       setCurrentStep(3);
-  //       toast.success("Documents uploaded successfully!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Upload failed:", error);
-  //     toast.error(
-  //       error.response?.data?.error ||
-  //         error.response?.data?.message ||
-  //         "Document upload failed. Is your backend running?",
-  //     );
-  //   }
-  // };
+      if (response.status === 201 || response.status === 200) {
+        // setCurrentStep(3); // Move to the next step in your UI
+        setCurrentStep(3);
+        toast.success("Documents uploaded successfully!");
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error(
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Document upload failed. Is your backend running?",
+      );
+    }
+  };
 
   // useEffect(() => {
   //   autoFillUserDetails();
   // }, []);
-useEffect(() => {
-  if (!creditProfile) return;
 
-  const mobile = sessionStorage.getItem("mobile_number");
+  useEffect(() => {
+    if (!creditProfile) return;
 
-  const appId = creditProfile?.applicationId || null;
-  setApplicationId(appId);
+    const mobile = sessionStorage.getItem("mobile_number");
 
-  if (appId) {
-    sessionStorage.setItem("applicationId", appId);
-  }
+    const appId = creditProfile?.applicationId || null;
+    setApplicationId(appId);
 
-  const apiData = creditProfile?.data || creditProfile;
+    if (appId) {
+      sessionStorage.setItem("applicationId", appId);
+    }
 
-  if (!apiData) return;
+    const apiData = creditProfile?.data || creditProfile;
 
-  setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+    if (!apiData) return;
 
-  // Application ID
+    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
 
-  // Emails
-  const apiEmails = Array.isArray(apiData.emails)
-    ? apiData.emails.map((e) => e.email).filter(Boolean)
-    : [];
+    // Application ID
 
-  const uniqueEmails = [...new Set(apiEmails)];
-  setEmailOptions(uniqueEmails);
+    // Emails
+    const apiEmails = Array.isArray(apiData.emails)
+      ? apiData.emails.map((e) => e.email).filter(Boolean)
+      : [];
 
-  // Phones
-  const apiPhones = Array.isArray(apiData.phoneNumbers)
-    ? apiData.phoneNumbers
+    const uniqueEmails = [...new Set(apiEmails)];
+    setEmailOptions(uniqueEmails);
+
+    // Phones
+    const apiPhones = Array.isArray(apiData.phoneNumbers)
+      ? apiData.phoneNumbers
         .map((p) => p.Number)
         .filter((num) => /^\d{10}$/.test(num))
-    : [];
+      : [];
 
-  const uniquePhones = [...new Set(apiPhones)];
-  setPhoneOptions(uniquePhones);
+    const uniquePhones = [...new Set(apiPhones)];
+    setPhoneOptions(uniquePhones);
 
-  // Set form data
-  setFormData((prev) => ({
-    ...mapApiResponseToFormData(apiData, mobile),
+    // Set form data
+    setFormData((prev) => ({
+      ...mapApiResponseToFormData(apiData, mobile),
 
-    // Preserve Loan Fields
-    loanType: prev.loanType,
-    loanAmount: prev.loanAmount,
-    loanTenure: prev.loanTenure,
-  }));
+      // Preserve Loan Fields
+      loanType: prev.loanType,
+      loanAmount: prev.loanAmount,
+      loanTenure: prev.loanTenure,
+    }));
 
-  setPageLoading(false);
-
-}, [creditProfile]);
+    setPageLoading(false);
+  }, [creditProfile]);
 
   useEffect(() => {
     if (location.state) {
@@ -1131,7 +1101,26 @@ useEffect(() => {
       }));
     }
   }, [location.state]);
-  console.log("loan application data", creditProfile)
+
+  useEffect(() => {
+    const savedLoanData = localStorage.getItem("loanData");
+
+    if (savedLoanData) {
+      const parsed = JSON.parse(savedLoanData);
+
+      setFormData((prev) => ({
+        ...prev,
+        loanType: parsed.loanType ?? prev.loanType,
+        loanAmount: parsed.loanAmount ?? prev.loanAmount,
+        loanTenure: parsed.loanTenure ?? prev.loanTenure,
+      }));
+    }
+
+    if (location.state?.goToStep !== undefined) {
+      setCurrentStep(location.state.goToStep);
+    }
+  }, []);
+
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -1717,20 +1706,22 @@ useEffect(() => {
                     />
                   </div>
                 </div>
-                <div className="mt-10">
+                {/* <div className="mt-10">
                   <ExistingDocumentsSelector
                     documents={existingDocuments}
                     onSelectionChange={setSelectedDocIds}
                   />
-                </div>
+                </div> */}
 
                 {/* Documents Section */}
-                {/* <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                <div className="space-y-6 mt-8 pt-6 border-t border-border">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Required Documents
                   </h3>
-                  <div className="flex gap-8 w-full md:w-auto">
+
+                  {/* Income Tax Autofetch */}
+                  {/* <div className="flex gap-8 w-full md:w-auto">
                     <input
                       type="text"
                       placeholder="Enter Your Income Tax Efiling Password"
@@ -1746,10 +1737,11 @@ useEffect(() => {
                     >
                       {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
                     </Button>
-                  </div>
+                  </div> */}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FileUploadZone
-                      label="Last 3 Years ITR/Form 16"
+                      label="Last 3 Years ITR/Form 166"
                       required
                       accept=".pdf,.jpg,.png"
                       onFileSelect={(file) =>
@@ -1765,6 +1757,7 @@ useEffect(() => {
                       }
                     />
                   </div>
+
                   {!isSelfEmployed && (
                     <div className="mt-6">
                       <h4 className="text-sm font-medium text-foreground mb-4">
@@ -1778,7 +1771,10 @@ useEffect(() => {
                           accept=".pdf,.jpg,.png"
                           compact
                           onFileSelect={(file) =>
-                            setDocuments((prev) => ({ ...prev, payslip1: file }))
+                            setDocuments((prev) => ({
+                              ...prev,
+                              payslip1: file,
+                            }))
                           }
                         />
                         <FileUploadZone
@@ -1787,7 +1783,10 @@ useEffect(() => {
                           accept=".pdf,.jpg,.png"
                           compact
                           onFileSelect={(file) =>
-                            setDocuments((prev) => ({ ...prev, payslip2: file }))
+                            setDocuments((prev) => ({
+                              ...prev,
+                              payslip2: file,
+                            }))
                           }
                         />
                         <FileUploadZone
@@ -1796,14 +1795,18 @@ useEffect(() => {
                           accept=".pdf,.jpg,.png"
                           compact
                           onFileSelect={(file) =>
-                            setDocuments((prev) => ({ ...prev, payslip3: file }))
+                            setDocuments((prev) => ({
+                              ...prev,
+                              payslip3: file,
+                            }))
                           }
                         />
                       </div>
                     </div>
-                  </div>
-                </div> */}
-                <div>
+                  )}
+                </div>
+
+                {/* <div className="duplicate-fileupload">
                   <div className="space-y-4 mt-9">
                     <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                       <span className="w-1 h-4 bg-primary rounded-full" />
@@ -1812,23 +1815,12 @@ useEffect(() => {
 
                     {selectedDocIds.length > 0 && (
                       <p className="text-sm text-muted-foreground">
-                        Some documents are already covered by your selections above. Upload any remaining required documents below.
+                        Some documents are already covered by your selections above.
+                        Upload any remaining required documents below.
                       </p>
                     )}
 
-                    {/* ITR Fetch */}
-                    <div className="flex items-end gap-3">
-                      <div className="flex-1 max-w-xs space-y-1.5">
-                        <Input placeholder="Enter Your Income Tax Efiling Password" />
-                      </div>
-                      <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                        Fetch ITR Documents
-                      </Button>
-                    </div>
-
-                    {/* Upload zones */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                       {!hasITR && (
                         <div>
                           <FileUploadZone
@@ -1864,23 +1856,23 @@ useEffect(() => {
                           )}
                         </div>
                       )}
-
                     </div>
 
                     {payslipsNeeded > 0 && (
                       <div className="space-y-2">
                         <p className="text-sm font-medium text-foreground">
-                          Last 3 Months Payslips <span className="text-destructive">*</span>
+                          Last 3 Months Payslips{" "}
+                          <span className="text-destructive">*</span>
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          {/* {Array.from({ length: payslipsNeeded }).map((_, i) => (
+                          {Array.from({ length: payslipsNeeded }).map((_, i) => (
                             <FileUploadZone
                               key={i}
                               label={`Month ${selectedPayslips.length + i + 1}`}
                               required
                               error={!!documentErrors.payslips}
                             />
-                          ))} */}
+                          ))}
                           {Array.from({ length: payslipsNeeded }).map((_, i) => {
                             const index = selectedPayslips.length + i + 1;
 
@@ -1911,16 +1903,16 @@ useEffect(() => {
                     {hasITR && hasPhoto && payslipsNeeded === 0 && (
                       <div className="p-4 rounded-lg bg-violet-100 text-center">
                         <p className="text-sm font-medium text-violet-500">
-                          ✓ All required documents are covered by your previous uploads!
+                          ✓ All required documents are covered by your previous
+                          uploads!
                         </p>
                       </div>
                     )}
                   </div>
-                </div>
+                </div> */}
               </FormCard>
             )}
 
-            {/* Step 4: Review & Submit - Enhanced */}
             {currentStep === 3 && (
               <div className="space-y-6">
                 {/* Header Summary Card */}
@@ -2078,7 +2070,7 @@ useEffect(() => {
 
                 {/* Loan Details */}
                 <SummarySection title="Loan Requirements" icon={IndianRupee}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
                     <SummaryRow
                       label="Loan Type"
                       value={
@@ -2249,7 +2241,7 @@ useEffect(() => {
             )}
           </div>
         </div>
-      </div >
+      </div>
     </>
   );
 };

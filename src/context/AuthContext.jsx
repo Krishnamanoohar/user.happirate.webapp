@@ -1,11 +1,12 @@
 import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from "react";
-import { fetchCreditReport, fetchRawResponseOfUser } from "@/api/api";
+import { fetchCreditReport, fetchRawResponseOfUser, fetchMyApplications } from "@/api/api";
 
 const AuthContext = createContext(null);
 
 export const ContextProvider = ({ children }) => {
   const [creditProfile, setCreditProfile] = useState(null);
   const [rawResponse, setRawResponse] = useState(null);
+  const [applications, setApplications] = useState([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(sessionStorage.getItem("userId") ? true : false);
 
   // These are now actively used during data fetching!
@@ -37,13 +38,15 @@ export const ContextProvider = ({ children }) => {
         }
 
         // 3. Promise.all fetches both API calls AT THE SAME TIME. Much faster! ⚡
-        const [creditResp, rawResp] = await Promise.all([
+        const [creditResp, rawResp, fileResp] = await Promise.all([
           fetchCreditReport({ mobileNumber, userId }),
-          fetchRawResponseOfUser()
+          fetchRawResponseOfUser(),
+          fetchMyApplications()
         ]);
 
         setCreditProfile(creditResp?.data || null);
         setRawResponse(rawResp?.data?.data?.rawData || null);
+        setApplications(fileResp?.data?.data || null)
       } catch (err) {
         console.error("A storm hit while fetching data:", err);
         setError(err.message || "Failed to fetch user data.");
@@ -62,11 +65,13 @@ export const ContextProvider = ({ children }) => {
     setCreditProfile,
     rawResponse,
     setRawResponse,
+    applications,
+    setApplications,
     isUserLoggedIn,
     setIsUserLoggedIn,
     isLoading,
     error,
-  }), [creditProfile, rawResponse, isUserLoggedIn, isLoading, error]);
+  }), [creditProfile, rawResponse, applications, isUserLoggedIn, isLoading, error]);
 
   return (
     <AuthContext.Provider value={value}>

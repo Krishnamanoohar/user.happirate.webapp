@@ -12,7 +12,6 @@ import {
 import happirateLogo from "../../../assets/images/happirateLogo.png";
 import TextLogo from "../../../assets/images/image.png";
 import { useNavigate } from "react-router-dom";
-import { useContextData } from "@/context/AuthContext";
 interface NavbarProps {
   scrollY: number;
 }
@@ -27,7 +26,6 @@ const navLinks = [
 export default function Navbar({ scrollY }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { creditProfile } = useContextData();
   // const [user, setUser] = useState(null);
   const [user, setUser] = useState<{
     mobile: string;
@@ -54,9 +52,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
     setIsDropdownOpen(false);
     navigate("/my-applicaton");
   };
-  useEffect(() => {
-    console.log("Credit profile from context:", creditProfile);
-  }, [creditProfile]);
 
   useEffect(() => {
     const loadUser = () => {
@@ -94,7 +89,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
-
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${

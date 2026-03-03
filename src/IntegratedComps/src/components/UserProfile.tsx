@@ -158,7 +158,6 @@ const ProfilePage = () => {
     payslip3: null,
   });
   const userInfo = sessionStorage.getItem("userId");
-  console.log("creditProfile", creditProfile);
 
   const fetchUploadedDocuments = async () => {
     try {
@@ -299,7 +298,8 @@ const ProfilePage = () => {
     };
   };
 
-  const cibil = getCibilBadge(creditProfile?.cibilScore || "0");
+  const cibil = getCibilBadge(creditProfile?.data?.data?.cibilScore || "0");
+
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -338,6 +338,11 @@ const ProfilePage = () => {
       setIsFetchingDocs(false);
     }
   };
+
+  useEffect(() => {
+    console.log("Credit profile", creditProfile);
+  }, [creditProfile]);
+
   if (isLoading || !creditProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -356,7 +361,7 @@ const ProfilePage = () => {
       </div>
     );
   }
-  console.log("user profile credit", creditProfile);
+
   return (
     <div className="min-h-screen bg-background mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
@@ -395,16 +400,17 @@ const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-violet-200 from-primary/20 to-accent flex items-center justify-center shrink-0">
                   <span className="text-sm font-bold text-primary">
-                    {creditProfile?.firstName?.[0] || ""}
-                    {creditProfile?.lastName?.[0] || ""}
+                    {creditProfile?.data?.firstName?.[0] || ""}
+                    {creditProfile?.data?.lastName?.[0] || ""}
                   </span>
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-foreground truncate">
-                    {creditProfile?.firstName} {creditProfile?.lastName}
+                    {creditProfile?.data?.firstName}{" "}
+                    {creditProfile?.data?.lastName}
                   </p>
                   <p className="text-[11px] text-muted-foreground truncate">
-                    {creditProfile?.email}
+                    {creditProfile?.data?.email}
                   </p>
                 </div>
               </div>
@@ -471,7 +477,7 @@ const ProfilePage = () => {
 
                 <div className="flex items-center gap-2 mt-0.5 justify-end">
                   <span className="text-lg md:text-xl font-bold text-primary font-mono">
-                    {creditProfile?.cibilScore}
+                    {creditProfile?.data?.cibilScore}
                   </span>
 
                   <span
@@ -493,14 +499,14 @@ const ProfilePage = () => {
                   <DetailRow
                     label="Full Name"
                     value={
-                      `${creditProfile?.firstName} ${creditProfile?.middleName} ${creditProfile?.lastName}` ||
+                      `${creditProfile?.data?.firstName} ${creditProfile?.data?.middleName} ${creditProfile?.data?.lastName}` ||
                       "Not provided"
                     }
                   />
                   <DetailRow
                     label="Date of Birth"
                     value={
-                      creditProfile?.dateOfBirth
+                      creditProfile?.data?.dateOfBirth
                         ? new Date(
                             creditProfile.dateOfBirth,
                           ).toLocaleDateString()
@@ -509,40 +515,40 @@ const ProfilePage = () => {
                   />
                   <DetailRow
                     label="Gender"
-                    value={creditProfile?.Gender || "Not provided"}
+                    value={creditProfile?.data?.Gender || "Not provided"}
                   />
                   {/* <DetailRow
                     label="Father's Name"
-                    value={creditProfile?.fatherName}
+                    value={creditProfile?.data?.fatherName}
                   />
                   <DetailRow
                     label="Marital Status"
-                    value={creditProfile?.maritalStatus}
+                    value={creditProfile?.data?.maritalStatus}
                   />
                   <DetailRow
                     label="Nationality"
-                    value={creditProfile?.nationality}
+                    value={creditProfile?.data?.nationality}
                   /> */}
                 </ProfileSection>
                 <ProfileSection icon={Shield} title="Identity & Contact">
                   <DetailRow
                     label="PAN Card"
-                    value={creditProfile?.panCard}
+                    value={creditProfile?.data?.panCard}
                     highlight
                   />
                   {/* <DetailRow
                     label="Aadhaar"
-                    value={creditProfile?.aadhaarCard}
+                    value={creditProfile?.data?.aadhaarCard}
                     masked
                   /> */}
-                  {/* <DetailRow label="Email" value={creditProfile?.email} /> */}
+                  {/* <DetailRow label="Email" value={creditProfile?.data?.email} /> */}
                   <DetailRow
                     label="Mobile"
                     value={sessionStorage.getItem("mobile_number")}
                   />
                 </ProfileSection>
                 <ProfileSection icon={Mail} title="Emails">
-                  {creditProfile?.emails?.map((item, idx) => (
+                  {creditProfile?.data?.emails?.map((item, idx) => (
                     <DetailRow
                       key={idx}
                       label="Mail"
@@ -553,7 +559,7 @@ const ProfilePage = () => {
                 </ProfileSection>
                 <ProfileSection icon={MapPin} title="Address Details">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {creditProfile?.addresses?.map((address, idx) => (
+                    {creditProfile?.data?.addresses?.map((address, idx) => (
                       <div
                         key={idx}
                         className="rounded-xl border border-border bg-card p-4 shadow-sm hover:shadow-md transition-all"
@@ -595,14 +601,14 @@ const ProfilePage = () => {
             )}
             {/* {activeTab === "address" && (
             <ProfileSection icon={MapPin} title="Address Details">
-              <DetailRow label="Address Line 1" value={creditProfile?.addressLine1} />
-              <DetailRow label="Address Line 2" value={creditProfile?.addressLine2} />
-              <DetailRow label="City" value={creditProfile?.city} />
-              <DetailRow label="State" value={creditProfile?.state} />
-              <DetailRow label="Pincode" value={creditProfile?.pincode} />
+              <DetailRow label="Address Line 1" value={creditProfile?.data?.addressLine1} />
+              <DetailRow label="Address Line 2" value={creditProfile?.data?.addressLine2} />
+              <DetailRow label="City" value={creditProfile?.data?.city} />
+              <DetailRow label="State" value={creditProfile?.data?.state} />
+              <DetailRow label="Pincode" value={creditProfile?.data?.pincode} />
               <DetailRow
                 label="Residential Status"
-                value={creditProfile?.residentialStatus}
+                value={creditProfile?.data?.residentialStatus}
               />
             </ProfileSection>
           )} */}
@@ -611,16 +617,16 @@ const ProfilePage = () => {
                 <ProfileSection icon={Briefcase} title="Current Employment">
                   <DetailRow
                     label="Status"
-                    value={creditProfile?.employmentStatus}
+                    value={creditProfile?.data?.employmentStatus}
                   />
                   <DetailRow
                     label="Salary Mode"
-                    value={creditProfile?.salaryMode}
+                    value={creditProfile?.data?.salaryMode}
                   />
                   <DetailRow
                     label="Experience"
                     value={
-                      creditProfile?.employmentExperience != null
+                      creditProfile?.data?.employmentExperience != null
                         ? `${creditProfile.employmentExperience} year${
                             creditProfile.employmentExperience > 1 ? "s" : ""
                           }`
@@ -630,41 +636,43 @@ const ProfilePage = () => {
                   <DetailRow
                     label="UAN / PF Number"
                     value={
-                      creditProfile?.uanNumber?.trim()
+                      creditProfile?.data?.uanNumber?.trim()
                         ? creditProfile.uanNumber
                         : "Not provided"
                     }
                   />
                   <DetailRow
                     label="Monthly Income"
-                    value={creditProfile?.monthlyIncome}
+                    value={creditProfile?.data?.monthlyIncome}
                     highlight
                   />
                 </ProfileSection>
                 <ProfileSection icon={Briefcase} title="Company Details">
                   <DetailRow
                     label="Current Company"
-                    value={creditProfile?.companyName}
+                    value={creditProfile?.data?.companyName}
                   />
                   <DetailRow
                     label="Current Joining Date"
-                    value={creditProfile?.currentJoinDate}
+                    value={creditProfile?.data?.currentJoinDate}
                   />
 
-                  {creditProfile?.previousCompanyJoinDate &&
-                    creditProfile?.previousCompanyRelieveDate && (
+                  {creditProfile?.data?.previousCompanyJoinDate &&
+                    creditProfile?.data?.previousCompanyRelieveDate && (
                       <>
                         <DetailRow
                           label="Previous Company"
-                          value={creditProfile?.previousCompany}
+                          value={creditProfile?.data?.previousCompany}
                         />
                         <DetailRow
                           label="Previous Joining Date"
-                          value={creditProfile?.previousCompanyJoinDate}
+                          value={creditProfile?.data?.previousCompanyJoinDate}
                         />
                         <DetailRow
                           label="Previous Relieving Date"
-                          value={creditProfile?.previousCompanyRelieveDate}
+                          value={
+                            creditProfile?.data?.previousCompanyRelieveDate
+                          }
                         />
                       </>
                     )}
@@ -676,24 +684,24 @@ const ProfilePage = () => {
                 <ProfileSection icon={CreditCard} title="Credit Score">
                   <DetailRow
                     label="CIBIL Score"
-                    value={creditProfile?.cibilScore}
+                    value={creditProfile?.data?.cibilScore}
                     highlight
                   />
                   <DetailRow
                     label="Recent Enquiries"
-                    value={creditProfile?.last6MonthsEnquiryCount || "0"}
+                    value={creditProfile?.data?.last6MonthsEnquiryCount || "0"}
                   />
                   <DetailRow
                     label="Settlements"
-                    value={creditProfile?.settlements || "0"}
+                    value={creditProfile?.data?.settlements || "0"}
                   />
                   <DetailRow
                     label="EMI Bounces"
-                    value={creditProfile?.emiBounces || '0'}
+                    value={creditProfile?.data?.emiBounces || "0"}
                   />
                   <DetailRow
                     label="Credit Utilization"
-                    value={creditProfile?.creaditCardUtilization || "0"}
+                    value={creditProfile?.data?.creaditCardUtilization || "0"}
                   />
                 </ProfileSection>
                 <div className="space-y-6 mt-8 pt-6 border-t border-border">
@@ -777,9 +785,9 @@ const ProfilePage = () => {
             )}
             {/* {activeTab === "emergency" && (
             <ProfileSection icon={AlertCircle} title="Emergency Contact">
-              <DetailRow label="Contact Name" value={creditProfile?.emergencyName} />
-              <DetailRow label="Relationship" value={creditProfile?.emergencyRelation} />
-              <DetailRow label="Phone Number" value={creditProfile?.emergencyContact} />
+              <DetailRow label="Contact Name" value={creditProfile?.data?.emergencyName} />
+              <DetailRow label="Relationship" value={creditProfile?.data?.emergencyRelation} />
+              <DetailRow label="Phone Number" value={creditProfile?.data?.emergencyContact} />
             </ProfileSection>
           )} */}
             {activeTab === "documents" && (
