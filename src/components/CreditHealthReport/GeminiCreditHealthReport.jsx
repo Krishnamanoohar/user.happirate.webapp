@@ -476,9 +476,11 @@ const estimateInterestRate = (principal, emi, months) => {
     if (calcEmi > emi) high = rate;
     else low = rate;
   }
-
-  return (rate * 12 * 100).toFixed(2); // annual %
+  const finalInterestRate = (rate * 12 * 100).toFixed(2)
+  console.log("finalInterestRate",finalInterestRate)
+  return finalInterestRate; // annual %
 };
+
 const estimateMonthsSinceOpened = (dateOpened) => {
   if (!dateOpened) return null;
   const d = new Date(dateOpened);

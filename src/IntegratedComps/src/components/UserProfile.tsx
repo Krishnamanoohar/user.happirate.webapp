@@ -158,7 +158,18 @@ const ProfilePage = () => {
     payslip3: null,
   });
   const userInfo = sessionStorage.getItem("userId");
+  const profile = creditProfile?.data ?? {};
+  const employmentData = profile?.employmentHistory?.employment_data ?? [];
 
+  // Current company = no exit date
+  const currentCompany = employmentData.find(
+    (job) => !job.date_of_exit || job.date_of_exit.trim() === "",
+  );
+
+  // Previous company = has exit date
+  const previousCompany = employmentData.find(
+    (job) => job.date_of_exit && job.date_of_exit.trim() !== "",
+  );
   const fetchUploadedDocuments = async () => {
     try {
       if (!userInfo) return;
@@ -298,8 +309,9 @@ const ProfilePage = () => {
     };
   };
 
-  const cibil = getCibilBadge(creditProfile?.data?.data?.cibilScore || "0");
-
+const cibil = getCibilBadge(
+  String(creditProfile?.data?.cibilScore ?? 0)
+);
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -508,8 +520,8 @@ const ProfilePage = () => {
                     value={
                       creditProfile?.data?.dateOfBirth
                         ? new Date(
-                            creditProfile.dateOfBirth,
-                          ).toLocaleDateString()
+                            creditProfile.data.dateOfBirth,
+                          ).toLocaleDateString("en-IN")
                         : "Not provided"
                     }
                   />
@@ -627,8 +639,10 @@ const ProfilePage = () => {
                     label="Experience"
                     value={
                       creditProfile?.data?.employmentExperience != null
-                        ? `${creditProfile.employmentExperience} year${
-                            creditProfile.employmentExperience > 1 ? "s" : ""
+                        ? `${creditProfile.data.employmentExperience} year${
+                            creditProfile.data.employmentExperience > 1
+                              ? "s"
+                              : ""
                           }`
                         : "Not provided"
                     }
@@ -636,8 +650,8 @@ const ProfilePage = () => {
                   <DetailRow
                     label="UAN / PF Number"
                     value={
-                      creditProfile?.data?.uanNumber?.trim()
-                        ? creditProfile.uanNumber
+                      creditProfile?.data?.uanNumber
+                        ? String(creditProfile.data.uanNumber)
                         : "Not provided"
                     }
                   />
@@ -648,34 +662,36 @@ const ProfilePage = () => {
                   />
                 </ProfileSection>
                 <ProfileSection icon={Briefcase} title="Company Details">
+                  {/* Current Company */}
                   <DetailRow
                     label="Current Company"
-                    value={creditProfile?.data?.companyName}
-                  />
-                  <DetailRow
-                    label="Current Joining Date"
-                    value={creditProfile?.data?.currentJoinDate}
+                    value={currentCompany?.establishment_name || "Not provided"}
                   />
 
-                  {creditProfile?.data?.previousCompanyJoinDate &&
-                    creditProfile?.data?.previousCompanyRelieveDate && (
-                      <>
-                        <DetailRow
-                          label="Previous Company"
-                          value={creditProfile?.data?.previousCompany}
-                        />
-                        <DetailRow
-                          label="Previous Joining Date"
-                          value={creditProfile?.data?.previousCompanyJoinDate}
-                        />
-                        <DetailRow
-                          label="Previous Relieving Date"
-                          value={
-                            creditProfile?.data?.previousCompanyRelieveDate
-                          }
-                        />
-                      </>
-                    )}
+                  <DetailRow
+                    label="Current Joining Date"
+                    value={currentCompany?.date_of_joining || "Not provided"}
+                  />
+
+                  {/* Previous Company */}
+                  {previousCompany && (
+                    <>
+                      <DetailRow
+                        label="Previous Company"
+                        value={previousCompany.establishment_name}
+                      />
+
+                      <DetailRow
+                        label="Previous Joining Date"
+                        value={previousCompany.date_of_joining}
+                      />
+
+                      <DetailRow
+                        label="Previous Relieving Date"
+                        value={previousCompany.date_of_exit}
+                      />
+                    </>
+                  )}
                 </ProfileSection>
               </div>
             )}
@@ -704,7 +720,7 @@ const ProfilePage = () => {
                     value={creditProfile?.data?.creaditCardUtilization || "0"}
                   />
                 </ProfileSection>
-                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                {/* <div className="space-y-6 mt-8 pt-6 border-t border-border">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Required Documents
@@ -780,7 +796,7 @@ const ProfilePage = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
             {/* {activeTab === "emergency" && (

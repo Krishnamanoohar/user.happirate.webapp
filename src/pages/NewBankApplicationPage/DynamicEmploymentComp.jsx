@@ -22,12 +22,20 @@ const IconInput = ({
   onChange,
   placeholder,
   type = "text",
+  error,
+  required = false,
 }) => {
   return (
     <div className="flex flex-col space-y-1.5">
-      <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+      {/* <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
         {label}
-      </label>
+      </label> */}
+      <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+  {label}
+  {required && (
+    <span className="text-red-500">*</span>
+  )}
+</label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
           <Icon size={16} />
@@ -37,15 +45,24 @@ const IconInput = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 shadow-sm"
+          className={`w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none transition-all duration-200 shadow-sm
+            ${
+              error
+                ? "bg-red-50 border border-red-500 focus:ring-2 focus:ring-red-400"
+                : "bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500"
+            }
+          `}
         />
       </div>
+      {error && (
+        <p className="text-xs text-red-500">{error}</p>
+      )}
     </div>
   );
 };
 
 // --- SINGLE EMPLOYMENT CARD COMPONENT ---
-const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
+const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors ={} }) => {
   const handleChange = (field, value) => {
     onChange(index, field, value);
   };
@@ -73,14 +90,14 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
         </div>
 
         {/* {totalRecords > 1 && ( */}
-          <button
-            type="button"
-            onClick={() => onRemove(index)}
-            className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors flex items-center gap-1 text-sm"
-          >
-            <Trash2 size={16} />
-            <span className="hidden sm:inline">Remove</span>
-          </button>
+        <button
+          type="button"
+          onClick={() => onRemove(index)}
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors flex items-center gap-1 text-sm"
+        >
+          <Trash2 size={16} />
+          <span className="hidden sm:inline">Remove</span>
+        </button>
         {/* )} */}
       </div>
 
@@ -123,6 +140,8 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
                   handleChange("establishment_name", e.target.value)
                 }
                 placeholder="Company Name"
+                error={errors.establishment_name}
+                required
               />
             </div>
             <IconInput
@@ -138,6 +157,8 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
               value={data.uan}
               onChange={(e) => handleChange("uan", e.target.value)}
               placeholder="12-digit UAN"
+              error={errors.uan}
+              required
             />
           </div>
         </div>
@@ -151,9 +172,11 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
             <IconInput
               label="Date of Joining"
               icon={Calendar}
-              value={data.date_of_joining }
+              value={data.date_of_joining}
               onChange={(e) => handleChange("date_of_joining", e.target.value)}
               placeholder="DD/MM/YYYY"
+              error={errors.date_of_joining}
+              required
             />
             <IconInput
               label="Date of Exit"
@@ -188,9 +211,10 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords }) => {
 };
 
 // --- MAIN EXPORTABLE COMPONENT TO DROP INTO YOUR FORM ---
-export const  EmploymentHistorySection = ({
+export const EmploymentHistorySection = ({
   employmentData,
   setEmploymentData,
+  errors=[],
 }) => {
   const emptyRecord = {
     uan: "",
@@ -241,16 +265,33 @@ export const  EmploymentHistorySection = ({
             <IconInput
               label="Employee Name"
               icon={User}
-              value={employmentData[0]?.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="e.g. John Doe"
+              value={employmentData[0]?.name || ""}
+              onChange={(e) =>
+                setEmploymentData((prev) => {
+                  const updated = [...prev];
+                  if (!updated[0]) updated[0] = {};
+                  updated[0] = { ...updated[0], name: e.target.value };
+                  return updated;
+                })
+              }
+              placeholder={"e.g. John Doe"}
+              error={errors[0]?.name}
+              required
             />
             <IconInput
               label="Guardian Name"
               icon={Users}
-              value={employmentData[0]?.guardian_name}
-              onChange={(e) => handleChange("guardian_name", e.target.value)}
-              placeholder="e.g. Richard Doe"
+              value={employmentData[0]?.guardian_name || ""}
+              onChange={(e) =>
+                setEmploymentData((prev) => {
+                  const updated = [...prev];
+                  updated[0] = { ...updated[0], guardian_name: e.target.value };
+                  return updated;
+                })
+              }
+              placeholder={"e.g. Richard Doe"}
+              error={errors[0]?.guardian_name}
+              required
             />
           </div>
         </div>
@@ -260,6 +301,7 @@ export const  EmploymentHistorySection = ({
             key={index} // Note: In production, better to use a unique ID if available instead of index
             index={index}
             data={record}
+            errors={errors[index] || {}}
             totalRecords={employmentData.length}
             onChange={handleEmploymentChange}
             onRemove={handleRemoveEmployment}
