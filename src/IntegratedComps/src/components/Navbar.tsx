@@ -187,7 +187,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                       onClick={handleMyapplication}
                       className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
                     >
-                      My Application
+                      My Applications
                     </button>
                     <button
                       onClick={handleProfile}
@@ -300,7 +300,18 @@ export default function Navbar({ scrollY }: NavbarProps) {
                   <div className="grid grid-cols-2 gap-3">
                     <Button
                       variant="outline"
-                      className="text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                      className="text-sm font-semibold text-slate-900 hover:bg-indigo-50 border border-gray-300"
+                      onClick={() => {
+                        handleMyapplication();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      My Applications
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      className="text-sm font-semibold text-slate-900 hover:bg-indigo-50 border border-gray-300"
                       onClick={() => {
                         handleProfile();
                         setMobileMenuOpen(false);
@@ -308,9 +319,10 @@ export default function Navbar({ scrollY }: NavbarProps) {
                     >
                       My Profile
                     </Button>
+
                     <Button
                       variant="ghost"
-                      className="text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold transition-colors duration-150 flex items-center gap-2 border border-gray-200"
+                      className="col-span-2 text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold border border-gray-300"
                       onClick={() => {
                         handleLogout();
                         setMobileMenuOpen(false);

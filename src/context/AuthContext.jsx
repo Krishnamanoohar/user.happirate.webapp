@@ -43,10 +43,11 @@ export const ContextProvider = ({ children }) => {
           fetchRawResponseOfUser(),
           fetchMyApplications()
         ]);
+        console.log("fileResp",fileResp)
 
         setCreditProfile(creditResp?.data || null);
         setRawResponse(rawResp?.data?.data?.rawData || null);
-        setApplications(fileResp?.data?.data || null)
+        setApplications(fileResp?.data?.applications || [])
       } catch (err) {
         console.error("A storm hit while fetching data:", err);
         setError(err.message || "Failed to fetch user data.");
