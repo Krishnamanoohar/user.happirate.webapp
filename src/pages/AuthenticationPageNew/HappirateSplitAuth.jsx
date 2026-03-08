@@ -52,7 +52,7 @@ export function HappirateSplitAuth() {
   const [isMobileVerified, setIsMobileVerified] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
-  const { handleSetCreditData, setIsLoading: setCreditLoading, setError, setIsUserLoggedIn } = useContextData();
+  const { handleSetCreditData, setIsLoading: setCreditLoading, setError, setIsUserLoggedIn, setIsPanMobileMismatch } = useContextData();
   const otpRefs = [
     useRef(null),
     useRef(null),
@@ -272,8 +272,28 @@ export function HappirateSplitAuth() {
       const resp = await verifyOtp(payload); // Calling your backend API
 
       if (resp.status === 200) {
+        // sessionStorage.setItem("mobile_number", mobileNumber);
+        // sessionStorage.setItem("userId", resp?.data?.data?._id);
+
+        const userID = resp?.data?.data?._id;
+
         sessionStorage.setItem("mobile_number", mobileNumber);
-        sessionStorage.setItem("userId", resp?.data?.data?._id);
+        sessionStorage.setItem("userId", userID);
+
+        const creditResp = await fetchCreditReport({
+          mobileNumber,
+          userId: userID
+        });
+
+        const creditData = creditResp?.data;
+
+        if (
+          creditData?.status === "FAILED" &&
+          creditData?.errors?.includes("PAN_FETCH_FAILED")
+        ) {
+          setIsPanMobileMismatch(true);
+          return;
+        }
         toast.success("Login verified successfully");
         setIsUserLoggedIn(true)
         navigate(sessionStorage.getItem("redirectAfterLogin") || "/");

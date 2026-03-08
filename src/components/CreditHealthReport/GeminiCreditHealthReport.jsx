@@ -1482,7 +1482,7 @@ const PortfolioGate = () => {
 
 // --- Main App Component ---
 export default function GeminiCreditHealthReport() {
-  const { rawResponse } = useContextData()
+  const { rawResponse, isLoading } = useContextData()
   const [jsonData, setJsonData] = useState(rawResponse || null);
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState(null);
@@ -1490,7 +1490,7 @@ export default function GeminiCreditHealthReport() {
   const [accountFilter, setAccountFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [bankSearch, setBankSearch] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const handleParse = () => {
     try {
@@ -1786,10 +1786,14 @@ export default function GeminiCreditHealthReport() {
   // useEffect(() => {
   //   sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
   // }, []);
-
+  useEffect(() => {
+  if (rawResponse) {
+    setJsonData(rawResponse);
+  }
+}, [rawResponse]);
   console.log("Report Data:", jsonData);
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
-  if (loading) return <DashboardLoader />;
+  if (isLoading) return <DashboardLoader />;
   console.log("Extracted Report Data:", reportData);
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-12">
