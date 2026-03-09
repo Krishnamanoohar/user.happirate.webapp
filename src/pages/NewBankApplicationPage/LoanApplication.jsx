@@ -1449,11 +1449,13 @@ const LoanApplication = () => {
                 title="Review & Edit Employment and Credit Details"
                 subtitle="Please review and update your employment and credit information"
               >
+              {!isSelfEmployed && (
                 <EmploymentHistorySection
                   employmentData={employmentData}
                   setEmploymentData={setEmploymentData}
                   errors={employmentErrors}
                 />
+              )}
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
