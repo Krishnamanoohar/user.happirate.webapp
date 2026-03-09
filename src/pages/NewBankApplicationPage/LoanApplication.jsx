@@ -233,6 +233,7 @@ const LoanApplication = () => {
   const [applicationId, setApplicationId] = useState(null);
   const [selectedDocIds, setSelectedDocIds] = useState([]);
   const [documentErrors, setDocumentErrors] = useState({});
+  const [documentValidationTriggered, setDocumentValidationTriggered] = useState(false);
   // Uploaded documents state
   const [documents, setDocuments] = useState({
     itr: null,
@@ -655,6 +656,7 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
+      setDocumentValidationTriggered(true);
       if (!validateDocuments()) {
         toast.error("Please upload all required documents");
         setIsLoading(false);
@@ -672,7 +674,6 @@ const LoanApplication = () => {
         setIsLoading(false);
       }
       console.log("Documents (frontend only):", documents);
-      toast.success("Documents validated successfully (mock mode)");
 
       // Move to Review step
       setCurrentStep(3);
@@ -1818,6 +1819,8 @@ const LoanApplication = () => {
                       label="Last 3 Years ITR/Form 166"
                       required
                       accept=".pdf,.jpg,.png"
+                      file={documents.itr}
+                      error={documentValidationTriggered && !!documentErrors.itr}
                       onFileSelect={(file) =>
                         setDocuments((prev) => ({ ...prev, itr: file }))
                       }
@@ -1826,6 +1829,8 @@ const LoanApplication = () => {
                       label="Applicant Photo"
                       required
                       accept=".jpg,.png,.jpeg"
+                      file={documents.photo}
+                      error={documentValidationTriggered && !!documentErrors.photo}
                       onFileSelect={(file) =>
                         setDocuments((prev) => ({ ...prev, photo: file }))
                       }
@@ -1843,6 +1848,8 @@ const LoanApplication = () => {
                           label="Month 1"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip1}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -1855,6 +1862,8 @@ const LoanApplication = () => {
                           label="Month 2"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip2}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -1867,6 +1876,8 @@ const LoanApplication = () => {
                           label="Month 3"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip3}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -2174,21 +2185,25 @@ const LoanApplication = () => {
                       file={documents.photo}
                       icon={User}
                     />
-                    <DocumentStatus
-                      label="Payslip - Month 1"
-                      file={documents.payslip1}
-                      icon={FileText}
-                    />
-                    <DocumentStatus
-                      label="Payslip - Month 2"
-                      file={documents.payslip2}
-                      icon={FileText}
-                    />
-                    <DocumentStatus
-                      label="Payslip - Month 3"
-                      file={documents.payslip3}
-                      icon={FileText}
-                    />
+                    {!isSelfEmployed && (
+                      <>
+                        <DocumentStatus
+                          label="Payslip - Month 1"
+                          file={documents.payslip1}
+                          icon={FileText}
+                        />
+                        <DocumentStatus
+                          label="Payslip - Month 2"
+                          file={documents.payslip2}
+                          icon={FileText}
+                        />
+                        <DocumentStatus
+                          label="Payslip - Month 3"
+                          file={documents.payslip3}
+                          icon={FileText}
+                        />
+                      </>
+                    )}
                   </div>
                 </SummarySection>
 
