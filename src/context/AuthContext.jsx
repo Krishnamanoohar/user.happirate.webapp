@@ -8,7 +8,7 @@ export const ContextProvider = ({ children }) => {
   const [rawResponse, setRawResponse] = useState(null);
   const [applications, setApplications] = useState([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(sessionStorage.getItem("userId") ? true : false);
-  const [isPanMobileMismatch, setIsPanMobileMismatch] = useState(false);
+  const [isPanMobileMismatch, setIsPanMobileMismatch] = useState(  sessionStorage.getItem("panMobileMismatch") === "true");
 
   // These are now actively used during data fetching!
   const [isLoading, setIsLoading] = useState(false);

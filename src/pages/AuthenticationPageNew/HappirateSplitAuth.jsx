@@ -292,6 +292,7 @@ export function HappirateSplitAuth() {
           creditData?.errors?.includes("PAN_FETCH_FAILED")
         ) {
           setIsPanMobileMismatch(true);
+          sessionStorage.setItem("panMobileMismatch", "true");
           return;
         }
         toast.success("Login verified successfully");
@@ -299,6 +300,19 @@ export function HappirateSplitAuth() {
         navigate(sessionStorage.getItem("redirectAfterLogin") || "/");
       }
     } catch (error) {
+      const errorData = error?.response?.data;
+
+      if (
+        error?.response?.status === 404 &&
+        (
+          errorData?.status === "FAILED" ||
+          errorData?.message === "PAN_FETCH_FAILED"
+        )
+      ) {
+        setIsPanMobileMismatch(true);
+        sessionStorage.setItem("panMobileMismatch", "true");
+        return;
+      }
       console.log("Verification error details:", {
         message: error.message,
         code: error.code,

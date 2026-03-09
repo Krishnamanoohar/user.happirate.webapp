@@ -3,13 +3,14 @@ import { useContextData } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const PanMobileMismatchPopup = () => {
-    const { isPanMobileMismatch } = useContextData();
+    const { isPanMobileMismatch, setIsPanMobileMismatch } = useContextData();
     const navigate = useNavigate();
 
     if (!isPanMobileMismatch) return null;
     const handleLoginClick = () => {
         sessionStorage.clear();
         localStorage.clear();
+        setIsPanMobileMismatch(false); 
         navigate("/sign-in");
     };
     return (
