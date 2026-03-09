@@ -750,7 +750,7 @@ const LoanApplication = () => {
 
     const residenceAddress =
       addresses.find((a) => a.type === "Residence") || addresses[0] || {};
-    console.log(apiData.dateOfBirth.split("T")[0]);
+    // console.log(apiData.dateOfBirth.split("T")[0]);
     const employmentRecords = apiData?.employmentHistory?.employment_data || [];
 
     let previousCompany = null;
@@ -780,9 +780,9 @@ const LoanApplication = () => {
       firstName: apiData.firstName ?? "",
       lastName: apiData.lastName ?? "",
       middleName: apiData.middleName ?? "",
-      dateOfBirth: apiData.dateOfBirth.split("T")[0] ?? "",
+      dateOfBirth: apiData?.dateOfBirth?.split?.("T")[0] ?? "",
       panCard: apiData.panCard ?? "",
-      email: primaryEmail ?? [],
+      email: primaryEmail ??"",
       aadhaarCard: apiData?.aadharCard ?? "",
       mobileNumber: mobile,
       // Employment Details
@@ -791,8 +791,8 @@ const LoanApplication = () => {
       employmentExperience: apiData.employmentExperience ?? "",
       employmentCategory: apiData.employmentCategory ?? "",
       salaryMode: apiData.salaryMode ?? "",
-      monthlyIncome: apiData.monthlyIncome,
-      residentialStatus: residenceAddress.type
+      monthlyIncome: apiData.monthlyIncome ?? "",
+      residentialStatus: residenceAddress?.type
         ? residenceAddress.type.toLowerCase()
         : "",
       addressLine1: residenceAddress?.streetAddress ?? "",

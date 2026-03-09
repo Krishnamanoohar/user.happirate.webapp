@@ -257,11 +257,16 @@ export function HappirateSplitAuth() {
 
     try {
       // 1. Verify OTP with Firebase locally
-      const result = await otpResult.confirm(enteredOtp);
-      const user = result.user;
+      if (!otpResult) {
+        toast.error("OTP session expired. Please resend OTP.");
+        setLoading(false);
+        return;
+      }
+      const result = await otpResult?.confirm(enteredOtp);
+      const user = result?.user;
 
       // 2. Get the secure ID Token (JWT) from Firebase
-      const idToken = await user.getIdToken();
+      const idToken = await user?.getIdToken();
 
       // 3. Send the Token to your backend instead of the raw OTP
       const payload = {
@@ -271,11 +276,11 @@ export function HappirateSplitAuth() {
 
       const resp = await verifyOtp(payload); // Calling your backend API
 
-      if (resp.status === 200) {
+      if (resp?.status === 200) {
         // sessionStorage.setItem("mobile_number", mobileNumber);
         // sessionStorage.setItem("userId", resp?.data?.data?._id);
 
-        const userID = resp?.data?.data?._id;
+        const userID = resp?.data?.data?._id ?? null;
 
         sessionStorage.setItem("mobile_number", mobileNumber);
         sessionStorage.setItem("userId", userID);
@@ -318,7 +323,7 @@ export function HappirateSplitAuth() {
         code: error.code,
         responseData: error.response?.data,
       });
-      switch (error.code) {
+      switch (error?.code) {
         case "auth/invalid-verification-code":
           toast.error("Incorrect OTP. Please check and try again.");
           setOtp(["", "", "", "", "", ""]); // Action: Clear boxes for retry
