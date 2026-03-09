@@ -233,6 +233,7 @@ const LoanApplication = () => {
   const [applicationId, setApplicationId] = useState(null);
   const [selectedDocIds, setSelectedDocIds] = useState([]);
   const [documentErrors, setDocumentErrors] = useState({});
+  const [documentValidationTriggered, setDocumentValidationTriggered] = useState(false);
   // Uploaded documents state
   const [documents, setDocuments] = useState({
     itr: null,
@@ -342,31 +343,33 @@ const LoanApplication = () => {
   const validateDocuments = () => {
     const newErrors = {};
 
-    // Check ITR
-    if (!hasITR && !documents.itr) {
-      newErrors.itr = "This field is required";
+    // ITR required
+    if (!documents.itr) {
+      newErrors.itr = "ITR document is required";
     }
 
-    // Check Photo
-    if (!hasPhoto && !documents.photo) {
-      newErrors.photo = "This field is required";
+    // Photo required
+    if (!documents.photo) {
+      newErrors.photo = "Applicant photo is required";
     }
 
-    // Check Payslips
-    const uploadedPayslips = [
-      documents.payslip1,
-      documents.payslip2,
-      documents.payslip3,
-    ].filter(Boolean).length;
+    // Payslips required only for salaried users
+    if (!isSelfEmployed) {
+      const uploadedPayslips = [
+        documents.payslip1,
+        documents.payslip2,
+        documents.payslip3,
+      ].filter(Boolean).length;
 
-    if (selectedPayslips.length + uploadedPayslips < 3) {
-      newErrors.payslips = "This field is required";
+      if (uploadedPayslips < 3) {
+        newErrors.payslips = "All 3 payslips are required";
+      }
     }
 
     setDocumentErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
-
   const validateGST = (value) => {
     if (!value) return null;
 
@@ -378,43 +381,43 @@ const LoanApplication = () => {
       : "Invalid GST format (e.g. 22ABCDE1234F1Z5)";
   };
   const validateEmploymentHistory = () => {
-  const employmentErrors = [];
-  let isValid = true;
+    const employmentErrors = [];
+    let isValid = true;
 
-  employmentData.forEach((record, index) => {
-    const recordErrors = {};
+    employmentData.forEach((record, index) => {
+      const recordErrors = {};
 
-    if (!record.name?.trim()) {
-      recordErrors.name = "Employee name is required";
-      isValid = false;
-    }
+      if (!record.name?.trim()) {
+        recordErrors.name = "Employee name is required";
+        isValid = false;
+      }
 
-    if (!record.guardian_name?.trim()) {
-      recordErrors.guardian_name = "Guardian name is required";
-      isValid = false;
-    }
+      if (!record.guardian_name?.trim()) {
+        recordErrors.guardian_name = "Guardian name is required";
+        isValid = false;
+      }
 
-    if (!record.establishment_name?.trim()) {
-      recordErrors.establishment_name = "Establishment name is required";
-      isValid = false;
-    }
+      if (!record.establishment_name?.trim()) {
+        recordErrors.establishment_name = "Establishment name is required";
+        isValid = false;
+      }
 
-    if (!record.uan || !/^\d{12}$/.test(record.uan)) {
-      recordErrors.uan = "UAN must be 12 digits";
-      isValid = false;
-    }
+      if (!record.uan || !/^\d{12}$/.test(record.uan)) {
+        recordErrors.uan = "UAN must be 12 digits";
+        isValid = false;
+      }
 
-    if (!record.date_of_joining) {
-      recordErrors.date_of_joining = "Date of joining is required";
-      isValid = false;
-    }
+      if (!record.date_of_joining) {
+        recordErrors.date_of_joining = "Date of joining is required";
+        isValid = false;
+      }
 
-    employmentErrors[index] = recordErrors;
-  });
+      employmentErrors[index] = recordErrors;
+    });
 
-  setEmploymentErrors(employmentErrors);
-  return isValid;
-};
+    setEmploymentErrors(employmentErrors);
+    return isValid;
+  };
   const validateStep = () => {
     const newErrors = {};
 
@@ -536,7 +539,12 @@ const LoanApplication = () => {
     lastName: data.lastName,
     middleName: data.middleName,
     dateOfBirth: data.dateOfBirth,
-    email: data.email,
+    emails: [
+      {
+        email: data.email,
+        type: "Primary",
+      },
+    ],
     panCard: data.panCard,
     aadharCard: data.aadhaarCard,
     // residentialType: data.residentialStatus,
@@ -594,6 +602,11 @@ const LoanApplication = () => {
         setIsLoading(false);
         return;
       }
+      if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
+        toast.error("Please enter a valid email address");
+        setIsLoading(false);
+        return;
+      }
       const payload = buildPersonalDetailsPayload(formData);
 
       try {
@@ -615,13 +628,13 @@ const LoanApplication = () => {
 
     // STEP 2 → Employment & Credit API
     if (currentStep === 1) {
-        const isEmploymentValid = validateEmploymentHistory();
+      const isEmploymentValid = validateEmploymentHistory();
 
-  if (!isEmploymentValid) {
-    toast.error("Please fill all required employment details");
-    setIsLoading(false);
-    return;
-  }
+      if (!isEmploymentValid) {
+        toast.error("Please fill all required employment details");
+        setIsLoading(false);
+        return;
+      }
       const payload = buildEmploymentDetailsPayload(formData);
 
       try {
@@ -643,6 +656,7 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
+      setDocumentValidationTriggered(true);
       if (!validateDocuments()) {
         toast.error("Please upload all required documents");
         setIsLoading(false);
@@ -660,7 +674,6 @@ const LoanApplication = () => {
         setIsLoading(false);
       }
       console.log("Documents (frontend only):", documents);
-      toast.success("Documents validated successfully (mock mode)");
 
       // Move to Review step
       setCurrentStep(3);
@@ -939,29 +952,29 @@ const LoanApplication = () => {
   //   }
   // };
 
-const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
-  const months = 6 + i * 6; // 6-month increments
+  const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
+    const months = 6 + i * 6; // 6-month increments
 
-  let label;
+    let label;
 
-  if (months < 12) {
-    label = `${months} Months`;
-  } else {
-    const years = months / 12;
-
-    // If whole number year (12, 24, 36...)
-    if (Number.isInteger(years)) {
-      label = `${years} Year${years > 1 ? "s" : ""}`;
+    if (months < 12) {
+      label = `${months} Months`;
     } else {
-      label = `${years} Years`; // 1.5, 2.5 etc
-    }
-  }
+      const years = months / 12;
 
-  return {
-    value: String(months), // backend still gets months
-    label,
-  };
-});
+      // If whole number year (12, 24, 36...)
+      if (Number.isInteger(years)) {
+        label = `${years} Year${years > 1 ? "s" : ""}`;
+      } else {
+        label = `${years} Years`; // 1.5, 2.5 etc
+      }
+    }
+
+    return {
+      value: String(months), // backend still gets months
+      label,
+    };
+  });
 
   // const handleDocumentUpload = async () => {
   //   const userId = sessionStorage.getItem("userId");
@@ -1292,7 +1305,7 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                       hint="PAN cannot be edited as it's verified from source"
                       error={errors.panCard}
                     />
-                    {emailOptions.length > 1 ? (
+                    {emailOptions.length > 0 ? (
                       <FormSelect
                         label="E-Mail ID"
                         value={formData.email}
@@ -1436,11 +1449,13 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                 title="Review & Edit Employment and Credit Details"
                 subtitle="Please review and update your employment and credit information"
               >
+              {!isSelfEmployed && (
                 <EmploymentHistorySection
                   employmentData={employmentData}
                   setEmploymentData={setEmploymentData}
                   errors={employmentErrors}
                 />
+              )}
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1806,6 +1821,8 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                       label="Last 3 Years ITR/Form 166"
                       required
                       accept=".pdf,.jpg,.png"
+                      file={documents.itr}
+                      error={documentValidationTriggered && !!documentErrors.itr}
                       onFileSelect={(file) =>
                         setDocuments((prev) => ({ ...prev, itr: file }))
                       }
@@ -1814,6 +1831,8 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                       label="Applicant Photo"
                       required
                       accept=".jpg,.png,.jpeg"
+                      file={documents.photo}
+                      error={documentValidationTriggered && !!documentErrors.photo}
                       onFileSelect={(file) =>
                         setDocuments((prev) => ({ ...prev, photo: file }))
                       }
@@ -1831,6 +1850,8 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                           label="Month 1"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip1}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -1843,6 +1864,8 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                           label="Month 2"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip2}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -1855,6 +1878,8 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                           label="Month 3"
                           required
                           accept=".pdf,.jpg,.png"
+                          file={documents.payslip3}
+                          error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
                           onFileSelect={(file) =>
                             setDocuments((prev) => ({
@@ -2162,21 +2187,25 @@ const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
                       file={documents.photo}
                       icon={User}
                     />
-                    <DocumentStatus
-                      label="Payslip - Month 1"
-                      file={documents.payslip1}
-                      icon={FileText}
-                    />
-                    <DocumentStatus
-                      label="Payslip - Month 2"
-                      file={documents.payslip2}
-                      icon={FileText}
-                    />
-                    <DocumentStatus
-                      label="Payslip - Month 3"
-                      file={documents.payslip3}
-                      icon={FileText}
-                    />
+                    {!isSelfEmployed && (
+                      <>
+                        <DocumentStatus
+                          label="Payslip - Month 1"
+                          file={documents.payslip1}
+                          icon={FileText}
+                        />
+                        <DocumentStatus
+                          label="Payslip - Month 2"
+                          file={documents.payslip2}
+                          icon={FileText}
+                        />
+                        <DocumentStatus
+                          label="Payslip - Month 3"
+                          file={documents.payslip3}
+                          icon={FileText}
+                        />
+                      </>
+                    )}
                   </div>
                 </SummarySection>
 

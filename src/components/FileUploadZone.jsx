@@ -9,10 +9,11 @@ const FileUploadZone = ({
     className,
     accept,
     compact = false,
+    file,
     onFileSelect,
     error = false
 }) => {
-    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const inputRef = useRef(null);
 
@@ -30,7 +31,7 @@ const FileUploadZone = ({
         setIsDragging(false);
         const droppedFile = e.dataTransfer.files[0];
         if (droppedFile) {
-            setFile(droppedFile);
+            // setFile(droppedFile);
             onFileSelect?.(droppedFile);
         }
     };
@@ -42,14 +43,14 @@ const FileUploadZone = ({
     const handleFileChange = (e) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
-            setFile(selectedFile);
+            // setFile(selectedFile);
             onFileSelect?.(selectedFile);
         }
     };
 
     const removeFile = (e) => {
         e.stopPropagation();
-        setFile(null);
+        // setFile(null);
         onFileSelect?.(null);
         if (inputRef.current) inputRef.current.value = "";
     };

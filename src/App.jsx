@@ -40,6 +40,7 @@ import ComingSoonPage from "./components/ComingSoon/ComingSoon";
 import EMICalculator from "./IntegratedComps/src/components/EMICalculator";
 import MyApplication from "./pages/MyApplication/MyApplication";
 import LoanTrackerPage from "./pages/LoanTrackerPage/LoanTrackerPage";
+import PanMobileMismatchPopup from "./pages/PanMobileMismatchPopup/PanMobileMismatchPopup";
 // import CreditPortfolio from "./components/CreditHealthReport/CreditPortfolio";
 
 export const Context = createContext();
@@ -76,7 +77,7 @@ const App = () => {
       >
         <BrowserRouter>
           <Navbar scrollY={scrollY} />
-
+          <PanMobileMismatchPopup/>
           <Routes>
             {/* <Route path="/" element={<IndexPage />} /> */}
             <Route path="/" element={<LandingApp />} />
