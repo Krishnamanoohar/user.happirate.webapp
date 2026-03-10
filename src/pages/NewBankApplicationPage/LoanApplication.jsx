@@ -27,11 +27,7 @@ import FileUploadZone from "../../components/FileUploadZone";
 import { cn } from "../../lib/utils";
 import { useLocation } from "react-router-dom";
 import { useContextData } from "@/context/AuthContext";
-// import { useNavigate } from "react-router-dom";
 import {
-  // fetchCreditReport,
-  // sendOtpToMobile,
-  //verifyOtpApi,
   personalDetailsVerification,
   submitFinancialProfileDetails,
   updateCreditReport,
@@ -49,11 +45,21 @@ import { EmploymentHistorySection } from "./DynamicEmploymentComp";
 import ExistingDocumentsSelector from "@/components/ExistingDocumentsSelector/ExistingDocumentsSelector";
 import { Input } from "@/components/ui/input";
 
-const steps = [
+// ─── Static steps for Personal Loan (4 steps) ────────────────────────────────
+const personalLoanSteps = [
   { id: 1, title: "Review & Edit Personal Details" },
   { id: 2, title: "Review & Edit Employment and Credit Details" },
   { id: 3, title: "Select Loan & Upload Documents" },
   { id: 4, title: "Review & Submit" },
+];
+
+// ─── Steps for Home Loan (5 steps — extra Property Details step) ──────────────
+const homeLoanSteps = [
+  { id: 1, title: "Review & Edit Personal Details" },
+  { id: 2, title: "Review & Edit Employment and Credit Details" },
+  { id: 3, title: "Select Loan & Upload Documents" },
+  { id: 4, title: "Property Details" },
+  { id: 5, title: "Review & Submit" },
 ];
 
 const loanTypes = [
@@ -65,7 +71,6 @@ const loanTypes = [
 ];
 
 const employmentStatuses = [
-  // { value: "", label: "Select Employment Status" },
   { value: "salaried", label: "Salaried" },
   { value: "self-employed", label: "Self Employed" },
 ];
@@ -75,104 +80,59 @@ const residentialStatuses = [
   { value: "rented", label: "Rented" },
   { value: "family", label: "Living with Family" },
 ];
+
 const indianStates = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-  //union territories
-  "Andaman and Nicobar Islands",
-  "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Jammu and Kashmir",
-  "Ladakh",
-  "Lakshadweep",
-  "Puducherry",
-];
-const existingDocuments = [
-  {
-    id: "1",
-    name: "ITR_2023-24.pdf",
-    type: "pdf",
-    category: "ITR/Form 16",
-    uploadedAt: "15 Jan 2025",
-    size: "2.3 MB",
-  },
-  {
-    id: "2",
-    name: "ITR_2022-23.pdf",
-    type: "pdf",
-    category: "ITR/Form 16",
-    uploadedAt: "10 Mar 2024",
-    size: "1.8 MB",
-  },
-  {
-    id: "3",
-    name: "passport_photo.jpg",
-    type: "image",
-    category: "Applicant Photo",
-    uploadedAt: "20 Dec 2024",
-    size: "450 KB",
-  },
-  {
-    id: "4",
-    name: "payslip_jan_2025.pdf",
-    type: "pdf",
-    category: "Payslip",
-    uploadedAt: "02 Feb 2025",
-    size: "320 KB",
-  },
-  {
-    id: "5",
-    name: "payslip_dec_2024.pdf",
-    type: "pdf",
-    category: "Payslip",
-    uploadedAt: "01 Jan 2025",
-    size: "310 KB",
-  },
-  {
-    id: "6",
-    name: "payslip_nov_2024.pdf",
-    type: "pdf",
-    category: "Payslip",
-    uploadedAt: "01 Dec 2024",
-    size: "305 KB",
-  },
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa",
+  "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
+  "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland",
+  "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+  "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands",
+  "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi",
+  "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry",
 ];
 
-// const formatDateToDDMMYYYY = (isoDate) => {
-//   if (!isoDate) return "";
-//   const [y, m, d] = isoDate.split("-");
-//   return `${d}-${m}-${y}`;
-// };
-const getTodayISODate = () => {
-  return new Date().toISOString().split("T")[0];
-};
+// ─── Home Loan specific option lists ─────────────────────────────────────────
+const propertyTypes = [
+  { value: "apartment", label: "Apartment / Flat" },
+  { value: "independent_house", label: "Independent House / Villa" },
+  { value: "plot_construction", label: "Plot + Construction" },
+  { value: "under_construction", label: "Under Construction Property" },
+  { value: "resale", label: "Resale Property" },
+  { value: "commercial", label: "Commercial Property" },
+];
+
+const propertyOwnershipTypes = [
+  { value: "self", label: "Self" },
+  { value: "joint", label: "Joint Ownership" },
+  { value: "family", label: "Family Owned" },
+];
+
+const loanPurposeOptions = [
+  { value: "purchase", label: "Purchase of Property" },
+  { value: "construction", label: "Construction of House" },
+  { value: "renovation", label: "Renovation / Extension" },
+  { value: "balance_transfer", label: "Balance Transfer" },
+  { value: "top_up", label: "Top-Up Loan" },
+];
+
+const coApplicantRelationOptions = [
+  { value: "spouse", label: "Spouse" },
+  { value: "parent", label: "Parent" },
+  { value: "sibling", label: "Sibling" },
+  { value: "child", label: "Child (Adult)" },
+  { value: "other", label: "Other" },
+];
+
+const existingDocuments = [
+  { id: "1", name: "ITR_2023-24.pdf", type: "pdf", category: "ITR/Form 16", uploadedAt: "15 Jan 2025", size: "2.3 MB" },
+  { id: "2", name: "ITR_2022-23.pdf", type: "pdf", category: "ITR/Form 16", uploadedAt: "10 Mar 2024", size: "1.8 MB" },
+  { id: "3", name: "passport_photo.jpg", type: "image", category: "Applicant Photo", uploadedAt: "20 Dec 2024", size: "450 KB" },
+  { id: "4", name: "payslip_jan_2025.pdf", type: "pdf", category: "Payslip", uploadedAt: "02 Feb 2025", size: "320 KB" },
+  { id: "5", name: "payslip_dec_2024.pdf", type: "pdf", category: "Payslip", uploadedAt: "01 Jan 2025", size: "310 KB" },
+  { id: "6", name: "payslip_nov_2024.pdf", type: "pdf", category: "Payslip", uploadedAt: "01 Dec 2024", size: "305 KB" },
+];
+
+const getTodayISODate = () => new Date().toISOString().split("T")[0];
 
 const normalizeAadhaarForApi = (value) =>
   value?.replace(/\D/g, "").replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3");
@@ -183,38 +143,6 @@ const validatePan = (value) => {
   const regex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
   return regex.test(pan) ? null : "PAN must be in format ABCDE1234F";
 };
-
-// const validateGmail = (value) => {
-//   if (!value) return "Email is required";
-//   const regex = /^[a-z0-9._%+-]+@gmail\.com$/;
-//   return regex.test(value.toLowerCase()) ? null : "Enter a valid Gmail address";
-// };
-
-const validateEmploymentNumbers = (data) => {
-  const errors = {};
-
-  if (Number(data.monthlyIncome) <= 0) {
-    errors.monthlyIncome = "Monthly income must be greater than 0";
-  }
-
-  if (Number(data.cibilScore) < 300 || Number(data.cibilScore) > 900) {
-    errors.cibilScore = "CIBIL score must be between 300 and 900";
-  }
-
-  if (!/^\d{6}$/.test(data.pincode)) {
-    errors.pincode = "Pincode must be 6 digits";
-  }
-
-  if (!/^\d{12}$/.test(data.uanNumber)) {
-    errors.uanNumber = "UAN must be 12 digits";
-  }
-
-  return errors;
-};
-
-const buildFileUpload = (data) => ({
-  mobileNumber: sessionStorage.getItem("mobile_number"),
-});
 
 const LoanApplication = () => {
   const { creditProfile } = useContextData();
@@ -229,18 +157,27 @@ const LoanApplication = () => {
   const [isFetchingDocs, setIsFetchingDocs] = useState(false);
   const [filteredStates, setFilteredStates] = useState([]);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [filteredPropertyStates, setFilteredPropertyStates] = useState([]);
+  const [showPropertyStateDropdown, setShowPropertyStateDropdown] = useState(false);
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [applicationId, setApplicationId] = useState(null);
   const [selectedDocIds, setSelectedDocIds] = useState([]);
   const [documentErrors, setDocumentErrors] = useState({});
   const [documentValidationTriggered, setDocumentValidationTriggered] = useState(false);
-  // Uploaded documents state
+  const [hasCoApplicant, setHasCoApplicant] = useState(false);
+
   const [documents, setDocuments] = useState({
     itr: null,
     photo: null,
     payslip1: null,
     payslip2: null,
     payslip3: null,
+    // Home loan specific documents
+    propertyDocument: null,
+    saleAgreement: null,
+    noc: null,
+    titleDeed: null,
+    approvedPlan: null,
   });
 
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -248,201 +185,175 @@ const LoanApplication = () => {
   const [consentError, setConsentError] = useState(false);
   const [employmentErrors, setEmploymentErrors] = useState([]);
 
-  // Determine which upload zones are still needed
+  const [formData, setFormData] = useState({
+    // Personal
+    firstName: "", lastName: "", middleName: "", dateOfBirth: "",
+    panCard: "", email: "", aadhaarCard: "", mobileNumber: "",
+    // Employment
+    uanNumber: "", employmentExperience: "", employmentStatus: "",
+    gstNumber: "", companyName: "", monthlyIncome: "",
+    residentialStatus: "", addressLine1: "", state: "", pincode: "",
+    // Loan common
+    loanType: "", loanAmount: "", loanTenure: "",
+    // Credit
+    cibilScore: "", recentEnquiries: "", settlements: "",
+    emiBounces: "", creditCardUtilization: "", residentialStability: "",
+    existingEmi: "", employmentCategory: "", salaryMode: "",
+    // ── Home Loan specific ──────────────────────────────────────────────────
+    // Property Info
+    propertyType: "",
+    propertyAddress: "",
+    propertyState: "",
+    propertyPincode: "",
+    propertyValue: "",          // Market value of the property
+    downPaymentAmount: "",      // Amount applicant will pay upfront
+    loanPurpose: "",
+    propertyOwnershipType: "",
+    builderName: "",            // Only for under-construction
+    possessionDate: "",         // Expected possession date
+    // Co-applicant
+    coApplicantName: "",
+    coApplicantRelation: "",
+    coApplicantDOB: "",
+    coApplicantPAN: "",
+    coApplicantMonthlyIncome: "",
+    coApplicantEmploymentStatus: "",
+  });
+
+  const [employmentData, setEmploymentData] = useState([]);
+
+  // ─── Derived helpers ────────────────────────────────────────────────────────
+  const isHomeLoan = formData.loanType === "home";
+  const isSelfEmployed = formData.employmentStatus === "self-employed";
+
+  // Dynamic steps based on loan type
+  const steps = isHomeLoan ? homeLoanSteps : personalLoanSteps;
+
+  // Total step indices (0-based):
+  //   Personal Loan: 0=Personal, 1=Employment, 2=Loan+Docs, 3=Review
+  //   Home Loan:     0=Personal, 1=Employment, 2=Loan+Docs, 3=PropertyDetails, 4=Review
+  const reviewStep = isHomeLoan ? 4 : 3;
+  const propertyStep = 3; // only exists for home loan
+
+  // ─── Document helpers ────────────────────────────────────────────────────────
   const hasITR = selectedDocIds.some((id) =>
     existingDocuments.find((d) => d.id === id && d.category === "ITR/Form 16"),
   );
-
   const hasPhoto = selectedDocIds.some((id) =>
-    existingDocuments.find(
-      (d) => d.id === id && d.category === "Applicant Photo",
-    ),
+    existingDocuments.find((d) => d.id === id && d.category === "Applicant Photo"),
   );
-
   const selectedPayslips = selectedDocIds.filter((id) =>
     existingDocuments.find((d) => d.id === id && d.category === "Payslip"),
   );
-
   const payslipsNeeded = Math.max(0, 3 - selectedPayslips.length);
 
-  // Form data state (pre-filled)
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    dateOfBirth: "",
-    panCard: "",
-    email: "",
-    aadhaarCard: "",
-    mobileNumber: "",
-    uanNumber: "",
-    employmentExperience: "",
-    employmentStatus: "",
-    gstNumber: "",
-    companyName: "",
-    monthlyIncome: "",
-    residentialStatus: "",
-    addressLine1: "",
-    // city: "",
-    state: "",
-    pincode: "",
-    loanType: "",
-    loanAmount: "",
-    cibilScore: "",
-    recentEnquiries: "",
-    settlements: "",
-    emiBounces: "",
-    creditCardUtilization: "",
-    residentialStability: "",
-    existingEmi: "",
-    loanTenure: "",
-    employmentCategory: "",
-  });
-  const [employmentData, setEmploymentData] = useState([]);
-
-  const isSelfEmployed = formData.employmentStatus === "self-employed";
-
+  // ─── Fetch tax documents ─────────────────────────────────────────────────────
   const handleFetchTaxDocuments = async () => {
-    if (!taxNumber.trim()) {
-      toast.error("Please enter Tax Number");
-      return;
-    }
-
+    if (!taxNumber.trim()) { toast.error("Please enter Tax Number"); return; }
     try {
       setIsFetchingDocs(true);
-
-      const resp = await fetchTaxDocuments({
-        taxNumber,
-        mobileNumber: sessionStorage.getItem("mobile_number"),
-      });
-
+      const resp = await fetchTaxDocuments({ taxNumber, mobileNumber: sessionStorage.getItem("mobile_number") });
       const itrFileUrl = resp?.data?.itrUrl;
-
-      if (!itrFileUrl) {
-        toast.error("No ITR documents found");
-        return;
-      }
-
-      // Store in documents state
-      setDocuments((prev) => ({
-        ...prev,
-        itr: {
-          name: "ITR_Fetched.pdf",
-          url: itrFileUrl,
-          fetched: true,
-        },
-      }));
-
+      if (!itrFileUrl) { toast.error("No ITR documents found"); return; }
+      setDocuments((prev) => ({ ...prev, itr: { name: "ITR_Fetched.pdf", url: itrFileUrl, fetched: true } }));
       toast.success("ITR documents fetched successfully");
-    } catch (error) {
-      toast.error("Failed to fetch tax documents");
-    } finally {
-      setIsFetchingDocs(false);
-    }
+    } catch { toast.error("Failed to fetch tax documents"); }
+    finally { setIsFetchingDocs(false); }
   };
+
+  // ─── Document validation ─────────────────────────────────────────────────────
   const validateDocuments = () => {
     const newErrors = {};
-
-    // ITR required
-    if (!documents.itr) {
-      newErrors.itr = "ITR document is required";
-    }
-
-    // Photo required
-    if (!documents.photo) {
-      newErrors.photo = "Applicant photo is required";
-    }
-
-    // Payslips required only for salaried users
+    if (!documents.itr) newErrors.itr = "ITR document is required";
+    if (!documents.photo) newErrors.photo = "Applicant photo is required";
     if (!isSelfEmployed) {
-      const uploadedPayslips = [
-        documents.payslip1,
-        documents.payslip2,
-        documents.payslip3,
-      ].filter(Boolean).length;
-
-      if (uploadedPayslips < 3) {
-        newErrors.payslips = "All 3 payslips are required";
-      }
+      const uploadedPayslips = [documents.payslip1, documents.payslip2, documents.payslip3].filter(Boolean).length;
+      if (uploadedPayslips < 3) newErrors.payslips = "All 3 payslips are required";
     }
-
+    // Home loan additional required docs
+    if (isHomeLoan) {
+      if (!documents.propertyDocument) newErrors.propertyDocument = "Property document is required";
+      if (!documents.saleAgreement) newErrors.saleAgreement = "Sale agreement / allotment letter is required";
+    }
     setDocumentErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
+
+  // ─── Home Loan property step validation ──────────────────────────────────────
+  const validatePropertyStep = () => {
+    const newErrors = {};
+    if (!formData.loanPurpose) newErrors.loanPurpose = "Loan purpose is required";
+    if (!formData.propertyType) newErrors.propertyType = "Property type is required";
+    if (!formData.propertyAddress) newErrors.propertyAddress = "Property address is required";
+    if (!formData.propertyState) newErrors.propertyState = "Property state is required";
+    if (!formData.propertyPincode || !/^\d{6}$/.test(formData.propertyPincode))
+      newErrors.propertyPincode = "Valid 6-digit pincode is required";
+    if (!formData.propertyValue || Number(formData.propertyValue) <= 0)
+      newErrors.propertyValue = "Property value must be greater than 0";
+    if (!formData.downPaymentAmount || Number(formData.downPaymentAmount) <= 0)
+      newErrors.downPaymentAmount = "Down payment amount is required";
+    if (Number(formData.downPaymentAmount) >= Number(formData.propertyValue))
+      newErrors.downPaymentAmount = "Down payment must be less than property value";
+    if (!formData.propertyOwnershipType) newErrors.propertyOwnershipType = "Ownership type is required";
+    if (formData.propertyType === "under_construction") {
+      if (!formData.possessionDate) newErrors.possessionDate = "Expected possession date is required";
+    }
+    // Co-applicant validation (only if toggled on)
+    if (hasCoApplicant) {
+      if (!formData.coApplicantName) newErrors.coApplicantName = "Co-applicant name is required";
+      if (!formData.coApplicantRelation) newErrors.coApplicantRelation = "Relation is required";
+      if (!formData.coApplicantDOB) newErrors.coApplicantDOB = "Co-applicant date of birth is required";
+      if (!formData.coApplicantPAN || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formData.coApplicantPAN.toUpperCase()))
+        newErrors.coApplicantPAN = "Valid PAN required (e.g. ABCDE1234F)";
+      if (!formData.coApplicantMonthlyIncome || Number(formData.coApplicantMonthlyIncome) <= 0)
+        newErrors.coApplicantMonthlyIncome = "Co-applicant monthly income is required";
+      if (!formData.coApplicantEmploymentStatus) newErrors.coApplicantEmploymentStatus = "Employment status is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const validateGST = (value) => {
     if (!value) return null;
-
-    const gstRegex =
-      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-
-    return gstRegex.test(value.toUpperCase())
-      ? null
-      : "Invalid GST format (e.g. 22ABCDE1234F1Z5)";
+    const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+    return gstRegex.test(value.toUpperCase()) ? null : "Invalid GST format (e.g. 22ABCDE1234F1Z5)";
   };
-  const validateEmploymentHistory = () => {
-    const employmentErrors = [];
-    let isValid = true;
 
+  const validateEmploymentHistory = () => {
+    const empErrors = [];
+    let isValid = true;
     employmentData.forEach((record, index) => {
       const recordErrors = {};
-
-      if (!record.name?.trim()) {
-        recordErrors.name = "Employee name is required";
-        isValid = false;
-      }
-
-      if (!record.guardian_name?.trim()) {
-        recordErrors.guardian_name = "Guardian name is required";
-        isValid = false;
-      }
-
-      if (!record.establishment_name?.trim()) {
-        recordErrors.establishment_name = "Establishment name is required";
-        isValid = false;
-      }
-
-      if (!record.uan || !/^\d{12}$/.test(record.uan)) {
-        recordErrors.uan = "UAN must be 12 digits";
-        isValid = false;
-      }
-
-      if (!record.date_of_joining) {
-        recordErrors.date_of_joining = "Date of joining is required";
-        isValid = false;
-      }
-
-      employmentErrors[index] = recordErrors;
+      if (!record.name?.trim()) { recordErrors.name = "Employee name is required"; isValid = false; }
+      if (!record.guardian_name?.trim()) { recordErrors.guardian_name = "Guardian name is required"; isValid = false; }
+      if (!record.establishment_name?.trim()) { recordErrors.establishment_name = "Establishment name is required"; isValid = false; }
+      if (!record.uan || !/^\d{12}$/.test(record.uan)) { recordErrors.uan = "UAN must be 12 digits"; isValid = false; }
+      if (!record.date_of_joining) { recordErrors.date_of_joining = "Date of joining is required"; isValid = false; }
+      empErrors[index] = recordErrors;
     });
-
-    setEmploymentErrors(employmentErrors);
+    setEmploymentErrors(empErrors);
     return isValid;
   };
+
+  // ─── Per-step validation ─────────────────────────────────────────────────────
   const validateStep = () => {
     const newErrors = {};
 
     if (currentStep === 0) {
       if (!formData.firstName) newErrors.firstName = "First name is required";
-      // if (!formData.middleName) newErrors.middleName = "Middle name is required";
       if (!formData.lastName) newErrors.lastName = "Last name is required";
       if (!formData.dateOfBirth) {
         newErrors.dateOfBirth = "DOB is required";
-      } else {
-        const today = getTodayISODate();
-        if (formData.dateOfBirth > today) {
-          newErrors.dateOfBirth = "Date of birth cannot be in the future";
-        }
+      } else if (formData.dateOfBirth > getTodayISODate()) {
+        newErrors.dateOfBirth = "Date of birth cannot be in the future";
       }
       if (!formData.email) newErrors.email = "Email is required";
-      if (!formData.addressLine1)
-        newErrors.addressLine1 = "Address is required";
+      if (!formData.addressLine1) newErrors.addressLine1 = "Address is required";
       if (!formData.state) newErrors.state = "State is required";
       if (!formData.pincode) newErrors.pincode = "Pincode is required";
-      if (!formData.aadhaarCard) newErrors.aadhaarCard = "Aadhaar is required";
       if (!formData.aadhaarCard || !/^\d{12}$/.test(formData.aadhaarCard))
         newErrors.aadhaarCard = "Aadhaar must be 12 digits";
-      if (!formData.mobileNumber)
-        newErrors.mobileNumber = "Mobile number is required";
+      if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     }
 
     if (currentStep === 1) {
@@ -452,106 +363,52 @@ const LoanApplication = () => {
         const gstError = validateGST(formData.gstNumber);
         if (gstError) newErrors.gstNumber = gstError;
       }
-      if (!formData.monthlyIncome)
-        newErrors.monthlyIncome = "Monthly Income is Required";
+      if (!formData.monthlyIncome) newErrors.monthlyIncome = "Monthly Income is Required";
       if (!isSelfEmployed) {
-        if (!formData.employmentCategory)
-          newErrors.employmentCategory = "Employment Category is required";
+        if (!formData.employmentCategory) newErrors.employmentCategory = "Employment Category is required";
         if (!formData.employmentExperience) {
           newErrors.employmentExperience = "Employment Experience is Required";
         } else if (!/^\d+(\.\d+)?$/.test(formData.employmentExperience)) {
-          newErrors.employmentExperience =
-            "Only numbers allowed (e.g. 1 or 1.5)";
+          newErrors.employmentExperience = "Only numbers allowed (e.g. 1 or 1.5)";
         }
-        // if (!formData.previousCompanyName)
-        //   newErrors.previousCompanyName = "Previous Company Name is required";
-        // if (formData.previousCompanyName) {
-        //   if (!formData.previousCompanyFrom) {
-        //     newErrors.previousCompanyFrom =
-        //       "Previous Company Joined Date is required";
-        //   }
-
-        //   if (!formData.previousCompanyTo) {
-        //     newErrors.previousCompanyTo =
-        //       "Previous Company Relieving Date is required";
-        //   } else if (
-        //     formData.previousCompanyFrom &&
-        //     formData.previousCompanyTo <= formData.previousCompanyFrom
-        //   ) {
-        //     newErrors.previousCompanyTo =
-        //       "Relieving date must be after joined date";
-        //   }
-        // }
-        // if (!formData.currentCompanyName)
-        //   newErrors.currentCompanyName = "Current Company Name is required";
-        // if (!formData.currentCompanyJoiningDate)
-        //   newErrors.currentCompanyJoiningDate =
-        //     "Current Company Joining Date is required";
-        // if (!formData.uanNumber)
-        //   newErrors.uanNumber = "UAN/PF Number is required";
-        // if (!formData.salaryMode)
-        //   newErrors.salaryMode = "Salary Mode is required";
       }
-      // if (
-      //   !formData.residentialStability &
-      //   (formData.residentialStability !== 0)
-      // )
-      //   newErrors.residentialStability = "Residential Stability is required";
     }
 
     if (currentStep === 2) {
       if (!formData.loanType) newErrors.loanType = "Loan Type is Required";
-      if (!formData.loanAmount)
-        newErrors.loanAmount = "Loan Amount is Required";
+      if (!formData.loanAmount) newErrors.loanAmount = "Loan Amount is Required";
       if (!formData.loanTenure) newErrors.loanTenure = "Loan Tenure Required";
     }
 
     setErrors(newErrors);
-    console.log(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // ─── State dropdown helpers ──────────────────────────────────────────────────
   const handleStateChange = (value) => {
     updateFormData("state", value);
-
-    if (!value) {
-      setFilteredStates([]);
-      setShowStateDropdown(false);
-      return;
-    }
-
-    const filtered = indianStates.filter((state) =>
-      state.toLowerCase().includes(value.toLowerCase()),
-    );
-
-    setFilteredStates(filtered);
+    if (!value) { setFilteredStates([]); setShowStateDropdown(false); return; }
+    setFilteredStates(indianStates.filter((s) => s.toLowerCase().includes(value.toLowerCase())));
     setShowStateDropdown(true);
   };
-  const handleStateSelect = (state) => {
-    updateFormData("state", state);
-    setShowStateDropdown(false);
-  };
+  const handleStateSelect = (state) => { updateFormData("state", state); setShowStateDropdown(false); };
 
+  const handlePropertyStateChange = (value) => {
+    updateFormData("propertyState", value);
+    if (!value) { setFilteredPropertyStates([]); setShowPropertyStateDropdown(false); return; }
+    setFilteredPropertyStates(indianStates.filter((s) => s.toLowerCase().includes(value.toLowerCase())));
+    setShowPropertyStateDropdown(true);
+  };
+  const handlePropertyStateSelect = (state) => { updateFormData("propertyState", state); setShowPropertyStateDropdown(false); };
+
+  // ─── Payload builders ────────────────────────────────────────────────────────
   const buildPersonalDetailsPayload = (data) => ({
     mobileNumber: sessionStorage.getItem("mobile_number"),
-
-    firstName: data.firstName,
-    lastName: data.lastName,
-    middleName: data.middleName,
+    firstName: data.firstName, lastName: data.lastName, middleName: data.middleName,
     dateOfBirth: data.dateOfBirth,
-    emails: [
-      {
-        email: data.email,
-        type: "Primary",
-      },
-    ],
-    panCard: data.panCard,
-    aadharCard: data.aadhaarCard,
-    // residentialType: data.residentialStatus,
-    addressLine1: data.addressLine1,
-    // city: data.city,
-    state: data.state,
-    pincode: data.pincode,
+    emails: [{ email: data.email, type: "Primary" }],
+    panCard: data.panCard, aadharCard: data.aadhaarCard,
+    addressLine1: data.addressLine1, state: data.state, pincode: data.pincode,
   });
 
   const buildEmploymentDetailsPayload = (data) => ({
@@ -573,88 +430,98 @@ const LoanApplication = () => {
     settlements: Number(data.settlements),
     emiBounces: Number(data.emiBounces),
     creditCardUtilization: Number(data.creditCardUtilization),
-    // residentialStability: Number(data.residentialStability),
     existingEmi: Number(data.existingEmi),
     employmentCategory: data.employmentCategory,
     salaryMode: data.salaryMode,
   });
 
+  const buildHomeLoanPropertyPayload = (data) => ({
+    mobileNumber: sessionStorage.getItem("mobile_number"),
+    applicationId,
+    loanPurpose: data.loanPurpose,
+    propertyType: data.propertyType,
+    propertyAddress: data.propertyAddress,
+    propertyState: data.propertyState,
+    propertyPincode: data.propertyPincode,
+    propertyValue: Number(data.propertyValue),
+    downPaymentAmount: Number(data.downPaymentAmount),
+    propertyOwnershipType: data.propertyOwnershipType,
+    builderName: data.builderName || null,
+    possessionDate: data.possessionDate || null,
+    coApplicant: hasCoApplicant
+      ? {
+        name: data.coApplicantName,
+        relation: data.coApplicantRelation,
+        dateOfBirth: data.coApplicantDOB,
+        panCard: data.coApplicantPAN,
+        monthlyIncome: Number(data.coApplicantMonthlyIncome),
+        employmentStatus: data.coApplicantEmploymentStatus,
+      }
+      : null,
+  });
+
+  // ─── Navigation handlers ─────────────────────────────────────────────────────
   const handleNext = async () => {
-    if (currentStep === 3 && (!termsAccepted || !privacyAccepted)) {
+    if (currentStep === reviewStep && (!termsAccepted || !privacyAccepted)) {
       setConsentError(true);
       toast.error("Please accept Terms & Privacy Policy");
       return;
     } else {
       setConsentError(false);
     }
+
+    // Property step for home loan
+    if (isHomeLoan && currentStep === propertyStep) {
+      if (!validatePropertyStep()) {
+        toast.error("Please fill all required property details");
+        return;
+      }
+      // Could call a property details API here
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
     if (!validateStep()) {
       toast.error("Please fill all required fields");
       return;
     }
+
     setIsLoading(true);
-    // STEP 1 → Personal Details API
+
+    // STEP 1 → Personal Details
     if (currentStep === 0) {
       const panError = validatePan(formData.panCard);
-      //const emailError = validateGmail(formData.email);
-
-      if (panError) {
-        toast.error(panError);
-        setIsLoading(false);
-        return;
-      }
+      if (panError) { toast.error(panError); setIsLoading(false); return; }
       if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-        toast.error("Please enter a valid email address");
-        setIsLoading(false);
-        return;
+        toast.error("Please enter a valid email address"); setIsLoading(false); return;
       }
       const payload = buildPersonalDetailsPayload(formData);
-
       try {
-        const response = await updateCreditReport(payload);
-        console.log(response, "response");
-        toast.success("Personal details Submitted Sucessfully");
+        await updateCreditReport(payload);
+        toast.success("Personal details Submitted Successfully");
         setCurrentStep(1);
       } catch (error) {
-        console.error(
-          "Personal details submission failed",
-          error.response?.data || error.message,
-        );
         toast.error("Personal details submission failed");
-      } finally {
-        setIsLoading(false);
-      }
+      } finally { setIsLoading(false); }
       return;
     }
 
-    // STEP 2 → Employment & Credit API
+    // STEP 2 → Employment & Credit
     if (currentStep === 1) {
       const isEmploymentValid = validateEmploymentHistory();
-
-      if (!isEmploymentValid) {
-        toast.error("Please fill all required employment details");
-        setIsLoading(false);
-        return;
-      }
+      if (!isEmploymentValid) { toast.error("Please fill all required employment details"); setIsLoading(false); return; }
       const payload = buildEmploymentDetailsPayload(formData);
-
       try {
-        const response = await updateCreditReport(payload);
-        console.log(response, "response________----");
-        toast.success("Employment details Submitted Sucessfully");
+        await updateCreditReport(payload);
+        toast.success("Employment details Submitted Successfully");
         setCurrentStep(2);
       } catch (error) {
-        console.error(
-          "Employment details submission failed",
-          error.response?.data || error.message,
-        );
         toast.error("Employment details submission failed");
-      } finally {
-        setIsLoading(false);
-      }
+      } finally { setIsLoading(false); }
       return;
     }
 
-    // STEP 3 → Documents (NO API in old code)
+    // STEP 3 → Documents
     if (currentStep === 2) {
       setDocumentValidationTriggered(true);
       if (!validateDocuments()) {
@@ -663,23 +530,19 @@ const LoanApplication = () => {
         return;
       }
       try {
-        console.log(documents);
-        const response = await handleDocumentUpload();
-        const resp = await handleUpdateLoanRequirements();
-        console.log(resp, "update loan requirements response");
-        console.log(response, "response");
+        await handleDocumentUpload();
+        await handleUpdateLoanRequirements();
+        setCurrentStep(isHomeLoan ? propertyStep : reviewStep);
       } catch (error) {
         console.log(error, "error");
-      } finally {
-        setIsLoading(false);
-      }
-      console.log("Documents (frontend only):", documents);
+      } finally { setIsLoading(false); }
 
-      // Move to Review step
-      setCurrentStep(3);
+      // Home loan goes to property step next, personal loan goes to review
       setIsLoading(false);
       return;
     }
+
+    setIsLoading(false);
   };
 
   const handleBack = () => {
@@ -693,7 +556,7 @@ const LoanApplication = () => {
       setIsLoading(false);
       return;
     }
-
+    setIsLoading(true);
     const payload = {
       applicationId,
       userId: sessionStorage.getItem("userId"),
@@ -702,118 +565,178 @@ const LoanApplication = () => {
         termsAndPrivacyPolicy: privacyAccepted,
       },
     };
-    console.log("payload Data", payload);
     try {
-      const resp = await updateConsents(payload);
-      console.log(resp, "update consents response");
-      console.log("Final Review Data:", { formData, documents });
-      sessionStorage.setItem(
-        "loanData",
-        JSON.stringify({
-          loanType: formData.loanType,
-          loanAmount: formData.loanAmount,
-          loanTenure: formData.loanTenure,
-        }),
-      );
+      await updateConsents(payload);
+      sessionStorage.setItem("loanData", JSON.stringify({
+        loanType: formData.loanType, loanAmount: formData.loanAmount, loanTenure: formData.loanTenure,
+      }));
       navigate("/eligible-loans");
     } catch (error) {
       console.error("Error updating consents:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    } finally { setIsLoading(false); }
   };
 
   const updateFormData = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-
-    // Clear error if exists
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
+      setErrors((prev) => { const n = { ...prev }; delete n[field]; return n; });
     }
   };
 
   const mapApiResponseToFormData = (apiData, mobile) => {
-    // pick PRIMARY email
     const primaryEmail = apiData.emails?.[0]?.email || "";
-
-    // pick RESIDENCE address (fallback to first)
-    const addresses = Array.isArray(apiData?.addresses)
-      ? apiData?.addresses
-      : [];
-
-    const residenceAddress =
-      addresses.find((a) => a.type === "Residence") || addresses[0] || {};
-    // console.log(apiData.dateOfBirth.split("T")[0]);
+    const addresses = Array.isArray(apiData?.addresses) ? apiData.addresses : [];
+    const residenceAddress = addresses.find((a) => a.type === "Residence") || addresses[0] || {};
     const employmentRecords = apiData?.employmentHistory?.employment_data || [];
-
-    let previousCompany = null;
-    let currentCompany = null;
-
-    employmentRecords.forEach((job) => {
-      const hasExit = job.date_of_exit && job.date_of_exit.trim() !== "";
-
-      if (hasExit) {
-        previousCompany = job;
-      } else {
-        currentCompany = job;
-      }
-    });
-
-    // Helper to convert DD/MM/YYYY → YYYY-MM-DD
-    const convertToISO = (dateString) => {
-      if (!dateString) return "";
-      const [day, month, year] = dateString.split("/");
-      return `${year}-${month}-${day}`;
-    };
-
-    const hasUAN =
-      employmentRecords.length > 0 && employmentRecords[0]?.uan?.trim() !== "";
+    const hasUAN = employmentRecords.length > 0 && employmentRecords[0]?.uan?.trim() !== "";
     return {
-      // Personal Details
-      firstName: apiData.firstName ?? "",
-      lastName: apiData.lastName ?? "",
-      middleName: apiData.middleName ?? "",
-      dateOfBirth: apiData?.dateOfBirth?.split?.("T")[0] ?? "",
-      panCard: apiData.panCard ?? "",
-      email: primaryEmail ??"",
-      aadhaarCard: apiData?.aadharCard ?? "",
-      mobileNumber: mobile,
-      // Employment Details
+      firstName: apiData.firstName ?? "", lastName: apiData.lastName ?? "",
+      middleName: apiData.middleName ?? "", dateOfBirth: apiData?.dateOfBirth?.split?.("T")[0] ?? "",
+      panCard: apiData.panCard ?? "", email: primaryEmail ?? "",
+      aadhaarCard: apiData?.aadharCard ?? "", mobileNumber: mobile,
       employmentStatus: hasUAN ? "salaried" : "",
       uanNumber: employmentRecords[0]?.uan ?? "",
       employmentExperience: apiData.employmentExperience ?? "",
       employmentCategory: apiData.employmentCategory ?? "",
       salaryMode: apiData.salaryMode ?? "",
       monthlyIncome: apiData.monthlyIncome ?? "",
-      residentialStatus: residenceAddress?.type
-        ? residenceAddress.type.toLowerCase()
-        : "",
+      residentialStatus: residenceAddress?.type ? residenceAddress.type.toLowerCase() : "",
       addressLine1: residenceAddress?.streetAddress ?? "",
-      city: apiData.city ?? "",
-      state: residenceAddress.state ?? "",
+      city: apiData.city ?? "", state: residenceAddress.state ?? "",
       pincode: residenceAddress.pincode ?? "",
-      loanType: "",
-      loanAmount: "",
+      loanType: "", loanAmount: "",
       cibilScore: apiData.cibilScore ?? "",
       recentEnquiries: apiData.last6MonthsEnquiryCount ?? "",
-      settlements: apiData.settlements ?? "",
-      emiBounces: apiData.emiBounces ?? "",
+      settlements: apiData.settlements ?? "", emiBounces: apiData.emiBounces ?? "",
       creditCardUtilization: apiData.creaditCardUtilization ?? "",
-      residentialStability: "",
-      existingEmi: apiData.existingEmi ?? "",
+      residentialStability: "", existingEmi: apiData.existingEmi ?? "",
       loanTenure: apiData.loanTenure ?? "",
-      salaryMode: apiData.salaryMode ?? "",
-      employmentCategory: apiData.employmentCategory ?? "",
+      // Home loan fields default empty
+      propertyType: "", propertyAddress: "", propertyState: "", propertyPincode: "",
+      propertyValue: "", downPaymentAmount: "", loanPurpose: "",
+      propertyOwnershipType: "", builderName: "", possessionDate: "",
+      coApplicantName: "", coApplicantRelation: "", coApplicantDOB: "",
+      coApplicantPAN: "", coApplicantMonthlyIncome: "", coApplicantEmploymentStatus: "",
     };
   };
 
+  // ─── Tenure options ───────────────────────────────────────────────────────────
+  const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
+    const months = 6 + i * 6;
+    let label;
+    if (months < 12) { label = `${months} Months`; }
+    else {
+      const years = months / 12;
+      label = Number.isInteger(years) ? `${years} Year${years > 1 ? "s" : ""}` : `${years} Years`;
+    }
+    return { value: String(months), label };
+  });
+
+  // Home loan tenure goes up to 30 years (360 months), 1-year increments
+  const homeLoanTenureOptions = Array.from({ length: 30 }, (_, i) => {
+    const years = i + 1;
+    return { value: String(years * 12), label: `${years} Year${years > 1 ? "s" : ""}` };
+  });
+
+  const activeTenureOptions = isHomeLoan ? homeLoanTenureOptions : loanTenureOptions;
+
+  // ─── Document upload ─────────────────────────────────────────────────────────
+  const handleUpdateLoanRequirements = async () => {
+    try {
+      await updateLoanRequirements({
+        userId: sessionStorage.getItem("userId"),
+        loanType: formData.loanType,
+        applicationId,
+        requestedAmount: formData.loanAmount,
+        preferredTenure: formData.loanTenure,
+      });
+    } catch (error) {
+      console.log(error, "error in updating loan requirements");
+    }
+  };
+  const formatIndianNumber = (value) => {
+    if (!value) return "";
+    const num = value.toString().replace(/,/g, "");
+    return new Intl.NumberFormat("en-IN").format(Number(num));
+  };
+  const handleDocumentUpload = async () => {
+    const userId = sessionStorage.getItem("userId");
+    if (!userId) { toast.error("User ID is missing. Please log in again."); return; }
+    const fd = new FormData();
+    fd.append("userId", userId);
+    if (documents.payslip1) fd.append("payslips", documents.payslip1);
+    if (documents.payslip2) fd.append("payslips", documents.payslip2);
+    if (documents.payslip3) fd.append("payslips", documents.payslip3);
+    if (documents.itr) fd.append("itrs", documents.itr);
+    if (documents.photo) fd.append("others", documents.photo);
+    // Home loan docs
+    if (formData.loanType === "home") {
+      if (documents.propertyDocument) fd.append("others", documents.propertyDocument);
+      if (documents.saleAgreement) fd.append("others", documents.saleAgreement);
+      if (documents.noc) fd.append("others", documents.noc);
+      if (documents.titleDeed) fd.append("others", documents.titleDeed);
+      if (documents.approvedPlan) fd.append("others", documents.approvedPlan);
+    }
+    try {
+      const response = await uploadFinancialDocuments(fd);
+      if (response.status === 201 || response.status === 200) {
+        toast.success("Documents uploaded successfully!");
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error(error.response?.data?.error || error.response?.data?.message || "Document upload failed.");
+    }
+  };
+
+  // ─── Effects ─────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!creditProfile) return;
+    const mobile = sessionStorage.getItem("mobile_number");
+    const appId = creditProfile?.applicationId || null;
+    setApplicationId(appId);
+    if (appId) sessionStorage.setItem("applicationId", appId);
+    const apiData = creditProfile?.data || creditProfile;
+    if (!apiData) return;
+    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+    const apiEmails = Array.isArray(apiData.emails) ? apiData.emails.map((e) => e.email).filter(Boolean) : [];
+    setEmailOptions([...new Set(apiEmails)]);
+    const apiPhones = Array.isArray(apiData.phoneNumbers)
+      ? apiData.phoneNumbers.map((p) => p.Number).filter((num) => /^\d{10}$/.test(num))
+      : [];
+    setPhoneOptions([...new Set(apiPhones)]);
+    setFormData((prev) => ({
+      ...mapApiResponseToFormData(apiData, mobile),
+      loanType: prev.loanType, loanAmount: prev.loanAmount, loanTenure: prev.loanTenure,
+    }));
+    setPageLoading(false);
+  }, [creditProfile]);
+
+  useEffect(() => {
+    if (location.state) {
+      setCurrentStep(location.state.goToStep ?? 0);
+      setFormData((prev) => ({
+        ...prev,
+        loanType: location.state.loanType ?? prev.loanType,
+        loanAmount: location.state.loanAmount ?? prev.loanAmount,
+      }));
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    const savedLoanData = localStorage.getItem("loanData");
+    if (savedLoanData) {
+      const parsed = JSON.parse(savedLoanData);
+      setFormData((prev) => ({
+        ...prev,
+        loanType: parsed.loanType ?? prev.loanType,
+        loanAmount: parsed.loanAmount ?? prev.loanAmount,
+        loanTenure: parsed.loanTenure ?? prev.loanTenure,
+      }));
+    }
+    if (location.state?.goToStep !== undefined) setCurrentStep(location.state.goToStep);
+  }, []);
+
+  // ─── Summary sub-components ──────────────────────────────────────────────────
   const SummarySection = ({ title, icon: Icon, children }) => (
     <div className="bg-card rounded-xl border border-border/50 overflow-hidden shadow-sm">
       <div className="bg-gradient-to-r from-primary/10 to-accent/30 px-5 py-3 border-b border-border/50">
@@ -832,12 +755,10 @@ const LoanApplication = () => {
         {Icon && <Icon className="w-4 h-4 text-primary/60" />}
         {label}
       </span>
-      <span
-        className={cn(
-          "text-sm font-medium text-right max-w-[60%] break-words whitespace-normal leading-relaxed",
-          highlighted ? "text-primary font-semibold" : "text-foreground",
-        )}
-      >
+      <span className={cn(
+        "text-sm font-medium text-right max-w-[60%] break-words whitespace-normal leading-relaxed",
+        highlighted ? "text-primary font-semibold" : "text-foreground",
+      )}>
         {value ?? "—"}
       </span>
     </div>
@@ -851,368 +772,28 @@ const LoanApplication = () => {
       </span>
       {file ? (
         <span className="text-sm font-medium text-success flex items-center gap-1.5 bg-success/10 px-2.5 py-1 rounded-full">
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          Uploaded
+          <CheckCircle2 className="w-3.5 h-3.5" />Uploaded
         </span>
       ) : (
         <span className="text-sm font-medium text-destructive flex items-center gap-1.5 bg-destructive/10 px-2.5 py-1 rounded-full">
-          <AlertCircle className="w-3.5 h-3.5" />
-          Missing
+          <AlertCircle className="w-3.5 h-3.5" />Missing
         </span>
       )}
     </div>
   );
 
-  // const autoFillUserDetails = async () => {
-  //   try {
-  //     setPageLoading(true);
-  //     const mobile = sessionStorage.getItem("mobile_number");
-  //     const userId = sessionStorage.getItem("userId");
-  //     console.log(mobile, "mobile");
-
-  //     if (!mobile) {
-  //       navigate("/sign-in", { replace: true });
-  //       return;
-  //     }
-  //     const resp = await fetchCreditReport({
-  //       mobileNumber: mobile,
-  //       userId: userId,
-  //     });
-  //     console.log("credit report response", resp);
-  //     const apiData = resp?.data?.data;
-  //     setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-  //     setApplicationId(resp?.applicationId || null);
-  //     console.log(
-  //       "application id from credit report",
-  //       resp?.data?.applicationId,
-  //     );
-
-  //     if (!apiData) {
-  //       console.error("Credit report API returned empty response", resp);
-  //       return;
-  //     }
-
-  //     const apiEmails = Array.isArray(apiData.emails)
-  //       ? apiData.emails.map((e) => e.email).filter(Boolean) // Remove empty/null values
-  //       : [];
-
-  //     // Create Set to remove duplicates and convert back to array
-  //     const uniqueEmails = [...new Set(apiEmails)];
-  //     setEmailOptions(uniqueEmails);
-
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       email: apiEmails[0] || "",
-  //     }));
-
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       email: apiEmails[0] || "",
-  //     }));
-  //     const apiPhones = Array.isArray(apiData.phoneNumbers)
-  //       ? apiData.phoneNumbers
-  //         .map((p) => p.Number)
-  //         .filter((num) => /^\d{10}$/.test(num)) // keep valid 10-digit numbers
-  //       : [];
-
-  //     // Remove duplicates
-  //     const uniquePhones = [...new Set(apiPhones)];
-
-  //     setPhoneOptions(uniquePhones);
-
-  //     // Set default selected number
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       mobileNumber: uniquePhones[0] || "",
-  //     }));
-
-  //     console.log(
-  //       "mapApiResponseToFormData",
-  //       mapApiResponseToFormData(resp.data.data, mobile),
-  //     );
-
-  //     sessionStorage.setItem(
-  //       "username",
-  //       `${resp.data.data.firstName} ${resp.data.data.middleName} ${resp.data.data.lastName}`,
-  //     );
-
-  //     // setFormData(mapApiResponseToFormData(resp.data.data, mobile));
-  //     setFormData((prev) => ({
-  //       ...mapApiResponseToFormData(resp.data.data, mobile),
-
-  //       // 🔥 Preserve Loan Fields If Already Filled
-  //       loanType: prev.loanType,
-  //       loanAmount: prev.loanAmount,
-  //       loanTenure: prev.loanTenure,
-  //     }));
-  //   } catch (error) {
-  //     console.log("error in auto filling user details", error);
-  //   } finally {
-  //     setPageLoading(false);
-  //   }
-  // };
-
-  const loanTenureOptions = Array.from({ length: 20 }, (_, i) => {
-    const months = 6 + i * 6; // 6-month increments
-
-    let label;
-
-    if (months < 12) {
-      label = `${months} Months`;
-    } else {
-      const years = months / 12;
-
-      // If whole number year (12, 24, 36...)
-      if (Number.isInteger(years)) {
-        label = `${years} Year${years > 1 ? "s" : ""}`;
-      } else {
-        label = `${years} Years`; // 1.5, 2.5 etc
-      }
-    }
-
-    return {
-      value: String(months), // backend still gets months
-      label,
-    };
-  });
-
-  // const handleDocumentUpload = async () => {
-  //   const userId = sessionStorage.getItem("userId");
-
-  //   if (!userId) {
-  //     toast.error("User ID is missing. Please log in again.");
-  //     return;
-  //   }
-
-  //   // --- NEW: Client-side file size validation ---
-  //   const MAX_FILE_SIZE_MB = 5; // Max size for a SINGLE file (e.g., 5MB)
-  //   const MAX_TOTAL_SIZE_MB = 15; // Max size for the ENTIRE batch (e.g., 15MB)
-
-  //   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-  //   const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
-
-  //   // Gather all currently selected files into an array, ignoring empty ones
-  //   const selectedFiles = [
-  //     documents.payslip1,
-  //     documents.payslip2,
-  //     documents.payslip3,
-  //     documents.itr,
-  //     documents.photo,
-  //   ].filter(Boolean);
-
-  //   let totalSize = 0;
-
-  //   for (const file of selectedFiles) {
-  //     // Check individual file size
-  //     if (file.size > MAX_FILE_SIZE_BYTES) {
-  //       toast.error(
-  //         `File "${file.name}" is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
-  //       );
-  //       return; // Stop the upload process instantly
-  //     }
-  //     totalSize += file.size;
-  //   }
-
-  //   // Check total batch size
-  //   if (totalSize > MAX_TOTAL_SIZE_BYTES) {
-  //     toast.error(
-  //       `Total document size is too large. Maximum allowed is ${MAX_TOTAL_SIZE_MB} MB. Please compress your files.`,
-  //     );
-  //     return; // Stop the upload process instantly
-  //   }
-  //   // ----------------------------------------------
-
-  //   // 1. Create and pack the FormData
-  //   const formData = new FormData();
-  //   formData.append("userId", userId);
-
-  //   // Loop and append all payslips under the 'payslips' key
-  //   if (documents.payslip1) formData.append("payslips", documents.payslip1);
-  //   if (documents.payslip2) formData.append("payslips", documents.payslip2);
-  //   if (documents.payslip3) formData.append("payslips", documents.payslip3);
-  //   if (documents.itr) formData.append("itrs", documents.itr);
-  //   if (documents.photo) formData.append("others", documents.photo);
-
-  //   try {
-  //     const response = await uploadFinancialDocuments(formData);
-
-  //     if (response.status === 201 || response.status === 200) {
-  //       setCurrentStep(3);
-  //       toast.success("Documents uploaded successfully!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Upload failed:", error);
-
-  //     // Fallback error handling if a 413 somehow slips through to the client
-  //     if (error.response?.status === 413) {
-  //       toast.error("Files are too large for the server to process.");
-  //     } else {
-  //       toast.error(
-  //         error.response?.data?.error ||
-  //         error.response?.data?.message ||
-  //         "Document upload failed. Is your backend running?",
-  //       );
-  //     }
-  //   }
-  // };
-
-  const handleUpdateLoanRequirements = async () => {
-    try {
-      const resp = await updateLoanRequirements({
-        userId: sessionStorage.getItem("userId"),
-        loanType: formData.loanType,
-        applicationId,
-        requestedAmount: formData.loanAmount,
-        preferredTenure: formData.loanTenure,
-      });
-      console.log(resp, "update loan requirements response");
-    } catch (error) {
-      console.log(error, "error in updating loan requirements");
-    }
-  };
-
-  const handleDocumentUpload = async () => {
-    const userId = sessionStorage.getItem("userId");
-
-    if (!userId) {
-      toast.error("User ID is missing. Please log in again.");
-      return;
-    }
-
-    // 1. Create and pack the FormData
-    const formData = new FormData();
-    formData.append("userId", userId);
-
-    // Loop and append all payslips under the 'payslips' key
-    // Ensure 'documents' state actually contains File objects from the input!
-    if (documents.payslip1) formData.append("payslips", documents.payslip1);
-    if (documents.payslip2) formData.append("payslips", documents.payslip2);
-    if (documents.payslip3) formData.append("payslips", documents.payslip3);
-    if (documents.itr) formData.append("itrs", documents.itr);
-    if (documents.photo) formData.append("others", documents.photo);
-
-    try {
-      const response = await uploadFinancialDocuments(formData);
-
-      if (response.status === 201 || response.status === 200) {
-        // setCurrentStep(3); // Move to the next step in your UI
-        setCurrentStep(3);
-        toast.success("Documents uploaded successfully!");
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(
-        error.response?.data?.error ||
-        error.response?.data?.message ||
-        "Document upload failed. Is your backend running?",
-      );
-    }
-  };
-
-  // useEffect(() => {
-  //   autoFillUserDetails();
-  // }, []);
-
-  useEffect(() => {
-    if (!creditProfile) return;
-
-    const mobile = sessionStorage.getItem("mobile_number");
-
-    const appId = creditProfile?.applicationId || null;
-    setApplicationId(appId);
-
-    if (appId) {
-      sessionStorage.setItem("applicationId", appId);
-    }
-
-    const apiData = creditProfile?.data || creditProfile;
-
-    if (!apiData) return;
-
-    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
-
-    // Application ID
-
-    // Emails
-    const apiEmails = Array.isArray(apiData.emails)
-      ? apiData.emails.map((e) => e.email).filter(Boolean)
-      : [];
-
-    const uniqueEmails = [...new Set(apiEmails)];
-    setEmailOptions(uniqueEmails);
-
-    // Phones
-    const apiPhones = Array.isArray(apiData.phoneNumbers)
-      ? apiData.phoneNumbers
-        .map((p) => p.Number)
-        .filter((num) => /^\d{10}$/.test(num))
-      : [];
-
-    const uniquePhones = [...new Set(apiPhones)];
-    setPhoneOptions(uniquePhones);
-
-    // Set form data
-    setFormData((prev) => ({
-      ...mapApiResponseToFormData(apiData, mobile),
-
-      // Preserve Loan Fields
-      loanType: prev.loanType,
-      loanAmount: prev.loanAmount,
-      loanTenure: prev.loanTenure,
-    }));
-
-    setPageLoading(false);
-  }, [creditProfile]);
-
-  useEffect(() => {
-    if (location.state) {
-      setCurrentStep(location.state.goToStep ?? 0);
-
-      setFormData((prev) => ({
-        ...prev,
-        loanType: location.state.loanType ?? prev.loanType,
-        loanAmount: location.state.loanAmount ?? prev.loanAmount,
-      }));
-    }
-  }, [location.state]);
-
-  useEffect(() => {
-    const savedLoanData = localStorage.getItem("loanData");
-
-    if (savedLoanData) {
-      const parsed = JSON.parse(savedLoanData);
-
-      setFormData((prev) => ({
-        ...prev,
-        loanType: parsed.loanType ?? prev.loanType,
-        loanAmount: parsed.loanAmount ?? prev.loanAmount,
-        loanTenure: parsed.loanTenure ?? prev.loanTenure,
-      }));
-    }
-
-    if (location.state?.goToStep !== undefined) {
-      setCurrentStep(location.state.goToStep);
-    }
-  }, []);
-
+  // ─── Loading screen ──────────────────────────────────────────────────────────
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="flex flex-col items-center justify-center gap-8 w-full max-w-md px-6">
-          {/* Sub Message with Brand Color */}
           <p className="text-xl md:text-2xl font-bold text-slate-800 animate-pulse">
-            Loading your{" "}
-            <span className="text-[#7c3aed]">credit profile...</span>
+            Loading your <span className="text-[#7c3aed]">credit profile...</span>
           </p>
-
-          {/* Modern Bordered Loader Bar */}
           <div className="w-full h-5 bg-white border-2 border-slate-200 rounded-full p-1 shadow-sm">
-            {/* Inner Progress Bar */}
             <div
               className="h-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] rounded-full animate-loader-bar shadow-[0_0_8px_rgba(124,58,237,0.3)]"
-              style={{
-                width: "40%",
-              }} /* Note: Use state/props for dynamic width */
+              style={{ width: "40%" }}
             />
           </div>
         </div>
@@ -1220,39 +801,30 @@ const LoanApplication = () => {
     );
   }
 
+  // ════════════════════════════════════════════════════════════════════════════
   return (
     <>
-      <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20 ">
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          pauseOnHover
-          draggable
-          theme="light"
-        />
+      <div className="flex min-h-screen justify-center bg-gradient-to-br from-background via-background to-accent/20">
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable theme="light" />
         <div className="px-4 py-8 md:py-12 max-w-7xl w-full mt-10">
+
           {/* Header */}
           <div className="justify-center text-center mb-8">
             <h1 className="text-4xl md:text-3xl font-bold text-foreground mb-4 mt-4">
               Loan <span className="text-[#7c3bed]">Application</span>
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#7c3bed] to-transparent mx-auto rounded-full opacity-50 mb-4"></div>
-            <p className="mt-2 text-muted-foreground">
-              Complete all steps to submit your application
-            </p>
+            <p className="mt-2 text-muted-foreground">Complete all steps to submit your application</p>
           </div>
 
-          {/* Step Indicator */}
+          {/* Step Indicator — dynamic based on loan type */}
           <div>
             <StepIndicator steps={steps} currentStep={currentStep + 1} />
           </div>
 
-          {/* Form Content */}
           <div className="mt-8 space-y-6">
-            {/* Step 1: Personal Details + Address */}
+
+            {/* ── STEP 1: Personal Details ────────────────────────────────────── */}
             {currentStep === 0 && (
               <FormCard
                 title="Review & Edit Personal Details"
@@ -1262,102 +834,26 @@ const LoanApplication = () => {
                   <div className="flex items-center gap-3 p-3 bg-accent/50 rounded-lg border border-accent mb-6">
                     <User className="w-5 h-5 text-primary" />
                     <p className="text-sm text-accent-foreground italic">
-                      *Review the pre-filled data. You may edit any field if
-                      needed.
+                      *Review the pre-filled data. You may edit any field if needed.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <FormInput
-                      label="First Name"
-                      value={formData.firstName}
-                      onChange={(v) => updateFormData("firstName", v)}
-                      required
-                      error={errors.firstName}
-                    />
-                    <FormInput
-                      label="Middle Name"
-                      value={formData.middleName}
-                      onChange={(v) => updateFormData("middleName", v)}
-                    // required
-                    // error={errors.middleName}
-                    />
-                    <FormInput
-                      label="Last Name"
-                      value={formData.lastName}
-                      onChange={(v) => updateFormData("lastName", v)}
-                      required
-                      error={errors.lastName}
-                    />
-                    <FormInput
-                      label="Date of Birth"
-                      value={formData.dateOfBirth}
-                      onChange={(v) => updateFormData("dateOfBirth", v)}
-                      type="date"
-                      max={getTodayISODate()} // ✅ prevents future selection
-                      required
-                      error={errors.dateOfBirth}
-                    />
-                    <FormInput
-                      label="PAN Card"
-                      value={formData.panCard}
-                      disabled
-                      hint="PAN cannot be edited as it's verified from source"
-                      error={errors.panCard}
-                    />
+                    <FormInput label="First Name" value={formData.firstName} onChange={(v) => updateFormData("firstName", v)} required error={errors.firstName} />
+                    <FormInput label="Middle Name" value={formData.middleName} onChange={(v) => updateFormData("middleName", v)} />
+                    <FormInput label="Last Name" value={formData.lastName} onChange={(v) => updateFormData("lastName", v)} required error={errors.lastName} />
+                    <FormInput label="Date of Birth" value={formData.dateOfBirth} onChange={(v) => updateFormData("dateOfBirth", v)} type="date" max={getTodayISODate()} required error={errors.dateOfBirth} />
+                    <FormInput label="PAN Card" value={formData.panCard} disabled hint="PAN cannot be edited as it's verified from source" error={errors.panCard} />
                     {emailOptions.length > 0 ? (
-                      <FormSelect
-                        label="E-Mail ID"
-                        value={formData.email}
-                        onChange={(v) => updateFormData("email", v)}
-                        options={Array.from(emailOptions).map((e) => ({
-                          value: e,
-                          label: e,
-                        }))}
-                        required
-                        error={errors.email}
-                      />
+                      <FormSelect label="E-Mail ID" value={formData.email} onChange={(v) => updateFormData("email", v)} options={Array.from(emailOptions).map((e) => ({ value: e, label: e }))} required error={errors.email} />
                     ) : (
-                      <FormInput
-                        label="E-Mail ID"
-                        value={formData.email}
-                        onChange={(v) => updateFormData("email", v)}
-                        type="email"
-                        required
-                        error={errors.email}
-                      />
+                      <FormInput label="E-Mail ID" value={formData.email} onChange={(v) => updateFormData("email", v)} type="email" required error={errors.email} />
                     )}
-
-                    <FormInput
-                      label="Aadhaar Card"
-                      type="number"
-                      value={formData.aadhaarCard}
-                      onChange={(v) => updateFormData("aadhaarCard", v)}
-                      required
-                      // hint="Aadhaar cannot be edited as it's verified from source"
-                      error={errors.aadhaarCard}
-                    />
+                    <FormInput label="Aadhaar Card" type="number" value={formData.aadhaarCard} onChange={(v) => updateFormData("aadhaarCard", v)} required error={errors.aadhaarCard} />
                     {phoneOptions.length > 1 ? (
-                      <FormSelect
-                        label="Mobile Number"
-                        value={formData.mobileNumber}
-                        onChange={(v) => updateFormData("mobileNumber", v)}
-                        options={phoneOptions.map((num) => ({
-                          value: num,
-                          label: num,
-                        }))}
-                        required
-                        error={errors.mobileNumber}
-                      />
+                      <FormSelect label="Mobile Number" value={formData.mobileNumber} onChange={(v) => updateFormData("mobileNumber", v)} options={phoneOptions.map((num) => ({ value: num, label: num }))} required error={errors.mobileNumber} />
                     ) : (
-                      <FormInput
-                        label="Mobile Number"
-                        value={formData.mobileNumber}
-                        onChange={(v) => updateFormData("mobileNumber", v)}
-                        type="tel"
-                        required
-                        error={errors.mobileNumber}
-                      />
+                      <FormInput label="Mobile Number" value={formData.mobileNumber} onChange={(v) => updateFormData("mobileNumber", v)} type="tel" required error={errors.mobileNumber} />
                     )}
                   </div>
 
@@ -1369,385 +865,79 @@ const LoanApplication = () => {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                       <div className="md:col-span-2 space-y-2">
-                        <label className="text-sm font-medium text-foreground">
-                          Address Line 1
-                        </label>
-
+                        <label className="text-sm font-medium text-foreground">Address Line 1 <span className="text-destructive">*</span></label>
                         <textarea
                           value={formData.addressLine1}
-                          onChange={(e) =>
-                            updateFormData("addressLine1", e.target.value)
-                          }
-                          required
-                          error={errors.addressLine1}
+                          onChange={(e) => updateFormData("addressLine1", e.target.value)}
                           rows={3}
                           className={cn(
                             "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
-                            errors.addressLine1
-                              ? "border border-destructive focus:ring-destructive"
-                              : "border border-input focus:ring-primary",
+                            errors.addressLine1 ? "border border-destructive focus:ring-destructive" : "border border-input focus:ring-primary",
                           )}
                         />
-                        {errors.addressLine1 && (
-                          <p className="text-sm text-destructive mt-1">
-                            {errors.addressLine1}
-                          </p>
-                        )}
+                        {errors.addressLine1 && <p className="text-sm text-destructive mt-1">{errors.addressLine1}</p>}
                       </div>
-
-                      {/* <FormInput
-                      label="City"
-                      value={formData.city}
-                      onChange={(v) => updateFormData("city", v)}
-                      required
-                    /> */}
                       <div className="relative">
-                        <FormInput
-                          label="State"
-                          value={formData.state}
-                          onChange={handleStateChange}
-                          required
-                          error={errors.state}
-                          autoComplete="off"
-                        />
+                        <FormInput label="State" value={formData.state} onChange={handleStateChange} required error={errors.state} autoComplete="off" />
                         {showStateDropdown && filteredStates.length > 0 && (
                           <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
                             {filteredStates.map((state, index) => (
-                              <div
-                                key={index}
-                                onClick={() => handleStateSelect(state)}
-                                className="px-3 py-2 cursor-pointer hover:bg-purple-50"
-                              >
-                                {state}
-                              </div>
+                              <div key={index} onClick={() => handleStateSelect(state)} className="px-3 py-2 cursor-pointer hover:bg-purple-50">{state}</div>
                             ))}
                           </div>
                         )}
                       </div>
-                      <FormInput
-                        label="Pincode"
-                        value={formData.pincode}
-                        onChange={(v) => updateFormData("pincode", v)}
-                        required
-                        error={errors.pincode}
-                      />
-                      {/* <FormSelect
-                      label="Residential Status"
-                      value={formData.residentialStatus}
-                      onChange={(v) => updateFormData("residentialStatus", v)}
-                      options={residentialStatuses}
-                    /> */}
+                      <FormInput label="Pincode" value={formData.pincode} onChange={(v) => updateFormData("pincode", v)} required error={errors.pincode} />
                     </div>
                   </div>
                 </div>
               </FormCard>
             )}
 
-            {/* Step 2: Employment & Credit Details (no address) */}
+            {/* ── STEP 2: Employment & Credit Details ────────────────────────── */}
             {currentStep === 1 && (
-              <FormCard
-                title="Review & Edit Employment and Credit Details"
-                subtitle="Please review and update your employment and credit information"
-              >
-              {!isSelfEmployed && (
-                <EmploymentHistorySection
-                  employmentData={employmentData}
-                  setEmploymentData={setEmploymentData}
-                  errors={employmentErrors}
-                />
-              )}
-                {/* Employment Section */}
+              <FormCard title="Review & Edit Employment and Credit Details" subtitle="Please review and update your employment and credit information">
+                {!isSelfEmployed && (
+                  <EmploymentHistorySection employmentData={employmentData} setEmploymentData={setEmploymentData} errors={employmentErrors} />
+                )}
                 <div className="space-y-6 mt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <FormSelect
-                      label="Employment Status"
-                      value={formData.employmentStatus}
-                      onChange={(v) => updateFormData("employmentStatus", v)}
-                      options={employmentStatuses}
-                      required
-                      error={errors.employmentStatus}
-                    />
+                    <FormSelect label="Employment Status" placeholder="Select Status" value={formData.employmentStatus} onChange={(v) => updateFormData("employmentStatus", v)} options={employmentStatuses} required error={errors.employmentStatus} />
                     {isSelfEmployed && (
-                      <FormInput
-                        label="GST Number (Optional)"
-                        value={formData.gstNumber}
-                        onChange={(v) =>
-                          updateFormData("gstNumber", v.toUpperCase())
-                        }
-                        placeholder="Enter GST Number"
-                        error={errors.gstNumber}
-                      />
+                      <FormInput label="GST Number (Optional)" value={formData.gstNumber} onChange={(v) => updateFormData("gstNumber", v.toUpperCase())} placeholder="Enter GST Number" error={errors.gstNumber} />
                     )}
                     {!isSelfEmployed && (
                       <>
-                        <FormSelect
-                          label="Salary Mode"
-                          value={formData.salaryMode}
-                          onChange={(v) => updateFormData("salaryMode", v)}
-                          placeholder="Select Salary Mode"
-                          required
-                          options={[
-                            { value: "bank-transfer", label: "Bank Transfer" },
-                            { value: "cash", label: "Cash" },
-                          ]}
-                          error={errors.salaryMode}
-                        />
-                        {/* <FormInput
-                          label="Employment Category"
-                          value={formData.employmentCategory}
-                          onChange={(v) =>
-                            updateFormData("employmentCategory", v)
-                          }
-                          required
-                          error={errors.employmentCategory}
-                        /> */}
-                        <FormInput
-                          label="Employment Experience (Years)"
-                          placeholder="e.g. 1.5"
-                          value={formData.employmentExperience || ""}
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          inputMode="decimal"
-                          onChange={(v) => {
-                            // allow only numbers + decimal
-                            if (/^\d*\.?\d*$/.test(v)) {
-                              updateFormData("employmentExperience", v);
-                            }
-                          }}
-                          required
-                          error={errors.employmentExperience}
-                        />
-                        {/* <FormInput
-                          label="UAN / PF Number"
-                          value={formData.uanNumber || ""}
-                          onChange={(v) =>
-                            updateFormData("uanNumber", v.replace(/\D/g, ""))
-                          }
-                          required
-                          error={errors.uanNumber}
-                        /> */}
+                        <FormSelect label="Salary Mode" value={formData.salaryMode} onChange={(v) => updateFormData("salaryMode", v)} placeholder="Select Salary Mode" required options={[{ value: "bank-transfer", label: "Bank Transfer" }, { value: "cash", label: "Cash" }]} error={errors.salaryMode} />
+                        <FormInput label="Employment Experience (Years)" placeholder="e.g. 1.5" value={formData.employmentExperience || ""} type="number" step="0.1" min="0" inputMode="decimal" onChange={(v) => { if (/^\d*\.?\d*$/.test(v)) updateFormData("employmentExperience", v); }} required error={errors.employmentExperience} />
                       </>
                     )}
-                    <FormInput
-                      label="Monthly Income (₹)"
-                      value={formData.monthlyIncome}
-                      onChange={(v) => updateFormData("monthlyIncome", v)}
-                      type="number"
-                      required
-                      error={errors.monthlyIncome}
-                    />
-                    {!isSelfEmployed && (
-                      <>
-                        {/* <FormInput
-                          label="Previous Company Name"
-                          value={formData.previousCompanyName || ""}
-                          onChange={(v) =>
-                            updateFormData("previousCompanyName", v)
-                          }
-                          placeholder="Enter previous company name"
-                          required
-                          error={errors.previousCompanyName}
-                        /> */}
-
-                        {/* Previous Company From Date - custom with Calendar icon */}
-                        {/* <div className="space-y-2">
-                          <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Previous Company Joined Date{" "}
-                            <span className="text-destructive">*</span>
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="date"
-                              value={formData.previousCompanyFrom || ""}
-                              onChange={(e) =>
-                                updateFormData(
-                                  "previousCompanyFrom",
-                                  e.target.value,
-                                )
-                              }
-                              max={getTodayISODate()}
-                              className={cn(
-                                "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
-                                errors.previousCompanyFrom
-                                  ? "border-destructive focus:ring-destructive"
-                                  : "border-input",
-                              )}
-                            />
-                            
-                          </div>
-                          {errors.previousCompanyFrom && (
-                            <p className="text-xs text-destructive mt-1">
-                              {errors.previousCompanyFrom}
-                            </p>
-                          )}
-                        </div> */}
-
-                        {/* Previous Company To Date - custom with Calendar icon */}
-                        {/* <div className="space-y-2">
-                          <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Previous Company Relieving Date{" "}
-                            <span className="text-destructive">*</span>
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="date"
-                              value={formData.previousCompanyTo || ""}
-                              onChange={(e) =>
-                                updateFormData(
-                                  "previousCompanyTo",
-                                  e.target.value,
-                                )
-                              }
-                              min={formData.previousCompanyFrom || undefined}
-                              max={getTodayISODate()}
-                              className={cn(
-                                "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
-                                errors.previousCompanyTo
-                                  ? "border-destructive focus:ring-destructive"
-                                  : "border-input",
-                              )}
-                            />
-                           
-                          </div>
-                          {errors.previousCompanyTo && (
-                            <p className="text-xs text-destructive mt-1">
-                              {errors.previousCompanyTo}
-                            </p>
-                          )}
-                        </div> */}
-
-                        {/* <FormInput
-                          label="Current Company Name"
-                          value={formData.currentCompanyName || ""}
-                          onChange={(v) =>
-                            updateFormData("currentCompanyName", v)
-                          }
-                          placeholder="Enter current company name"
-                          required
-                          error={errors.currentCompanyName}
-                        /> */}
-
-                        {/* Current Company Joining Date - custom with Calendar icon */}
-                        {/* <div className="space-y-2">
-                          <label className="text-sm font-medium text-foreground flex items-center gap-1">
-                            Current Company Joining Date{" "}
-                            <span className="text-destructive">*</span>
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="date"
-                              value={formData.currentCompanyJoiningDate || ""}
-                              onChange={(e) =>
-                                updateFormData(
-                                  "currentCompanyJoiningDate",
-                                  e.target.value,
-                                )
-                              }
-                              min={formData.previousCompanyTo || undefined}
-                              max={getTodayISODate()}
-                              className={cn(
-                                "w-full rounded-md bg-background px-3 py-2 pr-10 text-sm border focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer",
-                                errors.currentCompanyJoiningDate
-                                  ? "border-destructive focus:ring-destructive"
-                                  : "border-input",
-                              )}
-                            />
-                          </div>
-                          {errors.currentCompanyJoiningDate && (
-                            <p className="text-xs text-destructive mt-1">
-                              {errors.currentCompanyJoiningDate}
-                            </p>
-                          )}
-                        </div> */}
-                      </>
-                    )}
+                    <FormInput label="Monthly Income (₹)" value={formData.monthlyIncome} onChange={(v) => updateFormData("monthlyIncome", v)} type="number" required error={errors.monthlyIncome} />
                   </div>
                 </div>
 
-                {/* Credit Details Section */}
+                {/* Credit Details */}
                 <div className="space-y-6 mt-8 pt-6 border-t border-border">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-primary" />
                     Credit Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <FormInput
-                      label="CIBIL Score"
-                      value={formData.cibilScore}
-                      disabled
-                      placeholder="Enter your CIBIL score"
-                      required
-                      error={errors.cibilScore}
-                    />
-                    <FormInput
-                      label="Recent Enquiries"
-                      value={formData.recentEnquiries}
-                      disabled
-                      placeholder="Number of recent credit enquiries"
-                      required
-                      error={errors.recentEnquiries}
-                    />
-                    <FormInput
-                      label="Settlements"
-                      value={formData.settlements}
-                      disabled
-                      placeholder="Any loan settlements"
-                      required
-                      error={errors.settlements}
-                    />
-                    <FormInput
-                      label="EMI Bounces"
-                      value={formData.emiBounces}
-                      disabled
-                      placeholder="Number of EMI bounces"
-                      required
-                      error={errors.emiBounces}
-                    />
-                    <FormInput
-                      label="Credit Card Utilization (%)"
-                      value={formData.creditCardUtilization}
-                      disabled
-                      placeholder="e.g., 40%"
-                      required
-                      error={errors.creditCardUtilization}
-                    />
-                    {/* <FormSelect
-                      label="Residential Stability"
-                      value={formData.residentialStability}
-                      onChange={(v) =>
-                        updateFormData("residentialStability", v)
-                      }
-                      placeholder="Select stability period"
-                      required
-                      options={[
-                        { value: "1", label: "Less than 1 year" },
-                        { value: "3", label: "1-3 years" },
-                        { value: "5", label: "3-5 years" },
-                        { value: "10", label: "More than 5 years" },
-                      ]}
-                      error={errors.residentialStability}
-                    /> */}
-                    <FormInput
-                      label="Existing EMI (₹)"
-                      value={formData.existingEmi}
-                      disabled
-                      placeholder="Total existing EMI amount"
-                      type="number"
-                      required
-                      error={errors.existingEmi}
-                    />
+                    <FormInput label="CIBIL Score" value={formData.cibilScore} disabled placeholder="Enter your CIBIL score" required error={errors.cibilScore} />
+                    <FormInput label="Recent Enquiries" value={formData.recentEnquiries} disabled placeholder="Number of recent credit enquiries" required error={errors.recentEnquiries} />
+                    <FormInput label="Settlements" value={formData.settlements} disabled placeholder="Any loan settlements" required error={errors.settlements} />
+                    <FormInput label="EMI Bounces" value={formData.emiBounces} disabled placeholder="Number of EMI bounces" required error={errors.emiBounces} />
+                    <FormInput label="Credit Card Utilization (%)" value={formData.creditCardUtilization} disabled placeholder="e.g., 40%" required error={errors.creditCardUtilization} />
+                    <FormInput label="Existing EMI (₹)" value={formData.existingEmi} disabled placeholder="Total existing EMI amount" type="number" required error={errors.existingEmi} />
                   </div>
                 </div>
               </FormCard>
             )}
 
-            {/* Step 3: Loan & Documents */}
+            {/* ── STEP 3: Loan Type + Documents ──────────────────────────────── */}
             {currentStep === 2 && (
-              <FormCard
-                title="Loan Requirement & Document Upload"
-                subtitle="Select your loan type and upload required documents"
-              >
+              <FormCard title="Loan Requirement & Document Upload" subtitle="Select your loan type and upload required documents">
+
                 {/* Loan Details */}
                 <div className="space-y-6">
                   <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
@@ -1758,37 +948,56 @@ const LoanApplication = () => {
                     <FormSelect
                       label="Loan Type"
                       value={formData.loanType}
-                      onChange={(v) => updateFormData("loanType", v)}
+                      onChange={(v) => {
+                        updateFormData("loanType", v);
+                        // Reset tenure when switching loan type since tenure options differ
+                        updateFormData("loanTenure", "");
+                      }}
                       options={loanTypes}
                       required
                       error={errors.loanType}
                     />
                     <FormInput
                       label="Desired Loan Amount (₹)"
-                      value={formData.loanAmount}
-                      onChange={(v) => updateFormData("loanAmount", v)}
+                      value={formatIndianNumber(formData.loanAmount)}
+                      onChange={(v) => {
+                        const rawValue = v.replace(/,/g, "").replace(/\D/g, "");
+                        updateFormData("loanAmount", rawValue);
+                      }}
                       placeholder="Enter amount"
-                      type="number"
+                      type="text"
                       required
                       error={errors.loanAmount}
                     />
-                    <FormSelect
-                      label="Desired Loan Tenure"
-                      value={formData.loanTenure}
-                      onChange={(v) => updateFormData("loanTenure", v)}
-                      options={loanTenureOptions}
-                      placeholder="Select tenure"
-                      required
-                      error={errors.loanTenure}
-                    />
+                    <FormSelect label="Desired Loan Tenure" value={formData.loanTenure} onChange={(v) => updateFormData("loanTenure", v)} options={activeTenureOptions} placeholder="Select tenure" required error={errors.loanTenure} />
+
+                    {/* Home Loan: show loan purpose inline alongside other loan fields */}
+                    {isHomeLoan && (
+                      <FormSelect
+                        label="Loan Purpose"
+                        value={formData.loanPurpose}
+                        onChange={(v) => updateFormData("loanPurpose", v)}
+                        options={loanPurposeOptions}
+                        required
+                        error={errors.loanPurpose}
+                      />
+                    )}
                   </div>
+
+                  {/* ── Home Loan info banner ─────────────────────────────────── */}
+                  {isHomeLoan && (
+                    <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <Home className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-sm font-semibold text-blue-800">Home Loan Selected</p>
+                        <p className="text-sm text-blue-600 mt-0.5">
+                          After uploading documents you'll fill in property and co-applicant details on the next step.
+                          Tenure options go up to 30 years.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {/* <div className="mt-10">
-                  <ExistingDocumentsSelector
-                    documents={existingDocuments}
-                    onSelectionChange={setSelectedDocIds}
-                  />
-                </div> */}
 
                 {/* Documents Section */}
                 <div className="space-y-6 mt-8 pt-6 border-t border-border">
@@ -1797,413 +1006,356 @@ const LoanApplication = () => {
                     Required Documents
                   </h3>
 
-                  {/* Income Tax Autofetch */}
-                  {/* <div className="flex gap-8 w-full md:w-auto">
-                    <input
-                      type="text"
-                      placeholder="Enter Your Income Tax Efiling Password"
-                      value={taxNumber}
-                      onChange={(e) => setTaxNumber(e.target.value)}
-                      className="h-10 w-70 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-
-                    <Button
-                      onClick={handleFetchTaxDocuments}
-                      disabled={isFetchingDocs}
-                      className="h-10"
-                    >
-                      {isFetchingDocs ? "Fetching..." : "Fetch ITR Documents"}
-                    </Button>
-                  </div> */}
-
+                  {/* Common docs (ITR + Photo) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <FileUploadZone
-                      label="Last 3 Years ITR/Form 166"
-                      required
-                      accept=".pdf,.jpg,.png"
-                      file={documents.itr}
-                      error={documentValidationTriggered && !!documentErrors.itr}
-                      onFileSelect={(file) =>
-                        setDocuments((prev) => ({ ...prev, itr: file }))
-                      }
-                    />
-                    <FileUploadZone
-                      label="Applicant Photo"
-                      required
-                      accept=".jpg,.png,.jpeg"
-                      file={documents.photo}
-                      error={documentValidationTriggered && !!documentErrors.photo}
-                      onFileSelect={(file) =>
-                        setDocuments((prev) => ({ ...prev, photo: file }))
-                      }
-                    />
+                    <FileUploadZone label="Last 3 Years ITR/Form 16" required accept=".pdf,.jpg,.png" file={documents.itr} error={documentValidationTriggered && !!documentErrors.itr} onFileSelect={(file) => setDocuments((prev) => ({ ...prev, itr: file }))} />
+                    <FileUploadZone label="Applicant Photo" required accept=".jpg,.png,.jpeg" file={documents.photo} error={documentValidationTriggered && !!documentErrors.photo} onFileSelect={(file) => setDocuments((prev) => ({ ...prev, photo: file }))} />
                   </div>
 
+                  {/* Payslips — only for salaried */}
                   {!isSelfEmployed && (
                     <div className="mt-6">
                       <h4 className="text-sm font-medium text-foreground mb-4">
-                        Last 3 Months Payslips
-                        <span className="text-destructive ml-1">*</span>
+                        Last 3 Months Payslips<span className="text-destructive ml-1">*</span>
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <FileUploadZone label="Month 1" required accept=".pdf,.jpg,.png" file={documents.payslip1} error={documentValidationTriggered && !!documentErrors.payslips} compact onFileSelect={(file) => setDocuments((prev) => ({ ...prev, payslip1: file }))} />
+                        <FileUploadZone label="Month 2" required accept=".pdf,.jpg,.png" file={documents.payslip2} error={documentValidationTriggered && !!documentErrors.payslips} compact onFileSelect={(file) => setDocuments((prev) => ({ ...prev, payslip2: file }))} />
+                        <FileUploadZone label="Month 3" required accept=".pdf,.jpg,.png" file={documents.payslip3} error={documentValidationTriggered && !!documentErrors.payslips} compact onFileSelect={(file) => setDocuments((prev) => ({ ...prev, payslip3: file }))} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Home Loan specific documents ─────────────────────────── */}
+                  {isHomeLoan && (
+                    <div className="mt-6 space-y-4">
+                      <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <Home className="w-4 h-4 text-primary" />
+                        Property Documents
+                      </h4>
+                      <p className="text-xs text-muted-foreground -mt-2">
+                        Upload property-related documents. Marked <span className="text-destructive font-medium">*</span> items are mandatory.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {/* Required */}
                         <FileUploadZone
-                          label="Month 1"
+                          label="Property Document / Allotment Letter"
                           required
                           accept=".pdf,.jpg,.png"
-                          file={documents.payslip1}
-                          error={documentValidationTriggered && !!documentErrors.payslips}
-                          compact
-                          onFileSelect={(file) =>
-                            setDocuments((prev) => ({
-                              ...prev,
-                              payslip1: file,
-                            }))
-                          }
+                          file={documents.propertyDocument}
+                          error={documentValidationTriggered && !!documentErrors.propertyDocument}
+                          onFileSelect={(file) => setDocuments((prev) => ({ ...prev, propertyDocument: file }))}
                         />
                         <FileUploadZone
-                          label="Month 2"
+                          label="Sale Agreement / Booking Receipt"
                           required
                           accept=".pdf,.jpg,.png"
-                          file={documents.payslip2}
-                          error={documentValidationTriggered && !!documentErrors.payslips}
-                          compact
-                          onFileSelect={(file) =>
-                            setDocuments((prev) => ({
-                              ...prev,
-                              payslip2: file,
-                            }))
-                          }
+                          file={documents.saleAgreement}
+                          error={documentValidationTriggered && !!documentErrors.saleAgreement}
+                          onFileSelect={(file) => setDocuments((prev) => ({ ...prev, saleAgreement: file }))}
+                        />
+                        {/* Optional */}
+                        <FileUploadZone
+                          label="Title Deed (Optional)"
+                          accept=".pdf,.jpg,.png"
+                          file={documents.titleDeed}
+                          onFileSelect={(file) => setDocuments((prev) => ({ ...prev, titleDeed: file }))}
                         />
                         <FileUploadZone
-                          label="Month 3"
-                          required
+                          label="Approved Building Plan (Optional)"
                           accept=".pdf,.jpg,.png"
-                          file={documents.payslip3}
-                          error={documentValidationTriggered && !!documentErrors.payslips}
-                          compact
-                          onFileSelect={(file) =>
-                            setDocuments((prev) => ({
-                              ...prev,
-                              payslip3: file,
-                            }))
-                          }
+                          file={documents.approvedPlan}
+                          onFileSelect={(file) => setDocuments((prev) => ({ ...prev, approvedPlan: file }))}
+                        />
+                        <FileUploadZone
+                          label="NOC from Builder/Society (Optional)"
+                          accept=".pdf,.jpg,.png"
+                          file={documents.noc}
+                          onFileSelect={(file) => setDocuments((prev) => ({ ...prev, noc: file }))}
                         />
                       </div>
                     </div>
                   )}
                 </div>
-
-                {/* <div className="duplicate-fileupload">
-                  <div className="space-y-4 mt-9">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <span className="w-1 h-4 bg-primary rounded-full" />
-                      Required Documents
-                    </h3>
-
-                    {selectedDocIds.length > 0 && (
-                      <p className="text-sm text-muted-foreground">
-                        Some documents are already covered by your selections above.
-                        Upload any remaining required documents below.
-                      </p>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {!hasITR && (
-                        <div>
-                          <FileUploadZone
-                            label="Last 3 Years ITR/Form 16"
-                            required
-                            error={!!documentErrors.itr}
-                            onFileSelect={(file) =>
-                              setDocuments((prev) => ({ ...prev, itr: file }))
-                            }
-                          />
-                          {documentErrors.itr && (
-                            <p className="text-sm text-destructive mt-1">
-                              {documentErrors.itr}
-                            </p>
-                          )}
-                        </div>
-                      )}
-
-                      {!hasPhoto && (
-                        <div>
-                          <FileUploadZone
-                            label="Applicant Photo"
-                            error={!!documentErrors.photo}
-                            required
-                            onFileSelect={(file) =>
-                              setDocuments((prev) => ({ ...prev, photo: file }))
-                            }
-                          />
-                          {documentErrors.photo && (
-                            <p className="text-sm text-destructive mt-1">
-                              {documentErrors.photo}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {payslipsNeeded > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium text-foreground">
-                          Last 3 Months Payslips{" "}
-                          <span className="text-destructive">*</span>
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          {Array.from({ length: payslipsNeeded }).map((_, i) => (
-                            <FileUploadZone
-                              key={i}
-                              label={`Month ${selectedPayslips.length + i + 1}`}
-                              required
-                              error={!!documentErrors.payslips}
-                            />
-                          ))}
-                          {Array.from({ length: payslipsNeeded }).map((_, i) => {
-                            const index = selectedPayslips.length + i + 1;
-
-                            return (
-                              <FileUploadZone
-                                key={i}
-                                label={`Month ${index}`}
-                                required
-                                error={!!documentErrors.payslips}
-                                onFileSelect={(file) =>
-                                  setDocuments((prev) => ({
-                                    ...prev,
-                                    [`payslip${index}`]: file,
-                                  }))
-                                }
-                              />
-                            );
-                          })}
-                        </div>
-                        {documentErrors.payslips && (
-                          <p className="text-sm text-destructive mt-1">
-                            {documentErrors.payslips}
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    {hasITR && hasPhoto && payslipsNeeded === 0 && (
-                      <div className="p-4 rounded-lg bg-violet-100 text-center">
-                        <p className="text-sm font-medium text-violet-500">
-                          ✓ All required documents are covered by your previous
-                          uploads!
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div> */}
               </FormCard>
             )}
 
-            {currentStep === 3 && (
+            {/* ── STEP 4 (Home Loan only): Property Details ──────────────────── */}
+            {isHomeLoan && currentStep === propertyStep && (
+              <FormCard
+                title="Property & Co-Applicant Details"
+                subtitle="Provide details about the property you intend to purchase and any co-applicant"
+              >
+                {/* Property Information */}
+                <div className="space-y-6">
+                  <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                    <Home className="w-4 h-4 text-primary" />
+                    Property Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <FormSelect label="Property Type" value={formData.propertyType} onChange={(v) => updateFormData("propertyType", v)} options={propertyTypes} required error={errors.propertyType} />
+                    <FormSelect label="Ownership Type" value={formData.propertyOwnershipType} onChange={(v) => updateFormData("propertyOwnershipType", v)} options={propertyOwnershipTypes} required error={errors.propertyOwnershipType} />
+                    <FormInput label="Market Value of Property (₹)" value={formData.propertyValue} onChange={(v) => updateFormData("propertyValue", v)} type="number" placeholder="e.g. 5000000" required error={errors.propertyValue} />
+                    <FormInput label="Down Payment Amount (₹)" value={formData.downPaymentAmount} onChange={(v) => updateFormData("downPaymentAmount", v)} type="number" placeholder="Amount you will pay upfront" required error={errors.downPaymentAmount} />
+
+                    {/* Derived LTV display */}
+                    {formData.propertyValue && formData.downPaymentAmount && Number(formData.propertyValue) > 0 && (
+                      <div className="md:col-span-2 flex items-center gap-4 p-3 bg-accent/40 rounded-lg border border-accent">
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground">Loan-to-Value (LTV) Ratio</p>
+                          <p className="text-lg font-semibold text-primary">
+                            {(((Number(formData.propertyValue) - Number(formData.downPaymentAmount)) / Number(formData.propertyValue)) * 100).toFixed(1)}%
+                          </p>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground">Estimated Loan Required</p>
+                          <p className="text-lg font-semibold text-foreground">
+                            ₹{Math.max(0, Number(formData.propertyValue) - Number(formData.downPaymentAmount)).toLocaleString("en-IN")}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Under-construction extras */}
+                    {formData.propertyType === "under_construction" && (
+                      <>
+                        <FormInput label="Builder / Developer Name" value={formData.builderName} onChange={(v) => updateFormData("builderName", v)} placeholder="Enter builder name" error={errors.builderName} />
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                            Expected Possession Date <span className="text-destructive">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            value={formData.possessionDate || ""}
+                            min={getTodayISODate()}
+                            onChange={(e) => updateFormData("possessionDate", e.target.value)}
+                            className={cn(
+                              "w-full rounded-md bg-background px-3 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-primary",
+                              errors.possessionDate ? "border-destructive" : "border-input",
+                            )}
+                          />
+                          {errors.possessionDate && <p className="text-xs text-destructive mt-1">{errors.possessionDate}</p>}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Property Address */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mt-2">
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                        Property Address <span className="text-destructive">*</span>
+                      </label>
+                      <textarea
+                        value={formData.propertyAddress}
+                        onChange={(e) => updateFormData("propertyAddress", e.target.value)}
+                        rows={3}
+                        placeholder="Full address of the property"
+                        className={cn(
+                          "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                          errors.propertyAddress ? "border border-destructive focus:ring-destructive" : "border border-input focus:ring-primary",
+                        )}
+                      />
+                      {errors.propertyAddress && <p className="text-sm text-destructive mt-1">{errors.propertyAddress}</p>}
+                    </div>
+                    <div className="relative">
+                      <FormInput label="Property State" value={formData.propertyState} onChange={handlePropertyStateChange} required error={errors.propertyState} autoComplete="off" />
+                      {showPropertyStateDropdown && filteredPropertyStates.length > 0 && (
+                        <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                          {filteredPropertyStates.map((state, index) => (
+                            <div key={index} onClick={() => handlePropertyStateSelect(state)} className="px-3 py-2 cursor-pointer hover:bg-purple-50">{state}</div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <FormInput label="Property Pincode" value={formData.propertyPincode} onChange={(v) => updateFormData("propertyPincode", v.replace(/\D/g, "").slice(0, 6))} placeholder="6-digit pincode" required error={errors.propertyPincode} />
+                  </div>
+                </div>
+
+                {/* Co-Applicant Section */}
+                <div className="space-y-6 mt-8 pt-6 border-t border-border">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                      <User className="w-4 h-4 text-primary" />
+                      Co-Applicant Details
+                    </h3>
+                    {/* Toggle switch */}
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                      <div
+                        onClick={() => setHasCoApplicant((v) => !v)}
+                        className={cn(
+                          "relative w-11 h-6 rounded-full transition-colors duration-200",
+                          hasCoApplicant ? "bg-primary" : "bg-muted",
+                        )}
+                      >
+                        <div className={cn(
+                          "absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200",
+                          hasCoApplicant ? "translate-x-5" : "translate-x-0",
+                        )} />
+                      </div>
+                      <span className="text-sm text-muted-foreground">{hasCoApplicant ? "Added" : "Add Co-Applicant"}</span>
+                    </label>
+                  </div>
+
+                  {!hasCoApplicant && (
+                    <p className="text-sm text-muted-foreground">
+                      Adding a co-applicant (e.g. spouse) can improve your loan eligibility. Toggle the switch above to add one.
+                    </p>
+                  )}
+
+                  {hasCoApplicant && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <FormInput label="Co-Applicant Full Name" value={formData.coApplicantName} onChange={(v) => updateFormData("coApplicantName", v)} placeholder="Enter full name" required error={errors.coApplicantName} />
+                      <FormSelect label="Relation with Applicant" value={formData.coApplicantRelation} onChange={(v) => updateFormData("coApplicantRelation", v)} options={coApplicantRelationOptions} required error={errors.coApplicantRelation} />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-foreground flex items-center gap-1">
+                          Date of Birth <span className="text-destructive">*</span>
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.coApplicantDOB || ""}
+                          max={getTodayISODate()}
+                          onChange={(e) => updateFormData("coApplicantDOB", e.target.value)}
+                          className={cn(
+                            "w-full rounded-md bg-background px-3 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-primary",
+                            errors.coApplicantDOB ? "border-destructive" : "border-input",
+                          )}
+                        />
+                        {errors.coApplicantDOB && <p className="text-xs text-destructive mt-1">{errors.coApplicantDOB}</p>}
+                      </div>
+                      <FormInput
+                        label="Co-Applicant PAN"
+                        value={formData.coApplicantPAN}
+                        onChange={(v) => updateFormData("coApplicantPAN", v.toUpperCase())}
+                        placeholder="ABCDE1234F"
+                        required
+                        error={errors.coApplicantPAN}
+                      />
+                      <FormSelect label="Employment Status" value={formData.coApplicantEmploymentStatus} onChange={(v) => updateFormData("coApplicantEmploymentStatus", v)} options={employmentStatuses} required error={errors.coApplicantEmploymentStatus} />
+                      <FormInput label="Monthly Income (₹)" value={formData.coApplicantMonthlyIncome} onChange={(v) => updateFormData("coApplicantMonthlyIncome", v)} type="number" placeholder="Co-applicant monthly income" required error={errors.coApplicantMonthlyIncome} />
+                    </div>
+                  )}
+                </div>
+              </FormCard>
+            )}
+
+            {/* ── REVIEW STEP ─────────────────────────────────────────────────── */}
+            {currentStep === reviewStep && (
               <div className="space-y-6">
                 {/* Header Summary Card */}
                 <div className="bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground shadow-xl shadow-primary/25">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">
-                        Application Summary
-                      </p>
-                      <h2 className="text-2xl font-bold">
-                        {formData.firstName} {formData.middleName}{" "}
-                        {formData.lastName}
-                      </h2>
-                      <p className="text-primary-foreground/80 mt-1">
-                        {formData.email}
-                      </p>
+                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">Application Summary</p>
+                      <h2 className="text-2xl font-bold">{formData.firstName} {formData.middleName} {formData.lastName}</h2>
+                      <p className="text-primary-foreground/80 mt-1">{formData.email}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">
-                        Requested Amount
-                      </p>
-                      <p className="text-3xl font-bold">
-                        ₹{Number(formData.loanAmount).toLocaleString("en-IN")}
-                      </p>
-                      <p className="text-primary-foreground/80 mt-1">
-                        {
-                          loanTypes.find((l) => l.value === formData.loanType)
-                            ?.label
-                        }
-                      </p>
+                      <p className="text-primary-foreground/80 text-sm font-medium mb-1">Requested Amount</p>
+                      <p className="text-3xl font-bold">₹{Number(formData.loanAmount).toLocaleString("en-IN")}</p>
+                      <p className="text-primary-foreground/80 mt-1">{loanTypes.find((l) => l.value === formData.loanType)?.label}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Details Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Personal Details */}
                   <SummarySection title="Personal Details" icon={User}>
-                    <SummaryRow
-                      label="Full Name"
-                      value={`${formData.firstName} ${formData.middleName} ${formData.lastName}`}
-                      icon={User}
-                    />
-                    <SummaryRow
-                      label="Date of Birth"
-                      value={formData.dateOfBirth}
-                      icon={Calendar}
-                    />
-                    <SummaryRow
-                      label="Mobile"
-                      value={formData.mobileNumber}
-                      icon={Phone}
-                    />
-                    <SummaryRow
-                      label="Email"
-                      value={formData.email}
-                      icon={Mail}
-                    />
-                    <SummaryRow
-                      label="PAN Card"
-                      value={formData.panCard}
-                      icon={CreditCard}
-                      highlighted
-                    />
-                    <SummaryRow
-                      label="Aadhaar"
-                      value={formData.aadhaarCard}
-                      icon={CreditCard}
-                      highlighted
-                    />
+                    <SummaryRow label="Full Name" value={`${formData.firstName} ${formData.middleName} ${formData.lastName}`} icon={User} />
+                    <SummaryRow label="Date of Birth" value={formData.dateOfBirth} icon={Calendar} />
+                    <SummaryRow label="Mobile" value={formData.mobileNumber} icon={Phone} />
+                    <SummaryRow label="Email" value={formData.email} icon={Mail} />
+                    <SummaryRow label="PAN Card" value={formData.panCard} icon={CreditCard} highlighted />
+                    <SummaryRow label="Aadhaar" value={formData.aadhaarCard} icon={CreditCard} highlighted />
                   </SummarySection>
 
-                  {/* Address Details */}
                   <SummarySection title="Address Details" icon={MapPin}>
-                    <SummaryRow
-                      label="Address"
-                      value={formData.addressLine1}
-                      icon={Home}
-                    />
-                    <SummaryRow
-                      label="City"
-                      value={formData.city || "—"}
-                      icon={Building}
-                    />
-                    <SummaryRow
-                      label="State"
-                      value={formData.state}
-                      icon={MapPin}
-                    />
+                    <SummaryRow label="Address" value={formData.addressLine1} icon={Home} />
+                    <SummaryRow label="State" value={formData.state} icon={MapPin} />
                     <SummaryRow label="Pincode" value={formData.pincode} />
-                    <SummaryRow
-                      label="Residential Status"
-                      value={
-                        residentialStatuses.find(
-                          (r) => r.value === formData.residentialStatus,
-                        )?.label || ""
-                      }
-                    />
                   </SummarySection>
 
-                  {/* Employment Details */}
                   <SummarySection title="Employment Details" icon={Briefcase}>
-                    <SummaryRow
-                      label="Status"
-                      value={
-                        employmentStatuses.find(
-                          (e) => e.value === formData.employmentStatus,
-                        )?.label || ""
-                      }
-                      icon={Briefcase}
-                    />
-                    <SummaryRow
-                      label="Company"
-                      value={formData.companyName}
-                      icon={Building}
-                    />
-                    <SummaryRow
-                      label="Monthly Income"
-                      value={`₹${Number(formData.monthlyIncome).toLocaleString("en-IN")}`}
-                      icon={IndianRupee}
-                      highlighted
-                    />
-                    <SummaryRow
-                      label="Existing EMI"
-                      value={`₹${Number(formData.existingEmi).toLocaleString("en-IN")}`}
-                    />
+                    <SummaryRow label="Status" value={employmentStatuses.find((e) => e.value === formData.employmentStatus)?.label || ""} icon={Briefcase} />
+                    <SummaryRow label="Company" value={formData.companyName} icon={Building} />
+                    <SummaryRow label="Monthly Income" value={`₹${Number(formData.monthlyIncome).toLocaleString("en-IN")}`} icon={IndianRupee} highlighted />
+                    <SummaryRow label="Existing EMI" value={`₹${Number(formData.existingEmi).toLocaleString("en-IN")}`} />
                   </SummarySection>
 
-                  {/* Credit Details */}
                   <SummarySection title="Credit Information" icon={CreditCard}>
-                    <SummaryRow
-                      label="CIBIL Score"
-                      value={formData.cibilScore}
-                      icon={CreditCard}
-                      highlighted
-                    />
-                    <SummaryRow
-                      label="Recent Enquiries"
-                      value={Number(formData.recentEnquiries) || 0}
-                    />
-                    <SummaryRow
-                      label="EMI Bounces"
-                      value={Number(formData.emiBounces) || 0}
-                    />
-                    <SummaryRow
-                      label="Credit Utilization"
-                      value={`${Number(formData.creditCardUtilization) || 0}%`}
-                    />
-                    <SummaryRow
-                      label="Settlements"
-                      value={Number(formData.settlements) || 0}
-                    />
+                    <SummaryRow label="CIBIL Score" value={formData.cibilScore} icon={CreditCard} highlighted />
+                    <SummaryRow label="Recent Enquiries" value={Number(formData.recentEnquiries) || 0} />
+                    <SummaryRow label="EMI Bounces" value={Number(formData.emiBounces) || 0} />
+                    <SummaryRow label="Credit Utilization" value={`${Number(formData.creditCardUtilization) || 0}%`} />
+                    <SummaryRow label="Settlements" value={Number(formData.settlements) || 0} />
                   </SummarySection>
                 </div>
 
                 {/* Loan Details */}
                 <SummarySection title="Loan Requirements" icon={IndianRupee}>
                   <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
-                    <SummaryRow
-                      label="Loan Type"
-                      value={
-                        loanTypes.find((l) => l.value === formData.loanType)
-                          ?.label || ""
-                      }
-                      highlighted
-                    />
-                    <SummaryRow
-                      label="Loan Amount"
-                      value={`₹${Number(formData.loanAmount).toLocaleString("en-IN")}`}
-                      highlighted
-                    />
+                    <SummaryRow label="Loan Type" value={loanTypes.find((l) => l.value === formData.loanType)?.label || ""} highlighted />
+                    <SummaryRow label="Loan Amount" value={`₹${Number(formData.loanAmount).toLocaleString("en-IN")}`} highlighted />
+                    <SummaryRow label="Tenure" value={activeTenureOptions.find((t) => t.value === formData.loanTenure)?.label || ""} />
                   </div>
                 </SummarySection>
+
+                {/* Home Loan: Property Summary */}
+                {isHomeLoan && (
+                  <SummarySection title="Property Details" icon={Home}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                      <SummaryRow label="Loan Purpose" value={loanPurposeOptions.find((l) => l.value === formData.loanPurpose)?.label || ""} />
+                      <SummaryRow label="Property Type" value={propertyTypes.find((p) => p.value === formData.propertyType)?.label || ""} highlighted />
+                      <SummaryRow label="Property Value" value={`₹${Number(formData.propertyValue).toLocaleString("en-IN")}`} highlighted />
+                      <SummaryRow label="Down Payment" value={`₹${Number(formData.downPaymentAmount).toLocaleString("en-IN")}`} />
+                      <SummaryRow label="Property State" value={formData.propertyState} icon={MapPin} />
+                      <SummaryRow label="Property Pincode" value={formData.propertyPincode} />
+                      <SummaryRow label="Ownership Type" value={propertyOwnershipTypes.find((o) => o.value === formData.propertyOwnershipType)?.label || ""} />
+                      {formData.propertyType === "under_construction" && (
+                        <>
+                          <SummaryRow label="Builder Name" value={formData.builderName} />
+                          <SummaryRow label="Expected Possession" value={formData.possessionDate} icon={Calendar} />
+                        </>
+                      )}
+                    </div>
+                    {hasCoApplicant && (
+                      <div className="mt-4 pt-4 border-t border-border/30">
+                        <p className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <User className="w-4 h-4 text-primary" />
+                          Co-Applicant
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                          <SummaryRow label="Name" value={formData.coApplicantName} />
+                          <SummaryRow label="Relation" value={coApplicantRelationOptions.find((r) => r.value === formData.coApplicantRelation)?.label || ""} />
+                          <SummaryRow label="PAN" value={formData.coApplicantPAN} highlighted />
+                          <SummaryRow label="Monthly Income" value={`₹${Number(formData.coApplicantMonthlyIncome).toLocaleString("en-IN")}`} highlighted />
+                          <SummaryRow label="Employment Status" value={employmentStatuses.find((e) => e.value === formData.coApplicantEmploymentStatus)?.label || ""} />
+                        </div>
+                      </div>
+                    )}
+                  </SummarySection>
+                )}
 
                 {/* Uploaded Documents */}
                 <SummarySection title="Uploaded Documents" icon={FileText}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                    <DocumentStatus
-                      label="ITR/Form 16"
-                      file={documents.itr}
-                      icon={FileText}
-                    />
-                    <DocumentStatus
-                      label="Applicant Photo"
-                      file={documents.photo}
-                      icon={User}
-                    />
+                    <DocumentStatus label="ITR/Form 16" file={documents.itr} icon={FileText} />
+                    <DocumentStatus label="Applicant Photo" file={documents.photo} icon={User} />
                     {!isSelfEmployed && (
                       <>
-                        <DocumentStatus
-                          label="Payslip - Month 1"
-                          file={documents.payslip1}
-                          icon={FileText}
-                        />
-                        <DocumentStatus
-                          label="Payslip - Month 2"
-                          file={documents.payslip2}
-                          icon={FileText}
-                        />
-                        <DocumentStatus
-                          label="Payslip - Month 3"
-                          file={documents.payslip3}
-                          icon={FileText}
-                        />
+                        <DocumentStatus label="Payslip - Month 1" file={documents.payslip1} icon={FileText} />
+                        <DocumentStatus label="Payslip - Month 2" file={documents.payslip2} icon={FileText} />
+                        <DocumentStatus label="Payslip - Month 3" file={documents.payslip3} icon={FileText} />
+                      </>
+                    )}
+                    {isHomeLoan && (
+                      <>
+                        <DocumentStatus label="Property Document" file={documents.propertyDocument} icon={FileText} />
+                        <DocumentStatus label="Sale Agreement" file={documents.saleAgreement} icon={FileText} />
+                        {documents.titleDeed && <DocumentStatus label="Title Deed" file={documents.titleDeed} icon={FileText} />}
+                        {documents.approvedPlan && <DocumentStatus label="Approved Building Plan" file={documents.approvedPlan} icon={FileText} />}
+                        {documents.noc && <DocumentStatus label="NOC" file={documents.noc} icon={FileText} />}
                       </>
                     )}
                   </div>
@@ -2211,116 +1363,51 @@ const LoanApplication = () => {
 
                 {/* Terms & Consent */}
                 <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm">
-                  <h3 className="text-base font-semibold text-foreground mb-4">
-                    Terms & Consent
-                  </h3>
+                  <h3 className="text-base font-semibold text-foreground mb-4">Terms & Consent</h3>
                   <div className="space-y-4">
-                    <div
-                      className={cn(
-                        "flex items-start space-x-3 p-3 rounded-md border",
-                        consentError && !termsAccepted
-                          ? "border-destructive bg-destructive/5"
-                          : "border-border",
-                      )}
-                    >
-                      <Checkbox
-                        id="terms"
-                        className="mt-0.5 border-primary data-[state=checked]:bg-primary"
-                        checked={termsAccepted}
-                        onCheckedChange={(checked) => {
-                          setTermsAccepted(checked);
-                          if (checked && privacyAccepted)
-                            setConsentError(false);
-                        }}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
-                      >
-                        I hereby declare that all the information provided is
-                        true and accurate to the best of my knowledge. I
-                        authorize the bank to verify my details and make credit
-                        enquiries as necessary.
+                    <div className={cn("flex items-start space-x-3 p-3 rounded-md border", consentError && !termsAccepted ? "border-destructive bg-destructive/5" : "border-border")}>
+                      <Checkbox id="terms" className="mt-0.5 border-primary data-[state=checked]:bg-primary" checked={termsAccepted} onCheckedChange={(checked) => { setTermsAccepted(checked); if (checked && privacyAccepted) setConsentError(false); }} />
+                      <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                        I hereby declare that all the information provided is true and accurate to the best of my knowledge. I authorize the bank to verify my details and make credit enquiries as necessary.
                       </label>
                     </div>
-                    <div
-                      className={cn(
-                        "flex items-start space-x-3 p-3 rounded-md border",
-                        consentError && !privacyAccepted
-                          ? "border-destructive bg-destructive/5"
-                          : "border-border",
-                      )}
-                    >
-                      <Checkbox
-                        id="privacy"
-                        className="mt-0.5 border-primary data-[state=checked]:bg-primary"
-                        checked={privacyAccepted}
-                        onCheckedChange={(checked) => {
-                          setPrivacyAccepted(checked);
-                          if (checked && termsAccepted) setConsentError(false);
-                        }}
-                      />
-                      <label
-                        htmlFor="privacy"
-                        className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
-                      >
+                    <div className={cn("flex items-start space-x-3 p-3 rounded-md border", consentError && !privacyAccepted ? "border-destructive bg-destructive/5" : "border-border")}>
+                      <Checkbox id="privacy" className="mt-0.5 border-primary data-[state=checked]:bg-primary" checked={privacyAccepted} onCheckedChange={(checked) => { setPrivacyAccepted(checked); if (checked && termsAccepted) setConsentError(false); }} />
+                      <label htmlFor="privacy" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
                         I have read and agree to the{" "}
-                        <span className="text-primary underline cursor-pointer font-medium">
-                          Terms of Service
-                        </span>{" "}
+                        <span className="text-primary underline cursor-pointer font-medium">Terms of Service</span>{" "}
                         and{" "}
-                        <span className="text-primary underline cursor-pointer font-medium">
-                          Privacy Policy
-                        </span>
-                        .
+                        <span className="text-primary underline cursor-pointer font-medium">Privacy Policy</span>.
                       </label>
                     </div>
                   </div>
                 </div>
-                {consentError && (
-                  <p className="text-sm text-destructive mt-2">
-                    Please accept Terms & Privacy Policy to continue
-                  </p>
-                )}
+                {consentError && <p className="text-sm text-destructive mt-2">Please accept Terms & Privacy Policy to continue</p>}
               </div>
             )}
           </div>
 
-          {/* Navigation Buttons */}
+          {/* ── Navigation Buttons ──────────────────────────────────────────────── */}
           <div className="mt-8 flex justify-between items-center">
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 0}
-              className="h-12 px-6 border-border hover:bg-muted"
-            >
+            <Button variant="outline" onClick={handleBack} disabled={currentStep === 0} className="h-12 px-6 border-border hover:bg-muted">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
 
-            {currentStep < 3 && (
+            {currentStep < reviewStep && (
               <Button
                 onClick={handleNext}
                 disabled={isLoading}
                 className={cn(
                   "h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25",
-                  isLoading
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer",
+                  isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
                 )}
               >
-                {isLoading ? (
-                  <Loader size={20} />
-                ) : (
-                  <>
-                    Next
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </>
-                )}
+                {isLoading ? <Loader size={20} /> : (<>Next<ArrowRight className="w-4 h-4 ml-2" /></>)}
               </Button>
             )}
 
-            {currentStep === 3 && (
+            {currentStep === reviewStep && (
               <Button
                 onClick={handleSubmit}
                 disabled={!termsAccepted || !privacyAccepted}
