@@ -396,14 +396,13 @@ export function HappirateSplitAuth() {
         <div className="w-full">
           <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
             {/* Left marketing panel */}
-            <section className="flex flex-col justify-center py-0">
-              <div className="flex items-center gap-3">
-                {/* <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
+            <section className="order-2 lg:order-1 flex flex-col justify-center py-0">              <div className="flex items-center gap-3">
+              {/* <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
               </div> */}
-                {/* <div className="text-sm text-muted-foreground">
+              {/* <div className="text-sm text-muted-foreground">
                 Transparent • Privacy-first
               </div> */}
-              </div>
+            </div>
 
               <div className="mt-8 space-y-4">
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
@@ -441,7 +440,7 @@ export function HappirateSplitAuth() {
             </section>
 
             {/* Right auth card */}
-            <section className="flex items-center justify-center py-0 lg:justify-end">
+            <section className="order-1 lg:order-2 mt-10 lg:mt-0 flex items-center justify-center py-0 lg:justify-end">
               <Card
                 className={cn(
                   "w-full max-w-md border-border/70 bg-card/75 shadow-elev backdrop-blur",
