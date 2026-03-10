@@ -37,6 +37,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { submitApplication } from "@/api/api";
 import React from "react";
 
 interface PreSanctionLetterProps {
@@ -66,6 +67,8 @@ export const PreSanctionLetter = ({
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showReassessDialog, setShowReassessDialog] = useState(false);
   const [applicantName, setApplicantName] = useState<string>("");
+  const [referenceNumber, setReferenceNumber] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const currentDate = new Date().toLocaleDateString("en-IN", {
@@ -74,7 +77,6 @@ export const PreSanctionLetter = ({
     year: "numeric",
   });
   console.log("lender in psl", lender);
-  const referenceNumber = `HPR/${lender.logo.toUpperCase()}/${Date.now().toString().slice(-8)}`;
 
   const getLoanTypeName = (type: string) => {
     const types: Record<string, string> = {
@@ -117,23 +119,63 @@ export const PreSanctionLetter = ({
   const tenureMonths = getTenureMonths(lender.tenureOptions);
 
   const emi = calcEMI(estimatedAmount, lender.trueAPR, tenureMonths);
-  const handleAccept = () => {
-    setShowSuccessDialog(true);
+  const getTenureNumber = (tenureString) => {
+    if (!tenureString) return null;
+
+    const numbers = tenureString.match(/\d+/g);
+    if (!numbers) return null;
+
+    return Number(numbers[numbers.length - 1]); // returns 84
+  };
+  const handleAccept = async () => {
+    try {
+      setIsSubmitting(true);
+      const payload = {
+        applicationId: sessionStorage.getItem("applicationId"),
+        userId: sessionStorage.getItem("userId"),
+        acceptedOfferData: {
+          bankId: lender.id,
+          bankName: lender.name,
+          eligible: true,
+          approvalProbability: lender.approvalProbability,
+          interestRate: lender.trueAPR,
+
+          // send requestedAmount OR maxSanctionAmount
+          loanAmount: lender.requestedAmount ?? lender.maxSanctionAmount,
+
+          prePaymentCharges: lender.prepaymentCharges,
+
+          tenure: getTenureNumber(lender.tenureOptions),
+
+          disbursalTime: lender.disbursalTime,
+
+          processingFee: {
+            min: lender.processingFeeMin,
+            max: lender.processingFeeMax,
+          },
+        },
+      };
+
+      console.log("submit application payload", payload);
+      const response = await submitApplication(payload);
+
+      console.log("Submit Application Response:", response);
+
+      setReferenceNumber(response.data.applicationId);
+      setIsSubmitting(false);
+      setShowSuccessDialog(true);
+
+      setShowSuccessDialog(true);
+    } catch (error) {
+      console.error("Error submitting application", error);
+    } finally {
+      setIsSubmitting(true);
+    }
   };
 
-  const handleRedirectToDashboard = () => {
+  const handleRedirectToMyApplications = () => {
     setShowSuccessDialog(false);
-    navigate("/loan-tracker", {
-      state: {
-        applicant: applicantName,
-        referenceId: referenceNumber,
-        loanType: getLoanTypeName(loanType),
-        sanctionedAmount: estimatedAmount,
-        apr: lender.trueAPR,
-        tenure: lender.tenureOptions,
-        // lenderName: lender.name,
-      },
-    });
+    navigate("/my-applicaton",);
     // In a real app, this would navigate to the loan tracking dashboard
     onBack();
   };
@@ -233,14 +275,6 @@ export const PreSanctionLetter = ({
                 <span className="text-white/80">Applicant:</span>
                 <span className="font-medium">
                   {applicantName || "Applicant"}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2 md:justify-end">
-                <Hash className="w-4 h-4 text-white/60" />
-                <span className="text-white/80">Ref ID:</span>
-                <span className="font-mono text-xs bg-white/10 px-2 py-0.5 rounded">
-                  {referenceNumber}
                 </span>
               </div>
 
@@ -543,23 +577,23 @@ export const PreSanctionLetter = ({
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 onClick={handleAccept}
-                className="
-                  h-12 
-                  px-8
-                  !rounded-md
-                  text-base 
-                  font-semibold 
-                  text-white
-                  bg-gradient-to-r from-[#1b1630] to-[#2a2146]
-                  shadow-lg shadow-black/20
-                  hover:opacity-90 
-                  active:scale-[0.98]
-                  transition-all
-                  flex items-center justify-center gap-2
-                "
+                disabled={isSubmitting || showSuccessDialog}
+                className="h-12 px-8 !rounded-md text-base font-semibold text-white
+  bg-gradient-to-r from-[#1b1630] to-[#2a2146]
+  shadow-lg shadow-black/20 hover:opacity-90 active:scale-[0.98]
+  transition-all flex items-center justify-center gap-2"
               >
-                <CheckCircle className="w-5 h-5" />
-                Accept & Continue to Final Sanction
+                {isSubmitting && !showSuccessDialog ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Accept & Continue to Final Sanction
+                  </>
+                )}
               </Button>
 
               <Button
@@ -603,7 +637,13 @@ export const PreSanctionLetter = ({
       </div>
 
       {/* Success Dialog */}
-      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+      <Dialog
+        open={showSuccessDialog}
+        onOpenChange={(open) => {
+          setShowSuccessDialog(open);
+          if (!open) setIsSubmitting(false); 
+        }}
+      >
         <DialogContent
           className="
               w-[95%] 
@@ -661,9 +701,9 @@ export const PreSanctionLetter = ({
                   active:scale-[0.98]
                   transition-all
                   flex items-center justify-center gap-2"
-            onClick={handleRedirectToDashboard}
+            onClick={handleRedirectToMyApplications}
           >
-            Go to Loan Tracking Dashboard
+            Go to My Applications
           </Button>
         </DialogContent>
       </Dialog>

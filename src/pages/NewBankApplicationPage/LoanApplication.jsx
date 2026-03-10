@@ -693,7 +693,7 @@ const LoanApplication = () => {
       setIsLoading(false);
       return;
     }
-
+    setIsLoading(true)
     const payload = {
       applicationId,
       userId: sessionStorage.getItem("userId"),
@@ -1177,7 +1177,7 @@ const LoanApplication = () => {
   }, [location.state]);
 
   useEffect(() => {
-    const savedLoanData = localStorage.getItem("loanData");
+    const savedLoanData = sessionStorage.getItem("loanData");
 
     if (savedLoanData) {
       const parsed = JSON.parse(savedLoanData);
@@ -2323,11 +2323,17 @@ const LoanApplication = () => {
             {currentStep === 3 && (
               <Button
                 onClick={handleSubmit}
-                disabled={!termsAccepted || !privacyAccepted}
+                disabled={!termsAccepted || !privacyAccepted || isLoading}
                 className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50"
               >
+                {isLoading ? (
+                  <Loader size={20} />
+                ) : (
+                  <>
                 <Send className="w-4 h-4 mr-2" />
                 Submit Application
+                  </>
+                )}
               </Button>
             )}
           </div>
