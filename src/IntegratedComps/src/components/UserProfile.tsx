@@ -354,7 +354,7 @@ const cibil = getCibilBadge(
   useEffect(() => {
     console.log("Credit profile", creditProfile);
   }, [creditProfile]);
-
+  const isSelfEmployed = creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
   if (isLoading || !creditProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -661,6 +661,7 @@ const cibil = getCibilBadge(
                     highlight
                   />
                 </ProfileSection>
+                {!isSelfEmployed && (
                 <ProfileSection icon={Briefcase} title="Company Details">
                   {/* Current Company */}
                   <DetailRow
@@ -693,6 +694,7 @@ const cibil = getCibilBadge(
                     </>
                   )}
                 </ProfileSection>
+                )}
               </div>
             )}
             {activeTab === "credit" && (
