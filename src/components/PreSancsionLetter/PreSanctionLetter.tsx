@@ -44,7 +44,20 @@ interface PreSanctionLetterProps {
   loanType: string;
   onBack: () => void;
 }
+function formatINR(value: number) {
+  return new Intl.NumberFormat("en-IN").format(value);
+}
 
+function calcEMI(principal: number, annualRate: number, tenureMonths: number) {
+  if (!principal || !annualRate || !tenureMonths) return "—";
+
+  const r = annualRate / 12 / 100;
+  const n = tenureMonths;
+
+  const emi = (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+
+  return formatINR(Math.round(emi)) + "/mo";
+}
 export const PreSanctionLetter = ({
   lender,
   loanType,
@@ -73,6 +86,14 @@ export const PreSanctionLetter = ({
     };
     return types[type] || "Personal Loan";
   };
+  const getTenureMonths = (tenureString: string) => {
+    if (!tenureString) return 36;
+
+    const numbers = tenureString.match(/\d+/g);
+    if (!numbers) return 36;
+
+    return parseInt(numbers[numbers.length - 1]); // take max tenure
+  };
 
   // const estimatedAmount = Math.round(lender.maxSanctionAmount * 0.85);
   const estimatedAmount = lender.requestedAmount ?? lender.maxSanctionAmount;
@@ -88,28 +109,31 @@ export const PreSanctionLetter = ({
     Math.round(estimatedAmount * (lender.trueAPR / 100) * 3);
 
   // EMI calculation (simplified)
-  const tenure = 36; // months
-  const monthlyRate = lender.trueAPR / 12 / 100;
-  // const emi = Math.round((estimatedAmount * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1));
-  const emi = "N/A";
+  // const tenure = 36; // months
+  // const monthlyRate = lender.trueAPR / 12 / 100;
+  // // const emi = Math.round((estimatedAmount * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1));
+  // const emi = "N/A";
 
+  const tenureMonths = getTenureMonths(lender.tenureOptions);
+
+  const emi = calcEMI(estimatedAmount, lender.trueAPR, tenureMonths);
   const handleAccept = () => {
     setShowSuccessDialog(true);
   };
 
   const handleRedirectToDashboard = () => {
     setShowSuccessDialog(false);
-      navigate("/loan-tracker", {
-    state: {
-      applicant: applicantName,
-      referenceId: referenceNumber,
-      loanType: getLoanTypeName(loanType),
-      sanctionedAmount: estimatedAmount,
-      apr: lender.trueAPR,
-      tenure: lender.tenureOptions,
-      // lenderName: lender.name,
-    },
-  });
+    navigate("/loan-tracker", {
+      state: {
+        applicant: applicantName,
+        referenceId: referenceNumber,
+        loanType: getLoanTypeName(loanType),
+        sanctionedAmount: estimatedAmount,
+        apr: lender.trueAPR,
+        tenure: lender.tenureOptions,
+        // lenderName: lender.name,
+      },
+    });
     // In a real app, this would navigate to the loan tracking dashboard
     onBack();
   };
@@ -119,7 +143,6 @@ export const PreSanctionLetter = ({
       setApplicantName(storedName);
     }
   }, []);
-
   return (
     <div className="animate-slide-up max-w-4xl mx-auto pb-8 mt-10">
       <Button
@@ -326,7 +349,8 @@ export const PreSanctionLetter = ({
                   </p>
                 </div>
                 <p className="font-display text-xl font-bold text-yellow-500">
-                  ₹ {emi.toLocaleString("en-IN")}/mo
+                  {/* ₹ {emi.toLocaleString("en-IN")}/mo */}
+                  {emi}
                 </p>
               </div>
               {/* <div className="bg-secondary/50 rounded-xl p-4 border border-border">
