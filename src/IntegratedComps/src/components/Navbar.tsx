@@ -52,6 +52,13 @@ export default function Navbar({ scrollY }: NavbarProps) {
     setIsDropdownOpen(false);
     navigate("/my-applicaton");
   };
+  const formatName = (name: string | null) => {
+  if (!name) return "";
+  return name
+    .split(" ")
+    .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
+    .join(" ");
+};
 
   useEffect(() => {
     const loadUser = () => {
@@ -177,7 +184,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                   <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 origin-top-right transform transition-all duration-200">
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm text-gray-900 font-medium truncate">
-                        {user.username}
+                        {formatName(user?.username)}
                       </p>
                       <p className="text-xs text-gray-500 truncate">
                         {user.mobile}

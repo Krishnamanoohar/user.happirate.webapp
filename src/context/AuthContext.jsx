@@ -8,7 +8,7 @@ export const ContextProvider = ({ children }) => {
   const [rawResponse, setRawResponse] = useState(null);
   const [applications, setApplications] = useState([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(sessionStorage.getItem("userId") ? true : false);
-  const [isPanMobileMismatch, setIsPanMobileMismatch] = useState(  sessionStorage.getItem("panMobileMismatch") === "true");
+  const [isPanMobileMismatch, setIsPanMobileMismatch] = useState(sessionStorage.getItem("panMobileMismatch") === "true");
 
   // These are now actively used during data fetching!
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +48,15 @@ export const ContextProvider = ({ children }) => {
 
         const creditData = creditResp?.data || null;
         setCreditProfile(creditData);
+        if (creditData?.data) {
+          const { firstName, middleName, lastName } = creditData.data;
+
+          const username = [firstName, middleName, lastName]
+            .filter(Boolean)
+            .join(" ");
+
+          sessionStorage.setItem("username", username);
+        }
         setRawResponse(rawResp?.data?.data?.rawData || null);
         setApplications(fileResp?.data?.applications || [])
       } catch (err) {
