@@ -477,7 +477,7 @@ const estimateInterestRate = (principal, emi, months) => {
     else low = rate;
   }
   const finalInterestRate = (rate * 12 * 100).toFixed(2)
-  console.log("finalInterestRate",finalInterestRate)
+  console.log("finalInterestRate", finalInterestRate)
   return finalInterestRate; // annual %
 };
 
@@ -785,7 +785,7 @@ const EnquiryList = ({ enquiries }) => {
                   ₹
                   {parseInt(
                     enq.amount || enq.inquiryAmount || 0,
-                  ).toLocaleString()}
+                  ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
                 </td>
                 <td className="px-4 py-3">
                   <Badge type="neutral">{purpose || "General"}</Badge>
@@ -1789,10 +1789,10 @@ export default function GeminiCreditHealthReport() {
   //   sessionStorage.getItem("mobile_number") ? fetchDashboardData() : "";
   // }, []);
   useEffect(() => {
-  if (rawResponse) {
-    setJsonData(rawResponse);
-  }
-}, [rawResponse]);
+    if (rawResponse) {
+      setJsonData(rawResponse);
+    }
+  }, [rawResponse]);
   console.log("Report Data:", jsonData);
   if (!sessionStorage.getItem("mobile_number")) return <PortfolioGate />;
   if (isLoading) return <DashboardLoader />;
