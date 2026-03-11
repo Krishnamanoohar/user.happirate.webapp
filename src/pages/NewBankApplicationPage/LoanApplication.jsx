@@ -788,7 +788,7 @@ const LoanApplication = () => {
       aadhaarCard: apiData?.aadharCard ?? "",
       mobileNumber: mobile,
       // Employment Details
-      employmentStatus: hasUAN ? "salaried" : "",
+       employmentStatus: apiData.employmentStatus ?? "",
       uanNumber: employmentRecords[0]?.uan ?? "",
       employmentExperience: apiData.employmentExperience ?? "",
       employmentCategory: apiData.employmentCategory ?? "",
@@ -1552,11 +1552,19 @@ const LoanApplication = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <FormSelect
                       label="Employment Status"
-                      value={formData.employmentStatus}
+                      value={formData.employmentStatus || ""}
                       onChange={(v) => updateFormData("employmentStatus", v)}
                       options={employmentStatuses}
                       required
+                      placeholder="Select"
                       error={errors.employmentStatus}
+                      className={cn(
+                        !formData.employmentStatus
+                          ? "border-gray-300 focus:ring-gray-300"
+                          : errors.employmentStatus
+                            ? "border-destructive focus:ring-destructive"
+                            : "border-input focus:ring-primary"
+                      )}
                     />
                     {isSelfEmployed && (
                       <FormInput
