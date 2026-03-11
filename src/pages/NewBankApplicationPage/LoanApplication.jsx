@@ -788,7 +788,7 @@ const LoanApplication = () => {
       aadhaarCard: apiData?.aadharCard ?? "",
       mobileNumber: mobile,
       // Employment Details
-       employmentStatus: apiData.employmentStatus ?? "",
+      employmentStatus: apiData.employmentStatus ?? "",
       uanNumber: employmentRecords[0]?.uan ?? "",
       employmentExperience: apiData.employmentExperience ?? "",
       employmentCategory: apiData.employmentCategory ?? "",
@@ -1121,6 +1121,10 @@ const LoanApplication = () => {
       state: addr.state || "",
       pincode: addr.pincode || "",
     }));
+  };
+  const formatIndianNumber = (value) => {
+    if (!value) return "";
+    return Number(value).toLocaleString("en-IN");
   };
 
   // useEffect(() => {
@@ -1630,9 +1634,16 @@ const LoanApplication = () => {
                     )}
                     <FormInput
                       label="Monthly Income (₹)"
-                      value={formData.monthlyIncome}
-                      onChange={(v) => updateFormData("monthlyIncome", v)}
-                      type="number"
+                      value={formatIndianNumber(formData.monthlyIncome)}
+                      onChange={(v) => {
+                        const raw = v.replace(/,/g, ""); // remove commas
+
+                        // allow only positive digits
+                        if (/^\d*$/.test(raw)) {
+                          updateFormData("monthlyIncome", raw);
+                        }
+                      }}
+                      placeholder="Enter monthly income"
                       required
                       error={errors.monthlyIncome}
                     />
@@ -1853,7 +1864,7 @@ const LoanApplication = () => {
                     <span className="w-1.5 h-5 bg-primary rounded-full" />
                     Loan Details
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <FormSelect
                       label="Loan Type"
                       value={formData.loanType}
@@ -1864,10 +1875,15 @@ const LoanApplication = () => {
                     />
                     <FormInput
                       label="Desired Loan Amount (₹)"
-                      value={formData.loanAmount}
-                      onChange={(v) => updateFormData("loanAmount", v)}
+                      value={formatIndianNumber(formData.loanAmount)}
+                      onChange={(v) => {
+                        const raw = v.replace(/,/g, ""); // remove commas
+
+                        if (/^\d*$/.test(raw)) {
+                          updateFormData("loanAmount", raw);
+                        }
+                      }}
                       placeholder="Enter amount"
-                      type="number"
                       required
                       error={errors.loanAmount}
                     />
