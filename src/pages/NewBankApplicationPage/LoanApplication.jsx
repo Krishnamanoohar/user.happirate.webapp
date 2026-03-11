@@ -1935,7 +1935,8 @@ const LoanApplication = () => {
                     <FileUploadZone
                       label="Last 3 Years ITR/Form 166"
                       required
-                      accept=".pdf,.jpg,.png"
+                      accept=".pdf"
+                      acceptDescription={"PDF up to 5MB"}
                       file={documents.itr}
                       error={documentValidationTriggered && !!documentErrors.itr}
                       onFileSelect={(file) =>
@@ -1945,7 +1946,8 @@ const LoanApplication = () => {
                     <FileUploadZone
                       label="Applicant Photo"
                       required
-                      accept=".jpg,.png,.jpeg"
+                      acceptDescription={"JPEG, JPG, PNG up to 5MB"}
+                      accept=".jpg,.jpeg"
                       file={documents.photo}
                       error={documentValidationTriggered && !!documentErrors.photo}
                       onFileSelect={(file) =>

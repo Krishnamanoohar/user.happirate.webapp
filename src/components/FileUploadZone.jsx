@@ -8,6 +8,7 @@ const FileUploadZone = ({
     required,
     className,
     accept,
+    acceptDescription,
     compact = false,
     file,
     onFileSelect,
@@ -69,16 +70,16 @@ const FileUploadZone = ({
                 className={cn(
                     "relative border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200",
                     compact ? "p-4" : "p-6",
-                        error && "border-destructive bg-destructive/5",
+                    error && "border-destructive bg-destructive/5",
 
-    // ✅ SUCCESS STATE
-    !error && file && "border-success bg-success/5",
+                    // ✅ SUCCESS STATE
+                    !error && file && "border-success bg-success/5",
 
-    // ✅ DRAG STATE
-    !error && !file && isDragging && "border-primary bg-accent",
+                    // ✅ DRAG STATE
+                    !error && !file && isDragging && "border-primary bg-accent",
 
-    // ✅ DEFAULT STATE
-    !error && !file && !isDragging && "border-border hover:border-primary/50 hover:bg-accent/50"
+                    // ✅ DEFAULT STATE
+                    !error && !file && !isDragging && "border-border hover:border-primary/50 hover:bg-accent/50"
                 )}
             >
                 <input
@@ -132,7 +133,7 @@ const FileUploadZone = ({
                             "text-muted-foreground mt-1",
                             compact ? "text-[10px]" : "text-xs"
                         )}>
-                            PDF, JPG, PNG up to 5MB
+                            {acceptDescription || "PDF, JPG, PNG up to 5MB"}
                         </p>
                     </div>
                 )}
