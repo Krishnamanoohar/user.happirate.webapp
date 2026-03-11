@@ -2286,7 +2286,13 @@ const LoanApplication = () => {
                       value={`₹${Number(formData.loanAmount).toLocaleString("en-IN")}`}
                       highlighted
                     />
+                    <SummaryRow
+                      label="Loan Tenure"
+                      value={`${Number(formData.loanTenure).toLocaleString("en-IN")} Months`}
+                      highlighted
+                    />
                   </div>
+
                 </SummarySection>
 
                 {/* Uploaded Documents */}
