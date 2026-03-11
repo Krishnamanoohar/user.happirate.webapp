@@ -234,6 +234,8 @@ const LoanApplication = () => {
   const [selectedDocIds, setSelectedDocIds] = useState([]);
   const [documentErrors, setDocumentErrors] = useState({});
   const [documentValidationTriggered, setDocumentValidationTriggered] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   // Uploaded documents state
   const [documents, setDocuments] = useState({
     itr: null,
@@ -782,7 +784,7 @@ const LoanApplication = () => {
       middleName: apiData.middleName ?? "",
       dateOfBirth: apiData?.dateOfBirth?.split?.("T")[0] ?? "",
       panCard: apiData.panCard ?? "",
-      email: primaryEmail ??"",
+      email: primaryEmail ?? "",
       aadhaarCard: apiData?.aadharCard ?? "",
       mobileNumber: mobile,
       // Employment Details
@@ -1108,11 +1110,77 @@ const LoanApplication = () => {
       );
     }
   };
+  const handleAddressSelect = (index) => {
+    const addr = addresses[index];
+
+    setSelectedAddressIndex(index);
+
+    setFormData((prev) => ({
+      ...prev,
+      addressLine1: addr.streetAddress || "",
+      state: addr.state || "",
+      pincode: addr.pincode || "",
+    }));
+  };
 
   // useEffect(() => {
   //   autoFillUserDetails();
   // }, []);
 
+  // useEffect(() => {
+  //   if (!creditProfile) return;
+
+  //   const mobile = sessionStorage.getItem("mobile_number");
+
+  //   const appId = creditProfile?.applicationId || null;
+  //   setApplicationId(appId);
+
+  //   if (appId) {
+  //     sessionStorage.setItem("applicationId", appId);
+  //   }
+
+  //   const apiData = creditProfile?.data || creditProfile;
+
+  //   if (!apiData) return;
+  //     const addressList = Array.isArray(apiData?.addresses)
+  //   ? apiData?.addresses
+  //   : [];
+
+  // setAddresses(addressList);
+  //   setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+
+  //   // Application ID
+
+  //   // Emails
+  //   const apiEmails = Array.isArray(apiData.emails)
+  //     ? apiData.emails.map((e) => e.email).filter(Boolean)
+  //     : [];
+
+  //   const uniqueEmails = [...new Set(apiEmails)];
+  //   setEmailOptions(uniqueEmails);
+
+  //   // Phones
+  //   const apiPhones = Array.isArray(apiData.phoneNumbers)
+  //     ? apiData.phoneNumbers
+  //       .map((p) => p.Number)
+  //       .filter((num) => /^\d{10}$/.test(num))
+  //     : [];
+
+  //   const uniquePhones = [...new Set(apiPhones)];
+  //   setPhoneOptions(uniquePhones);
+
+  //   // Set form data
+  //   setFormData((prev) => ({
+  //     ...mapApiResponseToFormData(apiData, mobile),
+
+  //     // Preserve Loan Fields
+  //     loanType: prev.loanType,
+  //     loanAmount: prev.loanAmount,
+  //     loanTenure: prev.loanTenure,
+  //   }));
+
+  //   setPageLoading(false);
+  // }, [creditProfile]);
   useEffect(() => {
     if (!creditProfile) return;
 
@@ -1126,12 +1194,18 @@ const LoanApplication = () => {
     }
 
     const apiData = creditProfile?.data || creditProfile;
-
     if (!apiData) return;
 
-    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+    // ✅ Store addresses
+    const addressList = Array.isArray(apiData?.addresses)
+      ? apiData.addresses
+      : [];
 
-    // Application ID
+    setAddresses(addressList);
+
+    const defaultAddress = addressList[0] || {};
+
+    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
 
     // Emails
     const apiEmails = Array.isArray(apiData.emails)
@@ -1151,11 +1225,14 @@ const LoanApplication = () => {
     const uniquePhones = [...new Set(apiPhones)];
     setPhoneOptions(uniquePhones);
 
-    // Set form data
     setFormData((prev) => ({
       ...mapApiResponseToFormData(apiData, mobile),
 
-      // Preserve Loan Fields
+      addressLine1: defaultAddress.streetAddress || "",
+      state: defaultAddress.state || "",
+      pincode: defaultAddress.pincode || "",
+
+      // Preserve loan fields
       loanType: prev.loanType,
       loanAmount: prev.loanAmount,
       loanTenure: prev.loanTenure,
@@ -1370,24 +1447,38 @@ const LoanApplication = () => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                       <div className="md:col-span-2 space-y-2">
                         <label className="text-sm font-medium text-foreground">
-                          Address Line 1
+                          Address Line 1 <span className="text-destructive">*</span>
                         </label>
 
-                        <textarea
-                          value={formData.addressLine1}
-                          onChange={(e) =>
-                            updateFormData("addressLine1", e.target.value)
-                          }
-                          required
-                          error={errors.addressLine1}
-                          rows={3}
-                          className={cn(
-                            "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
-                            errors.addressLine1
-                              ? "border border-destructive focus:ring-destructive"
-                              : "border border-input focus:ring-primary",
-                          )}
-                        />
+                        {/* If multiple addresses show dropdown */}
+                        {addresses.length > 1 ? (
+                          <select
+                            value={selectedAddressIndex}
+                            onChange={(e) => handleAddressSelect(Number(e.target.value))}
+                            className="w-full rounded-md bg-background px-3 py-2 text-sm border border-input focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {addresses.map((addr, index) => (
+                              <option key={index} value={index}>
+                                {addr.streetAddress}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <textarea
+                            value={formData.addressLine1}
+                            onChange={(e) =>
+                              updateFormData("addressLine1", e.target.value)
+                            }
+                            rows={3}
+                            className={cn(
+                              "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                              errors.addressLine1
+                                ? "border border-destructive focus:ring-destructive"
+                                : "border border-input focus:ring-primary"
+                            )}
+                          />
+                        )}
+
                         {errors.addressLine1 && (
                           <p className="text-sm text-destructive mt-1">
                             {errors.addressLine1}
@@ -1449,13 +1540,13 @@ const LoanApplication = () => {
                 title="Review & Edit Employment and Credit Details"
                 subtitle="Please review and update your employment and credit information"
               >
-              {!isSelfEmployed && (
-                <EmploymentHistorySection
-                  employmentData={employmentData}
-                  setEmploymentData={setEmploymentData}
-                  errors={employmentErrors}
-                />
-              )}
+                {!isSelfEmployed && (
+                  <EmploymentHistorySection
+                    employmentData={employmentData}
+                    setEmploymentData={setEmploymentData}
+                    errors={employmentErrors}
+                  />
+                )}
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -2330,8 +2421,8 @@ const LoanApplication = () => {
                   <Loader size={20} />
                 ) : (
                   <>
-                <Send className="w-4 h-4 mr-2" />
-                Submit Application
+                    <Send className="w-4 h-4 mr-2" />
+                    Submit Application
                   </>
                 )}
               </Button>
