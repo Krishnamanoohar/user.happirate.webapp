@@ -444,6 +444,7 @@ const LOAN_TYPE_CONFIG = {
 const STATUS_MAP = {
     draft: 'Draft',
     active: 'Active',
+    submitted: 'Submitted',
     disbursed: 'Disbursed',
     closed: 'Closed',
     cancelled: 'Cancelled',
@@ -460,6 +461,7 @@ const STEP_LABEL_MAP = {
     SANCTIONED: 'Sanctioned',
     DISBURSED: 'Disbursed',
     CANCELLED: 'Cancelled',
+    OFFERS_GENERATED: 'Offers Generated',
 };
 
 /** Format a number to Indian rupee string e.g. ₹5,00,000 */
@@ -492,27 +494,37 @@ function getBestOffer(offers = []) {
 
 /** Build timeline steps from currentStep */
 function buildTimeline(currentStep, status, createdAt) {
-    const steps = [
-        'APPLICATION_SUBMITTED',
-        'KYC_PENDING',
-        'CONSENTS_PENDING',
-        'SENT_TO_BANK',
-        'UNDER_VERIFICATION',
-        'SANCTIONED',
-        'DISBURSED',
-    ];
+  const steps = [
+    'APPLICATION_SUBMITTED',
+    'KYC_PENDING',
+    'CONSENTS_PENDING',
+    'SENT_TO_BANK',
+    'UNDER_VERIFICATION',
+    'SANCTIONED',
+    'DISBURSED',
+  ];
 
-    const currentIdx = steps.indexOf(currentStep);
+  let currentIdx = steps.indexOf(currentStep);
 
-    return steps.map((step, idx) => ({
-        label: STEP_LABEL_MAP[step] || step,
-        date: idx < currentIdx
-            ? (idx === 0 && createdAt ? new Date(createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Completed')
-            : idx === currentIdx
-                ? (step === currentStep ? 'In Progress' : 'Completed')
-                : 'Pending',
-        completed: idx < currentIdx || (idx === currentIdx && status !== 'draft'),
-    }));
+  // If backend step not in list
+  if (currentIdx === -1) {
+    if (status === "submitted") {
+      currentIdx = 1; // APPLICATION_SUBMITTED completed
+    } else {
+      currentIdx = 0;
+    }
+  }
+
+  return steps.map((step, idx) => ({
+    label: STEP_LABEL_MAP[step] || step,
+    date:
+      idx < currentIdx
+        ? "Completed"
+        : idx === currentIdx
+        ? "In Progress"
+        : "Pending",
+    completed: idx < currentIdx,
+  }));
 }
 
 /** Transform a raw API application object into the shape the UI expects */
@@ -568,9 +580,19 @@ function transformApplication(raw) {
     };
 
 
-    const appliedDate = raw.updatedAt
-        ? new Date(raw.updatedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
-        : '—';
+    const appliedDate = raw.submittedAt
+        ? new Date(raw.submittedAt).toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        })
+        : raw.createdAt
+            ? new Date(raw.createdAt).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            })
+            : '—';
 
     const timeline = buildTimeline(raw.currentStep, raw.status, raw.createdAt);
 
@@ -606,11 +628,54 @@ function transformApplication(raw) {
 
 const StatusBadge = ({ status }) => {
     const styles = {
-        'Disbursed': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', icon: <CheckCircle2 size={12} className="mr-1" /> },
-        'Active': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', icon: <CheckCircle2 size={12} className="mr-1" /> },
-        'Closed': { bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200', icon: <MinusCircle size={12} className="mr-1" /> },
-        'On Hold': { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', icon: <Clock size={12} className="mr-1" /> },
-        'Cancelled': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', icon: <XCircle size={12} className="mr-1" /> },
+  'Submitted': {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    icon: <CheckCircle2 size={12} className="mr-1" />
+  },
+
+  'Completed': {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    icon: <CheckCircle2 size={12} className="mr-1" />
+  },
+
+  'Disbursed': {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    icon: <CheckCircle2 size={12} className="mr-1" />
+  },
+
+  'Active': {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-600',
+    border: 'border-emerald-200',
+    icon: <CheckCircle2 size={12} className="mr-1" />
+  },
+
+  'Closed': {
+    bg: 'bg-slate-50',
+    text: 'text-slate-500',
+    border: 'border-slate-200',
+    icon: <MinusCircle size={12} className="mr-1" />
+  },
+
+  'On Hold': {
+    bg: 'bg-amber-50',
+    text: 'text-amber-600',
+    border: 'border-amber-200',
+    icon: <Clock size={12} className="mr-1" />
+  },
+
+  'Cancelled': {
+    bg: 'bg-rose-50',
+    text: 'text-rose-600',
+    border: 'border-rose-200',
+    icon: <XCircle size={12} className="mr-1" />
+  }
     };
     const style = styles[status] || styles['On Hold'];
     return (
@@ -683,7 +748,7 @@ export default function MyApplication() {
                                                     <p className="text-[11px] font-medium text-slate-400 mt-1">{app.id?.slice(-8)?.toUpperCase()} • {app.bank}</p>
                                                 </div>
                                             </div>
-                                            <StatusBadge status={app.status} />
+                                            <StatusBadge status={app.status}  />
                                         </div>
 
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-slate-50">

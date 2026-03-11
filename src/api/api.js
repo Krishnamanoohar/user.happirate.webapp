@@ -69,7 +69,11 @@ const fetchUserFinDocuments = async (userId) => {
   console.log("fetchUserFinDocuments response", resp);
   return resp;
 };
-
+const submitApplication = async (payload) => {
+  const resp = await apiClient.post("/submit-application", payload);
+  console.log("submit application response", resp);
+  return resp;
+};
 // const fetchEligibleLoanProducts = async () => {
 //   const mobile = sessionStorage.getItem("mobile_number")
 //   const resp = await apiClient.post("/provisional-credit-assesment", {
@@ -174,4 +178,5 @@ export {
   uploadFinancialDocuments,
   fetchUserFinDocuments,
   fetchMyApplications,
+  submitApplication,
 };

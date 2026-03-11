@@ -52,7 +52,7 @@ export function HappirateSplitAuth() {
   const [isMobileVerified, setIsMobileVerified] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
-  const { handleSetCreditData, setIsLoading: setCreditLoading, setError, setIsUserLoggedIn } = useContextData();
+  const { handleSetCreditData, setIsLoading: setCreditLoading, setError, setIsUserLoggedIn, setIsPanMobileMismatch } = useContextData();
   const otpRefs = [
     useRef(null),
     useRef(null),
@@ -257,11 +257,16 @@ export function HappirateSplitAuth() {
 
     try {
       // 1. Verify OTP with Firebase locally
-      const result = await otpResult.confirm(enteredOtp);
-      const user = result.user;
+      if (!otpResult) {
+        toast.error("OTP session expired. Please resend OTP.");
+        setLoading(false);
+        return;
+      }
+      const result = await otpResult?.confirm(enteredOtp);
+      const user = result?.user;
 
       // 2. Get the secure ID Token (JWT) from Firebase
-      const idToken = await user.getIdToken();
+      const idToken = await user?.getIdToken();
 
       // 3. Send the Token to your backend instead of the raw OTP
       const payload = {
@@ -271,20 +276,54 @@ export function HappirateSplitAuth() {
 
       const resp = await verifyOtp(payload); // Calling your backend API
 
-      if (resp.status === 200) {
+      if (resp?.status === 200) {
+        // sessionStorage.setItem("mobile_number", mobileNumber);
+        // sessionStorage.setItem("userId", resp?.data?.data?._id);
+
+        const userID = resp?.data?.data?._id ?? null;
+
         sessionStorage.setItem("mobile_number", mobileNumber);
-        sessionStorage.setItem("userId", resp?.data?.data?._id);
+        sessionStorage.setItem("userId", userID);
+
+        const creditResp = await fetchCreditReport({
+          mobileNumber,
+          userId: userID
+        });
+
+        const creditData = creditResp?.data;
+
+        if (
+          creditData?.status === "FAILED" &&
+          creditData?.errors?.includes("PAN_FETCH_FAILED")
+        ) {
+          setIsPanMobileMismatch(true);
+          sessionStorage.setItem("panMobileMismatch", "true");
+          return;
+        }
         toast.success("Login verified successfully");
         setIsUserLoggedIn(true)
         navigate(sessionStorage.getItem("redirectAfterLogin") || "/");
       }
     } catch (error) {
+      const errorData = error?.response?.data;
+
+      if (
+        error?.response?.status === 404 &&
+        (
+          errorData?.status === "FAILED" ||
+          errorData?.message === "PAN_FETCH_FAILED"
+        )
+      ) {
+        setIsPanMobileMismatch(true);
+        sessionStorage.setItem("panMobileMismatch", "true");
+        return;
+      }
       console.log("Verification error details:", {
         message: error.message,
         code: error.code,
         responseData: error.response?.data,
       });
-      switch (error.code) {
+      switch (error?.code) {
         case "auth/invalid-verification-code":
           toast.error("Incorrect OTP. Please check and try again.");
           setOtp(["", "", "", "", "", ""]); // Action: Clear boxes for retry
@@ -357,14 +396,13 @@ export function HappirateSplitAuth() {
         <div className="w-full">
           <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 items-stretch gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
             {/* Left marketing panel */}
-            <section className="flex flex-col justify-center py-0">
-              <div className="flex items-center gap-3">
-                {/* <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
+            <section className="order-2 lg:order-1 flex flex-col justify-center py-0">              <div className="flex items-center gap-3">
+              {/* <div className="rounded-2xl border bg-card/70 p-3 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-card/55">
               </div> */}
-                {/* <div className="text-sm text-muted-foreground">
+              {/* <div className="text-sm text-muted-foreground">
                 Transparent • Privacy-first
               </div> */}
-              </div>
+            </div>
 
               <div className="mt-8 space-y-4">
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
@@ -402,7 +440,7 @@ export function HappirateSplitAuth() {
             </section>
 
             {/* Right auth card */}
-            <section className="flex items-center justify-center py-0 lg:justify-end">
+            <section className="order-1 lg:order-2 mt-10 lg:mt-0 flex items-center justify-center py-0 lg:justify-end">
               <Card
                 className={cn(
                   "w-full max-w-md border-border/70 bg-card/75 shadow-elev backdrop-blur",

@@ -85,12 +85,29 @@ const CompareLoanPage = () => {
     setStage("compare");
   };
 
-  const handleFetchEligibleLoans = async (amount: number, tenure: number, type: string, applicationID: string) => {
+  const handleFetchEligibleLoans = async (
+    amount: number,
+    tenure: number,
+    type: string,
+    applicationID: string,
+  ) => {
     try {
-      console.log("Fetching eligible loans for amount:", amount, "tenure:", tenure, "and ApplicaionID:", applicationID);
+      console.log(
+        "Fetching eligible loans for amount:",
+        amount,
+        "tenure:",
+        tenure,
+        "and ApplicaionID:",
+        applicationID,
+      );
       setLoading(true);
 
-      const resp = await fetchEligibleLoanProducts(amount, tenure, type, applicationID);
+      const resp = await fetchEligibleLoanProducts(
+        amount,
+        tenure,
+        type,
+        applicationID,
+      );
 
       const banks = resp.data.banks.map((bank: any) => ({
         id: bank.bankId,
@@ -153,13 +170,13 @@ const CompareLoanPage = () => {
     const savedLoanData = JSON.parse(
       sessionStorage.getItem("loanData") || "{}",
     );
-    const applicationID = sessionStorage.getItem("applicationId") || ""
+    const applicationID = sessionStorage.getItem("applicationId") || "";
     setFormattedAmount(formatIndianNumber(savedLoanData.loanAmount || ""));
     console.log("Loaded loan data from localStorage:", savedLoanData);
 
     const amount = Number(savedLoanData.loanAmount) || 0;
     const tenure = Number(savedLoanData.loanTenure) || 0;
-    const type = String(savedLoanData.loanType) || ""
+    const type = String(savedLoanData.loanType) || "";
     setLoanAmount(amount);
     setLoanTenure(tenure);
 
@@ -179,7 +196,7 @@ const CompareLoanPage = () => {
                   variant="ghost"
                   onClick={() => {
                     const savedLoanData = JSON.parse(
-                      localStorage.getItem("loanData") || "{}",
+                      sessionStorage.getItem("loanData") || "{}",
                     );
                     sessionStorage.setItem(
                       "loanData",
@@ -263,18 +280,6 @@ const CompareLoanPage = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex bg-gray-100 p-1 rounded-xl w-full md:w-auto">
                     <button
-                      onClick={() => setComparisonTab("max-sanction")}
-                      className={cn(
-                        "flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all",
-                        comparisonTab === "max-sanction"
-                          ? "bg-white text-purple-600 shadow-sm"
-                          : "text-gray-500 hover:text-gray-700",
-                      )}
-                    >
-                      <TrendingUp className="w-4 h-4" />
-                      Max Sanction
-                    </button>
-                    <button
                       onClick={() => setComparisonTab("customize")}
                       className={cn(
                         "flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all",
@@ -285,6 +290,18 @@ const CompareLoanPage = () => {
                     >
                       <Calculator className="w-4 h-4" />
                       Customize Amount
+                    </button>
+                    <button
+                      onClick={() => setComparisonTab("max-sanction")}
+                      className={cn(
+                        "flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all",
+                        comparisonTab === "max-sanction"
+                          ? "bg-white text-purple-600 shadow-sm"
+                          : "text-gray-500 hover:text-gray-700",
+                      )}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      Max Sanction
                     </button>
                   </div>
 
@@ -310,10 +327,23 @@ const CompareLoanPage = () => {
 
                           const amount = Number(customAmount);
 
-                          setSubmittedAmount(amount); // 👈 important
+                          const savedLoanData = JSON.parse(
+                            sessionStorage.getItem("loanData") || "{}",
+                          );
+
+                          const applicationID =
+                            sessionStorage.getItem("applicationId") || "";
+                          const type = savedLoanData.loanType || "";
+
+                          setSubmittedAmount(amount);
                           setLoanAmount(amount);
 
-                          handleFetchEligibleLoans(amount, loanTenure);
+                          handleFetchEligibleLoans(
+                            amount,
+                            loanTenure,
+                            type,
+                            applicationID,
+                          );
                         }}
                         disabled={!customAmount}
                         className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white"
