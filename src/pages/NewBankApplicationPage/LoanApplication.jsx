@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -242,6 +242,7 @@ const LoanApplication = () => {
   const [documentValidationTriggered, setDocumentValidationTriggered] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   // Uploaded documents state
   const [documents, setDocuments] = useState({
     itr: null,
@@ -255,6 +256,7 @@ const LoanApplication = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [consentError, setConsentError] = useState(false);
   const [employmentErrors, setEmploymentErrors] = useState([]);
+  const addressComboboxRef = useRef(null);
 
   // Determine which upload zones are still needed
   const hasITR = selectedDocIds.some((id) =>
@@ -556,7 +558,15 @@ const LoanApplication = () => {
     panCard: data.panCard,
     aadharCard: data.aadhaarCard,
     // residentialType: data.residentialStatus,
-    addressLine1: data.addressLine1,
+    // addressLine1: data.addressLine1,
+    addresses: [
+      {
+        streetAddress: data.addressLine1,
+        state: data.state,
+        pincode: data.pincode,
+        type: addresses.length === 1 ? "Primary" : data.addressType || "Not Categorized",
+      },
+    ],
     // city: data.city,
     state: data.state,
     pincode: data.pincode,
@@ -1118,15 +1128,24 @@ const LoanApplication = () => {
     }
   };
   const handleAddressSelect = (index) => {
-    const addr = addresses[index];
+    const updatedAddresses = addresses.map((addr, i) => ({
+      ...addr,
+      type: i === index ? "Primary" : addr.type,
+    }));
+
+    setAddresses(updatedAddresses);
+
+    const selected = updatedAddresses[index];
 
     setSelectedAddressIndex(index);
+    setShowAddressDropdown(false);
 
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      addressLine1: addr.streetAddress || "",
-      state: addr.state || "",
-      pincode: addr.pincode || "",
+      addressLine1: selected.streetAddress,
+      state: selected.state,
+      pincode: selected.pincode,
+      addressType: "Primary"
     }));
   };
   const formatIndianNumber = (value) => {
@@ -1245,6 +1264,7 @@ const LoanApplication = () => {
       addressLine1: defaultAddress.streetAddress || "",
       state: defaultAddress.state || "",
       pincode: defaultAddress.pincode || "",
+      addressType: defaultAddress.type || "Not Categorized",
 
       // Preserve loan fields
       loanType: prev.loanType,
@@ -1284,6 +1304,15 @@ const LoanApplication = () => {
     if (location.state?.goToStep !== undefined) {
       setCurrentStep(location.state.goToStep);
     }
+  }, []);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (addressComboboxRef.current && !addressComboboxRef.current.contains(e.target)) {
+        setShowAddressDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   if (pageLoading) {
@@ -1458,54 +1487,109 @@ const LoanApplication = () => {
                       <MapPin className="w-4 h-4 text-primary" />
                       Address Details
                     </h3>
+
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                      <div className="md:col-span-2 space-y-2">
+
+                      {/* Combined Address Combobox - spans 2 cols */}
+                      <div ref={addressComboboxRef} className="md:col-span-2 space-y-2 relative address-combobox">
                         <label className="text-sm font-medium text-foreground">
                           Address Line 1 <span className="text-destructive">*</span>
                         </label>
 
-                        {/* If multiple addresses show dropdown */}
-                        {addresses.length > 1 ? (
-                          <select
-                            value={selectedAddressIndex}
-                            onChange={(e) => handleAddressSelect(Number(e.target.value))}
-                            className="w-full rounded-md bg-background px-3 py-2 text-sm border border-input focus:outline-none focus:ring-2 focus:ring-primary"
-                          >
-                            {addresses.map((addr, index) => (
-                              <option key={index} value={index}>
-                                {addr.streetAddress}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
+                        {/* The single editable input that also opens address picker */}
+                        <div className="relative">
                           <textarea
                             value={formData.addressLine1}
-                            onChange={(e) =>
-                              updateFormData("addressLine1", e.target.value)
-                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // update form data
+                              updateFormData("addressLine1", value);
+
+                              // update address state also
+                              setAddresses((prev) => {
+                                if (!prev.length) return prev;
+
+                                const updated = [...prev];
+
+                                updated[selectedAddressIndex] = {
+                                  ...updated[selectedAddressIndex],
+                                  streetAddress: value,
+                                };
+
+                                return updated;
+                              });
+                            }}
+                            // ← NO onFocus here
                             rows={3}
+                            placeholder="Select or type your address"
                             className={cn(
-                              "w-full rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2",
+                              "w-full rounded-md bg-background px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 resize-none",
                               errors.addressLine1
                                 ? "border border-destructive focus:ring-destructive"
                                 : "border border-input focus:ring-primary"
                             )}
                           />
-                        )}
+
+                          {/* Chevron — only if multiple addresses exist */}
+                          {addresses.length > 0 && (
+                            <button
+                              type="button"
+                              onMouseDown={(e) => {
+                                e.preventDefault(); // prevent textarea blur stealing focus
+                                setShowAddressDropdown((prev) => !prev);
+                              }}
+                              className="absolute top-2 right-2 text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <svg
+                                className={cn(
+                                  "w-4 h-4 transition-transform duration-200",
+                                  showAddressDropdown ? "rotate-180" : "rotate-0"
+                                )}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          )}
+
+                          {/* Dropdown list */}
+                          {showAddressDropdown && addresses.length > 0 && (
+                            <div className="absolute z-50 w-full top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+                              {addresses.map((addr, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onMouseDown={(e) => {
+                                    e.preventDefault(); // ← prevents blur on textarea before state updates
+                                    handleAddressSelect(index);
+                                  }}
+                                  className={cn(
+                                    "w-full text-left px-3 py-2.5 text-sm hover:bg-purple-50 hover:text-primary border-b border-gray-100 last:border-0 transition-colors",
+                                    selectedAddressIndex === index
+                                      ? "bg-purple-50 text-primary font-medium"
+                                      : "text-foreground"
+                                  )}
+                                >
+                                  <span className="block font-medium truncate">{addr.streetAddress}</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {addr.state} — {addr.pincode}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
 
                         {errors.addressLine1 && (
-                          <p className="text-sm text-destructive mt-1">
-                            {errors.addressLine1}
-                          </p>
+                          <p className="text-sm text-destructive mt-1">{errors.addressLine1}</p>
                         )}
                       </div>
 
-                      {/* <FormInput
-                      label="City"
-                      value={formData.city}
-                      onChange={(v) => updateFormData("city", v)}
-                      required
-                    /> */}
+                      {/* State — editable, with autocomplete */}
                       <div className="relative">
                         <FormInput
                           label="State"
@@ -1521,7 +1605,7 @@ const LoanApplication = () => {
                               <div
                                 key={index}
                                 onClick={() => handleStateSelect(state)}
-                                className="px-3 py-2 cursor-pointer hover:bg-purple-50"
+                                className="px-3 py-2 cursor-pointer hover:bg-purple-50 text-sm"
                               >
                                 {state}
                               </div>
@@ -1529,6 +1613,8 @@ const LoanApplication = () => {
                           </div>
                         )}
                       </div>
+
+                      {/* Pincode — editable */}
                       <FormInput
                         label="Pincode"
                         value={formData.pincode}
@@ -1536,12 +1622,7 @@ const LoanApplication = () => {
                         required
                         error={errors.pincode}
                       />
-                      {/* <FormSelect
-                      label="Residential Status"
-                      value={formData.residentialStatus}
-                      onChange={(v) => updateFormData("residentialStatus", v)}
-                      options={residentialStatuses}
-                    /> */}
+
                     </div>
                   </div>
                 </div>
