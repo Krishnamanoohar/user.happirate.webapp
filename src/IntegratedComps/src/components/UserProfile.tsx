@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 
-import { Download, FileText, File, Files } from "lucide-react";
+import {
+  Download,
+  FileText,
+  File,
+  Files,
+  Lock,
+  LogIn,
+  ChevronRight,
+} from "lucide-react";
 import {
   User,
   MapPin,
@@ -142,8 +150,54 @@ interface DocumentSection {
   icon: any;
   docs: UploadedDoc[];
 }
+const ProfileGate = () => {
+  const handleLogin = () => {
+    sessionStorage.setItem("redirectAfterLogin", "/my-profile");
+    window.location.pathname = "/sign-in";
+  };
 
+  return (
+    <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50">
+      <div className="max-w-md w-full text-center space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="relative mx-auto w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+          <Lock className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold text-slate-900 tracking-tight">
+            Profile Information
+          </h2>
+
+          <p className="text-slate-500 text-sm leading-relaxed">
+            Your profile information is protected. Please login to view and
+            manage your details.
+          </p>
+        </div>
+
+        <button
+          onClick={handleLogin}
+          className="group w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-slate-200"
+        >
+          <LogIn className="w-4 h-4" />
+          <span>Login to View Profile</span>
+          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </button>
+
+        <div className="pt-4 border-t border-slate-100">
+          <p className="text-[11px] uppercase tracking-widest text-slate-400 font-medium">
+            256-bit Encrypted Security
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 const ProfilePage = () => {
+  const mobile = sessionStorage.getItem("mobile_number");
+
+  if (!mobile) {
+    return <ProfileGate />;
+  }
   const { creditProfile, isLoading } = useContextData();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -309,9 +363,7 @@ const ProfilePage = () => {
     };
   };
 
-const cibil = getCibilBadge(
-  String(creditProfile?.data?.cibilScore ?? 0)
-);
+  const cibil = getCibilBadge(String(creditProfile?.data?.cibilScore ?? 0));
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -354,7 +406,8 @@ const cibil = getCibilBadge(
   useEffect(() => {
     console.log("Credit profile", creditProfile);
   }, [creditProfile]);
-  const isSelfEmployed = creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
+  const isSelfEmployed =
+    creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
   if (isLoading || !creditProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -662,38 +715,40 @@ const cibil = getCibilBadge(
                   />
                 </ProfileSection>
                 {!isSelfEmployed && (
-                <ProfileSection icon={Briefcase} title="Company Details">
-                  {/* Current Company */}
-                  <DetailRow
-                    label="Current Company"
-                    value={currentCompany?.establishment_name || "Not provided"}
-                  />
+                  <ProfileSection icon={Briefcase} title="Company Details">
+                    {/* Current Company */}
+                    <DetailRow
+                      label="Current Company"
+                      value={
+                        currentCompany?.establishment_name || "Not provided"
+                      }
+                    />
 
-                  <DetailRow
-                    label="Current Joining Date"
-                    value={currentCompany?.date_of_joining || "Not provided"}
-                  />
+                    <DetailRow
+                      label="Current Joining Date"
+                      value={currentCompany?.date_of_joining || "Not provided"}
+                    />
 
-                  {/* Previous Company */}
-                  {previousCompany && (
-                    <>
-                      <DetailRow
-                        label="Previous Company"
-                        value={previousCompany.establishment_name}
-                      />
+                    {/* Previous Company */}
+                    {previousCompany && (
+                      <>
+                        <DetailRow
+                          label="Previous Company"
+                          value={previousCompany.establishment_name}
+                        />
 
-                      <DetailRow
-                        label="Previous Joining Date"
-                        value={previousCompany.date_of_joining}
-                      />
+                        <DetailRow
+                          label="Previous Joining Date"
+                          value={previousCompany.date_of_joining}
+                        />
 
-                      <DetailRow
-                        label="Previous Relieving Date"
-                        value={previousCompany.date_of_exit}
-                      />
-                    </>
-                  )}
-                </ProfileSection>
+                        <DetailRow
+                          label="Previous Relieving Date"
+                          value={previousCompany.date_of_exit}
+                        />
+                      </>
+                    )}
+                  </ProfileSection>
                 )}
               </div>
             )}
