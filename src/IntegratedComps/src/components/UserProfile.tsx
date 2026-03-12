@@ -30,6 +30,7 @@ import { fetchTaxDocuments } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { error } from "three";
 import { useContextData } from "@/context/AuthContext";
+import LoginGate from "@/components/LoginGate/LoginGate";
 const tabs = [
   { id: "personal", label: "Personal Info", icon: User },
   // { id: "address", label: "Address", icon: MapPin },
@@ -150,53 +151,19 @@ interface DocumentSection {
   icon: any;
   docs: UploadedDoc[];
 }
-const ProfileGate = () => {
-  const handleLogin = () => {
-    sessionStorage.setItem("redirectAfterLogin", "/my-profile");
-    window.location.pathname = "/sign-in";
-  };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50">
-      <div className="max-w-md w-full text-center space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-        <div className="relative mx-auto w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-          <Lock className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold text-slate-900 tracking-tight">
-            Profile Information
-          </h2>
-
-          <p className="text-slate-500 text-sm leading-relaxed">
-            Your profile information is protected. Please login to view and
-            manage your details.
-          </p>
-        </div>
-
-        <button
-          onClick={handleLogin}
-          className="group w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-slate-200"
-        >
-          <LogIn className="w-4 h-4" />
-          <span>Login to View Profile</span>
-          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </button>
-
-        <div className="pt-4 border-t border-slate-100">
-          <p className="text-[11px] uppercase tracking-widest text-slate-400 font-medium">
-            256-bit Encrypted Security
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
 const ProfilePage = () => {
   const mobile = sessionStorage.getItem("mobile_number");
 
   if (!mobile) {
-    return <ProfileGate />;
+  return (
+    <LoginGate
+      title="Profile Information"
+      description="Your profile information is protected. Please login to view and manage your details."
+      redirectPath="/my-profile"
+      buttonText="Login to View Profile"
+    />
+  );
   }
   const { creditProfile, isLoading } = useContextData();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
