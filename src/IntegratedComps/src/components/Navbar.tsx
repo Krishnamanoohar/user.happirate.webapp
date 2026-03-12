@@ -314,7 +314,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
             {/* Navigation Links */}
             <div className="space-y-1">
               {navLinks.map((link) =>
-                link.isAccount && user ? (
+                link.isAccount ? (
                   <div key={link.name}>
                     <button
                       onClick={() => setMobileAccountOpen(!mobileAccountOpen)}
