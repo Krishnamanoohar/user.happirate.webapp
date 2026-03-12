@@ -65,7 +65,7 @@ const loanTypes = [
 ];
 
 const employmentStatuses = [
-  // { value: "", label: "Select Employment Status" },
+  { value: "Select", label: "Select" },
   { value: "salaried", label: "Salaried" },
   { value: "self-employed", label: "Self Employed" },
 ];
@@ -448,7 +448,7 @@ const LoanApplication = () => {
     }
 
     if (currentStep === 1) {
-      if (!formData.employmentStatus || formData.employmentStatus.trim() === "")
+      if (!formData.employmentStatus || formData.employmentStatus.trim() === "Select")
         newErrors.employmentStatus = "Employment Status is Required";
       if (isSelfEmployed) {
         const gstError = validateGST(formData.gstNumber);
@@ -1553,7 +1553,7 @@ const LoanApplication = () => {
                 )}
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <FormSelect
                       label="Employment Status"
                       value={formData.employmentStatus || ""}
@@ -1563,11 +1563,10 @@ const LoanApplication = () => {
                       placeholder="Select"
                       error={errors.employmentStatus}
                       className={cn(
-                        !formData.employmentStatus
-                          ? "border-gray-300 focus:ring-gray-300"
-                          : errors.employmentStatus
-                            ? "border-destructive focus:ring-destructive"
-                            : "border-input focus:ring-primary"
+                        "transition-colors",
+                        !formData.employmentStatus && "border-gray-300 text-gray-400",
+                        formData.employmentStatus && "border-input text-foreground",
+                        errors.employmentStatus && "border-destructive focus:ring-destructive"
                       )}
                     />
                     {isSelfEmployed && (
@@ -1581,6 +1580,21 @@ const LoanApplication = () => {
                         error={errors.gstNumber}
                       />
                     )}
+                    <FormInput
+                      label="Monthly Income (₹)"
+                      value={formatIndianNumber(formData.monthlyIncome)}
+                      onChange={(v) => {
+                        const raw = v.replace(/,/g, ""); // remove commas
+
+                        // allow only positive digits
+                        if (/^\d*$/.test(raw)) {
+                          updateFormData("monthlyIncome", raw);
+                        }
+                      }}
+                      placeholder="Enter monthly income"
+                      required
+                      error={errors.monthlyIncome}
+                    />
                     {!isSelfEmployed && (
                       <>
                         <FormSelect
@@ -1632,21 +1646,6 @@ const LoanApplication = () => {
                         /> */}
                       </>
                     )}
-                    <FormInput
-                      label="Monthly Income (₹)"
-                      value={formatIndianNumber(formData.monthlyIncome)}
-                      onChange={(v) => {
-                        const raw = v.replace(/,/g, ""); // remove commas
-
-                        // allow only positive digits
-                        if (/^\d*$/.test(raw)) {
-                          updateFormData("monthlyIncome", raw);
-                        }
-                      }}
-                      placeholder="Enter monthly income"
-                      required
-                      error={errors.monthlyIncome}
-                    />
                     {!isSelfEmployed && (
                       <>
                         {/* <FormInput
