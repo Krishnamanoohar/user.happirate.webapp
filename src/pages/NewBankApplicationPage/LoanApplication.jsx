@@ -2413,7 +2413,7 @@ const LoanApplication = () => {
             <Button
               variant="outline"
               onClick={handleBack}
-              disabled={currentStep === 0}
+              disabled={currentStep === 0 || isLoading}
               className="h-12 px-6 border-border hover:bg-muted"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
