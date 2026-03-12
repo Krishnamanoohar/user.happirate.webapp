@@ -413,6 +413,7 @@
 // }
 import React, { useState } from 'react';
 import { useContextData } from '@/context/AuthContext';
+import { Lock, LogIn, ChevronRight } from "lucide-react";
 import {
     Info,
     Briefcase,
@@ -494,37 +495,37 @@ function getBestOffer(offers = []) {
 
 /** Build timeline steps from currentStep */
 function buildTimeline(currentStep, status, createdAt) {
-  const steps = [
-    'APPLICATION_SUBMITTED',
-    'KYC_PENDING',
-    'CONSENTS_PENDING',
-    'SENT_TO_BANK',
-    'UNDER_VERIFICATION',
-    'SANCTIONED',
-    'DISBURSED',
-  ];
+    const steps = [
+        'APPLICATION_SUBMITTED',
+        'KYC_PENDING',
+        'CONSENTS_PENDING',
+        'SENT_TO_BANK',
+        'UNDER_VERIFICATION',
+        'SANCTIONED',
+        'DISBURSED',
+    ];
 
-  let currentIdx = steps.indexOf(currentStep);
+    let currentIdx = steps.indexOf(currentStep);
 
-  // If backend step not in list
-  if (currentIdx === -1) {
-    if (status === "submitted") {
-      currentIdx = 1; // APPLICATION_SUBMITTED completed
-    } else {
-      currentIdx = 0;
+    // If backend step not in list
+    if (currentIdx === -1) {
+        if (status === "submitted") {
+            currentIdx = 1; // APPLICATION_SUBMITTED completed
+        } else {
+            currentIdx = 0;
+        }
     }
-  }
 
-  return steps.map((step, idx) => ({
-    label: STEP_LABEL_MAP[step] || step,
-    date:
-      idx < currentIdx
-        ? "Completed"
-        : idx === currentIdx
-        ? "In Progress"
-        : "Pending",
-    completed: idx < currentIdx,
-  }));
+    return steps.map((step, idx) => ({
+        label: STEP_LABEL_MAP[step] || step,
+        date:
+            idx < currentIdx
+                ? "Completed"
+                : idx === currentIdx
+                    ? "In Progress"
+                    : "Pending",
+        completed: idx < currentIdx,
+    }));
 }
 
 /** Transform a raw API application object into the shape the UI expects */
@@ -628,54 +629,54 @@ function transformApplication(raw) {
 
 const StatusBadge = ({ status }) => {
     const styles = {
-  'Submitted': {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-600',
-    border: 'border-emerald-200',
-    icon: <CheckCircle2 size={12} className="mr-1" />
-  },
+        'Submitted': {
+            bg: 'bg-emerald-50',
+            text: 'text-emerald-600',
+            border: 'border-emerald-200',
+            icon: <CheckCircle2 size={12} className="mr-1" />
+        },
 
-  'Completed': {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-600',
-    border: 'border-emerald-200',
-    icon: <CheckCircle2 size={12} className="mr-1" />
-  },
+        'Completed': {
+            bg: 'bg-emerald-50',
+            text: 'text-emerald-600',
+            border: 'border-emerald-200',
+            icon: <CheckCircle2 size={12} className="mr-1" />
+        },
 
-  'Disbursed': {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-600',
-    border: 'border-emerald-200',
-    icon: <CheckCircle2 size={12} className="mr-1" />
-  },
+        'Disbursed': {
+            bg: 'bg-emerald-50',
+            text: 'text-emerald-600',
+            border: 'border-emerald-200',
+            icon: <CheckCircle2 size={12} className="mr-1" />
+        },
 
-  'Active': {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-600',
-    border: 'border-emerald-200',
-    icon: <CheckCircle2 size={12} className="mr-1" />
-  },
+        'Active': {
+            bg: 'bg-emerald-50',
+            text: 'text-emerald-600',
+            border: 'border-emerald-200',
+            icon: <CheckCircle2 size={12} className="mr-1" />
+        },
 
-  'Closed': {
-    bg: 'bg-slate-50',
-    text: 'text-slate-500',
-    border: 'border-slate-200',
-    icon: <MinusCircle size={12} className="mr-1" />
-  },
+        'Closed': {
+            bg: 'bg-slate-50',
+            text: 'text-slate-500',
+            border: 'border-slate-200',
+            icon: <MinusCircle size={12} className="mr-1" />
+        },
 
-  'On Hold': {
-    bg: 'bg-amber-50',
-    text: 'text-amber-600',
-    border: 'border-amber-200',
-    icon: <Clock size={12} className="mr-1" />
-  },
+        'On Hold': {
+            bg: 'bg-amber-50',
+            text: 'text-amber-600',
+            border: 'border-amber-200',
+            icon: <Clock size={12} className="mr-1" />
+        },
 
-  'Cancelled': {
-    bg: 'bg-rose-50',
-    text: 'text-rose-600',
-    border: 'border-rose-200',
-    icon: <XCircle size={12} className="mr-1" />
-  }
+        'Cancelled': {
+            bg: 'bg-rose-50',
+            text: 'text-rose-600',
+            border: 'border-rose-200',
+            icon: <XCircle size={12} className="mr-1" />
+        }
     };
     const style = styles[status] || styles['On Hold'];
     return (
@@ -685,10 +686,60 @@ const StatusBadge = ({ status }) => {
         </div>
     );
 };
+const MyApplicationGate = () => {
+    const handleLogin = () => {
+        sessionStorage.setItem("redirectAfterLogin", "/my-applicaton");
+        window.location.pathname = "/sign-in";
+    };
 
+    return (
+        <div className="flex items-center justify-center min-h-screen w-full p-6 bg-slate-50">
+            <div className="max-w-md w-full text-center space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+
+                {/* Icon */}
+                <div className="relative mx-auto w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Lock className="w-10 h-10 text-purple-600" strokeWidth={1.5} />
+                    <div className="absolute inset-0 rounded-full border-4 border-purple-50 border-t-purple-500 animate-spin-slow" />
+                </div>
+
+                {/* Text */}
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-semibold text-slate-900">
+                        View Your Applications
+                    </h2>
+
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                        Your loan applications and progress timeline are secured.
+                        Please login to track your applications.
+                    </p>
+                </div>
+
+                {/* Login Button */}
+                <button
+                    onClick={handleLogin}
+                    className="group w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-all shadow-lg shadow-slate-200"
+                >
+                    <LogIn className="w-4 h-4" />
+                    <span>Login to View Applications</span>
+                    <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
+
+                <p className="text-[11px] uppercase tracking-widest text-slate-400 font-medium pt-4 border-t border-slate-100">
+                    Secure Access Required
+                </p>
+
+            </div>
+        </div>
+    );
+};
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function MyApplication() {
+    const mobileNumber = sessionStorage.getItem("mobile_number");
+
+    if (!mobileNumber) {
+        return <MyApplicationGate />;
+    }
     const { applications: rawApplications, isLoading } = useContextData();
     // const isLoading = rawApplications === undefined || rawApplications === null;
     const [selectedId, setSelectedId] = useState(null);
@@ -748,7 +799,7 @@ export default function MyApplication() {
                                                     <p className="text-[11px] font-medium text-slate-400 mt-1">{app.id?.slice(-8)?.toUpperCase()} • {app.bank}</p>
                                                 </div>
                                             </div>
-                                            <StatusBadge status={app.status}  />
+                                            <StatusBadge status={app.status} />
                                         </div>
 
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-slate-50">

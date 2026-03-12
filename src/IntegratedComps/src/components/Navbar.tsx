@@ -186,7 +186,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
               </Link>
             ))} */}
             {navLinks.map((link) =>
-              link.isAccount && user ? (
+              link.isAccount ? (
                 <div className="relative group">
                   <button className="flex items-center gap-1 text-slate-700 hover:text-violet-600 font-semibold transition-colors">
                     My Account
