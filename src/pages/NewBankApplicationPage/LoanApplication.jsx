@@ -220,7 +220,13 @@ const LoanApplication = () => {
   const { creditProfile } = useContextData();
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
+  // const [currentStep, setCurrentStep] = useState(location.state?.goToStep ?? 0);
+  const STEP_STORAGE_KEY = "loanApplicationCurrentStep";
+  const savedStep = sessionStorage.getItem(STEP_STORAGE_KEY);
+
+  const [currentStep, setCurrentStep] = useState(
+    savedStep ? Number(savedStep) : location.state?.goToStep ?? 0
+  );
   const [emailOptions, setEmailOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -707,6 +713,7 @@ const LoanApplication = () => {
     console.log("payload Data", payload);
     try {
       const resp = await updateConsents(payload);
+      sessionStorage.removeItem(STEP_STORAGE_KEY);
       console.log(resp, "update consents response");
       console.log("Final Review Data:", { formData, documents });
       sessionStorage.setItem(
@@ -1185,6 +1192,9 @@ const LoanApplication = () => {
 
   //   setPageLoading(false);
   // }, [creditProfile]);
+  useEffect(() => {
+    sessionStorage.setItem(STEP_STORAGE_KEY, currentStep);
+  }, [currentStep]);
   useEffect(() => {
     if (!creditProfile) return;
 
