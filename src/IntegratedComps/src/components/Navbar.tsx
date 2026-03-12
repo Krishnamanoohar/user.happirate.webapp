@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useContextData } from "@/context/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,25 +26,36 @@ const navLinks = [
 ];
 
 export default function Navbar({ scrollY }: NavbarProps) {
+  const { isUserLoggedIn, creditProfile, setIsUserLoggedIn } = useContextData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
-  const [user, setUser] = useState<{
-    mobile: string;
-    username: string | null;
-  } | null>(null);
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
 
   const isScrolled = scrollY > 50;
+    const user = useMemo(() => {
+    const mobile = sessionStorage.getItem("mobile_number");
+    if (!isUserLoggedIn || !mobile) return null;
+
+    // Use creditProfile name if available, otherwise fall back to sessionStorage
+    const username = creditProfile?.data
+      ? [creditProfile.data.firstName, creditProfile.data.middleName, creditProfile.data.lastName]
+          .filter(Boolean)
+          .join(" ")
+      : sessionStorage.getItem("username");
+
+    return { mobile, username: username || null };
+  }, [isUserLoggedIn, creditProfile]);
 
   const handleLogout = () => {
     sessionStorage.clear();
     localStorage.clear();
-    setUser(null);
+    setIsUserLoggedIn(false);
     setIsDropdownOpen(false);
     navigate("/sign-in"); // Or redirect to home "/"
   };
@@ -63,23 +75,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
       .join(" ");
   };
 
-  useEffect(() => {
-    const loadUser = () => {
-      const mobile = sessionStorage.getItem("mobile_number");
-      const name = sessionStorage.getItem("username");
-
-      if (mobile) {
-        setUser({ mobile, username: name || null });
-      } else {
-        setUser(null);
-      }
-    };
-
-    loadUser();
-
-    window.addEventListener("storage", loadUser);
-    return () => window.removeEventListener("storage", loadUser);
-  }, [sessionStorage.getItem("mobile_number")]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
