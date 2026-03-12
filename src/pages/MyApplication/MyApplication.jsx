@@ -495,7 +495,7 @@ function getBestOffer(offers = []) {
 }
 
 /** Build timeline steps from currentStep */
-function buildTimeline(currentStep, status, createdAt) {
+function buildTimeline(currentStep, status) {
     const steps = [
         'APPLICATION_SUBMITTED',
         'KYC_PENDING',
@@ -508,13 +508,14 @@ function buildTimeline(currentStep, status, createdAt) {
 
     let currentIdx = steps.indexOf(currentStep);
 
-    // If backend step not in list
-    if (currentIdx === -1) {
-        if (status === "submitted") {
-            currentIdx = 1; // APPLICATION_SUBMITTED completed
-        } else {
-            currentIdx = 0;
-        }
+    // Draft application
+    if (status === "draft") {
+        currentIdx = 0;
+    }
+
+    // Submitted but step not mapped (like OFFERS_GENERATED)
+    else if (status === "submitted" && currentIdx === -1) {
+        currentIdx = 1;
     }
 
     return steps.map((step, idx) => ({
@@ -523,8 +524,8 @@ function buildTimeline(currentStep, status, createdAt) {
             idx < currentIdx
                 ? "Completed"
                 : idx === currentIdx
-                    ? "In Progress"
-                    : "Pending",
+                ? "In Progress"
+                : "Pending",
         completed: idx < currentIdx,
     }));
 }
@@ -692,7 +693,13 @@ const StatusBadge = ({ status }) => {
 
 export default function MyApplication() {
     const mobileNumber = sessionStorage.getItem("mobile_number");
+    const { applications: rawApplications, isLoading } = useContextData();
+    // const isLoading = rawApplications === undefined || rawApplications === null;
+    const [selectedId, setSelectedId] = useState(null);
 
+    // Transform raw API data → UI-ready shape
+    const applications = (rawApplications || []).map(transformApplication);
+    const selectedApp = applications.find(a => a.id === selectedId);
     if (!mobileNumber) {
         return (
             <LoginGate
@@ -704,13 +711,6 @@ export default function MyApplication() {
         );
 
     }
-    const { applications: rawApplications, isLoading } = useContextData();
-    // const isLoading = rawApplications === undefined || rawApplications === null;
-    const [selectedId, setSelectedId] = useState(null);
-
-    // Transform raw API data → UI-ready shape
-    const applications = (rawApplications || []).map(transformApplication);
-    const selectedApp = applications.find(a => a.id === selectedId);
 
     return (
         <div className="min-h-screen bg-[#fcfaff] font-sans text-slate-900 transition-all duration-300 mt-5">
@@ -745,41 +745,205 @@ export default function MyApplication() {
                         ) : (
                             <div className="space-y-4">
                                 {applications.map((app) => (
-                                    <div
-                                        key={app.id}
-                                        onClick={() => setSelectedId(app.id)}
-                                        className={`bg-white border rounded-2xl p-5 shadow-sm cursor-pointer transition-all duration-300 group ${selectedId === app.id
-                                            ? 'border-purple-500 ring-1 ring-purple-500 bg-purple-50/10'
-                                            : 'border-slate-100 hover:border-purple-200 hover:shadow-md'
-                                            }`}
-                                    >
-                                        <div className="flex justify-between items-start mb-6">
-                                            <div className="flex gap-4">
-                                                <div className={`p-3 rounded-xl transition-colors duration-300 flex items-center justify-center shrink-0 ${app.iconBg} ${app.iconColor} group-hover:bg-purple-100 group-hover:text-purple-600`}>
-                                                    <app.icon size={22} />
+                                    <React.Fragment key={app.id}>
+                                        {/* Card */}
+                                        <div
+                                            onClick={() => setSelectedId(selectedId === app.id ? null : app.id)}
+                                            className={`bg-white border rounded-2xl p-5 shadow-sm cursor-pointer transition-all duration-300 group ${selectedId === app.id
+                                                ? 'border-purple-500 ring-1 ring-purple-500 bg-purple-50/10'
+                                                : 'border-slate-100 hover:border-purple-200 hover:shadow-md'
+                                                }`}
+                                        >
+                                            <div className="flex justify-between items-start mb-6">
+                                                <div className="flex gap-4">
+                                                    <div className={`p-3 rounded-xl transition-colors duration-300 flex items-center justify-center shrink-0 ${app.iconBg} ${app.iconColor} group-hover:bg-purple-100 group-hover:text-purple-600`}>
+                                                        <app.icon size={22} />
+                                                    </div>
+                                                    <div className="flex flex-col justify-center">
+                                                        <h2 className="font-bold text-[15px] text-slate-800 leading-tight">{app.type}</h2>
+                                                        <p className="text-[11px] font-medium text-slate-400 mt-1">{app.id?.slice(-8)?.toUpperCase()} • {app.bank}</p>
+                                                    </div>
                                                 </div>
-                                                <div className="flex flex-col justify-center">
-                                                    <h2 className="font-bold text-[15px] text-slate-800 leading-tight">{app.type}</h2>
-                                                    <p className="text-[11px] font-medium text-slate-400 mt-1">{app.id?.slice(-8)?.toUpperCase()} • {app.bank}</p>
-                                                </div>
+                                                <StatusBadge status={app.status} />
                                             </div>
-                                            <StatusBadge status={app.status} />
+
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-slate-50">
+                                                {[
+                                                    { label: 'Amount', value: app.amount },
+                                                    { label: 'Tenure', value: app.tenure },
+                                                    { label: 'Approximated EMI', value: app.emi },
+                                                    { label: 'Applied', value: app.appliedDate },
+                                                ].map((item, idx) => (
+                                                    <div key={idx} className="flex flex-col">
+                                                        <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">{item.label}</span>
+                                                        <span className="font-bold text-slate-800 text-[13px]">{item.value}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
 
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-slate-50">
-                                            {[
-                                                { label: 'Amount', value: app.amount },
-                                                { label: 'Tenure', value: app.tenure },
-                                                { label: 'Approximated EMI', value: app.emi },
-                                                { label: 'Applied', value: app.appliedDate },
-                                            ].map((item, idx) => (
-                                                <div key={idx} className="flex flex-col">
-                                                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">{item.label}</span>
-                                                    <span className="font-bold text-slate-800 text-[13px]">{item.value}</span>
+                                        {/* Inline detail panel — mobile only, shown right after the selected card */}
+                                        {selectedId === app.id && selectedApp && (
+                                            <div className="block lg:hidden animate-in fade-in slide-in-from-top-2 duration-500">
+                                                <div className="bg-white border border-slate-100 rounded-[32px] p-6 shadow-xl shadow-slate-200/50 relative">
+
+                                                    <div className="flex items-center justify-between mb-6">
+                                                        <div>
+                                                            <h2 className="text-xl font-bold text-slate-800 tracking-tight">{selectedApp.type}</h2>
+                                                            <p className="text-sm font-medium text-slate-400">{selectedApp.appliedDate}</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <StatusBadge status={selectedApp.status} />
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setSelectedId(null); }}
+                                                                className="flex items-center gap-1 px-2 py-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all text-xs"
+                                                            >
+                                                                <X size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-6">
+                                                        {/* Borrower Details */}
+                                                        <section className="bg-gray-100 border border-slate-100/80 rounded-2xl p-5">
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <User size={16} className="text-slate-400" />
+                                                                <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Borrower Details</h3>
+                                                            </div>
+                                                            <div className="grid grid-cols-1 gap-y-3.5">
+                                                                {[
+                                                                    { label: 'Name', value: selectedApp.borrower.name },
+                                                                    { label: 'Mobile', value: selectedApp.borrower.mobile },
+                                                                    { label: 'City', value: selectedApp.borrower.city },
+                                                                    { label: 'Income', value: selectedApp.borrower.income },
+                                                                    { label: 'Employment', value: selectedApp.borrower.employment },
+                                                                ].map((item, idx) => (
+                                                                    <div key={idx} className="flex items-center justify-between border-b border-slate-100/50 pb-2 last:border-0 last:pb-0">
+                                                                        <span className="text-[11px] font-medium text-slate-400">{item.label}</span>
+                                                                        <span className="text-[12px] font-bold text-slate-700">{item.value}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </section>
+
+                                                        {/* Loan Details */}
+                                                        <section className="bg-gray-100 border border-slate-100/80 rounded-2xl p-5">
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <FileText size={16} className="text-slate-400" />
+                                                                <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Loan Details</h3>
+                                                            </div>
+                                                            <div className="grid grid-cols-1 gap-y-3.5">
+                                                                {[
+                                                                    { label: 'Amount', value: selectedApp.amount },
+                                                                    { label: 'Tenure', value: selectedApp.tenure },
+                                                                    { label: 'Lender', value: selectedApp.bank },
+                                                                    { label: 'Interest Rate', value: selectedApp.interestRate },
+                                                                    { label: 'EMI', value: selectedApp.emi },
+                                                                ].map((item, idx) => (
+                                                                    <div key={idx} className="flex items-center justify-between border-b border-slate-100/50 pb-2 last:border-0 last:pb-0">
+                                                                        <span className="text-[11px] font-medium text-slate-400">{item.label}</span>
+                                                                        <span className="text-[12px] font-bold text-slate-700">{item.value}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </section>
+
+                                                        {/* Eligibility & Risk */}
+                                                        <section className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-5">
+                                                            <div className="flex items-center gap-2 mb-5">
+                                                                <ShieldCheck size={16} className="text-slate-400" />
+                                                                <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Eligibility & Risk</h3>
+                                                            </div>
+                                                            <div className="space-y-4 mb-6">
+                                                                <div>
+                                                                    <div className="flex justify-between mb-1.5">
+                                                                        <span className="text-[11px] font-bold text-slate-500">Eligibility Score</span>
+                                                                        <span className="text-[11px] font-bold text-slate-800">{selectedApp.eligibilityScore}/100</span>
+                                                                    </div>
+                                                                    <div className="w-full bg-slate-200/60 rounded-full h-2 overflow-hidden">
+                                                                        <div className="bg-emerald-500 h-full rounded-full transition-all duration-700" style={{ width: `${selectedApp.eligibilityScore}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div className="flex justify-between mb-1.5">
+                                                                        <span className="text-[11px] font-bold text-slate-500">Risk Score</span>
+                                                                        <span className="text-[11px] font-bold text-slate-800">{selectedApp.riskScore}/100</span>
+                                                                    </div>
+                                                                    <div className="w-full bg-slate-200/60 rounded-full h-2 overflow-hidden">
+                                                                        <div className="bg-emerald-400 h-full rounded-full transition-all duration-700" style={{ width: `${selectedApp.riskScore}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="space-y-3 mb-6">
+                                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recommended Lenders</p>
+                                                                {(selectedApp.recommendedLenders.length > 0 ? selectedApp.recommendedLenders : ['—']).map((lender, i) => (
+                                                                    <div key={i} className="flex items-center justify-between border-b border-slate-100/50 pb-1.5 last:border-0 last:pb-0">
+                                                                        <p className="text-xs font-bold text-slate-700">{lender}</p>
+                                                                        <CheckCircle2 size={14} className="text-emerald-500" />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            {selectedApp.allOffers.length > 0 && (
+                                                                <div>
+                                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">All Offers</p>
+                                                                    <div className="overflow-x-auto">
+                                                                        <table className="w-full text-[11px]">
+                                                                            <thead>
+                                                                                <tr className="border-b border-slate-100">
+                                                                                    {['Bank', 'Rate', 'Max Amount', 'Approval %', 'Disbursal'].map(h => (
+                                                                                        <th key={h} className="text-left font-bold text-slate-400 pb-2 pr-3">{h}</th>
+                                                                                    ))}
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                {selectedApp.allOffers.map((offer, i) => (
+                                                                                    <tr key={i} className="border-b border-slate-50 last:border-0">
+                                                                                        <td className="py-2 pr-3 font-bold text-slate-700">{offer.bankName}</td>
+                                                                                        <td className="py-2 pr-3 text-slate-600">{offer.interestRate}%</td>
+                                                                                        <td className="py-2 pr-3 text-slate-600">{formatINR(offer.maximumEligibleLoanAmount)}</td>
+                                                                                        <td className="py-2 pr-3"><span className="text-emerald-600 font-bold">{offer.approvalProbability?.toFixed(0)}%</span></td>
+                                                                                        <td className="py-2 text-slate-600">{offer.disbursalTime?.from}–{offer.disbursalTime?.to} {offer.disbursalTime?.unit}</td>
+                                                                                    </tr>
+                                                                                ))}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </section>
+
+                                                        {/* Timeline */}
+                                                        <section className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-6">
+                                                            <div className="flex items-center gap-2 mb-6">
+                                                                <History size={16} className="text-slate-400" />
+                                                                <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Application Timeline</h3>
+                                                            </div>
+                                                            <div className="space-y-6 relative">
+                                                                {selectedApp.timeline.map((item, idx) => (
+                                                                    <div key={idx} className="flex gap-4 relative">
+                                                                        {idx !== selectedApp.timeline.length - 1 && (
+                                                                            <div className={`absolute left-[11px] top-6 w-[2px] h-[calc(100%+8px)] ${item.completed ? 'bg-emerald-100' : 'bg-slate-100'}`}></div>
+                                                                        )}
+                                                                        <div className="shrink-0 mt-0.5 z-10">
+                                                                            {item.completed ? (
+                                                                                <CheckCircle2 size={22} className="text-emerald-500 fill-white" />
+                                                                            ) : (
+                                                                                <div className="w-[22px] h-[22px] rounded-full border-2 border-slate-200 bg-white shadow-sm"></div>
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="flex flex-col justify-center">
+                                                                            <p className={`text-[13px] font-bold ${item.completed ? 'text-slate-700' : 'text-slate-400'}`}>{item.label}</p>
+                                                                            <p className="text-[10px] font-medium text-slate-400 mt-0.5">{item.date}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </section>
+                                                    </div>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                            </div>
+                                        )}
+                                    </React.Fragment>
                                 ))}
                             </div>
                         )}
@@ -787,7 +951,7 @@ export default function MyApplication() {
 
                     {/* RIGHT COLUMN: Detail View */}
                     {selectedId && selectedApp && (
-                        <div className="w-full lg:w-[60%] animate-in fade-in slide-in-from-right-4 duration-500 flex flex-col">
+                        <div className="hidden lg:flex w-full lg:w-[60%] animate-in fade-in slide-in-from-right-4 duration-500 flex flex-col">
                             <div className="h-[60px] mb-6 flex items-end justify-end px-2">
                                 <button
                                     onClick={() => setSelectedId(null)}
@@ -849,6 +1013,36 @@ export default function MyApplication() {
                                                 <div key={idx} className="flex items-center justify-between border-b border-slate-100/50 pb-2 last:border-0 last:pb-0">
                                                     <span className="text-[11px] font-medium text-slate-400">{item.label}</span>
                                                     <span className="text-[12px] font-bold text-slate-700">{item.value}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </section>
+                                    {/* Application Timeline */}
+                                    <section className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-6">
+                                        <div className="flex items-center gap-2 mb-6">
+                                            <History size={16} className="text-slate-400" />
+                                            <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Application Timeline</h3>
+                                        </div>
+
+                                        <div className="space-y-6 relative">
+                                            {selectedApp.timeline.map((item, idx) => (
+                                                <div key={idx} className="flex gap-4 relative">
+                                                    {idx !== selectedApp.timeline.length - 1 && (
+                                                        <div className={`absolute left-[11px] top-6 w-[2px] h-[calc(100%+8px)] ${item.completed ? 'bg-emerald-100' : 'bg-slate-100'}`}></div>
+                                                    )}
+                                                    <div className="shrink-0 mt-0.5 z-10">
+                                                        {item.completed ? (
+                                                            <CheckCircle2 size={22} className="text-emerald-500 fill-white" />
+                                                        ) : (
+                                                            <div className="w-[22px] h-[22px] rounded-full border-2 border-slate-200 bg-white shadow-sm"></div>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col justify-center">
+                                                        <p className={`text-[13px] font-bold ${item.completed ? 'text-slate-700' : 'text-slate-400'}`}>
+                                                            {item.label}
+                                                        </p>
+                                                        <p className="text-[10px] font-medium text-slate-400 mt-0.5">{item.date}</p>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -933,36 +1127,6 @@ export default function MyApplication() {
                                         )}
                                     </section>
 
-                                    {/* Application Timeline */}
-                                    <section className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-6">
-                                        <div className="flex items-center gap-2 mb-6">
-                                            <History size={16} className="text-slate-400" />
-                                            <h3 className="font-bold text-slate-600 text-[13px] uppercase tracking-wide">Application Timeline</h3>
-                                        </div>
-
-                                        <div className="space-y-6 relative">
-                                            {selectedApp.timeline.map((item, idx) => (
-                                                <div key={idx} className="flex gap-4 relative">
-                                                    {idx !== selectedApp.timeline.length - 1 && (
-                                                        <div className={`absolute left-[11px] top-6 w-[2px] h-[calc(100%+8px)] ${item.completed ? 'bg-emerald-100' : 'bg-slate-100'}`}></div>
-                                                    )}
-                                                    <div className="shrink-0 mt-0.5 z-10">
-                                                        {item.completed ? (
-                                                            <CheckCircle2 size={22} className="text-emerald-500 fill-white" />
-                                                        ) : (
-                                                            <div className="w-[22px] h-[22px] rounded-full border-2 border-slate-200 bg-white shadow-sm"></div>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex flex-col justify-center">
-                                                        <p className={`text-[13px] font-bold ${item.completed ? 'text-slate-700' : 'text-slate-400'}`}>
-                                                            {item.label}
-                                                        </p>
-                                                        <p className="text-[10px] font-medium text-slate-400 mt-0.5">{item.date}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </section>
 
                                 </div>
                             </div>
