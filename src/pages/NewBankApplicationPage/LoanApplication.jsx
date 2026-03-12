@@ -58,10 +58,10 @@ const steps = [
 
 const loanTypes = [
   { value: "personal", label: "Personal Loan" },
-  { value: "home", label: "Home Loan" },
-  { value: "education", label: "Education Loan" },
-  { value: "vehicle", label: "Vehicle Loan" },
-  { value: "business", label: "Business Loan" },
+  // { value: "home", label: "Home Loan" },
+  // { value: "education", label: "Education Loan" },
+  // { value: "vehicle", label: "Vehicle Loan" },
+  // { value: "business", label: "Business Loan" },
 ];
 
 const employmentStatuses = [
