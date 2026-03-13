@@ -43,7 +43,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/IntegratedComps/src/components/Navbar";
-import axios from "axios";
 import Loader from "@/ReactBitsComps/Loader/Loader";
 import { EmploymentHistorySection } from "./DynamicEmploymentComp";
 import ExistingDocumentsSelector from "@/components/ExistingDocumentsSelector/ExistingDocumentsSelector";
@@ -257,6 +256,8 @@ const LoanApplication = () => {
   const [consentError, setConsentError] = useState(false);
   const [employmentErrors, setEmploymentErrors] = useState([]);
   const addressComboboxRef = useRef(null);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Determine which upload zones are still needed
   const hasITR = selectedDocIds.some((id) =>
@@ -686,16 +687,13 @@ const LoanApplication = () => {
         const resp = await handleUpdateLoanRequirements();
         console.log(resp, "update loan requirements response");
         console.log(response, "response");
+        setCurrentStep(3);
       } catch (error) {
         console.log(error, "error");
       } finally {
         setIsLoading(false);
       }
       console.log("Documents (frontend only):", documents);
-
-      // Move to Review step
-      setCurrentStep(3);
-      setIsLoading(false);
       return;
     }
   };
@@ -1109,14 +1107,20 @@ const LoanApplication = () => {
     if (documents.photo) formData.append("others", documents.photo);
 
     try {
-      const response = await uploadFinancialDocuments(formData);
+      setUploadModalOpen(true);
+      setUploadProgress(0);
+      const response = await uploadFinancialDocuments(formData, (progress) => {
+        setUploadProgress(progress);
+      });
 
       if (response.status === 201 || response.status === 200) {
         // setCurrentStep(3); // Move to the next step in your UI
+        setUploadModalOpen(false);
         setCurrentStep(3);
         toast.success("Documents uploaded successfully!");
       }
     } catch (error) {
+      setUploadModalOpen(false);  
       console.error("Upload failed:", error);
       toast.error(
         error.response?.data?.error ||
@@ -2549,6 +2553,37 @@ const LoanApplication = () => {
             )}
           </div>
         </div>
+        {
+          uploadModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+
+              <div className="bg-white rounded-2xl shadow-xl p-8 w-[400px] text-center">
+
+                <h2 className="text-xl font-semibold text-slate-800 mb-4">
+                  Uploading Documents
+                </h2>
+
+                <p className="text-sm text-slate-500 mb-6">
+                  Please wait while we securely upload your documents.
+                </p>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-violet-600 h-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+
+                <p className="mt-3 text-sm font-medium text-violet-600">
+                  {uploadProgress}%
+                </p>
+
+              </div>
+
+            </div>
+          )
+        }
       </div>
     </>
   );

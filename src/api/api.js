@@ -48,10 +48,17 @@ const updateLoanRequirements = async (payload) => {
   return resp;
 };
 
-const uploadFinancialDocuments = async (formData) => {
+const uploadFinancialDocuments = async (formData, onProgress) => {
   const resp = await apiClient.post("/docs/upload-batch", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress: (event) => {
+      if (!event.total) return;
+
+      const percent = Math.round((event.loaded * 100) / event.total);
+
+      if (onProgress) onProgress(percent);
     },
   });
   console.log("Response for document upload", resp);
