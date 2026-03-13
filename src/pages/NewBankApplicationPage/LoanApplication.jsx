@@ -828,8 +828,6 @@ const LoanApplication = () => {
       residentialStability: "",
       existingEmi: apiData.existingEmi ?? "",
       loanTenure: apiData.loanTenure ?? "",
-      salaryMode: apiData.salaryMode ?? "",
-      employmentCategory: apiData.employmentCategory ?? "",
     };
   };
 
