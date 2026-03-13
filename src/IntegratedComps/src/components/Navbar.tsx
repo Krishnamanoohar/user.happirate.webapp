@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Menu, X, ChevronDown, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useContextData } from "@/context/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,26 +22,40 @@ const navLinks = [
   { name: "EMI Calculator", href: "/emi-calculator" },
   { name: "Credit Health", href: "/credit-health-report" },
   { name: "Get In Touch", href: "/#contact" },
+  { name: "My Account", href: "#", isAccount: true },
 ];
 
 export default function Navbar({ scrollY }: NavbarProps) {
+  const { isUserLoggedIn, creditProfile, setIsUserLoggedIn } = useContextData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
-  const [user, setUser] = useState<{
-    mobile: string;
-    username: string | null;
-  } | null>(null);
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
 
   const isScrolled = scrollY > 50;
+    const user = useMemo(() => {
+    const mobile = sessionStorage.getItem("mobile_number");
+    if (!isUserLoggedIn || !mobile) return null;
+
+    // Use creditProfile name if available, otherwise fall back to sessionStorage
+    const username = creditProfile?.data
+      ? [creditProfile.data.firstName, creditProfile.data.middleName, creditProfile.data.lastName]
+          .filter(Boolean)
+          .join(" ")
+      : sessionStorage.getItem("username");
+
+    return { mobile, username: username || null };
+  }, [isUserLoggedIn, creditProfile]);
 
   const handleLogout = () => {
     sessionStorage.clear();
     localStorage.clear();
-    setUser(null);
+    setIsUserLoggedIn(false);
     setIsDropdownOpen(false);
     navigate("/sign-in"); // Or redirect to home "/"
   };
@@ -53,30 +68,13 @@ export default function Navbar({ scrollY }: NavbarProps) {
     navigate("/my-applicaton");
   };
   const formatName = (name: string | null) => {
-  if (!name) return "";
-  return name
-    .split(" ")
-    .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
-    .join(" ");
-};
+    if (!name) return "";
+    return name
+      .split(" ")
+      .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
+      .join(" ");
+  };
 
-  useEffect(() => {
-    const loadUser = () => {
-      const mobile = sessionStorage.getItem("mobile_number");
-      const name = sessionStorage.getItem("username");
-
-      if (mobile) {
-        setUser({ mobile, username: name || null });
-      } else {
-        setUser(null);
-      }
-    };
-
-    loadUser();
-
-    window.addEventListener("storage", loadUser);
-    return () => window.removeEventListener("storage", loadUser);
-  }, [sessionStorage.getItem("mobile_number")]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,6 +94,25 @@ export default function Navbar({ scrollY }: NavbarProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setMobileMenuOpen(false);
+        setMobileAccountOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -153,7 +170,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu> */}
 
-            {navLinks.map((link) => (
+            {/* {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
@@ -162,7 +179,41 @@ export default function Navbar({ scrollY }: NavbarProps) {
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 gradient-bg group-hover:w-full transition-all duration-300" />
               </Link>
-            ))}
+            ))} */}
+            {navLinks.map((link) =>
+              link.isAccount ? (
+                <div className="relative group">
+                  <button className="flex items-center gap-1 text-slate-700 hover:text-violet-600 font-semibold transition-colors">
+                    My Account
+                    <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                  </button>
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform group-hover:translate-y-1 transition-all duration-200 overflow-hidden">
+                    <button
+                      onClick={handleMyapplication}
+                      className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-colors"
+                    >
+                      My Applications
+                    </button>
+
+                    <button
+                      onClick={handleProfile}
+                      className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-colors border-t border-gray-100"
+                    >
+                      My Profile
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-slate-600 hover:text-indigo-600 font-medium transition-colors relative group"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 gradient-bg group-hover:w-full transition-all duration-300" />
+                </Link>
+              ),
+            )}
           </div>
 
           {/* Sign In Button */}
@@ -190,18 +241,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
                         {user.mobile}
                       </p>
                     </div>
-                    <button
-                      onClick={handleMyapplication}
-                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
-                    >
-                      My Applications
-                    </button>
-                    <button
-                      onClick={handleProfile}
-                      className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-900  hover:bg-indigo-50 transition-colors duration-150 flex items-center gap-2 border-b border-gray-200"
-                    >
-                      My Profile
-                    </button>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 flex items-center gap-2"
@@ -262,20 +301,63 @@ export default function Navbar({ scrollY }: NavbarProps) {
       )} */}
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-slate-100 animate-in slide-in-from-top duration-300">
+        <div
+          ref={mobileMenuRef}
+          className="lg:hidden bg-white border-t border-slate-100 animate-in slide-in-from-top duration-300"
+        >
           <div className="px-4 py-6 space-y-4">
             {/* Navigation Links */}
             <div className="space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) =>
+                link.isAccount ? (
+                  <div key={link.name}>
+                    <button
+                      onClick={() => setMobileAccountOpen(!mobileAccountOpen)}
+                      className="flex justify-between w-full text-slate-700 font-semibold py-3 border-b border-slate-50"
+                    >
+                      My Account
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          mobileAccountOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {mobileAccountOpen && (
+                      <div className="pl-4 space-y-2 mt-2">
+                        <button
+                          onClick={() => {
+                            handleMyapplication();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="block w-full text-left text-slate-700 font-semibold py-2 hover:text-indigo-600 transition-colors"
+                        >
+                          My Applications
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            handleProfile();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="block w-full text-left text-slate-700 font-semibold py-2 hover:text-indigo-600 transition-colors"
+                        >
+                          My Profile
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="block text-slate-700 hover:text-indigo-600 font-semibold py-3 border-b border-slate-50"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ),
+              )}
             </div>
 
             {/* Profile / Auth Section */}
@@ -296,7 +378,7 @@ export default function Navbar({ scrollY }: NavbarProps) {
                     </button>
                     <div className="overflow-hidden">
                       <p className="font-bold text-slate-900 truncate">
-                        {user.username || "User"}
+                        {formatName(user?.username) || "User"}
                       </p>
                       <p className="text-xs text-slate-500 truncate">
                         {user.mobile}
@@ -305,28 +387,6 @@ export default function Navbar({ scrollY }: NavbarProps) {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant="outline"
-                      className="text-sm font-semibold text-slate-900 hover:bg-indigo-50 border border-gray-300"
-                      onClick={() => {
-                        handleMyapplication();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      My Applications
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className="text-sm font-semibold text-slate-900 hover:bg-indigo-50 border border-gray-300"
-                      onClick={() => {
-                        handleProfile();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      My Profile
-                    </Button>
-
                     <Button
                       variant="ghost"
                       className="col-span-2 text-red-500 hover:bg-red-50 hover:text-red-600 text-sm font-semibold border border-gray-300"

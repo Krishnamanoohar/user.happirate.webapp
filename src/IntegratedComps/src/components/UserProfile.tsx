@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 
-import { Download, FileText, File, Files } from "lucide-react";
+import {
+  Download,
+  FileText,
+  File,
+  Files,
+  Lock,
+  LogIn,
+  ChevronRight,
+} from "lucide-react";
 import {
   User,
   MapPin,
@@ -22,6 +30,7 @@ import { fetchTaxDocuments } from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { error } from "three";
 import { useContextData } from "@/context/AuthContext";
+import LoginGate from "@/components/LoginGate/LoginGate";
 const tabs = [
   { id: "personal", label: "Personal Info", icon: User },
   // { id: "address", label: "Address", icon: MapPin },
@@ -144,6 +153,18 @@ interface DocumentSection {
 }
 
 const ProfilePage = () => {
+  const mobile = sessionStorage.getItem("mobile_number");
+
+  if (!mobile) {
+  return (
+    <LoginGate
+      title="Profile Information"
+      description="Your profile information is protected. Please login to view and manage your details."
+      redirectPath="/my-profile"
+      buttonText="Login to View Profile"
+    />
+  );
+  }
   const { creditProfile, isLoading } = useContextData();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -309,9 +330,7 @@ const ProfilePage = () => {
     };
   };
 
-const cibil = getCibilBadge(
-  String(creditProfile?.data?.cibilScore ?? 0)
-);
+  const cibil = getCibilBadge(String(creditProfile?.data?.cibilScore ?? 0));
   const handleFetchTaxDocuments = async () => {
     if (!taxNumber.trim()) {
       toast.error("Please enter Tax Number");
@@ -354,7 +373,8 @@ const cibil = getCibilBadge(
   useEffect(() => {
     console.log("Credit profile", creditProfile);
   }, [creditProfile]);
-  const isSelfEmployed = creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
+  const isSelfEmployed =
+    creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
   if (isLoading || !creditProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -662,38 +682,40 @@ const cibil = getCibilBadge(
                   />
                 </ProfileSection>
                 {!isSelfEmployed && (
-                <ProfileSection icon={Briefcase} title="Company Details">
-                  {/* Current Company */}
-                  <DetailRow
-                    label="Current Company"
-                    value={currentCompany?.establishment_name || "Not provided"}
-                  />
+                  <ProfileSection icon={Briefcase} title="Company Details">
+                    {/* Current Company */}
+                    <DetailRow
+                      label="Current Company"
+                      value={
+                        currentCompany?.establishment_name || "Not provided"
+                      }
+                    />
 
-                  <DetailRow
-                    label="Current Joining Date"
-                    value={currentCompany?.date_of_joining || "Not provided"}
-                  />
+                    <DetailRow
+                      label="Current Joining Date"
+                      value={currentCompany?.date_of_joining || "Not provided"}
+                    />
 
-                  {/* Previous Company */}
-                  {previousCompany && (
-                    <>
-                      <DetailRow
-                        label="Previous Company"
-                        value={previousCompany.establishment_name}
-                      />
+                    {/* Previous Company */}
+                    {previousCompany && (
+                      <>
+                        <DetailRow
+                          label="Previous Company"
+                          value={previousCompany.establishment_name}
+                        />
 
-                      <DetailRow
-                        label="Previous Joining Date"
-                        value={previousCompany.date_of_joining}
-                      />
+                        <DetailRow
+                          label="Previous Joining Date"
+                          value={previousCompany.date_of_joining}
+                        />
 
-                      <DetailRow
-                        label="Previous Relieving Date"
-                        value={previousCompany.date_of_exit}
-                      />
-                    </>
-                  )}
-                </ProfileSection>
+                        <DetailRow
+                          label="Previous Relieving Date"
+                          value={previousCompany.date_of_exit}
+                        />
+                      </>
+                    )}
+                  </ProfileSection>
                 )}
               </div>
             )}
