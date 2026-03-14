@@ -1459,7 +1459,7 @@ const LoanApplication = () => {
                       // hint="Aadhaar cannot be edited as it's verified from source"
                       error={errors.aadhaarCard}
                     />
-                    {phoneOptions.length > 1 ? (
+                    {phoneOptions.length > 0 ? (
                       <FormSelect
                         label="Mobile Number"
                         value={formData.mobileNumber}
@@ -1468,6 +1468,7 @@ const LoanApplication = () => {
                           value: num,
                           label: num,
                         }))}
+                        disabled={phoneOptions.length === 1}
                         required
                         error={errors.mobileNumber}
                       />
