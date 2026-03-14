@@ -8,6 +8,7 @@ import {
   Lock,
   LogIn,
   ChevronRight,
+  ViewIcon,
 } from "lucide-react";
 import {
   User,
@@ -156,14 +157,14 @@ const ProfilePage = () => {
   const mobile = sessionStorage.getItem("mobile_number");
 
   if (!mobile) {
-  return (
-    <LoginGate
-      title="Profile Information"
-      description="Your profile information is protected. Please login to view and manage your details."
-      redirectPath="/my-profile"
-      buttonText="Login to View Profile"
-    />
-  );
+    return (
+      <LoginGate
+        title="Profile Information"
+        description="Your profile information is protected. Please login to view and manage your details."
+        redirectPath="/my-profile"
+        buttonText="Login to View Profile"
+      />
+    );
   }
   const { creditProfile, isLoading } = useContextData();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
@@ -181,6 +182,7 @@ const ProfilePage = () => {
   const userInfo = sessionStorage.getItem("userId");
   const profile = creditProfile?.data ?? {};
   const employmentData = profile?.employmentHistory?.employment_data ?? [];
+  const [docsLoading, setDocsLoading] = useState(false);
 
   // Current company = no exit date
   const currentCompany = employmentData.find(
@@ -195,117 +197,59 @@ const ProfilePage = () => {
     try {
       if (!userInfo) return;
 
+      setDocsLoading(true);
+
       const response = await fetchUserFinDocuments(userInfo);
       const files = response?.data?.documents || [];
-
-      const formatDisplayName = (fileName: string) => {
-        // Remove timestamp prefix
-        const parts = fileName.split("_");
-        if (!isNaN(Number(parts[0]))) {
-          parts.shift();
-        }
-
-        const withoutTimestamp = parts.join("_");
-        const ext = withoutTimestamp.split(".").pop();
-        const base = withoutTimestamp.replace(`.${ext}`, "");
-
-        // Clean unwanted patterns
-        const cleaned = base
-          .replace(/payslip/gi, "")
-          .replace(/itr/gi, "")
-          .replace(/form16/gi, "")
-          .replace(/[-_]+/g, " ")
-          .trim();
-
-        // Decide prefix dynamically
-        let prefix = "Document";
-        const lower = fileName.toLowerCase();
-
-        if (lower.includes("payslip")) prefix = "Payslip";
-        else if (lower.includes("itr") || lower.includes("form16"))
-          prefix = "ITR";
-
-        // Final format → Payslip-FileName-Type.pdf
-        return `${prefix} - ${cleaned.replace(/\s+/g, "_")}.${ext}`;
-      };
-
-      const extractDateFromName = (fileName: string) => {
-        const timestamp = fileName.split("_")[0];
-        const date = new Date(Number(timestamp));
-
-        if (isNaN(date.getTime())) return "Unknown";
-
-        return date.toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        });
-      };
-
-      const getFileType = (fileName: string) =>
-        fileName.split("_").pop()?.toUpperCase() || "FILE";
 
       const grouped = {
         Payslips: [] as UploadedDoc[],
         ITR: [] as UploadedDoc[],
         Others: [] as UploadedDoc[],
       };
+      files.sort(
+        (a, b) =>
+          Number(b.fileName.split("_")[0]) - Number(a.fileName.split("_")[0]),
+      );
 
       files.forEach((file: any) => {
-        const cleanFileName = (fileName: string) => {
-          const parts = fileName.split("_");
+        const parts = file.fileName.split("_");
 
-          if (!isNaN(Number(parts[0]))) {
-            parts.shift();
-          }
-
-          return parts.join("_").replace(/_-_/g, " ").replace(/_+/g, "_");
-        };
+        const fileType = parts[1]?.toLowerCase(); // payslip / itr / other
+        const readableName = parts
+          .slice(1)
+          .join("_")
+          .replace(/_/g, " ")
+          .replace(/\.[^/.]+$/, "");
 
         const doc: UploadedDoc = {
-          name: formatDisplayName(file.fileName),
-          type: getFileType(file.fileName),
-          size: null,
-          date: extractDateFromName(file.fileName),
+          name: readableName,
+          type: file.fileName.split(".").pop()?.toUpperCase() || "FILE",
+          size: "",
+          date: new Date(Number(parts[0])).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
           url: file.viewUrl,
         };
 
-        const lower = file.fileName.toLowerCase();
-
-        if (lower.includes("payslip")) {
-          grouped.Payslips.push(doc);
-        } else if (
-          lower.includes("itr") ||
-          lower.includes("form16") ||
-          lower.includes("tax")
-        ) {
-          grouped.ITR.push(doc);
-        } else {
-          grouped.Others.push(doc);
-        }
+        if (fileType === "payslip") grouped.Payslips.push(doc);
+        else if (fileType === "itr") grouped.ITR.push(doc);
+        else grouped.Others.push(doc);
       });
 
       const formatted: DocumentSection[] = [
-        {
-          category: "Payslips",
-          icon: FileText,
-          docs: grouped.Payslips,
-        },
-        {
-          category: "ITR Documents",
-          icon: FileText,
-          docs: grouped.ITR,
-        },
-        {
-          category: "Other Documents",
-          icon: FileText,
-          docs: grouped.Others,
-        },
+        { category: "Payslips", icon: FileText, docs: grouped.Payslips },
+        { category: "ITR Documents", icon: FileText, docs: grouped.ITR },
+        { category: "Other Documents", icon: FileText, docs: grouped.Others },
       ].filter((section) => section.docs.length > 0);
 
       setDocument(formatted);
     } catch (error) {
-      console.log(error, "error");
+      console.log(error);
+    } finally {
+      setDocsLoading(false);
     }
   };
 
@@ -373,6 +317,11 @@ const ProfilePage = () => {
   useEffect(() => {
     console.log("Credit profile", creditProfile);
   }, [creditProfile]);
+  useEffect(() => {
+    if (activeTab === "documents") {
+      fetchUploadedDocuments();
+    }
+  }, [activeTab]);
   const isSelfEmployed =
     creditProfile?.data?.employmentStatus?.toLowerCase() === "self-employed";
   if (isLoading || !creditProfile) {
@@ -832,50 +781,62 @@ const ProfilePage = () => {
           )} */}
             {activeTab === "documents" && (
               <div className="max-w-3xl">
-                <div className="flex flex-col gap-6">
-                  {document.map((section) => (
-                    <div key={section.category}>
-                      <div className="flex items-center gap-2 mb-3">
-                        <section.icon className="h-4 w-4 text-primary" />
-                        <h2 className="text-sm font-semibold text-foreground">
-                          {section.category}
-                        </h2>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {section.docs.map((doc) => (
-                          <div
-                            key={doc.url}
-                            className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 hover:border-primary/40 hover:shadow-sm transition-all group"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
-                                <File className="h-4 w-4 text-primary" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-foreground">
-                                  {doc.name}
-                                </p>
-                                <p className="text-[11px] text-muted-foreground">
-                                  Uploaded {doc.date}
-                                </p>
-                              </div>
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(doc.url, "_blank");
-                              }}
-                              className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors px-3 py-1.5 rounded-lg hover:bg-accent group-hover:opacity-100 opacity-70"
+                {docsLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 gap-4">
+                    <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin"></div>
+                    <p className="text-sm text-muted-foreground">
+                      Fetching your documents...
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-6">
+                    {document.map((section) => (
+                      <div key={section.category}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <section.icon className="h-4 w-4 text-primary" />
+                          <h2 className="text-sm font-semibold text-foreground">
+                            {section.category}
+                          </h2>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          {section.docs.map((doc) => (
+                            <div
+                              key={doc.url}
+                              className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 hover:border-primary/40 hover:shadow-sm transition-all group"
                             >
-                              <Download className="h-3.5 w-3.5" />
-                              Download
-                            </button>
-                          </div>
-                        ))}
+                              <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                                  <File className="h-4 w-4 text-primary" />
+                                </div>
+
+                                <div>
+                                  <p className="text-sm font-medium text-foreground">
+                                    {doc.name}
+                                  </p>
+                                  <p className="text-[11px] text-muted-foreground">
+                                    Uploaded {doc.date}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open(doc.url, "_blank");
+                                }}
+                                className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors px-3 py-1.5 rounded-lg hover:bg-accent group-hover:opacity-100 opacity-70"
+                              >
+                                <ViewIcon className="h-3.5 w-3.5" />
+                                View
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
