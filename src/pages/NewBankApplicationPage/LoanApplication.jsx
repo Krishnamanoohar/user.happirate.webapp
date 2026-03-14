@@ -675,26 +675,41 @@ const LoanApplication = () => {
 
     // STEP 3 → Documents (NO API in old code)
     if (currentStep === 2) {
+
       setDocumentValidationTriggered(true);
+
       if (!validateDocuments()) {
         toast.error("Please upload all required documents");
         setIsLoading(false);
         return;
       }
+
       try {
-        console.log(documents);
-        const response = await handleDocumentUpload();
-        const resp = await handleUpdateLoanRequirements();
-        console.log(resp, "update loan requirements response");
-        console.log(response, "response");
+
+        const uploadSuccess = await handleDocumentUpload();
+
+        if (!uploadSuccess) {
+          setIsLoading(false);
+          return;
+        }
+
+        const loanSuccess = await handleUpdateLoanRequirements();
+
+        if (!loanSuccess) {
+          setIsLoading(false);
+          return;
+        }
+
         setCurrentStep(3);
+
       } catch (error) {
-        console.log(error, "error");
+
+        toast.error("Something went wrong");
+
       } finally {
         setIsLoading(false);
       }
-      console.log("Documents (frontend only):", documents);
-      return;
+
     }
   };
 
@@ -1080,9 +1095,14 @@ const LoanApplication = () => {
         requestedAmount: formData.loanAmount,
         preferredTenure: formData.loanTenure,
       });
-      console.log(resp, "update loan requirements response");
+      return true;
     } catch (error) {
       console.log(error, "error in updating loan requirements");
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to update loan requirements"
+      );
+      return false;
     }
   };
 
@@ -1112,21 +1132,27 @@ const LoanApplication = () => {
       const response = await uploadFinancialDocuments(formData, (progress) => {
         setUploadProgress(progress);
       });
-
       if (response.status === 201 || response.status === 200) {
         // setCurrentStep(3); // Move to the next step in your UI
-        setUploadModalOpen(false);
-        setCurrentStep(3);
+        // setUploadModalOpen(false);
+        // setCurrentStep(3);
         toast.success("Documents uploaded successfully!");
+        return true;
       }
+      return false;
     } catch (error) {
-      setUploadModalOpen(false);  
+      setUploadModalOpen(false);
       console.error("Upload failed:", error);
       toast.error(
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Document upload failed. Is your backend running?",
       );
+      return false;
+    } finally {
+
+      setUploadModalOpen(false);
+
     }
   };
   const handleAddressSelect = (index) => {
