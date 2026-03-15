@@ -1733,12 +1733,13 @@ const LoanApplication = () => {
                     )}
                     <FormInput
                       label="Monthly Income (₹)"
-                      value={formatIndianNumber(formData.monthlyIncome)}
+                      value={formData.monthlyIncome ? `₹${formatIndianNumber(formData.monthlyIncome)}` : ""}
                       onChange={(v) => {
-                        const raw = v.replace(/,/g, ""); // remove commas
+                        // 2. Strip everything except digits (removes ₹, commas, and spaces)
+                        const raw = v.replace(/\D/g, "");
 
-                        // allow only positive digits
-                        if (/^\d*$/.test(raw)) {
+                        // 3. Update state with the clean numeric string
+                        if (raw === "" || /^\d+$/.test(raw)) {
                           updateFormData("monthlyIncome", raw);
                         }
                       }}
