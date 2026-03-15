@@ -1704,7 +1704,10 @@ const LoanApplication = () => {
               >
                 {/* Employment Section */}
                 <div className="space-y-6 mt-5">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <div className={cn(
+                    "grid grid-cols-1 gap-5",
+                    isSelfEmployed ? "md:grid-cols-3" : "md:grid-cols-4"
+                  )}>
                     <FormSelect
                       label="Employment Status"
                       value={formData.employmentStatus || ""}
