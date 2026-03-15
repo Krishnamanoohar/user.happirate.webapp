@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -63,11 +63,11 @@ const loanTypes = [
   // { value: "business", label: "Business Loan" },
 ];
 
-const employmentStatuses = [
-  { value: "Select", label: "Select" },
-  { value: "salaried", label: "Salaried" },
-  { value: "self-employed", label: "Self Employed" },
-];
+// const employmentStatuses = [
+//   { value: "Select", label: "Select" },
+//   { value: "salaried", label: "Salaried" },
+//   { value: "self-employed", label: "Self Employed" },
+// ];
 
 const residentialStatuses = [
   { value: "owned", label: "Owned" },
@@ -275,7 +275,6 @@ const LoanApplication = () => {
   );
 
   const payslipsNeeded = Math.max(0, 3 - selectedPayslips.length);
-
   // Form data state (pre-filled)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -310,6 +309,32 @@ const LoanApplication = () => {
     employmentCategory: "",
   });
   const [employmentData, setEmploymentData] = useState([]);
+  const employmentStatusOptions = useMemo(() => {
+
+    const historyExists = employmentData?.length > 0;
+    const status = formData.employmentStatus;
+
+    if (!status && historyExists) {
+      return [
+        { value: "salaried", label: "Salaried" },
+        { value: "self-employed", label: "Self Employed" }
+      ];
+    }
+
+    if (!status && !historyExists) {
+      return [
+        { value: "Select", label: "Select" },
+        { value: "salaried", label: "Salaried" },
+        { value: "self-employed", label: "Self Employed" }
+      ];
+    }
+
+    return [
+      { value: "salaried", label: "Salaried" },
+      { value: "self-employed", label: "Self Employed" }
+    ];
+
+  }, [employmentData, formData.employmentStatus]);
 
   const isSelfEmployed = formData.employmentStatus === "self-employed";
 
@@ -457,7 +482,7 @@ const LoanApplication = () => {
     }
 
     if (currentStep === 1) {
-      if (!formData.employmentStatus || formData.employmentStatus.trim() === "Select")
+      if (!formData.employmentStatus || formData.employmentStatus === "Select")
         newErrors.employmentStatus = "Employment Status is Required";
       if (isSelfEmployed) {
         const gstError = validateGST(formData.gstNumber);
@@ -1111,7 +1136,7 @@ const LoanApplication = () => {
 
     if (!userId) {
       toast.error("User ID is missing. Please log in again.");
-      return;
+      return false;
     }
 
     // 1. Create and pack the FormData
@@ -1163,7 +1188,7 @@ const LoanApplication = () => {
 
     setAddresses(updatedAddresses);
 
-    const selected = updatedAddresses[index];
+    const selected = updatedAddresses[index] || {};
 
     setSelectedAddressIndex(index);
     setShowAddressDropdown(false);
@@ -1266,7 +1291,20 @@ const LoanApplication = () => {
 
     const defaultAddress = addressList[0] || {};
 
-    setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+    // setEmploymentData(apiData?.employmentHistory?.employment_data || []);
+    const employmentRecords = apiData?.employmentHistory?.employment_data || [];
+
+    setEmploymentData(employmentRecords);
+
+    let derivedEmploymentStatus = apiData?.employmentStatus;
+
+    if (!derivedEmploymentStatus) {
+      if (employmentRecords.length > 0) {
+        derivedEmploymentStatus = "salaried";
+      } else {
+        derivedEmploymentStatus = "Select";
+      }
+    }
 
     // Emails
     const apiEmails = Array.isArray(apiData.emails)
@@ -1288,7 +1326,7 @@ const LoanApplication = () => {
 
     setFormData((prev) => ({
       ...mapApiResponseToFormData(apiData, mobile),
-
+      employmentStatus: derivedEmploymentStatus,
       addressLine1: defaultAddress.streetAddress || "",
       state: defaultAddress.state || "",
       pincode: defaultAddress.pincode || "",
@@ -1671,7 +1709,7 @@ const LoanApplication = () => {
                       label="Employment Status"
                       value={formData.employmentStatus || ""}
                       onChange={(v) => updateFormData("employmentStatus", v)}
-                      options={employmentStatuses}
+                      options={employmentStatusOptions}
                       required
                       placeholder="Select"
                       error={errors.employmentStatus}
@@ -2344,7 +2382,7 @@ const LoanApplication = () => {
                     <SummaryRow
                       label="Status"
                       value={
-                        employmentStatuses.find(
+                        employmentStatusOptions.find(
                           (e) => e.value === formData.employmentStatus,
                         )?.label || ""
                       }
