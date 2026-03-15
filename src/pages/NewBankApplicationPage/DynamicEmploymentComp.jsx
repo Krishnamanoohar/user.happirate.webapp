@@ -31,11 +31,11 @@ const IconInput = ({
         {label}
       </label> */}
       <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
-  {label}
-  {required && (
-    <span className="text-red-500">*</span>
-  )}
-</label>
+        {label}
+        {required && (
+          <span className="text-red-500">*</span>
+        )}
+      </label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
           <Icon size={16} />
@@ -46,10 +46,9 @@ const IconInput = ({
           onChange={onChange}
           placeholder={placeholder}
           className={`w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none transition-all duration-200 shadow-sm
-            ${
-              error
-                ? "bg-red-50 border border-red-500 focus:ring-2 focus:ring-red-400"
-                : "bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500"
+            ${error
+              ? "bg-red-50 border border-red-500 focus:ring-2 focus:ring-red-400"
+              : "bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500"
             }
           `}
         />
@@ -62,7 +61,7 @@ const IconInput = ({
 };
 
 // --- SINGLE EMPLOYMENT CARD COMPONENT ---
-const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors ={} }) => {
+const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors = {} }) => {
   const handleChange = (field, value) => {
     onChange(index, field, value);
   };
@@ -130,8 +129,9 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors 
           <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">
             Company Information
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="md:col-span-3 lg:col-span-1">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="sm:col-span-2 lg:col-span-1">
               <IconInput
                 label="Establishment Name"
                 icon={Building2}
@@ -168,7 +168,8 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors 
           <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 border-b pb-2">
             Timeline & Provident Fund
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <IconInput
               label="Date of Joining"
               icon={Calendar}
@@ -214,7 +215,7 @@ const EmploymentCard = ({ data, index, onChange, onRemove, totalRecords, errors 
 export const EmploymentHistorySection = ({
   employmentData,
   setEmploymentData,
-  errors=[],
+  errors = [],
 }) => {
   const emptyRecord = {
     uan: "",
