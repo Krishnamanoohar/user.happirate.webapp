@@ -2066,7 +2066,7 @@ const LoanApplication = () => {
                       label="Applicant Photo"
                       required
                       acceptDescription={"JPEG, JPG, PNG up to 5MB"}
-                      accept=".jpg,.jpeg"
+                      accept=".jpg,.jpeg,.png"
                       file={documents.photo}
                       error={documentValidationTriggered && !!documentErrors.photo}
                       onFileSelect={(file) =>
@@ -2085,7 +2085,8 @@ const LoanApplication = () => {
                         <FileUploadZone
                           label="Month 1"
                           required
-                          accept=".pdf,.jpg,.png"
+                          acceptDescription={"PDF up to 5MB"}
+                          accept=".pdf,application/pdf"
                           file={documents.payslip1}
                           error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
@@ -2099,7 +2100,8 @@ const LoanApplication = () => {
                         <FileUploadZone
                           label="Month 2"
                           required
-                          accept=".pdf,.jpg,.png"
+                          acceptDescription={"PDF up to 5MB"}
+                          accept=".pdf,application/pdf"
                           file={documents.payslip2}
                           error={documentValidationTriggered && !!documentErrors.payslips}
                           compact
@@ -2113,7 +2115,8 @@ const LoanApplication = () => {
                         <FileUploadZone
                           label="Month 3"
                           required
-                          accept=".pdf,.jpg,.png"
+                          acceptDescription={"PDF up to 5MB"}
+                          accept=".pdf,application/pdf"
                           file={documents.payslip3}
                           error={documentValidationTriggered && !!documentErrors.payslips}
                           compact

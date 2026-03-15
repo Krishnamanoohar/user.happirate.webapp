@@ -18,6 +18,7 @@ const FileUploadZone = ({
     const [isDragging, setIsDragging] = useState(false);
     const inputRef = useRef(null);
 
+
     const handleDragOver = (e) => {
         e.preventDefault();
         setIsDragging(true);
@@ -30,11 +31,23 @@ const FileUploadZone = ({
     const handleDrop = (e) => {
         e.preventDefault();
         setIsDragging(false);
+
         const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile) {
-            // setFile(droppedFile);
-            onFileSelect?.(droppedFile);
+        if (!droppedFile) return;
+
+        const MAX_SIZE = 5 * 1024 * 1024;
+
+        if (droppedFile.size > MAX_SIZE) {
+            alert("File size must be under 5MB");
+            return;
         }
+
+        if (accept?.includes("pdf") && droppedFile.type !== "application/pdf") {
+            alert("Only PDF files are allowed");
+            return;
+        }
+
+        onFileSelect?.(droppedFile);
     };
 
     const handleClick = () => {
@@ -43,10 +56,21 @@ const FileUploadZone = ({
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files?.[0];
-        if (selectedFile) {
-            // setFile(selectedFile);
-            onFileSelect?.(selectedFile);
+        if (!selectedFile) return;
+
+        const MAX_SIZE = 5 * 1024 * 1024;
+
+        if (selectedFile.size > MAX_SIZE) {
+            alert("File size must be under 5MB");
+            return;
         }
+
+        if (accept?.includes("pdf") && selectedFile.type !== "application/pdf") {
+            alert("Only PDF files are allowed");
+            return;
+        }
+
+        onFileSelect?.(selectedFile);
     };
 
     const removeFile = (e) => {
